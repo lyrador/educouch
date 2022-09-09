@@ -16,7 +16,7 @@ public class Educator {
     private String email;
     private String password;
     private String username;
-    private String profilePicture;
+    private String profilePictureURL;
 
     public Long getEducatorId() {
         return educatorId;
@@ -58,11 +58,11 @@ public class Educator {
         this.username = username;
     }
 
-    public String getProfilePicture() {
-        return profilePicture;
+    public String getProfilePictureURL() {
+        return profilePictureURL;
     }
 
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
+    public void setProfilePictureURL(String profilePictureURL) {
+        this.profilePictureURL = profilePictureURL;
     }
 }

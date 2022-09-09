@@ -1,0 +1,26 @@
+cloud:
+  aws:
+    credentials:
+      access-key: AKIAVQUIBIURWR4NVBGM
+      secret-key: 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
+    region:
+      static: ap-southeast-1
+    stack:
+      auto: false
+
+application:
+  bucket:
+    name: educouchbucket
+
+
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2MB
+      max-file-size: 200MB
+      max-request-size: 215MB
+
+server:
+  port: 8080
+
