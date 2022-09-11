@@ -11,7 +11,7 @@ public class EducatorServiceImpl implements EducatorService{
 
     @Autowired
     private EducatorRepository educatorRepository;
-    
+
     @Override
     public Educator saveEducator(Educator educator) {
 
