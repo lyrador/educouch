@@ -24,6 +24,15 @@ public class Learner {
     public Learner() {
     }
 
+    public Learner(String name, String address, String email, String password, String username, String profilePictureURL) {
+        this.name = name;
+        this.address = address;
+        this.email = email;
+        this.password = password;
+        this.username = username;
+        this.profilePictureURL = profilePictureURL;
+    }
+
     public Long getLearnerId() {
         return learnerId;
     }
