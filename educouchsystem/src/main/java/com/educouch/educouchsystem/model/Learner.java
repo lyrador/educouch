@@ -36,7 +36,6 @@ public class Learner {
     public Long getLearnerId() {
         return learnerId;
     }
-
     public void setLearnerId(Long learnerId) {
         this.learnerId = learnerId;
     }
