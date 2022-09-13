@@ -2,6 +2,7 @@ package com.educouch.educouchsystem.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,22 +12,22 @@ public class Folder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long folderId;
-    @NotBlank(message = "Folder name is mandatory")
+    @NotNull
     private String folderName;
 
     @OneToMany(mappedBy="parentFolder")
     private List<Folder> childFolders;
 
-    @ManyToOne(cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY)
-    @JoinColumn(nullable=false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
     private Folder parentFolder;
 
     @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<Attachment> attachments;
 
     @ManyToOne
-    @JoinColumn(nullable = false)
-    @NotBlank(message = "Course cannot be empty")
+    @JoinColumn
+    @NotNull
     private Course course;
 
     public Folder() {
