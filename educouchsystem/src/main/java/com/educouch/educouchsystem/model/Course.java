@@ -1,6 +1,7 @@
 package com.educouch.educouchsystem.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,19 +16,23 @@ public class Course {
     private String courseTimeline;
     private Double courseMaxScore;
     @Enumerated(EnumType.STRING)
-    @Column(name="ageGroup")
     private AgeGroupEnum ageGroup;
     @Enumerated(EnumType.STRING)
-    @Column(name="courseApprovalStatus")
     private CourseApprovalStatusEnum courseApprovalStatus;
 
     @OneToMany(mappedBy = "course")
     private List<Forum> forums;
 
+    @OneToMany(mappedBy = "course")
+    private List<Folder> folders;
+
     public Course() {
+        folders = new ArrayList<>();
+        forums = new ArrayList<>();
     }
 
     public Course(String courseCode, String courseTitle, String courseDescription, String courseTimeline, Double courseMaxScore, AgeGroupEnum ageGroup, CourseApprovalStatusEnum courseApprovalStatus) {
+        new Course();
         this.courseCode = courseCode;
         this.courseTitle = courseTitle;
         this.courseDescription = courseDescription;
@@ -108,4 +113,13 @@ public class Course {
     public void setForums(List<Forum> forums) {
         this.forums = forums;
     }
+
+    public List<Folder> getFolders() {
+        return folders;
+    }
+
+    public void setFolders(List<Folder> folders) {
+        this.folders = folders;
+    }
+
 }
