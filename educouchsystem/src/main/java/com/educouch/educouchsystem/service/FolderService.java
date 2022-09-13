@@ -14,6 +14,6 @@ public interface FolderService {
 
     void deleteFolder(Long folderId) throws FolderNotFoundException;
 
-    Folder createFolder(Long parentFolderId, Folder folder) throws FolderUnableToSaveException;
+    public Folder createFolder(Long courseId, Long parentFolderId, Folder folder) throws FolderUnableToSaveException;
 
 }
