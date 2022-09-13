@@ -1,7 +1,10 @@
 package com.educouch.educouchsystem.service;
 
+import com.educouch.educouchsystem.model.Course;
 import com.educouch.educouchsystem.model.Folder;
+import com.educouch.educouchsystem.repository.CourseRepository;
 import com.educouch.educouchsystem.repository.FolderRepository;
+import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.util.exception.FolderNotFoundException;
 import com.educouch.educouchsystem.util.exception.FolderUnableToSaveException;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,7 @@ import java.util.Optional;
 public class FolderServiceImpl implements FolderService{
 
     private FolderRepository folderRepository;
+    private CourseService courseService;
 
     public Folder createFolder(Folder folder) throws FolderUnableToSaveException {
 
@@ -41,16 +45,35 @@ public class FolderServiceImpl implements FolderService{
 
     }
 
-    public Folder createFolder(Long parentFolderId, Folder folder) throws FolderUnableToSaveException {
+    public Folder createFolder(Long courseId, Long parentFolderId, Folder folder) throws FolderUnableToSaveException {
         try {
+            Course course = courseService.getCourseById(courseId);
             Folder parentFolder = getFolder(parentFolderId);
+
+            // out direction
             folder.setParentFolder(parentFolder);
-            return createFolder(folder);
-        } catch(FolderNotFoundException | FolderUnableToSaveException ex) {
+            folder.setCourse(course);
+
+            // persist folder
+            Folder newFolder = createFolder(folder);
+
+            // the other direction
+            course.getFolders().add(newFolder);
+            parentFolder.getChildFolders().add(newFolder);
+
+            // save the course & parentFolder
+            folderRepository.save(parentFolder);
+            courseService.saveCourse(course);
+
+
+            return newFolder;
+        } catch(CourseNotFoundException | FolderNotFoundException | FolderUnableToSaveException ex) {
             throw new FolderUnableToSaveException(ex.getMessage());
         }
 
     }
+
+
 
 
 
