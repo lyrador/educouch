@@ -24,6 +24,11 @@ public class Folder {
     @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<Attachment> attachments;
 
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    @NotBlank(message = "Course cannot be empty")
+    private Course course;
+
     public Folder() {
         childFolders = new ArrayList<>();
         attachments = new ArrayList<>();
@@ -73,5 +78,13 @@ public class Folder {
 
     public void setAttachments(List<Attachment> attachments) {
         this.attachments = attachments;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 }
