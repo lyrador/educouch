@@ -1,43 +1,43 @@
 package com.educouch.educouchsystem.model;
 
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Learner {
+public class LmsAdmin {
 
-    //@id makes this a primary key, GenerationType.IDENTITY lets PK auto-increment
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long learnerId;
+    private Long lmsAdminId;
+
     private String name;
-    private String address;
 
     private String email;
-    private String password;
-    private String username;
-    private String profilePictureURL;
 
-    public Learner() {
+    private String password;
+
+    private String username;
+
+    private String profilePicture;
+
+    public LmsAdmin() {
     }
 
-    public Learner(String name, String address, String email, String password, String username, String profilePictureURL) {
+    public LmsAdmin(String name, String email, String password, String username) {
         this.name = name;
-        this.address = address;
         this.email = email;
         this.password = password;
         this.username = username;
-        this.profilePictureURL = profilePictureURL;
     }
 
-    public Long getLearnerId() {
-        return learnerId;
+    public Long getLmsAdminId() {
+        return lmsAdminId;
     }
-    public void setLearnerId(Long learnerId) {
-        this.learnerId = learnerId;
+
+    public void setLmsAdminId(Long lmsAdminId) {
+        this.lmsAdminId = lmsAdminId;
     }
 
     public String getName() {
@@ -46,14 +46,6 @@ public class Learner {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getEmail() {
@@ -80,11 +72,13 @@ public class Learner {
         this.username = username;
     }
 
-    public String getProfilePictureURL() {
-        return profilePictureURL;
+    public String getProfilePicture() {
+        return profilePicture;
     }
 
-    public void setProfilePictureURL(String profilePictureURL) {
-        this.profilePictureURL = profilePictureURL;
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
+
+
 }
