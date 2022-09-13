@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Attachment {
@@ -11,10 +12,13 @@ public class Attachment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long attachmentId;
+    @NotBlank(message = "File original name is mandatory")
     private String fileOriginalName;
-
+    @NotBlank(message = "File storage name is mandatory")
     private String fileStorageName;
+    @NotBlank(message = "File type is mandatory")
     private String fileType;
+    @NotBlank(message = "File url is mandatory")
     private String fileURL;
 
     public Attachment() {
