@@ -27,8 +27,8 @@ public class CourseServiceImpl implements CourseService{
         return courseRepository.findAll();
     }
 
+    @Override
     public Course getCourseById(Long courseId) throws CourseNotFoundException {
-
         Optional<Course> courseOpt =  courseRepository.findById(courseId);
         if(courseOpt.isPresent()) {
             return courseOpt.get();
