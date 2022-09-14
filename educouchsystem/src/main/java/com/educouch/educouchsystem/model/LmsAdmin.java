@@ -20,6 +20,8 @@ public class LmsAdmin {
 
     private String username;
 
+    private boolean isActive;
+
     private String profilePicture;
 
     public LmsAdmin() {
@@ -30,6 +32,7 @@ public class LmsAdmin {
         this.email = email;
         this.password = password;
         this.username = username;
+        this.isActive = true;
     }
 
     public Long getLmsAdminId() {
