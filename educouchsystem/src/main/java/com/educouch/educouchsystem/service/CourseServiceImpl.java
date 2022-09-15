@@ -36,4 +36,11 @@ public class CourseServiceImpl implements CourseService{
             throw new CourseNotFoundException("Course cannot be found");
         }
     }
+
+    @Override
+    public Course getCourseByCourseCode(String courseCode) {
+        Course c = courseRepository.findCourseByCourseCode(courseCode);
+        return c;
+    }
+
 }

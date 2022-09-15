@@ -1,5 +1,8 @@
 package com.educouch.educouchsystem.model;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -16,6 +19,7 @@ public class Folder {
     private String folderName;
 
     @OneToMany(mappedBy="parentFolder")
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Folder> childFolders;
 
     @ManyToOne(fetch = FetchType.LAZY)
