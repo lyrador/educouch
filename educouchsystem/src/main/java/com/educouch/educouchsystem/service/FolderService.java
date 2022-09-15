@@ -20,4 +20,6 @@ public interface FolderService {
 
     List<Folder> getAllFolders();
 
+    public List<Folder> getFoldersByCourseCode(String courseCode) throws FolderNotFoundException;
+
 }

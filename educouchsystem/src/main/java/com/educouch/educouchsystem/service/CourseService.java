@@ -10,4 +10,6 @@ public interface CourseService {
     public List<Course> getAllCourses();
 
     public Course getCourseById(Long courseId) throws CourseNotFoundException;
+
+    public Course getCourseByCourseCode(String courseCode);
 }

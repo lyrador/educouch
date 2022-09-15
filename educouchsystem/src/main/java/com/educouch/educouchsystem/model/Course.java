@@ -23,15 +23,16 @@ public class Course {
     @OneToMany(mappedBy = "course")
     private List<Forum> forums;
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
     private List<Folder> folders;
 
     public Course() {
-        folders = new ArrayList<>();
-        forums = new ArrayList<>();
+        this.folders = new ArrayList<>();
+        this.forums = new ArrayList<>();
     }
 
-    public Course(String courseCode, String courseTitle, String courseDescription, String courseTimeline, Double courseMaxScore, AgeGroupEnum ageGroup, CourseApprovalStatusEnum courseApprovalStatus) {
+    public Course(String courseCode, String courseTitle, String courseDescription, String courseTimeline,
+                  Double courseMaxScore, AgeGroupEnum ageGroup, CourseApprovalStatusEnum courseApprovalStatus) {
         new Course();
         this.courseCode = courseCode;
         this.courseTitle = courseTitle;
