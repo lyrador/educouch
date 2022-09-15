@@ -2,6 +2,7 @@ package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.model.Course;
 import com.educouch.educouchsystem.model.Folder;
+import com.educouch.educouchsystem.model.Forum;
 import com.educouch.educouchsystem.service.FolderService;
 import com.educouch.educouchsystem.util.exception.FolderNotFoundException;
 import com.educouch.educouchsystem.util.exception.FolderUnableToSaveException;
@@ -12,7 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 //giving learner path here
@@ -60,6 +63,15 @@ public class FolderController {
         }
         return folders;
     }
+    @GetMapping("/getFolderByFolderId/{folderId}")
+    public Folder getFolderByFolderId(@PathVariable Long folderId) {
+        try {
+            Folder folder = folderService.getFolder(folderId);
+            return folder;
+        } catch(FolderNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Folder not found", ex);
+        }
+    }
 
     @DeleteMapping("/deleteFolder/{folderId}")
     public String deleteFolder(@PathVariable Long folderId){
@@ -86,6 +98,39 @@ public class FolderController {
         folder.setCourse(null);
 
         return folder;
+
+    }
+    @GetMapping("/getFoldersByCourseCode/{courseCode}")
+    public List<Folder> getFoldersByCourseCode(@PathVariable String courseCode) {
+        try{
+
+            List<Folder> folders = folderService.getFoldersByCourseCode(courseCode);
+            for(Folder f: folders) {
+                processFolder(f);
+            }
+
+            return folders;
+        } catch(FolderNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Course cannot be found", ex);
+        }
+    }
+
+    private Course processCourse(Course c) {
+        List<Forum> forums = c.getForums();
+        for(Forum f: forums) {
+            f.setForumDiscussions(null);
+            f.setCourse(null);
+        }
+
+        List<Folder> childFolders = c.getFolders();
+        for(Folder f: childFolders) {
+            f.setChildFolders(null);
+            f.setAttachments(null);
+            f.setParentFolder(null);
+        }
+
+        return c;
+
 
     }
 

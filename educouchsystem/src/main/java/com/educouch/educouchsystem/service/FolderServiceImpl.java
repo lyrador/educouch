@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 // Add the attachment and sub folder one by one
 // Hence subfolder and attachment can only be created inside a persisted / managed folder
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +25,9 @@ public class FolderServiceImpl implements FolderService{
     private FolderRepository folderRepository;
     @Autowired
     private CourseService courseService;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public Folder saveFolder(Folder folder) throws FolderUnableToSaveException {
@@ -109,6 +114,14 @@ public class FolderServiceImpl implements FolderService{
     @Override
     public List<Folder> getAllFolders() {
         return folderRepository.findAll();
+    }
+    public List<Folder> getFoldersByCourseCode(String courseCode) throws FolderNotFoundException {
+        Course c = courseService.getCourseByCourseCode(courseCode);
+        if(c != null) {
+            return c.getFolders();
+        } else {
+            throw new FolderNotFoundException("Course cannot be found. ");
+        }
     }
 
 
