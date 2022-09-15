@@ -1,6 +1,7 @@
 package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.model.Comment;
+import com.educouch.educouchsystem.model.Folder;
 import com.educouch.educouchsystem.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,4 +23,6 @@ public class CommentServiceImpl implements CommentService{
     public List<Comment> getAllComments() {
         return commentRepository.findAll();
     }
+
+
 }
