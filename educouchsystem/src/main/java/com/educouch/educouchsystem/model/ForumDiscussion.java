@@ -10,16 +10,20 @@ public class ForumDiscussion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long forumDiscussionId;
+
+    @Column(name="forumDiscussionTitle", nullable = false, length = 128)
     private String forumDiscussionTitle;
+
+    @Column(name="forumDiscussionDescription", nullable = false)
     private String forumDiscussionDescription;
     private LocalDateTime timestamp;
 
-    @ManyToOne
+    /*@ManyToOne
     @JoinColumn(name="forum_id")
-    private Forum forum;
+    private Forum forum;*/
 
-    @OneToMany
-    @JoinColumn(name="forumDiscussion")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name="forumDiscussion_id")
     private List<Comment> comments;
 
     public ForumDiscussion() {
@@ -63,13 +67,13 @@ public class ForumDiscussion {
         this.timestamp = timestamp;
     }
 
-    public Forum getForum() {
+  /*public Forum getForum() {
         return forum;
     }
 
     public void setForum(Forum forum) {
         this.forum = forum;
-    }
+    }*/
 
     public List<Comment> getComments() {
         return comments;
