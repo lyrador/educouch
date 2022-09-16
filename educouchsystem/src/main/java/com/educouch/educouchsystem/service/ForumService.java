@@ -9,4 +9,8 @@ public interface ForumService {
     public Forum saveForum(Forum forum);
 
     public List<Forum> getAllForums();
+
+    public Forum retrieveForumById(Long id);
+
+    public void deleteForum(Long id);
 }
