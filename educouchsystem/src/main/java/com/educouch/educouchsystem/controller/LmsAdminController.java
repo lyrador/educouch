@@ -37,4 +37,10 @@ public class LmsAdminController {
     public ResponseEntity<List<LmsAdmin>> getAllLmsAdmins() {
         return ResponseEntity.status(HttpStatus.OK).body(lmsAdminService.getAllLmsAdmins());
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<LmsAdmin> loginLmsAdmin(@RequestParam String username, @RequestParam String password) {
+        return ResponseEntity.status(HttpStatus.OK).body(lmsAdminService.login(username,password));
+
+    }
 }
