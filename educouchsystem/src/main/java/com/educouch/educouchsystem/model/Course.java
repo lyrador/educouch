@@ -9,19 +9,30 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long courseId;
+
+    @Column(name="courseCode", unique = true, nullable = false, length = 10)
     private String courseCode;
+
+    @Column(name="courseTitle", nullable = false)
     private String courseTitle;
+
+    @Column(name="courseDescription", nullable = false)
     private String courseDescription;
+
+    @Column(name="courseTimeline", nullable = false)
     private String courseTimeline;
+
+    @Column(name="courseMaxScore", columnDefinition = "Decimal(10,2) default '100.0'")
     private Double courseMaxScore;
     @Enumerated(EnumType.STRING)
-    @Column(name="ageGroup")
+    @Column(name="ageGroup", nullable = false)
     private AgeGroupEnum ageGroup;
     @Enumerated(EnumType.STRING)
     @Column(name="courseApprovalStatus")
     private CourseApprovalStatusEnum courseApprovalStatus;
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name="course_id")
     private List<Forum> forums;
 
     public Course() {

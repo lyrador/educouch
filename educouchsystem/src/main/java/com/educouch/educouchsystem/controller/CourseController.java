@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -16,18 +17,24 @@ public class CourseController {
     @Autowired
     private CourseService courseService;
 
-    @PostMapping("/add")
+    @PostMapping("/courses")
     public String addCourse(@RequestBody Course course) {
         courseService.saveCourse(course);
         return "New course has been added";
     }
 
-    @GetMapping("/getAll")
-    public List<Course> getAllCourses() {
-        return courseService.getAllCourses();
+    @GetMapping("/courses")
+    public ResponseEntity<List<Course>> getAllCourses() {
+        List<Course> allCourses = new ArrayList<Course>();
+        if (!courseService.getAllCourses().isEmpty()) {
+            allCourses = courseService.getAllCourses();
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(allCourses, HttpStatus.OK);
     }
 
-    @GetMapping("/course/{courseId}")
+    @GetMapping("/courses/{courseId}")
     public ResponseEntity<Course> retrieveCourseById(@PathVariable("courseId") Long courseId) {
         try {
             Course existingCourse = courseService.retrieveCourseById(courseId);
@@ -37,19 +44,26 @@ public class CourseController {
         }
     }
 
-    @DeleteMapping("/course/{courseId}")
-    public String deleteCourse(@PathVariable("courseId") Long courseId) {
+    @DeleteMapping("/courses/{courseId}")
+    public ResponseEntity<HttpStatus> deleteCourse(@PathVariable("courseId") Long courseId) {
         courseService.deleteCourse(courseId);
-        return "Deleted Course with id " + courseId; 
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/course/{courseId}")
-    public ResponseEntity<Course> updateCourse(@RequestBody Course course, @PathVariable Long courseId) {
+    @PutMapping("/courses/{courseId}")
+    public ResponseEntity<Course> updateCourse(@RequestBody Course course, @PathVariable("courseId") Long courseId) {
         try {
             Course existingCourse = courseService.retrieveCourseById(courseId);
+            existingCourse.setCourseDescription(course.getCourseDescription());
+            existingCourse.setCourseTitle(course.getCourseTitle());
+            existingCourse.setCourseTimeline(course.getCourseTimeline());
+            existingCourse.setCourseCode(course.getCourseCode());
+            existingCourse.setAgeGroup(course.getAgeGroup());
+            existingCourse.setCourseApprovalStatus(course.getCourseApprovalStatus());
+            existingCourse.setCourseMaxScore(course.getCourseMaxScore());
+            courseService.saveCourse(existingCourse);
 
-            Course updatedCourse = courseService.saveCourse(course);
-            return new ResponseEntity<Course>(updatedCourse, HttpStatus.OK);
+            return new ResponseEntity<Course>(existingCourse, HttpStatus.OK);
         } catch (NoSuchElementException ex) {
             return new ResponseEntity<Course>(HttpStatus.NOT_FOUND);
         }
