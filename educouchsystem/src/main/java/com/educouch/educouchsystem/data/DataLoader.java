@@ -1,9 +1,8 @@
 package com.educouch.educouchsystem.data;
 
 import com.educouch.educouchsystem.model.*;
-import com.educouch.educouchsystem.repository.CourseRepository;
-import com.educouch.educouchsystem.repository.FolderRepository;
-import com.educouch.educouchsystem.repository.LearnerRepository;
+import com.educouch.educouchsystem.repository.*;
+import com.educouch.educouchsystem.service.EducatorService;
 import com.educouch.educouchsystem.service.FolderService;
 import com.educouch.educouchsystem.service.LmsAdminService;
 import com.educouch.educouchsystem.util.exception.FolderUnableToSaveException;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Component;
 public class DataLoader implements CommandLineRunner {
 
     private final LmsAdminService lmsAdminService;
+    private final EducatorService educatorService;
 
     @Autowired
     private LearnerRepository learnerRepository;
@@ -25,8 +25,9 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     private FolderService folderService;
 
-    public DataLoader(LmsAdminService lmsAdminService) {
+    public DataLoader(LmsAdminService lmsAdminService, EducatorService educatorService) {
         this.lmsAdminService = lmsAdminService;
+        this.educatorService = educatorService;
     }
 
     @Override
@@ -55,6 +56,15 @@ public class DataLoader implements CommandLineRunner {
         Folder a = new Folder("Week 1: Variable");
         Folder b = new Folder("Week 2: If conditionals");
         Folder c = new Folder("Week 3: Iterative Control");
+
+        //create organisation
+        Organisation org1 = new Organisation("FakeTuition");
+        OrganisationAdmin orgAdmin = new OrganisationAdmin("grinivas", "grini@gmail.com", "password", "grinivas");
+        org1.setOrganisationAdmin(orgAdmin);
+        orgAdmin.setOrganisation(org1);
+
+        educatorService.saveOrganisation(org1);
+        educatorService.saveOrganisationAdmin(orgAdmin);
 
 //        Folder saveFolder(Long courseId, Folder folder) throws FolderUnableToSaveException;
         try {
