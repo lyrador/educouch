@@ -67,6 +67,7 @@ public class FolderController {
     public Folder getFolderByFolderId(@PathVariable Long folderId) {
         try {
             Folder folder = folderService.getFolder(folderId);
+            processFolder(folder);
             return folder;
         } catch(FolderNotFoundException ex) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Folder not found", ex);
@@ -90,12 +91,19 @@ public class FolderController {
         List<Folder> subFolders = folder.getChildFolders();
         for(Folder cf: subFolders) {
             cf.setParentFolder(null);
+            cf.setAttachments(null);
+            cf.setChildFolders(null);
+            cf.setCourse(null);
         }
         Folder parentFolder = folder.getParentFolder();
         if(parentFolder != null) {
             parentFolder.setChildFolders(null);
+            parentFolder.setAttachments(null);
+            parentFolder.setParentFolder(null);
+            parentFolder.setCourse(null);
         }
         folder.setCourse(null);
+        folder.getAttachments();
 
         return folder;
 
@@ -124,9 +132,7 @@ public class FolderController {
 
         List<Folder> childFolders = c.getFolders();
         for(Folder f: childFolders) {
-            f.setChildFolders(null);
-            f.setAttachments(null);
-            f.setParentFolder(null);
+            processFolder(f);
         }
 
         return c;
