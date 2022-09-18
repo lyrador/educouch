@@ -8,7 +8,7 @@ import com.educouch.educouchsystem.repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+//educator service handles instructors, organisation admin
 @Service
 public class EducatorServiceImpl implements EducatorService{
 
@@ -27,13 +27,16 @@ public class EducatorServiceImpl implements EducatorService{
         return organisationAdminRepository.save(orgAdmin);
     }
 
+    public Instructor findInstructorByUsername(String username) {
+        return instructorRepository.findInstructorByUsername(username);
+    }
 
     //not done
     public Instructor findInstructorById(Long Id) {
         return new Instructor();
     }
 
-    //not tested done
+    //not tested
     public OrganisationAdmin findOrganisationAdminById(Long Id) {
         return organisationAdminRepository.findOrganisationAdminById(Id);
     }
