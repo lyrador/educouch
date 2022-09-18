@@ -1,9 +1,6 @@
 package com.educouch.educouchsystem.service;
 
-import com.educouch.educouchsystem.model.Educator;
-import com.educouch.educouchsystem.model.Instructor;
-import com.educouch.educouchsystem.model.Organisation;
-import com.educouch.educouchsystem.model.OrganisationAdmin;
+import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.repository.EducatorRepository;
 import com.educouch.educouchsystem.repository.InstructorRepository;
 import com.educouch.educouchsystem.repository.OrganisationAdminRepository;
@@ -11,8 +8,6 @@ import com.educouch.educouchsystem.repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class EducatorServiceImpl implements EducatorService{
@@ -32,24 +27,16 @@ public class EducatorServiceImpl implements EducatorService{
         return organisationAdminRepository.save(orgAdmin);
     }
 
-    public Organisation saveOrganisation(Organisation organisation) {
 
-        return organisationRepository.save(organisation);
-    }
-
-    public List<Instructor> getAllInstructors(Organisation organisation) {
-        return new ArrayList<>();
-    }
-
-    public Instructor addInstructor(Organisation organisation, Instructor instructor) {
-        return new Instructor();
-    }
-
+    //not done
     public Instructor findInstructorById(Long Id) {
         return new Instructor();
     }
 
-
+    //not tested done
+    public OrganisationAdmin findOrganisationAdminById(Long Id) {
+        return organisationAdminRepository.findOrganisationAdminById(Id);
+    }
 
 //    @Override
 //    public Educator saveEducator(Educator educator) {
