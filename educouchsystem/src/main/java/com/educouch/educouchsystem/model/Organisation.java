@@ -12,6 +12,7 @@ public class Organisation {
     private String organisationName;
 
     @OneToOne
+    @JoinColumn(name = "organisationAdminId")
     private OrganisationAdmin organisationAdmin;
     @OneToMany(mappedBy = "organisation")
     private List<Instructor> instructors;
