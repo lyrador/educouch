@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import java.util.List;
+
 @Component("loader")
 public class DataLoader implements CommandLineRunner {
 
@@ -64,9 +67,18 @@ public class DataLoader implements CommandLineRunner {
 
         //create organisation
         Organisation org1 = new Organisation("FakeTuition");
-        OrganisationAdmin orgAdmin = new OrganisationAdmin("grinivas", "grini@gmail.com", "password", "grinivas");
+        OrganisationAdmin orgAdmin = new OrganisationAdmin("grinivas", "grini@gmail.com", "grinivas", "password");
 
         organisationService.instantiateOrganisation(orgAdmin, org1);
+
+        //create instructors
+        Instructor i1 = new Instructor("milo", "milo@gmail.com", "milo", "password");
+        Instructor i2 = new Instructor("horlicks", "horlicks@gmail.com", "horlicks", "password");
+
+        organisationService.addInstructor("1", i1);
+        organisationService.addInstructor("1", i2);
+
+        System.out.println("instructorsss: " + organisationService.findAllInstructors("1"));
 
 //        Folder saveFolder(Long courseId, Folder folder) throws FolderUnableToSaveException;
         try {

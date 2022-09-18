@@ -9,6 +9,7 @@ public interface EducatorService {
 //    public List<Educator> getAllEducators();
     public OrganisationAdmin saveOrganisationAdmin(OrganisationAdmin orgAdmin);
     public OrganisationAdmin findOrganisationAdminById(Long Id);
+    public Instructor findInstructorByUsername(String username);
     public Instructor findInstructorById(Long Id);
 
 
