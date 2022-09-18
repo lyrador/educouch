@@ -13,6 +13,7 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/course")
+@CrossOrigin
 public class CourseController {
     @Autowired
     private CourseService courseService;
