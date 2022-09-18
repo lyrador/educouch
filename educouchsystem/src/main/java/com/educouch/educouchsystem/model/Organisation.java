@@ -1,6 +1,7 @@
 package com.educouch.educouchsystem.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,9 +19,11 @@ public class Organisation {
     private List<Instructor> instructors;
 
     public Organisation() {
+        this.instructors = new ArrayList<>();
     }
 
     public Organisation(String organisationName) {
+        this();
         this.organisationName = organisationName;
     }
 

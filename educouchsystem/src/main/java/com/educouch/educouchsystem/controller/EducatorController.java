@@ -7,6 +7,8 @@ import com.educouch.educouchsystem.service.OrganisationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/educator")
@@ -31,9 +33,14 @@ public class EducatorController {
     }
 
     @PostMapping("/addInstructor")
-    public String addInstructor(@RequestBody Instructor instructor) {
-
+    public String addInstructor(@RequestBody String organisationId, Instructor instructor) {
+        organisationService.addInstructor(organisationId, instructor);
         return "New Instructor is added";
+    }
+
+    @GetMapping("/findAllInstructors")
+    public List<Instructor> findAllInstructors(@RequestBody String organisationId) {
+        return organisationService.findAllInstructors(organisationId);
     }
 
 }

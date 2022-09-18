@@ -11,17 +11,18 @@ public class Instructor {
     @NotBlank(message = "Name is mandatory")
     private String name;
     private String email;
-    private String password;
+    @Column(unique = true)
     private String username;
+    private String password;
     private String profilePictureURL;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Organisation organisation;
 
     public Instructor() {
     }
 
-    public Instructor(@NotBlank(message = "Name is mandatory") String name, String email, String password, String username) {
+    public Instructor(@NotBlank(message = "Name is mandatory") String name, String email, String username, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -74,5 +75,13 @@ public class Instructor {
 
     public void setProfilePictureURL(String profilePictureURL) {
         this.profilePictureURL = profilePictureURL;
+    }
+
+    public Organisation getOrganisation() {
+        return organisation;
+    }
+
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
     }
 }
