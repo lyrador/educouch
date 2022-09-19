@@ -10,8 +10,11 @@ public class OrganisationAdmin {
     private Long organisationAdminId;
     @NotBlank(message = "Name is mandatory")
     private String name;
+    @Column(nullable = false)
     private String email;
+    @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
     private String username;
     private String profilePictureURL;
 
