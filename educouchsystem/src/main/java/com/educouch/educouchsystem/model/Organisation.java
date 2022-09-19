@@ -10,6 +10,7 @@ public class Organisation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long organisationId;
+    @Column(nullable = false)
     private String organisationName;
 
     @OneToOne
