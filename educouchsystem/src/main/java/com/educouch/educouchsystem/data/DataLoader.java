@@ -77,8 +77,11 @@ public class DataLoader implements CommandLineRunner {
 
         organisationService.addInstructor("1", i1);
         organisationService.addInstructor("1", i2);
-
-        System.out.println("instructorsss: " + organisationService.findAllInstructors("1"));
+        List<Instructor> instructors = organisationService.findAllInstructors("1");
+        System.out.println("is instructorList empty: " + instructors.isEmpty());
+        for(Instructor i : instructors) {
+            System.out.println(i.getName());
+        }
 
 //        Folder saveFolder(Long courseId, Folder folder) throws FolderUnableToSaveException;
         try {

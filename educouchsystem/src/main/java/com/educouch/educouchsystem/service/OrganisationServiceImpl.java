@@ -29,6 +29,10 @@ public class OrganisationServiceImpl implements OrganisationService {
         return managedOrganisation;
     }
 
+    public Organisation findOrganisationByOrganisationName(String organisationName) {
+        return organisationRepository.findOrganisationByOrganisationName(organisationName);
+    }
+
     public Organisation saveOrganisation(Organisation organisation) {
 
         return organisationRepository.save(organisation);
@@ -59,6 +63,7 @@ public class OrganisationServiceImpl implements OrganisationService {
 
     }
 
+    //not tested
     public Instructor addInstructor(String organisationId, Instructor instructor) {
 
         Organisation managedOrganisation = findOrganisationById(Long.parseLong(organisationId));
