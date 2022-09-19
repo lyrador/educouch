@@ -16,6 +16,7 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/forumDiscussion")
+@CrossOrigin
 public class ForumDiscussionController {
 
     @Autowired
