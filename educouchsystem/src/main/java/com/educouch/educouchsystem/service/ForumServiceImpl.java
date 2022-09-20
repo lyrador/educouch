@@ -22,4 +22,14 @@ public class ForumServiceImpl implements ForumService{
     public List<Forum> getAllForums() {
         return forumRepository.findAll();
     }
+
+    @Override
+    public Forum retrieveForumById(Long id) {
+        return forumRepository.findById(id).get();
+    }
+
+    @Override
+    public void deleteForum(Long id) {
+        forumRepository.deleteById(id);
+    }
 }
