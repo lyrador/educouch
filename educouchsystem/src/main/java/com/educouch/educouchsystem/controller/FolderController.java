@@ -123,6 +123,21 @@ public class FolderController {
         }
     }
 
+    @GetMapping("/getFoldersByCourseId/{courseId}")
+    public List<Folder> getFoldersByFolderId(@PathVariable String courseId) {
+        Long courseIdInLong = new Long(courseId);
+        try {
+            List<Folder> folders = folderService.getFoldersByCourseId(courseIdInLong);
+            for(Folder f: folders) {
+                processFolder(f);
+            }
+
+            return folders;
+        } catch(FolderNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Course cannot be found", ex);
+        }
+    }
+
     private Course processCourse(Course c) {
         List<Forum> forums = c.getForums();
         for(Forum f: forums) {
