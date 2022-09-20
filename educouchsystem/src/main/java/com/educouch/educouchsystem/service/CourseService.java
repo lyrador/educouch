@@ -12,4 +12,6 @@ public interface CourseService {
     public Course getCourseById(Long courseId) throws CourseNotFoundException;
 
     public Course getCourseByCourseCode(String courseCode);
+    public Course retrieveCourseById(Long id);
+    public void deleteCourse(Long id);
 }
