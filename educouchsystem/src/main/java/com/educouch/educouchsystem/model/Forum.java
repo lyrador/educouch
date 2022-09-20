@@ -9,15 +9,17 @@ public class Forum {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long forumId;
+
+    @Column(name="forumTitle", nullable = false, length = 128)
     private String forumTitle;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name="forum_id")
+    private List<ForumDiscussion> forumDiscussions;
 
     @ManyToOne
     @JoinColumn(name="course_id")
     private Course course;
-
-    @OneToMany
-    @JoinColumn(name="forum")
-    private List<ForumDiscussion> forumDiscussions;
 
     public Forum() {
     }
@@ -42,13 +44,6 @@ public class Forum {
         this.forumTitle = forumTitle;
     }
 
-    public Course getCourse() {
-        return course;
-    }
-
-    public void setCourse(Course course) {
-        this.course = course;
-    }
 
     public List<ForumDiscussion> getForumDiscussions() {
         return forumDiscussions;
@@ -56,5 +51,13 @@ public class Forum {
 
     public void setForumDiscussions(List<ForumDiscussion> forumDiscussions) {
         this.forumDiscussions = forumDiscussions;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 }
