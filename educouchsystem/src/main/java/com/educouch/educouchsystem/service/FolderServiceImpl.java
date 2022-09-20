@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -118,10 +119,34 @@ public class FolderServiceImpl implements FolderService{
     public List<Folder> getFoldersByCourseCode(String courseCode) throws FolderNotFoundException {
         Course c = courseService.getCourseByCourseCode(courseCode);
         if(c != null) {
-            return c.getFolders();
+            return retrieveParentFolders(c);
         } else {
             throw new FolderNotFoundException("Course cannot be found. ");
         }
+    }
+
+    public List<Folder> getFoldersByCourseId(Long courseId) throws FolderNotFoundException {
+        try {
+            Course c = courseService.getCourseById(courseId);
+            return retrieveParentFolders(c);
+
+        } catch(CourseNotFoundException ex) {
+            throw new FolderNotFoundException("Course doesn't exist.");
+        }
+
+    }
+
+    private List<Folder> retrieveParentFolders(Course c) {
+
+        List<Folder> folders = c.getFolders();
+        List<Folder> parentFolders = new ArrayList<>();
+        for (Folder f: folders) {
+            if (f.getParentFolder() == null) {
+                parentFolders.add(f);
+            }
+        }
+
+        return parentFolders;
     }
 
 

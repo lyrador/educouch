@@ -20,6 +20,17 @@ public class ForumDiscussionServiceImpl implements ForumDiscussionService{
 
     @Override
     public List<ForumDiscussion> getAllForumDiscussions() {
+
         return forumDiscussionRepository.findAll();
+    }
+
+    @Override
+    public ForumDiscussion retrieveForumDiscussionById(Long id) {
+        return forumDiscussionRepository.findById(id).get();
+    }
+
+    @Override
+    public void deleteForumDiscussion(Long id) {
+        forumDiscussionRepository.deleteById(id);
     }
 }
