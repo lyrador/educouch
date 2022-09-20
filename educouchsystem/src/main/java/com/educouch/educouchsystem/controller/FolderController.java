@@ -67,6 +67,7 @@ public class FolderController {
     public Folder getFolderByFolderId(@PathVariable Long folderId) {
         try {
             Folder folder = folderService.getFolder(folderId);
+            processFolder(folder);
             return folder;
         } catch(FolderNotFoundException ex) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Folder not found", ex);
@@ -90,12 +91,19 @@ public class FolderController {
         List<Folder> subFolders = folder.getChildFolders();
         for(Folder cf: subFolders) {
             cf.setParentFolder(null);
+            cf.setAttachments(null);
+            cf.setChildFolders(null);
+            cf.setCourse(null);
         }
         Folder parentFolder = folder.getParentFolder();
         if(parentFolder != null) {
             parentFolder.setChildFolders(null);
+            parentFolder.setAttachments(null);
+            parentFolder.setParentFolder(null);
+            parentFolder.setCourse(null);
         }
         folder.setCourse(null);
+        folder.getAttachments();
 
         return folder;
 
@@ -115,6 +123,21 @@ public class FolderController {
         }
     }
 
+    @GetMapping("/getFoldersByCourseId/{courseId}")
+    public List<Folder> getFoldersByFolderId(@PathVariable String courseId) {
+        Long courseIdInLong = new Long(courseId);
+        try {
+            List<Folder> folders = folderService.getFoldersByCourseId(courseIdInLong);
+            for(Folder f: folders) {
+                processFolder(f);
+            }
+
+            return folders;
+        } catch(FolderNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Course cannot be found", ex);
+        }
+    }
+
     private Course processCourse(Course c) {
         List<Forum> forums = c.getForums();
         for(Forum f: forums) {
@@ -124,18 +147,9 @@ public class FolderController {
 
         List<Folder> childFolders = c.getFolders();
         for(Folder f: childFolders) {
-            f.setChildFolders(null);
-            f.setAttachments(null);
-            f.setParentFolder(null);
+            processFolder(f);
         }
 
         return c;
-
-
     }
-
-
-
-
-
 }
