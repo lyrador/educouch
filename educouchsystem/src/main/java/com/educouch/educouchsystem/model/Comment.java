@@ -9,12 +9,14 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
+
+    @Column(name="content", nullable = false)
     private String content;
     private LocalDateTime timestamp;
 
-    @ManyToOne
+    /*@ManyToOne
     @JoinColumn(name="forumDiscussion_id")
-    private ForumDiscussion forumDiscussion;
+    private ForumDiscussion forumDiscussion;*/
 
     public Comment() {
     }
@@ -48,11 +50,11 @@ public class Comment {
         this.timestamp = timestamp;
     }
 
-    public ForumDiscussion getForumDiscussion() {
+  /*public ForumDiscussion getForumDiscussion() {
         return forumDiscussion;
     }
 
     public void setForumDiscussion(ForumDiscussion forumDiscussion) {
         this.forumDiscussion = forumDiscussion;
-    }
+    }*/
 }
