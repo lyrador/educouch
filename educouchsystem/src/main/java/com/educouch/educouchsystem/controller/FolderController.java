@@ -123,7 +123,7 @@ public class FolderController {
         }
     }
 
-    @GetMapping("/getFoldersByCourseCode/{courseId}")
+    @GetMapping("/getFoldersByCourseId/{courseId}")
     public List<Folder> getFoldersByFolderId(@PathVariable String courseId) {
         Long courseIdInLong = new Long(courseId);
         try {
