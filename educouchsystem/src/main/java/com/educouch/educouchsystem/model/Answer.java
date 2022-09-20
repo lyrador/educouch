@@ -19,26 +19,19 @@ public class Answer implements Serializable {
     @NotNull
     private Double maxScore;
 
-    @NotNull
-    private Boolean isCorrectAnswer;
-
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
-    private Question question;
+    private Question answerQuestion;
 
-    @OneToOne(mappedBy = "givenAnswer")
-    private QuestionAttempt questionAttempt;
 
     public Answer() {
     }
 
-    public Answer(String answerContent, Double maxScore, Boolean isCorrectAnswer, Question question, QuestionAttempt questionAttempt) {
+    public Answer(String answerContent, Double maxScore, Question answerQuestion) {
         this();
         this.answerContent = answerContent;
         this.maxScore = maxScore;
-        this.isCorrectAnswer = isCorrectAnswer;
-        this.question = question;
-        this.questionAttempt = questionAttempt;
+        this.answerQuestion = answerQuestion;
     }
 
     public Long getAnswerId() {
@@ -65,28 +58,12 @@ public class Answer implements Serializable {
         this.maxScore = maxScore;
     }
 
-    public Boolean getCorrectAnswer() {
-        return isCorrectAnswer;
+    public Question getAnswerQuestion() {
+        return answerQuestion;
     }
 
-    public void setCorrectAnswer(Boolean correctAnswer) {
-        isCorrectAnswer = correctAnswer;
-    }
-
-    public Question getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(Question question) {
-        this.question = question;
-    }
-
-    public QuestionAttempt getQuestionAttempt() {
-        return questionAttempt;
-    }
-
-    public void setQuestionAttempt(QuestionAttempt questionAttempt) {
-        this.questionAttempt = questionAttempt;
+    public void setAnswerQuestion(Question answerQuestion) {
+        this.answerQuestion = answerQuestion;
     }
 
     @Override

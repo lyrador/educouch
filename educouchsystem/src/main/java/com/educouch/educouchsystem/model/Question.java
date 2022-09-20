@@ -31,20 +31,25 @@ public class Question implements Serializable {
     @JoinColumn(nullable = false)
     private Quiz quiz;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "answerQuestion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Answer> answers;
+
+    @OneToMany(mappedBy = "optionQuestion", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Option> options;
 
     @OneToMany(mappedBy = "questionAttempted", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuestionAttempt> questionAttempts;
 
     public Question() {
         this.answers = new ArrayList<>();
+        this.options = new ArrayList<>();
         this.questionAttempts = new ArrayList<>();
     }
 
     public Question(String questionContent, String questionHint, QuestionTypeEnum questionType, Quiz quiz) {
         this();
         this.answers = new ArrayList<>();
+        this.options = new ArrayList<>();
         this.questionAttempts = new ArrayList<>();
         this.questionContent = questionContent;
         this.questionHint = questionHint;
@@ -98,6 +103,14 @@ public class Question implements Serializable {
 
     public void setAnswers(List<Answer> answers) {
         this.answers = answers;
+    }
+
+    public List<Option> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<Option> options) {
+        this.options = options;
     }
 
     public List<QuestionAttempt> getQuestionAttempts() {
