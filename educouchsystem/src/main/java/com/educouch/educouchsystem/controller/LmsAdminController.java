@@ -21,15 +21,15 @@ public class LmsAdminController {
     }
 
     @PostMapping("/addLmsAdmin")
-    public ResponseEntity<Long> createLmsAdmin(@RequestBody LmsAdmin lmsAdmin) {
+    public ResponseEntity<LmsAdmin> createLmsAdmin(@RequestBody LmsAdmin lmsAdmin) {
         LmsAdmin newAdmin = lmsAdminService.saveLmsAdmin(lmsAdmin);
-        return ResponseEntity.status(HttpStatus.OK).body(newAdmin.getLmsAdminId());
+        return ResponseEntity.status(HttpStatus.OK).body(newAdmin);
     }
 
     @PostMapping("/updateLmsAdmin")
-    public ResponseEntity<Long> updateLmsAdmin(@RequestBody LmsAdmin lmsAdmin) {
+    public ResponseEntity<LmsAdmin> updateLmsAdmin(@RequestBody LmsAdmin lmsAdmin) {
         LmsAdmin updatedAdmin = lmsAdminService.updateLmsAdmin(lmsAdmin);
-        return ResponseEntity.status(HttpStatus.OK).body(updatedAdmin.getLmsAdminId());
+        return ResponseEntity.status(HttpStatus.OK).body(updatedAdmin);
     }
 
 

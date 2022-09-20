@@ -1,4 +1,4 @@
-package com.educouch.educouchsystem.exception;
+package com.educouch.educouchsystem.util.exception;
 
 public class UsernameNotFoundException extends RuntimeException{
 

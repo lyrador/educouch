@@ -1,8 +1,8 @@
 package com.educouch.educouchsystem.exceptionHandling;
 
-import com.educouch.educouchsystem.exception.InvalidLoginCredentialsException;
-import com.educouch.educouchsystem.exception.LmsAdminNotFoundException;
-import com.educouch.educouchsystem.exception.UsernameNotFoundException;
+import com.educouch.educouchsystem.util.exception.InvalidLoginCredentialsException;
+import com.educouch.educouchsystem.util.exception.LmsAdminNotFoundException;
+import com.educouch.educouchsystem.util.exception.UsernameNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
