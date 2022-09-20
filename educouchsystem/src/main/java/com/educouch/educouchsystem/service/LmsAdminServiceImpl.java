@@ -1,15 +1,14 @@
 package com.educouch.educouchsystem.service;
 
-import com.educouch.educouchsystem.exception.InvalidLoginCredentialsException;
-import com.educouch.educouchsystem.exception.LmsAdminNotFoundException;
-import com.educouch.educouchsystem.exception.UsernameNotFoundException;
+import com.educouch.educouchsystem.util.exception.InvalidLoginCredentialsException;
+import com.educouch.educouchsystem.util.exception.LmsAdminNotFoundException;
+import com.educouch.educouchsystem.util.exception.UsernameNotFoundException;
 import com.educouch.educouchsystem.model.LmsAdmin;
 import com.educouch.educouchsystem.repository.LmsAdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class LmsAdminServiceImpl implements LmsAdminService {
@@ -51,6 +50,17 @@ public class LmsAdminServiceImpl implements LmsAdminService {
             throw new InvalidLoginCredentialsException("Invalid Username or Password!");
         }
     }
+
+    @Override
+    public void deleteLmsAdmin(LmsAdmin lmsAdmin) throws UsernameNotFoundException, InvalidLoginCredentialsException{
+        LmsAdmin adminToDelete = lmsAdminRepository.findByUsername(lmsAdmin.getUsername());
+        if(lmsAdmin.getPassword().equals(adminToDelete.getPassword())) {
+            lmsAdminRepository.delete(adminToDelete);
+        } else {
+            throw new InvalidLoginCredentialsException("Could not update as Lms Admin object to update has a different password");
+        }
+    }
+
     @Override
     public LmsAdmin updateLmsAdmin(LmsAdmin lmsAdmin) throws UsernameNotFoundException, InvalidLoginCredentialsException{
         LmsAdmin adminToUpdate = lmsAdminRepository.findByUsername(lmsAdmin.getUsername());
