@@ -85,14 +85,14 @@ public class DataLoader implements CommandLineRunner {
             b = folderService.saveFolder(cs1010.getCourseId(), b);
             c = folderService.saveFolder(cs1010.getCourseId(), c);
 
-            Folder childA = new Folder("Lecture Slides");
-            Folder childB = new Folder("Homework");
-            Folder childC = new Folder("In-class Activity");
-
-
-            childA = folderService.saveFolder(cs1010.getCourseId(), a.getFolderId(), childA);
-            childB = folderService.saveFolder(cs1010.getCourseId(), a.getFolderId(), childB);
-            childC = folderService.saveFolder(cs1010.getCourseId(), a.getFolderId(), childC);
+//            Folder childA = new Folder("Lecture Slides");
+//            Folder childB = new Folder("Homework");
+//            Folder childC = new Folder("In-class Activity");
+//
+//
+//            childA = folderService.saveFolder(cs1010.getCourseId(), a.getFolderId(), childA);
+//            childB = folderService.saveFolder(cs1010.getCourseId(), a.getFolderId(), childB);
+//            childC = folderService.saveFolder(cs1010.getCourseId(), a.getFolderId(), childC);
         } catch (FolderUnableToSaveException ex) {
             System.out.println("Unable to save folder during initization");
         }
