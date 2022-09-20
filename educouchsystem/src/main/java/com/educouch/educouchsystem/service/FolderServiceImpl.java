@@ -119,18 +119,34 @@ public class FolderServiceImpl implements FolderService{
     public List<Folder> getFoldersByCourseCode(String courseCode) throws FolderNotFoundException {
         Course c = courseService.getCourseByCourseCode(courseCode);
         if(c != null) {
-            List<Folder> folders = c.getFolders();
-            List<Folder> parentFolders = new ArrayList<>();
-            for (Folder f: folders) {
-                if (f.getParentFolder() == null) {
-                    parentFolders.add(f);
-                }
-            }
-
-            return parentFolders;
+            return retrieveParentFolders(c);
         } else {
             throw new FolderNotFoundException("Course cannot be found. ");
         }
+    }
+
+    public List<Folder> getFoldersByCourseId(Long courseId) throws FolderNotFoundException {
+        try {
+            Course c = courseService.getCourseById(courseId);
+            return retrieveParentFolders(c);
+
+        } catch(CourseNotFoundException ex) {
+            throw new FolderNotFoundException("Course doesn't exist.");
+        }
+
+    }
+
+    private List<Folder> retrieveParentFolders(Course c) {
+
+        List<Folder> folders = c.getFolders();
+        List<Folder> parentFolders = new ArrayList<>();
+        for (Folder f: folders) {
+            if (f.getParentFolder() == null) {
+                parentFolders.add(f);
+            }
+        }
+
+        return parentFolders;
     }
 
 
