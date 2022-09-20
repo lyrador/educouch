@@ -74,15 +74,12 @@ public class EducatorController {
 
     //need to do updateInstructor
 
-
-
     public Instructor deserializeInstructor(Instructor i) {
 
         Organisation tempOrg = i.getOrganisation();
         tempOrg.getOrganisationAdmin().setOrganisation(null);
         tempOrg.setInstructors(null);
         return i;
-
     }
 
     public Organisation deserializeOrganisation(Organisation o) {
@@ -94,7 +91,6 @@ public class EducatorController {
         o.getOrganisationAdmin().setOrganisation(null);
         return o;
     }
-
 }
 
 class OrganisationInstantiation {
