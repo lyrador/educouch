@@ -3,6 +3,8 @@ package com.educouch.educouchsystem.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class QuestionAttempt implements Serializable {
@@ -23,16 +25,19 @@ public class QuestionAttempt implements Serializable {
     @JoinColumn(nullable = false)
     private QuizAttempt quizAttempt;
 
-    @OneToOne
-    private Answer givenAnswer;
+    @OneToMany(mappedBy = "learnerQuestionAttempt", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Option> learnerOptions;
+
 
     public QuestionAttempt() {
+        this.learnerOptions = new ArrayList<>();
     }
 
-    public QuestionAttempt(Question questionAttempted, QuizAttempt quizAttempt, Answer givenAnswer) {
+    public QuestionAttempt(Question questionAttempted, QuizAttempt quizAttempt, List<Option> learnerOptions) {
+        this();
         this.questionAttempted = questionAttempted;
         this.quizAttempt = quizAttempt;
-        this.givenAnswer = givenAnswer;
+        this.learnerOptions = learnerOptions;
     }
 
     public Long getQuestionAttemptId() {
@@ -51,6 +56,14 @@ public class QuestionAttempt implements Serializable {
         this.questionAttemptScore = questionAttemptScore;
     }
 
+    public List<Option> getLearnerOptions() {
+        return learnerOptions;
+    }
+
+    public void setLearnerOptions(List<Option> learnerOptions) {
+        this.learnerOptions = learnerOptions;
+    }
+
     public Question getQuestionAttempted() {
         return questionAttempted;
     }
@@ -65,14 +78,6 @@ public class QuestionAttempt implements Serializable {
 
     public void setQuizAttempt(QuizAttempt quizAttempt) {
         this.quizAttempt = quizAttempt;
-    }
-
-    public Answer getGivenAnswer() {
-        return givenAnswer;
-    }
-
-    public void setGivenAnswer(Answer givenAnswer) {
-        this.givenAnswer = givenAnswer;
     }
 
     @Override
