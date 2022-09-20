@@ -22,4 +22,6 @@ public interface FolderService {
 
     public List<Folder> getFoldersByCourseCode(String courseCode) throws FolderNotFoundException;
 
+    public List<Folder> getFoldersByCourseId(Long courseId) throws FolderNotFoundException;
+
 }
