@@ -6,6 +6,7 @@ import com.educouch.educouchsystem.service.EducatorService;
 import com.educouch.educouchsystem.service.FolderService;
 import com.educouch.educouchsystem.service.LmsAdminService;
 import com.educouch.educouchsystem.service.OrganisationService;
+import com.educouch.educouchsystem.util.enumeration.InstructorAccessRight;
 import com.educouch.educouchsystem.util.exception.FolderUnableToSaveException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -72,16 +73,11 @@ public class DataLoader implements CommandLineRunner {
         organisationService.instantiateOrganisation(orgAdmin, org1);
 
         //create instructors
-        Instructor i1 = new Instructor("milo", "milo@gmail.com", "milo", "password");
-        Instructor i2 = new Instructor("horlicks", "horlicks@gmail.com", "horlicks", "password");
+        Instructor i1 = new Instructor("milo", "milo@gmail.com", "milo", "password", InstructorAccessRight.INSTRUCTOR);
+        Instructor i2 = new Instructor("horlicks", "horlicks@gmail.com", "horlicks", "password", InstructorAccessRight.HEADINSTRUCTOR);
 
         organisationService.addInstructor("1", i1);
         organisationService.addInstructor("1", i2);
-        List<Instructor> instructors = organisationService.findAllInstructors("1");
-        System.out.println("is instructorList empty: " + instructors.isEmpty());
-        for(Instructor i : instructors) {
-            System.out.println(i.getName());
-        }
 
 //        Folder saveFolder(Long courseId, Folder folder) throws FolderUnableToSaveException;
         try {
