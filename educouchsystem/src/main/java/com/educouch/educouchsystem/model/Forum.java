@@ -17,6 +17,10 @@ public class Forum {
     @JoinColumn(name="forum_id")
     private List<ForumDiscussion> forumDiscussions;
 
+    @ManyToOne
+    @JoinColumn(name="course_id")
+    private Course course;
+
     public Forum() {
     }
 
@@ -47,5 +51,13 @@ public class Forum {
 
     public void setForumDiscussions(List<ForumDiscussion> forumDiscussions) {
         this.forumDiscussions = forumDiscussions;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 }
