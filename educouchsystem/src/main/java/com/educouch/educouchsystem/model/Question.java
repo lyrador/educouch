@@ -5,6 +5,8 @@ import com.educouch.educouchsystem.util.enumeration.QuestionTypeEnum;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Question implements Serializable {
@@ -29,12 +31,21 @@ public class Question implements Serializable {
     @JoinColumn(nullable = false)
     private Quiz quiz;
 
-    public Question() {
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Answer> answers;
 
+    @OneToMany(mappedBy = "questionAttempted", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<QuestionAttempt> questionAttempts;
+
+    public Question() {
+        this.answers = new ArrayList<>();
+        this.questionAttempts = new ArrayList<>();
     }
 
     public Question(String questionContent, String questionHint, QuestionTypeEnum questionType, Quiz quiz) {
         this();
+        this.answers = new ArrayList<>();
+        this.questionAttempts = new ArrayList<>();
         this.questionContent = questionContent;
         this.questionHint = questionHint;
         this.questionType = questionType;
@@ -79,6 +90,22 @@ public class Question implements Serializable {
 
     public void setQuiz(Quiz quiz) {
         this.quiz = quiz;
+    }
+
+    public List<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
+    }
+
+    public List<QuestionAttempt> getQuestionAttempts() {
+        return questionAttempts;
+    }
+
+    public void setQuestionAttempts(List<QuestionAttempt> questionAttempts) {
+        this.questionAttempts = questionAttempts;
     }
 
     @Override

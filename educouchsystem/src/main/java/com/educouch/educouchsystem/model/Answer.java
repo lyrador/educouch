@@ -1,9 +1,6 @@
 package com.educouch.educouchsystem.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
@@ -19,11 +16,29 @@ public class Answer implements Serializable {
     @NotNull
     private String answerContent;
 
+    @NotNull
+    private Double maxScore;
+
+    @NotNull
+    private Boolean isCorrectAnswer;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
+    private Question question;
+
+    @OneToOne(mappedBy = "givenAnswer")
+    private QuestionAttempt questionAttempt;
+
     public Answer() {
     }
 
-    public Answer(String answerContent) {
+    public Answer(String answerContent, Double maxScore, Boolean isCorrectAnswer, Question question, QuestionAttempt questionAttempt) {
+        this();
         this.answerContent = answerContent;
+        this.maxScore = maxScore;
+        this.isCorrectAnswer = isCorrectAnswer;
+        this.question = question;
+        this.questionAttempt = questionAttempt;
     }
 
     public Long getAnswerId() {
@@ -40,6 +55,38 @@ public class Answer implements Serializable {
 
     public void setAnswerContent(String answerContent) {
         this.answerContent = answerContent;
+    }
+
+    public Double getMaxScore() {
+        return maxScore;
+    }
+
+    public void setMaxScore(Double maxScore) {
+        this.maxScore = maxScore;
+    }
+
+    public Boolean getCorrectAnswer() {
+        return isCorrectAnswer;
+    }
+
+    public void setCorrectAnswer(Boolean correctAnswer) {
+        isCorrectAnswer = correctAnswer;
+    }
+
+    public Question getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
+    }
+
+    public QuestionAttempt getQuestionAttempt() {
+        return questionAttempt;
+    }
+
+    public void setQuestionAttempt(QuestionAttempt questionAttempt) {
+        this.questionAttempt = questionAttempt;
     }
 
     @Override

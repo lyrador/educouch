@@ -1,6 +1,7 @@
 package com.educouch.educouchsystem.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
@@ -12,6 +13,9 @@ public class DocumentSubmissionAttempt implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long documentSubmissionAttemptId;
 
+    @NotNull
+    private Double obtainedScore = 0.0;
+
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private DocumentSubmission documentSubmission;
@@ -21,6 +25,7 @@ public class DocumentSubmissionAttempt implements Serializable {
     }
 
     public DocumentSubmissionAttempt(DocumentSubmission documentSubmission) {
+        this();
         this.documentSubmission = documentSubmission;
     }
 
@@ -30,6 +35,14 @@ public class DocumentSubmissionAttempt implements Serializable {
 
     public void setDocumentSubmissionAttemptId(Long documentSubmissionAttemptId) {
         this.documentSubmissionAttemptId = documentSubmissionAttemptId;
+    }
+
+    public Double getObtainedScore() {
+        return obtainedScore;
+    }
+
+    public void setObtainedScore(Double obtainedScore) {
+        this.obtainedScore = obtainedScore;
     }
 
     public DocumentSubmission getDocumentSubmission() {
