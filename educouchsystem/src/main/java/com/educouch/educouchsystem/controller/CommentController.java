@@ -10,12 +10,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/comment")
+@CrossOrigin
 public class CommentController {
 
     @Autowired
@@ -29,6 +31,7 @@ public class CommentController {
         try {
             ForumDiscussion forumDiscussion = forumDiscussionService.retrieveForumDiscussionById(forumDiscussionId);
             forumDiscussion.getComments().add(commentRequest);
+            commentRequest.setTimestamp(LocalDateTime.now());
             Comment comment = commentService.saveComment(commentRequest);
             return new ResponseEntity<>(comment, HttpStatus.OK);
         } catch (NoSuchElementException ex) {
