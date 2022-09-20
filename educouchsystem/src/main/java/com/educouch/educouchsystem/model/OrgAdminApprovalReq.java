@@ -24,12 +24,14 @@ public class OrgAdminApprovalReq {
 
     private String paymentAcc;
 
+    private ApprovalStatusEnum approvalStatusEnum;
 
 
     public OrgAdminApprovalReq() {
     }
 
     public OrgAdminApprovalReq(String adminName, String adminEmail, String adminNumber, String orgName, String orgDescription, String paymentAcc) {
+        this.approvalStatusEnum = ApprovalStatusEnum.PENDING;
         this.adminName = adminName;
         this.adminEmail = adminEmail;
         this.adminNumber = adminNumber;
@@ -93,4 +95,13 @@ public class OrgAdminApprovalReq {
     public void setPaymentAcc(String paymentAcc) {
         this.paymentAcc = paymentAcc;
     }
+
+    public ApprovalStatusEnum getApprovalStatusEnum() {
+        return approvalStatusEnum;
+    }
+
+    public void setApprovalStatusEnum(ApprovalStatusEnum approvalStatusEnum) {
+        this.approvalStatusEnum = approvalStatusEnum;
+    }
+
 }
