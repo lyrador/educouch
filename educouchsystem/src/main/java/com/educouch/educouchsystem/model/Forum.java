@@ -1,5 +1,8 @@
 package com.educouch.educouchsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -17,11 +20,10 @@ public class Forum {
     @JoinColumn(name="forum_id")
     private List<ForumDiscussion> forumDiscussions;
 
-<<<<<<< Updated upstream
     @ManyToOne
     @JoinColumn(name="course_id")
     private Course course;
-=======
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name="forumDiscussion_id")
     private List<Learner> learners;
@@ -29,7 +31,6 @@ public class Forum {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name="forumDiscussion_id")
     private List<Educator> educators;
->>>>>>> Stashed changes
 
     public Forum() {
     }
@@ -54,7 +55,6 @@ public class Forum {
         this.forumTitle = forumTitle;
     }
 
-
     public List<ForumDiscussion> getForumDiscussions() {
         return forumDiscussions;
     }
@@ -62,7 +62,7 @@ public class Forum {
     public void setForumDiscussions(List<ForumDiscussion> forumDiscussions) {
         this.forumDiscussions = forumDiscussions;
     }
-
+    @JsonIgnore
     public Course getCourse() {
         return course;
     }
