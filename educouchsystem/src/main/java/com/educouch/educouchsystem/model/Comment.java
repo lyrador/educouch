@@ -2,6 +2,7 @@ package com.educouch.educouchsystem.model;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class Comment {
@@ -17,6 +18,14 @@ public class Comment {
     /*@ManyToOne
     @JoinColumn(name="forumDiscussion_id")
     private ForumDiscussion forumDiscussion;*/
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name="forumDiscussion_id")
+    private List<Learner> learners;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name="forumDiscussion_id")
+    private List<Educator> educators;
 
     public Comment() {
     }
