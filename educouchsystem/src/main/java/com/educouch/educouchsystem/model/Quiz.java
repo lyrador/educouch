@@ -68,4 +68,5 @@ public class Quiz extends Assessment implements Serializable {
     public void setQuizAttempts(List<QuizAttempt> quizAttempts) {
         this.quizAttempts = quizAttempts;
     }
+
 }

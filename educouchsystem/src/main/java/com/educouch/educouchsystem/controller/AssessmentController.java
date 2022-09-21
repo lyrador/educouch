@@ -2,6 +2,7 @@ package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.model.Assessment;
 import com.educouch.educouchsystem.service.AssessmentService;
+import com.educouch.educouchsystem.util.exception.AssessmentNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,14 +41,18 @@ public class AssessmentController {
         try {
             Assessment existingAssessment = assessmentService.retrieveAssessmentById(assessmentId);
             return new ResponseEntity<Assessment>(existingAssessment, HttpStatus.OK);
-        } catch (NoSuchElementException ex) {
+        } catch (AssessmentNotFoundException ex) {
             return new ResponseEntity<Assessment>(HttpStatus.NOT_FOUND);
         }
     }
 
     @DeleteMapping("/assessments/{assessmentId}")
     public ResponseEntity<HttpStatus> deleteAssessment(@PathVariable("assessmentId") Long assessmentId) {
-        assessmentService.deleteAssessment(assessmentId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            assessmentService.deleteAssessment(assessmentId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (AssessmentNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

@@ -25,7 +25,11 @@ public class QuestionAttempt implements Serializable {
     @JoinColumn(nullable = false)
     private QuizAttempt quizAttempt;
 
-    @OneToMany(mappedBy = "learnerQuestionAttempt", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany
+    @JoinTable(name = "QuestionAttempt_Option", joinColumns = {
+            @JoinColumn(name = "questionAttemptId")}, inverseJoinColumns = {
+            @JoinColumn(name = "optionId")
+    })
     private List<Option> learnerOptions;
 
 
