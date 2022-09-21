@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -15,6 +16,8 @@ public class Forum {
 
     @Column(name="forumTitle", nullable = false, length = 128)
     private String forumTitle;
+
+    private LocalDateTime timestamp;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name="forum_id")
@@ -35,6 +38,11 @@ public class Forum {
     public Forum() {
     }
 
+    public Forum(String forumTitle, LocalDateTime timestamp) {
+        this.forumTitle = forumTitle;
+        this.timestamp = timestamp;
+    }
+
     public Forum(String forumTitle) {
         this.forumTitle = forumTitle;
     }
@@ -53,6 +61,14 @@ public class Forum {
 
     public void setForumTitle(String forumTitle) {
         this.forumTitle = forumTitle;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 
     public List<ForumDiscussion> getForumDiscussions() {
