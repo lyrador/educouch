@@ -1,5 +1,7 @@
 package com.educouch.educouchsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -119,7 +121,7 @@ public class Course {
     public void setCourseApprovalStatus(CourseApprovalStatusEnum courseApprovalStatus) {
         this.courseApprovalStatus = courseApprovalStatus;
     }
-
+    @JsonManagedReference
     public List<Forum> getForums() {
         return forums;
     }
@@ -127,7 +129,7 @@ public class Course {
     public void setForums(List<Forum> forums) {
         this.forums = forums;
     }
-
+    @JsonManagedReference
     public List<Folder> getFolders() {
         return folders;
     }

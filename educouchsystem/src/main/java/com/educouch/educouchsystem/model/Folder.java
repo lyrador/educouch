@@ -1,5 +1,7 @@
 package com.educouch.educouchsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -60,7 +62,7 @@ public class Folder {
     public void setFolderName(String folderName) {
         this.folderName = folderName;
     }
-
+    @JsonIgnore
     public List<Folder> getChildFolders() {
         return childFolders;
     }
@@ -85,6 +87,7 @@ public class Folder {
         this.attachments = attachments;
     }
 
+    @JsonIgnore
     public Course getCourse() {
         return course;
     }
