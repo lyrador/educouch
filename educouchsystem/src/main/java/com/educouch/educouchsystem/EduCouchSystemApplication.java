@@ -26,11 +26,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 		//initialise new entities here
 		@Override
 		public void run(String... args) throws Exception {
-			learnerRepository.save(new Learner("Alex", "SG", "alex@gmail.com", "password", "alex", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png"));
-
-
-
-
-
+//			learnerRepository.save(new Learner("Alex", "SG", "alex@gmail.com", "password", "alex", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png"));
 		}
 	}
