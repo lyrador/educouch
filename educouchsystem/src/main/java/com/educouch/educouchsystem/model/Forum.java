@@ -17,9 +17,19 @@ public class Forum {
     @JoinColumn(name="forum_id")
     private List<ForumDiscussion> forumDiscussions;
 
+<<<<<<< Updated upstream
     @ManyToOne
     @JoinColumn(name="course_id")
     private Course course;
+=======
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name="forumDiscussion_id")
+    private List<Learner> learners;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name="forumDiscussion_id")
+    private List<Educator> educators;
+>>>>>>> Stashed changes
 
     public Forum() {
     }
