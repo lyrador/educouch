@@ -2,9 +2,11 @@ package com.educouch.educouchsystem.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Entity
-public class Option {
+@Table(name="options") /* added this line to solve error creating table "option"*/
+public class Option implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -18,18 +20,13 @@ public class Option {
     @JoinColumn(nullable = false)
     private Question optionQuestion;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
-    private QuestionAttempt learnerQuestionAttempt;
-
     public Option() {
     }
 
-    public Option(String optionContent, Question optionQuestion, QuestionAttempt learnerQuestionAttempt) {
+    public Option(String optionContent, Question optionQuestion) {
         this();
         this.optionContent = optionContent;
         this.optionQuestion = optionQuestion;
-        this.learnerQuestionAttempt = learnerQuestionAttempt;
     }
 
     public Long getOptionId() {
@@ -56,13 +53,6 @@ public class Option {
         this.optionQuestion = optionQuestion;
     }
 
-    public QuestionAttempt getLearnerQuestionAttempt() {
-        return learnerQuestionAttempt;
-    }
-
-    public void setLearnerQuestionAttempt(QuestionAttempt learnerQuestionAttempt) {
-        this.learnerQuestionAttempt = learnerQuestionAttempt;
-    }
 
     @Override
     public int hashCode() {
