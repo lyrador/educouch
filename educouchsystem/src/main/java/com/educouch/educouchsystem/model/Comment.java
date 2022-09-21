@@ -11,6 +11,8 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
+    @Column(name="commentTitle", nullable = false, length = 128)
+    private String commentTitle;
     @Column(name="content", nullable = false)
     private String content;
     private LocalDateTime timestamp;
@@ -30,7 +32,8 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(String content, LocalDateTime timestamp) {
+    public Comment(String commentTitle, String content, LocalDateTime timestamp) {
+        this.commentTitle = commentTitle;
         this.content = content;
         this.timestamp = timestamp;
     }
@@ -59,7 +62,15 @@ public class Comment {
         this.timestamp = timestamp;
     }
 
-  /*public ForumDiscussion getForumDiscussion() {
+    public String getCommentTitle() {
+        return commentTitle;
+    }
+
+    public void setCommentTitle(String commentTitle) {
+        this.commentTitle = commentTitle;
+    }
+
+    /*public ForumDiscussion getForumDiscussion() {
         return forumDiscussion;
     }
 
