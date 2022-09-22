@@ -1,6 +1,8 @@
 package com.educouch.educouchsystem.service;
 
+import com.educouch.educouchsystem.model.Answer;
 import com.educouch.educouchsystem.model.Option;
+import com.educouch.educouchsystem.model.Question;
 import com.educouch.educouchsystem.model.QuestionAttempt;
 import com.educouch.educouchsystem.repository.QuestionAttemptRepository;
 import com.educouch.educouchsystem.util.exception.QuestionAttemptNotFoundException;
@@ -28,7 +30,7 @@ public class QuestionAttemptServiceImpl implements QuestionAttemptService {
     public List<Option> getSubmittedOptions(Long questionAttemptId) throws QuestionAttemptNotFoundException{
         QuestionAttempt questionAttempt = questionAttemptRepository.findById(questionAttemptId).get();
         if (questionAttempt != null) {
-            List<Option> questionAttemptOption = questionAttempt.getLearnerOption();
+            List<Option> questionAttemptOption = questionAttempt.getLearnerOptions();
             return questionAttemptOption;
         } else {
             throw new QuestionAttemptNotFoundException("QuestionAttempt Id " + questionAttemptId + " does not exist!");
@@ -56,7 +58,24 @@ public class QuestionAttemptServiceImpl implements QuestionAttemptService {
     }
 
     @Override
-    public void calculateQuestionScore(Long questionId, Long questionAttemptId) throws QuestionAttemptNotFoundException, QuestionNotFoundException {
-
+    public void calculateQuestionScore(Long questionAttemptId) throws QuestionAttemptNotFoundException, QuestionNotFoundException {
+        QuestionAttempt questionAttempt = retrieveQuestionAttemptById(questionAttemptId);
+        Question questionAttempted = questionAttempt.getQuestionAttempted();
+        if (questionAttempted != null) {
+            List<Option> learnerOptions = getSubmittedOptions(questionAttemptId);
+            List<Answer> correctAnswers = questionAttempted.getAnswers();
+            Double obtainedScore = 0.0;
+            for (Option option : learnerOptions) {
+                for (Answer ans : correctAnswers) {
+                    if (option.getOptionContent().equals(ans.getAnswerContent())) {
+                        obtainedScore += ans.getMaxScore();
+                    }
+                }
+            }
+            questionAttempt.setQuestionAttemptScore(obtainedScore);
+            questionAttemptRepository.save(questionAttempt);
+        } else {
+            throw new QuestionNotFoundException("Question does not exist for this Question Attempt!");
+        }
     }
 }
