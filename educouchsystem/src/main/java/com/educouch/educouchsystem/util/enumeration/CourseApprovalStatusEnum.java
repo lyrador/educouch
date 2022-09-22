@@ -1,4 +1,4 @@
-package com.educouch.educouchsystem.model;
+package com.educouch.educouchsystem.util.enumeration;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -10,8 +10,8 @@ public enum CourseApprovalStatusEnum {
     PENDINGAPPROVAL("Pending Approval"),
     LIVE("Live"),
     UNDERCONSTRUCTION("Under Construction"),
-    REJECTED("Rejected"),
-    APPEALED("Appealed");
+    ACCEPTED("Accepted"),
+    REJECTED("Rejected");
 
     private final String approvalStatus;
 

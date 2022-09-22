@@ -1,5 +1,6 @@
 package com.educouch.educouchsystem.model;
 
+import com.educouch.educouchsystem.util.enumeration.CourseApprovalStatusEnum;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -27,6 +28,10 @@ public class Course {
 
     @Column(name="courseMaxScore", columnDefinition = "Decimal(10,2) default '100.0'")
     private Double courseMaxScore;
+
+    @Column(name="rejectionReason")
+    private String rejectionReason;
+
     @Enumerated(EnumType.STRING)
     @Column(name="ageGroup", nullable = false)
     private AgeGroupEnum ageGroup;
@@ -138,4 +143,11 @@ public class Course {
         this.folders = folders;
     }
 
+    public String getRejectionReason() {
+        return rejectionReason;
+    }
+
+    public void setRejectionReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
+    }
 }

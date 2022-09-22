@@ -62,7 +62,7 @@ public class Folder {
     public void setFolderName(String folderName) {
         this.folderName = folderName;
     }
-    @JsonIgnore
+
     public List<Folder> getChildFolders() {
         return childFolders;
     }
