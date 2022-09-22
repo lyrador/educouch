@@ -26,13 +26,25 @@ public class ForumDiscussion {
     @JoinColumn(name="forumDiscussion_id")
     private List<Comment> comments;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name="forumDiscussion_id")
-    private List<Learner> learners;
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+//    @JoinColumn(name="forumDiscussion_id")
+//    private List<Learner> learners;
+//
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+//    @JoinColumn(name="forumDiscussion_id")
+//    private List<Educator> educators;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name="forumDiscussion_id")
-    private List<Educator> educators;
+    @OneToOne
+    @JoinColumn(name="learner_id")
+    private Learner createdByLearner;
+
+    @OneToOne
+    @JoinColumn(name="instructor_id")
+    private Instructor createdByInstructor;
+
+    @OneToOne
+    @JoinColumn(name="organisationAdmin_id")
+    private OrganisationAdmin createdByOrganisationAdmin;
 
     public ForumDiscussion() {
     }
@@ -89,6 +101,30 @@ public class ForumDiscussion {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public Learner getCreatedByLearner() {
+        return createdByLearner;
+    }
+
+    public void setCreatedByLearner(Learner createdByLearner) {
+        this.createdByLearner = createdByLearner;
+    }
+
+    public Instructor getCreatedByInstructor() {
+        return createdByInstructor;
+    }
+
+    public void setCreatedByInstructor(Instructor createdByInstructor) {
+        this.createdByInstructor = createdByInstructor;
+    }
+
+    public OrganisationAdmin getCreatedByOrganisationAdmin() {
+        return createdByOrganisationAdmin;
+    }
+
+    public void setCreatedByOrganisationAdmin(OrganisationAdmin createdByOrganisationAdmin) {
+        this.createdByOrganisationAdmin = createdByOrganisationAdmin;
     }
 }
 
