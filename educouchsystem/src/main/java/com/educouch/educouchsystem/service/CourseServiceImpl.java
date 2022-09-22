@@ -1,10 +1,9 @@
 package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.model.Course;
-import com.educouch.educouchsystem.model.Folder;
+import com.educouch.educouchsystem.util.enumeration.CourseApprovalStatusEnum;
 import com.educouch.educouchsystem.repository.CourseRepository;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
-import com.educouch.educouchsystem.util.exception.FolderNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,5 +56,43 @@ public class CourseServiceImpl implements CourseService{
         Course c = courseRepository.findCourseByCourseCode(courseCode);
         return c;
     }
+
+    @Override
+    public void submitCourseForApproval(Long courseId) throws CourseNotFoundException {
+        Course c = retrieveCourseById(courseId);
+        if(c != null) {
+            c.setCourseApprovalStatus(CourseApprovalStatusEnum.PENDINGAPPROVAL);
+            courseRepository.save(c);
+        } else {
+            throw new CourseNotFoundException("Course cannot be found.");
+        }
+
+    }
+
+    @Override
+    public void approveCourse(Long courseId) throws CourseNotFoundException {
+        Course c = retrieveCourseById(courseId);
+        if(c != null) {
+            c.setCourseApprovalStatus(CourseApprovalStatusEnum.ACCEPTED);
+            courseRepository.save(c);
+        } else {
+            throw new CourseNotFoundException("Course cannot be found.");
+        }
+    }
+
+    @Override
+    public void rejectCourse(Long courseId, String rejectionReason) throws CourseNotFoundException{
+        Course c = retrieveCourseById(courseId);
+        if (c != null) {
+            c.setCourseApprovalStatus(CourseApprovalStatusEnum.REJECTED);
+            c.setRejectionReason(rejectionReason);
+            courseRepository.save(c);
+        } else {
+            throw new CourseNotFoundException("Course cannot be found.");
+        }
+
+    }
+
+
 
 }
