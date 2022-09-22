@@ -7,4 +7,6 @@ import java.util.List;
 public interface LearnerService {
     public Learner saveLearner(Learner learner);
     public List<Learner> getAllLearners();
+
+    public Learner getLearnerById(Long learnerId);
 }

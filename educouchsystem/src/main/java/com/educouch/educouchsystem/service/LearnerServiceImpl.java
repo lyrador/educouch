@@ -24,4 +24,9 @@ public class LearnerServiceImpl implements LearnerService {
     public List<Learner> getAllLearners() {
         return learnerRepository.findAll();
     }
+
+    @Override
+    public Learner getLearnerById(Long learnerId) {
+        return learnerRepository.findById(learnerId).get();
+    }
 }
