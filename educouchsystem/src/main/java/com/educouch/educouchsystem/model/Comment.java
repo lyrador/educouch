@@ -2,6 +2,7 @@ package com.educouch.educouchsystem.model;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class Comment {
@@ -10,6 +11,8 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
+    @Column(name="commentTitle", nullable = false, length = 128)
+    private String commentTitle;
     @Column(name="content", nullable = false)
     private String content;
     private LocalDateTime timestamp;
@@ -18,10 +21,19 @@ public class Comment {
     @JoinColumn(name="forumDiscussion_id")
     private ForumDiscussion forumDiscussion;*/
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name="forumDiscussion_id")
+    private List<Learner> learners;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name="forumDiscussion_id")
+    private List<Educator> educators;
+
     public Comment() {
     }
 
-    public Comment(String content, LocalDateTime timestamp) {
+    public Comment(String commentTitle, String content, LocalDateTime timestamp) {
+        this.commentTitle = commentTitle;
         this.content = content;
         this.timestamp = timestamp;
     }
@@ -50,7 +62,15 @@ public class Comment {
         this.timestamp = timestamp;
     }
 
-  /*public ForumDiscussion getForumDiscussion() {
+    public String getCommentTitle() {
+        return commentTitle;
+    }
+
+    public void setCommentTitle(String commentTitle) {
+        this.commentTitle = commentTitle;
+    }
+
+    /*public ForumDiscussion getForumDiscussion() {
         return forumDiscussion;
     }
 

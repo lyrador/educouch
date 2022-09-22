@@ -1,5 +1,7 @@
 package com.educouch.educouchsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -8,6 +10,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+
+// hello! before you make changes in this file, I know that this file has been causing you a lot of problems with unmarshalling/
+// demarshalling :( But everything is eager, and not lazy since I need it to be, so please do not change that
+// also, do not place any json ignore here... i've spent some time to debug my previously working code
+// because ppl keep making changes here.
+// if you need help marshalling and demarshalling, please use my processFolder method in folderController instead!
 
 @Entity
 public class Folder {
@@ -22,7 +30,8 @@ public class Folder {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Folder> childFolders;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
     private Folder parentFolder;
 
@@ -85,6 +94,7 @@ public class Folder {
         this.attachments = attachments;
     }
 
+    @JsonIgnore
     public Course getCourse() {
         return course;
     }

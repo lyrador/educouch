@@ -6,14 +6,12 @@ import com.educouch.educouchsystem.service.EducatorService;
 import com.educouch.educouchsystem.service.FolderService;
 import com.educouch.educouchsystem.service.LmsAdminService;
 import com.educouch.educouchsystem.service.OrganisationService;
+import com.educouch.educouchsystem.util.enumeration.CourseApprovalStatusEnum;
 import com.educouch.educouchsystem.util.enumeration.InstructorAccessRight;
 import com.educouch.educouchsystem.util.exception.FolderUnableToSaveException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import java.util.List;
 
 @Component("loader")
 public class DataLoader implements CommandLineRunner {

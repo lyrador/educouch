@@ -1,6 +1,10 @@
 package com.educouch.educouchsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -13,6 +17,8 @@ public class Forum {
     @Column(name="forumTitle", nullable = false, length = 128)
     private String forumTitle;
 
+    private LocalDateTime timestamp;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name="forum_id")
     private List<ForumDiscussion> forumDiscussions;
@@ -21,7 +27,20 @@ public class Forum {
     @JoinColumn(name="course_id")
     private Course course;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name="forumDiscussion_id")
+    private List<Learner> learners;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name="forumDiscussion_id")
+    private List<Educator> educators;
+
     public Forum() {
+    }
+
+    public Forum(String forumTitle, LocalDateTime timestamp) {
+        this.forumTitle = forumTitle;
+        this.timestamp = timestamp;
     }
 
     public Forum(String forumTitle) {
@@ -44,6 +63,13 @@ public class Forum {
         this.forumTitle = forumTitle;
     }
 
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
 
     public List<ForumDiscussion> getForumDiscussions() {
         return forumDiscussions;
@@ -52,7 +78,7 @@ public class Forum {
     public void setForumDiscussions(List<ForumDiscussion> forumDiscussions) {
         this.forumDiscussions = forumDiscussions;
     }
-
+    @JsonIgnore
     public Course getCourse() {
         return course;
     }
