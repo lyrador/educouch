@@ -41,9 +41,9 @@ public class FolderServiceImpl implements FolderService{
     @Override
     public Folder getFolder(Long folderId) throws FolderNotFoundException{
 
-        Optional<Folder> folderOpt =  folderRepository.findById(folderId);
-        if(folderOpt.isPresent()) {
-            return folderOpt.get();
+        Folder folderOpt =  folderRepository.findById(folderId).get();
+        if(folderOpt != null) {
+            return folderOpt;
         } else {
             throw new FolderNotFoundException("Folder cannot be found");
         }
@@ -133,6 +133,18 @@ public class FolderServiceImpl implements FolderService{
         } catch(CourseNotFoundException ex) {
             throw new FolderNotFoundException("Course doesn't exist.");
         }
+
+    }
+
+    public void renameFolderByFolderId(String folderName, Long folderId) throws FolderNotFoundException {
+        Folder f = folderRepository.getReferenceById(folderId);
+        if(f != null) {
+            f.setFolderName(folderName);
+            folderRepository.save(f);
+        } else {
+            throw new FolderNotFoundException("Folder cannot be found. ");
+        }
+
 
     }
 
