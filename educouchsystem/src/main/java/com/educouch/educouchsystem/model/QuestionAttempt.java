@@ -27,7 +27,7 @@ public class QuestionAttempt implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "questionAttempt_id")
-    private List<Option> learnerOption;
+    private List<Option> learnerOptions;
 
 
     public QuestionAttempt() {
@@ -55,12 +55,12 @@ public class QuestionAttempt implements Serializable {
         this.questionAttemptScore = questionAttemptScore;
     }
 
-    public List<Option> getLearnerOption() {
-        return learnerOption;
+    public List<Option> getLearnerOptions() {
+        return learnerOptions;
     }
 
-    public void setLearnerOption(List<Option> learnerOption) {
-        this.learnerOption = learnerOption;
+    public void setLearnerOptions(List<Option> learnerOptions) {
+        this.learnerOptions = learnerOptions;
     }
 
     public Question getQuestionAttempted() {
