@@ -25,23 +25,19 @@ public class QuestionAttempt implements Serializable {
     @JoinColumn(nullable = false)
     private QuizAttempt quizAttempt;
 
-    @ManyToMany
-    @JoinTable(name = "QuestionAttempt_Option", joinColumns = {
-            @JoinColumn(name = "questionAttemptId")}, inverseJoinColumns = {
-            @JoinColumn(name = "optionId")
-    })
-    private List<Option> learnerOptions;
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
+    private Option learnerOption;
 
 
     public QuestionAttempt() {
-        this.learnerOptions = new ArrayList<>();
     }
 
-    public QuestionAttempt(Question questionAttempted, QuizAttempt quizAttempt, List<Option> learnerOptions) {
+    public QuestionAttempt(Question questionAttempted, QuizAttempt quizAttempt, Option learnerOption) {
         this();
         this.questionAttempted = questionAttempted;
         this.quizAttempt = quizAttempt;
-        this.learnerOptions = learnerOptions;
+        this.learnerOption = learnerOption;
     }
 
     public Long getQuestionAttemptId() {
@@ -60,12 +56,12 @@ public class QuestionAttempt implements Serializable {
         this.questionAttemptScore = questionAttemptScore;
     }
 
-    public List<Option> getLearnerOptions() {
-        return learnerOptions;
+    public Option getLearnerOption() {
+        return learnerOption;
     }
 
-    public void setLearnerOptions(List<Option> learnerOptions) {
-        this.learnerOptions = learnerOptions;
+    public void setLearnerOption(Option learnerOption) {
+        this.learnerOption = learnerOption;
     }
 
     public Question getQuestionAttempted() {
