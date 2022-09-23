@@ -12,4 +12,6 @@ public interface LearnerService {
     public Learner getLearnerById(Long learnerId);
 
     public Learner findLearnerByUsername(String username) throws UsernameNotFoundException;
+
+    public void deleteLearner(Long id);
 }

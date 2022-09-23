@@ -40,4 +40,9 @@ public class LearnerServiceImpl implements LearnerService {
         }
         throw new UsernameNotFoundException("Username not found");
     }
+
+    @Override
+    public void deleteLearner(Long id) {
+        learnerRepository.deleteById(id);
+    }
 }

@@ -12,4 +12,9 @@ public interface EducatorService {
     public Instructor findInstructorByUsername(String username);
     public Instructor findInstructorById(Long Id);
     public OrganisationAdmin findOrganisationAdminByUsername(String username);
+    public Instructor saveInstructor(Instructor instructor);
+
+    public void deleteOrganisationAdmin(Long id);
+
+    public void deleteInstructor(Long id);
 }

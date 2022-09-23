@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface OrganisationAdminRepository extends CrudRepository<OrganisationAdmin, Integer>{
+public interface OrganisationAdminRepository extends CrudRepository<OrganisationAdmin, Long>{
     public List<OrganisationAdmin> findAll();
 
     @Query("SELECT o FROM OrganisationAdmin o WHERE o.organisationAdminId=:Id")

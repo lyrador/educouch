@@ -51,6 +51,21 @@ public class EducatorServiceImpl implements EducatorService{
         throw new UsernameNotFoundException("Username not found");
     }
 
+    @Override
+    public Instructor saveInstructor(Instructor instructor) {
+        return instructorRepository.save(instructor);
+    }
+
+    @Override
+    public void deleteInstructor(Long id) {
+        instructorRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteOrganisationAdmin(Long id) {
+        organisationAdminRepository.deleteById(id);
+    }
+
 //    @Override
 //    public Educator saveEducator(Educator educator) {
 //
