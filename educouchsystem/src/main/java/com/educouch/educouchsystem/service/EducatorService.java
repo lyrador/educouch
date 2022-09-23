@@ -13,9 +13,13 @@ public interface EducatorService {
     public OrganisationAdmin findOrganisationAdminById(Long Id);
     public Instructor findInstructorByUsername(String username);
     public Instructor findInstructorById(Long Id);
+    public OrganisationAdmin findOrganisationAdminByUsername(String username);
+    public Instructor saveInstructor(Instructor instructor);
 
     public List<OrganisationAdmin> findAllOrgAdmin();
 
     public OrganisationAdmin updateOrganisationAdmin(OrganisationAdmin organisationAdmin);
+    public void deleteOrganisationAdmin(Long id);
 
+    public void deleteInstructor(Long id);
 }

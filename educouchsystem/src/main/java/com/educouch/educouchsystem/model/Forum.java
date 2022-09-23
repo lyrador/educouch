@@ -27,13 +27,25 @@ public class Forum {
     @JoinColumn(name="course_id")
     private Course course;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name="forumDiscussion_id")
-    private List<Learner> learners;
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+//    @JoinColumn(name="forumDiscussion_id")
+//    private List<Learner> learners;
+//
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+//    @JoinColumn(name="forumDiscussion_id")
+//    private List<Educator> educators;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name="forumDiscussion_id")
-    private List<Educator> educators;
+    @OneToOne
+    @JoinColumn(name="learner_id")
+    private Learner createdByLearner;
+
+    @OneToOne
+    @JoinColumn(name="instructor_id")
+    private Instructor createdByInstructor;
+
+    @OneToOne
+    @JoinColumn(name="organisationAdmin_id")
+    private OrganisationAdmin createdByOrganisationAdmin;
 
     public Forum() {
     }
@@ -86,4 +98,44 @@ public class Forum {
     public void setCourse(Course course) {
         this.course = course;
     }
+
+    public Learner getCreatedByLearner() {
+        return createdByLearner;
+    }
+
+    public void setCreatedByLearner(Learner createdByLearner) {
+        this.createdByLearner = createdByLearner;
+    }
+
+    public Instructor getCreatedByInstructor() {
+        return createdByInstructor;
+    }
+
+    public void setCreatedByInstructor(Instructor createdByInstructor) {
+        this.createdByInstructor = createdByInstructor;
+    }
+
+    public OrganisationAdmin getCreatedByOrganisationAdmin() {
+        return createdByOrganisationAdmin;
+    }
+
+    public void setCreatedByOrganisationAdmin(OrganisationAdmin createdByOrganisationAdmin) {
+        this.createdByOrganisationAdmin = createdByOrganisationAdmin;
+    }
+
+//    public List<Learner> getLearners() {
+//        return learners;
+//    }
+//
+//    public void setLearners(List<Learner> learners) {
+//        this.learners = learners;
+//    }
+//
+//    public List<Educator> getEducators() {
+//        return educators;
+//    }
+//
+//    public void setEducators(List<Educator> educators) {
+//        this.educators = educators;
+//    }
 }
