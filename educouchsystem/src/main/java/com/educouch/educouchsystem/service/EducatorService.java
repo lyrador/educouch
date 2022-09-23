@@ -11,6 +11,5 @@ public interface EducatorService {
     public OrganisationAdmin findOrganisationAdminById(Long Id);
     public Instructor findInstructorByUsername(String username);
     public Instructor findInstructorById(Long Id);
-
-
+    public OrganisationAdmin findOrganisationAdminByUsername(String username);
 }
