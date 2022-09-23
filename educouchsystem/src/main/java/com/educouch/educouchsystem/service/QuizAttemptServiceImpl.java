@@ -1,6 +1,6 @@
 package com.educouch.educouchsystem.service;
 
-import com.educouch.educouchsystem.model.Question;
+
 import com.educouch.educouchsystem.model.QuestionAttempt;
 import com.educouch.educouchsystem.model.QuizAttempt;
 import com.educouch.educouchsystem.repository.QuizAttemptRepository;
