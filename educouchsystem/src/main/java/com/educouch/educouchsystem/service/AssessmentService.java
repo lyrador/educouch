@@ -10,8 +10,6 @@ public interface AssessmentService {
 
     public Assessment saveAssessment(Assessment assessment);
 
-    public Assessment saveAssessment(Long courseId, Assessment assessment) throws CourseNotFoundException;
-
     public List<Assessment> getAllAssessments();
 
     public Assessment retrieveAssessmentById(Long assessmentId) throws AssessmentNotFoundException;

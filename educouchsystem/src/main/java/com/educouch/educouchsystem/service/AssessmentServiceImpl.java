@@ -25,20 +25,6 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
-    public Assessment saveAssessment(Long courseId, Assessment assessment) throws CourseNotFoundException {
-        Course course = courseService.getCourseById(courseId);
-        if (course != null) {
-            assessment.setAssessmentCourse(course);
-            course.getAssessments().add(assessment);
-            courseService.saveCourse(course);
-            saveAssessment(assessment);
-            return assessment;
-        } else {
-            throw new CourseNotFoundException("Course Id " + courseId + " does not exist!");
-        }
-    }
-
-    @Override
     public List<Assessment> getAllAssessments() {
         return assessmentRepository.findAll();
     }
