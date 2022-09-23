@@ -49,8 +49,8 @@ public class CourseController {
         for(Forum f: forums) {
             f.setForumDiscussions(null);
             f.setCourse(null);
-            f.setLearners(null);
-            f.setEducators(null);
+//            f.setLearners(null);
+//            f.setEducators(null);
         }
 
         List<Folder> childFolders = c.getFolders();
