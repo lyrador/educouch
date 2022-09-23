@@ -139,12 +139,4 @@ public class Course {
     public void setFolders(List<Folder> folders) {
         this.folders = folders;
     }
-
-    public List<Assessment> getAssessments() {
-        return assessments;
-    }
-
-    public void setAssessments(List<Assessment> assessments) {
-        this.assessments = assessments;
-    }
 }
