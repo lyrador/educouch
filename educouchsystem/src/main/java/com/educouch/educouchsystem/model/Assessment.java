@@ -45,6 +45,10 @@ public abstract class Assessment implements Serializable {
     @NotNull
     private AssessmentStatusEnum assessmentStatus = AssessmentStatusEnum.PENDING;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
+    private Course assessmentCourse;
+
     public Assessment() {
     }
 
@@ -130,6 +134,13 @@ public abstract class Assessment implements Serializable {
         this.assessmentStatus = assessmentStatus;
     }
 
+    public Course getAssessmentCourse() {
+        return assessmentCourse;
+    }
+
+    public void setAssessmentCourse(Course assessmentCourse) {
+        this.assessmentCourse = assessmentCourse;
+    }
 
     @Override
     public int hashCode() {

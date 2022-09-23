@@ -39,9 +39,13 @@ public class Course {
     @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
     private List<Folder> folders;
 
+    @OneToMany(mappedBy = "assessmentCourse", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Assessment> assessments;
+
     public Course() {
         this.folders = new ArrayList<>();
         this.forums = new ArrayList<>();
+        this.assessments = new ArrayList<>();
     }
 
     public Course(String courseCode, String courseTitle, String courseDescription, String courseTimeline,
@@ -136,4 +140,11 @@ public class Course {
         this.folders = folders;
     }
 
+    public List<Assessment> getAssessments() {
+        return assessments;
+    }
+
+    public void setAssessments(List<Assessment> assessments) {
+        this.assessments = assessments;
+    }
 }
