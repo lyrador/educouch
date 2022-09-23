@@ -113,14 +113,17 @@ public class CommentController {
                     commentDTO.setCreatedByUserId(comment.getCreatedByLearner().getLearnerId());
                     commentDTO.setCreatedByUserName(comment.getCreatedByLearner().getName());
                     commentDTO.setCreatedByUserProfilePictureURL(comment.getCreatedByLearner().getProfilePictureURL());
+                    commentDTO.setCreatedByUserType("LEARNER");
                 } else if (comment.getCreatedByInstructor() != null) {
                     commentDTO.setCreatedByUserId(comment.getCreatedByInstructor().getInstructorId());
                     commentDTO.setCreatedByUserName(comment.getCreatedByInstructor().getName());
                     commentDTO.setCreatedByUserProfilePictureURL(commentDTO.getCreatedByUserProfilePictureURL());
+                    commentDTO.setCreatedByUserType("INSTRUCTOR");
                 } else if (comment.getCreatedByOrganisationAdmin() != null) {
                     commentDTO.setCreatedByUserId(comment.getCreatedByOrganisationAdmin().getOrganisationAdminId());
                     commentDTO.setCreatedByUserName(comment.getCreatedByOrganisationAdmin().getName());
                     commentDTO.setCreatedByUserProfilePictureURL(commentDTO.getCreatedByUserProfilePictureURL());
+                    commentDTO.setCreatedByUserType("ORG_ADMIN");
                 }
                 commentDTOs.add(commentDTO);
             }

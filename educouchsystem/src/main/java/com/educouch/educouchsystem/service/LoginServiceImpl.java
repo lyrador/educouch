@@ -57,8 +57,8 @@ public class LoginServiceImpl implements LoginService {
             retrievedUser = new LoggedInUserDTO(
                     retrievedInstructor.getInstructorId(),
                     retrievedInstructor.getName(),
-                    retrievedInstructor.getEmail(),
                     null,
+                    retrievedInstructor.getEmail(),
                     retrievedInstructor.getPassword(),
                     retrievedInstructor.getUsername(),
                     retrievedInstructor.getProfilePictureURL(),
@@ -69,8 +69,8 @@ public class LoginServiceImpl implements LoginService {
             retrievedUser = new LoggedInUserDTO(
                     retrievedOrganisationAdmin.getOrganisationAdminId(),
                     retrievedOrganisationAdmin.getName(),
-                    retrievedOrganisationAdmin.getEmail(),
                     null,
+                    retrievedOrganisationAdmin.getEmail(),
                     retrievedOrganisationAdmin.getPassword(),
                     retrievedOrganisationAdmin.getUsername(),
                     retrievedOrganisationAdmin.getProfilePictureURL(),
