@@ -26,6 +26,14 @@ public class ForumDiscussion {
     @JoinColumn(name="forumDiscussion_id")
     private List<Comment> comments;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name="forumDiscussion_id")
+    private List<Learner> learners;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name="forumDiscussion_id")
+    private List<Educator> educators;
+
     public ForumDiscussion() {
     }
 

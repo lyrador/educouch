@@ -1,4 +1,6 @@
 package com.educouch.educouchsystem.model;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
@@ -18,6 +20,8 @@ public class OrganisationAdmin {
     private String username;
     private String profilePictureURL;
 
+    private Boolean isActive;
+
     @OneToOne(mappedBy = "organisationAdmin")
     private Organisation organisation;
 
@@ -25,6 +29,7 @@ public class OrganisationAdmin {
     }
 
     public OrganisationAdmin(@NotBlank(message = "Name is mandatory") String name, String email, String password, String username) {
+        this.isActive = true;
         this.name = name;
         this.email = email;
         this.password = password;
@@ -78,12 +83,20 @@ public class OrganisationAdmin {
     public void setProfilePictureURL(String profilePictureURL) {
         this.profilePictureURL = profilePictureURL;
     }
-
+    @JsonManagedReference
     public Organisation getOrganisation() {
         return organisation;
     }
 
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 }
