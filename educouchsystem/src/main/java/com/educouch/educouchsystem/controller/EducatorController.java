@@ -27,6 +27,16 @@ public class EducatorController {
     @Autowired
     private OrganisationService organisationService;
 
+    @GetMapping("/getAllOrgAdmin")
+    public ResponseEntity<List<OrganisationAdmin>> getAllOrgAdmin() {
+        return new ResponseEntity<List<OrganisationAdmin>>(educatorService.findAllOrgAdmin(), HttpStatus.OK);
+    }
+
+    @PostMapping("/updateOrgAdmin")
+    public ResponseEntity<OrganisationAdmin> updateOrgAdmin(@RequestBody OrganisationAdmin organisationAdmin) {
+        OrganisationAdmin updatedAdmin =educatorService.updateOrganisationAdmin(organisationAdmin);
+        return new ResponseEntity<OrganisationAdmin>(updatedAdmin, HttpStatus.OK);
+    }
     @PutMapping("/instantiateOrganisation")
     public ResponseEntity<Organisation> instantiateOrganisation(@RequestBody OrganisationInstantiation organisationInstantiation) {
 
