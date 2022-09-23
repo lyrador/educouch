@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/*To do relationship with OpenEnded*/
+
 @Entity
 public class QuestionAttempt implements Serializable {
     private static final long serialVersionUID = 1L;
