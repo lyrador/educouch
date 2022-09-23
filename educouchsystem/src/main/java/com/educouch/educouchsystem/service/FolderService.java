@@ -24,4 +24,6 @@ public interface FolderService {
 
     public List<Folder> getFoldersByCourseId(Long courseId) throws FolderNotFoundException;
 
+    public void renameFolderByFolderId(String folderName, Long folderId) throws FolderNotFoundException;
+
 }
