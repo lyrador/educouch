@@ -2,10 +2,13 @@ package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.model.Course;
 import com.educouch.educouchsystem.service.CourseService;
+import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
+import com.educouch.educouchsystem.webServiceModel.CourseRejectionModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +73,49 @@ public class CourseController {
         }
 
     }
+
+    @GetMapping("/courses/submitCourseForApproval/{courseId}")
+    public String submitCourseForApproval(@PathVariable("courseId") Long courseId) {
+        try {
+            courseService.submitCourseForApproval(courseId);
+
+            return "Course has been successfully submitted for approval.";
+        } catch(CourseNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Course cannot be found", ex);
+        }
+
+    }
+
+    @GetMapping("/courses/approveCourse/{courseId}")
+    public String approveCourse(@PathVariable("courseId") Long courseId) {
+        try {
+            courseService.approveCourse(courseId);
+
+            return "Course has been approved.";
+        } catch(CourseNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Course cannot be found", ex);
+        }
+
+    }
+
+    @PostMapping("/courses/rejectCourse")
+    public String rejectCourse(CourseRejectionModel courseRejectionModel) {
+        try {
+            Long courseId = courseRejectionModel.getCourseId();
+            String rejectionReason = courseRejectionModel.getRejectionReason();
+
+            courseService.rejectCourse(courseId, rejectionReason);
+
+            return "Course has been rejected.";
+        } catch(CourseNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Course cannot be found", ex);
+        }
+
+    }
+
+
+
+
 
 
 }

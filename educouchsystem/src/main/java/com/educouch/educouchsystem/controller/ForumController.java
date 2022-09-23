@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -30,6 +31,7 @@ public class ForumController {
         try {
             Course course = courseService.retrieveCourseById(courseId);
             course.getForums().add(forumRequest);
+            forumRequest.setTimestamp(LocalDateTime.now());
             Forum forum = forumService.saveForum(forumRequest);
             return new ResponseEntity<>(forum, HttpStatus.OK);
         } catch (NoSuchElementException ex) {

@@ -1,5 +1,8 @@
 package com.educouch.educouchsystem.model;
 
+import com.educouch.educouchsystem.util.enumeration.CourseApprovalStatusEnum;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,29 +14,33 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long courseId;
 
-    @Column(name="courseCode", unique = true, nullable = false, length = 10)
+    @Column(name = "courseCode", unique = true, nullable = false, length = 10)
     private String courseCode;
 
-    @Column(name="courseTitle", nullable = false)
+    @Column(name = "courseTitle", nullable = false)
     private String courseTitle;
 
-    @Column(name="courseDescription", nullable = false)
+    @Column(name = "courseDescription", nullable = false)
     private String courseDescription;
 
-    @Column(name="courseTimeline", nullable = false)
+    @Column(name = "courseTimeline", nullable = false)
     private String courseTimeline;
 
-    @Column(name="courseMaxScore", columnDefinition = "Decimal(10,2) default '100.0'")
+    @Column(name = "courseMaxScore", columnDefinition = "Decimal(10,2) default '100.0'")
     private Double courseMaxScore;
+
+    @Column(name = "rejectionReason")
+    private String rejectionReason;
+
     @Enumerated(EnumType.STRING)
-    @Column(name="ageGroup", nullable = false)
+    @Column(name = "ageGroup", nullable = false)
     private AgeGroupEnum ageGroup;
     @Enumerated(EnumType.STRING)
-    @Column(name="courseApprovalStatus")
+    @Column(name = "courseApprovalStatus")
     private CourseApprovalStatusEnum courseApprovalStatus;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name="course_id")
+    @JoinColumn(name = "course_id")
     private List<Forum> forums;
 
     @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
@@ -49,7 +56,7 @@ public class Course {
     }
 
     public Course(String courseCode, String courseTitle, String courseDescription, String courseTimeline,
-                  Double courseMaxScore, AgeGroupEnum ageGroup, CourseApprovalStatusEnum courseApprovalStatus) {
+            Double courseMaxScore, AgeGroupEnum ageGroup, CourseApprovalStatusEnum courseApprovalStatus) {
         new Course();
         this.courseCode = courseCode;
         this.courseTitle = courseTitle;
@@ -124,6 +131,7 @@ public class Course {
         this.courseApprovalStatus = courseApprovalStatus;
     }
 
+    @JsonManagedReference
     public List<Forum> getForums() {
         return forums;
     }
@@ -132,11 +140,20 @@ public class Course {
         this.forums = forums;
     }
 
+    @JsonManagedReference
     public List<Folder> getFolders() {
         return folders;
     }
 
     public void setFolders(List<Folder> folders) {
         this.folders = folders;
+    }
+
+    public String getRejectionReason() {
+        return rejectionReason;
+    }
+
+    public void setRejectionReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
     }
 }

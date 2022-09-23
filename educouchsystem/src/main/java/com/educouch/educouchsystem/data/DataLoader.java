@@ -6,14 +6,12 @@ import com.educouch.educouchsystem.service.EducatorService;
 import com.educouch.educouchsystem.service.FolderService;
 import com.educouch.educouchsystem.service.LmsAdminService;
 import com.educouch.educouchsystem.service.OrganisationService;
+import com.educouch.educouchsystem.util.enumeration.CourseApprovalStatusEnum;
 import com.educouch.educouchsystem.util.enumeration.InstructorAccessRight;
 import com.educouch.educouchsystem.util.exception.FolderUnableToSaveException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import java.util.List;
 
 @Component("loader")
 public class DataLoader implements CommandLineRunner {
@@ -85,14 +83,14 @@ public class DataLoader implements CommandLineRunner {
             b = folderService.saveFolder(cs1010.getCourseId(), b);
             c = folderService.saveFolder(cs1010.getCourseId(), c);
 
-            Folder childA = new Folder("Lecture Slides");
-            Folder childB = new Folder("Homework");
-            Folder childC = new Folder("In-class Activity");
-
-
-            childA = folderService.saveFolder(cs1010.getCourseId(), a.getFolderId(), childA);
-            childB = folderService.saveFolder(cs1010.getCourseId(), a.getFolderId(), childB);
-            childC = folderService.saveFolder(cs1010.getCourseId(), a.getFolderId(), childC);
+//            Folder childA = new Folder("Lecture Slides");
+//            Folder childB = new Folder("Homework");
+//            Folder childC = new Folder("In-class Activity");
+//
+//
+//            childA = folderService.saveFolder(cs1010.getCourseId(), a.getFolderId(), childA);
+//            childB = folderService.saveFolder(cs1010.getCourseId(), a.getFolderId(), childB);
+//            childC = folderService.saveFolder(cs1010.getCourseId(), a.getFolderId(), childC);
         } catch (FolderUnableToSaveException ex) {
             System.out.println("Unable to save folder during initization");
         }
