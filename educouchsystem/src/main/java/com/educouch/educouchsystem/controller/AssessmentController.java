@@ -1,7 +1,10 @@
 package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.model.Assessment;
+import com.educouch.educouchsystem.model.Course;
+import com.educouch.educouchsystem.model.Forum;
 import com.educouch.educouchsystem.service.AssessmentService;
+import com.educouch.educouchsystem.service.CourseService;
 import com.educouch.educouchsystem.util.exception.AssessmentNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,14 +22,23 @@ public class AssessmentController {
     @Autowired
     private AssessmentService assessmentService;
 
-    @PostMapping("/assessments")
-    public String addAssessment(@RequestBody Assessment assessment) {
-        assessmentService.saveAssessment(assessment);
-        return "New assessment has been added";
+    @Autowired
+    private CourseService courseService;
+
+    @PostMapping("/courses/{courseId}/assessments")
+    public ResponseEntity<Assessment> addAssessment(@PathVariable(value="courseId") Long courseId, @RequestBody Assessment assessment) {
+        try {
+            Course course = courseService.retrieveCourseById(courseId);
+            course.getAssessments().add(assessment);
+            Assessment addedAssessment = assessmentService.saveAssessment(assessment);
+            return new ResponseEntity<>(addedAssessment, HttpStatus.OK);
+        } catch (NoSuchElementException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @GetMapping("/assessments")
-    public ResponseEntity<List<Assessment>> getAllAssessments() {
+    @GetMapping("/courses/{courseId}/assessments")
+    public ResponseEntity<List<Assessment>> getAllAssessmentsByCourseId() {
         List<Assessment> allAssessments = new ArrayList<Assessment>();
         if (!assessmentService.getAllAssessments().isEmpty()) {
             allAssessments = assessmentService.getAllAssessments();
@@ -53,6 +65,23 @@ public class AssessmentController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (AssessmentNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/assessments/{assessmentId}")
+    public ResponseEntity<Assessment> updateAssessment(@RequestBody Assessment assessment, @PathVariable("assessmentId") Long assessmentId) {
+        try {
+            Assessment toUpdateAssessment = assessmentService.retrieveAssessmentById(assessmentId);
+            toUpdateAssessment.setTitle(assessment.getTitle());
+            toUpdateAssessment.setDescription(assessment.getDescription());
+            toUpdateAssessment.setMaxScore(assessment.getMaxScore());
+            toUpdateAssessment.setStartDate(assessment.getStartDate());
+            toUpdateAssessment.setEndDate(assessment.getEndDate());
+            toUpdateAssessment.setOpen(assessment.getOpen());
+            toUpdateAssessment.setAssessmentStatus(assessment.getAssessmentStatus());
+            return new ResponseEntity<Assessment>(toUpdateAssessment, HttpStatus.OK);
+        } catch (NoSuchElementException | AssessmentNotFoundException ex) {
+            return new ResponseEntity<Assessment>(HttpStatus.NOT_FOUND);
         }
     }
 }
