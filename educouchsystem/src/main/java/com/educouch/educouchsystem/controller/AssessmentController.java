@@ -2,10 +2,13 @@ package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.model.Assessment;
 import com.educouch.educouchsystem.model.Course;
+import com.educouch.educouchsystem.model.Quiz;
 import com.educouch.educouchsystem.service.AssessmentService;
 import com.educouch.educouchsystem.service.CourseService;
+import com.educouch.educouchsystem.service.QuizService;
 import com.educouch.educouchsystem.util.exception.AssessmentNotFoundException;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
+import com.educouch.educouchsystem.util.exception.QuizNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,19 +24,19 @@ import java.util.NoSuchElementException;
 public class AssessmentController {
     @Autowired
     private AssessmentService assessmentService;
-
     @Autowired
     private CourseService courseService;
 
-    @PostMapping("/addAssessment")
-    public ResponseEntity<Assessment> addAssessment(@RequestBody Assessment assessment) {
-        Long courseId = assessment.getAssessmentCourse().getCourseId();
+    @Autowired
+    private QuizService quizService;
+
+    @PostMapping("/addNewQuiz")
+    public ResponseEntity<Quiz> addQuiz(@RequestBody Quiz quiz) {
+        Long courseId = quiz.getAssessmentCourse().getCourseId();
         try {
-            Course course = courseService.retrieveCourseById(courseId);
-            course.getAssessments().add(assessment);
-            Assessment addedAssessment = assessmentService.saveAssessment(courseId, assessment);
-            return new ResponseEntity<>(addedAssessment, HttpStatus.OK);
-        } catch (NoSuchElementException | CourseNotFoundException ex) {
+            quizService.saveQuiz(courseId, quiz);
+            return new ResponseEntity<>(quiz, HttpStatus.OK);
+        } catch (CourseNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -71,7 +74,7 @@ public class AssessmentController {
         }
     }
 
-    @DeleteMapping("/courses/{courseId}/assessments")
+    @DeleteMapping("/deleteAllAssessmentsByCourseId/{courseId}")
     public ResponseEntity<HttpStatus> deleteAllAssessmentsOfCourse(@PathVariable(value="courseId") Long courseId) {
         try {
             Course course = courseService.retrieveCourseById(courseId);
@@ -87,20 +90,13 @@ public class AssessmentController {
         }
     }
 
-    @PutMapping("/assessments/{assessmentId}")
-    public ResponseEntity<Assessment> updateAssessment(@RequestBody Assessment assessment, @PathVariable("assessmentId") Long assessmentId) {
+    @PutMapping("/updateQuiz")
+    public ResponseEntity<Quiz> updateQuiz(@RequestBody Quiz quiz) {
         try {
-            Assessment toUpdateAssessment = assessmentService.retrieveAssessmentById(assessmentId);
-            toUpdateAssessment.setTitle(assessment.getTitle());
-            toUpdateAssessment.setDescription(assessment.getDescription());
-            toUpdateAssessment.setMaxScore(assessment.getMaxScore());
-            toUpdateAssessment.setStartDate(assessment.getStartDate());
-            toUpdateAssessment.setEndDate(assessment.getEndDate());
-            toUpdateAssessment.setOpen(assessment.getOpen());
-            toUpdateAssessment.setAssessmentStatus(assessment.getAssessmentStatus());
-            return new ResponseEntity<Assessment>(toUpdateAssessment, HttpStatus.OK);
-        } catch (NoSuchElementException | AssessmentNotFoundException ex) {
-            return new ResponseEntity<Assessment>(HttpStatus.NOT_FOUND);
+            Quiz toUpdateQuiz = quizService.updateQuiz(quiz);
+            return new ResponseEntity<Quiz>(toUpdateQuiz, HttpStatus.OK);
+        } catch (QuizNotFoundException ex) {
+            return new ResponseEntity<Quiz>(HttpStatus.NOT_FOUND);
         }
     }
 }

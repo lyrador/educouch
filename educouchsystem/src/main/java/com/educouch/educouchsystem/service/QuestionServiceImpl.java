@@ -10,9 +10,10 @@ import com.educouch.educouchsystem.util.exception.EntityInstanceExistsInCollecti
 import com.educouch.educouchsystem.util.exception.OptionNotFoundException;
 import com.educouch.educouchsystem.util.exception.QuestionNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class QuestionServiceImpl implements QuestionService {
     @Autowired
     private QuestionRepository questionRepository;
