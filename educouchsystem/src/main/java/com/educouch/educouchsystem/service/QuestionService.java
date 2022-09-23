@@ -22,6 +22,8 @@ public interface QuestionService {
 
     public void deleteQuestion(Long questionId) throws QuestionNotFoundException;
 
+    public Question updateQuestion (Question question) throws QuestionNotFoundException;
+
     public void addOptionToQuestion(Long questionId, Option option) throws QuestionNotFoundException, EntityInstanceExistsInCollectionException;
 
     public void removeOptionFromQuestion(Long questionId, Option option) throws QuestionNotFoundException, OptionNotFoundException;
