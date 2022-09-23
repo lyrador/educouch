@@ -1,13 +1,17 @@
 package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.model.Attachment;
+import com.educouch.educouchsystem.model.Folder;
 import com.educouch.educouchsystem.repository.AttachmentRepository;
 import com.educouch.educouchsystem.s3.service.StorageService;
 import com.educouch.educouchsystem.util.exception.FileUnableToSaveException;
 import com.educouch.educouchsystem.util.exception.FilenameContainsInvalidPathSequenceException;
+import com.educouch.educouchsystem.util.exception.FolderNotFoundException;
+import com.educouch.educouchsystem.util.exception.FolderUnableToSaveException;
 import com.educouch.educouchsystem.util.logger.LoggingController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +27,8 @@ public class AttachmentServiceImpl implements AttachmentService{
     private AttachmentRepository attachmentRepository;
 
     private StorageService storageService;
+    @Autowired
+    private FolderService folderService;
 
     public AttachmentServiceImpl(AttachmentRepository attachmentRepository, StorageService storageService) {
         this.attachmentRepository = attachmentRepository;
@@ -63,5 +69,31 @@ public class AttachmentServiceImpl implements AttachmentService{
         storageService.deleteFile(attachment.getFileStorageName());
         attachmentRepository.deleteById(attachmentId);
         return "Successfully deleted attachmentId: " + attachmentId + " from repository";
+    }
+    // attachment alr persisted
+    @Override
+    public void uploadFileToFolder(Attachment attachment, Long folderId) throws FolderNotFoundException,
+            FolderUnableToSaveException {
+        Folder f = folderService.getFolder(folderId);
+        f.getAttachments().add(attachment);
+        folderService.saveFolder(f);
+    }
+
+    @Override
+    public void rename(Long attachmentId, String fileName) throws FileNotFoundException {
+        Attachment attachment = getAttachment(attachmentId);
+        attachment.setFileOriginalName(fileName);
+        attachmentRepository.save(attachment);
+    }
+
+    @Override
+    public void deleteAttachmentFromFolder(Long attachmentId, Long folderId) throws FolderNotFoundException,
+            FileNotFoundException, FolderUnableToSaveException {
+        Attachment attachment = getAttachment(attachmentId);
+        Folder f = folderService.getFolder(folderId);
+        f.getAttachments().remove(attachment);
+        folderService.saveFolder(f);
+        this.deleteAttachment(attachmentId);
+
     }
 }
