@@ -156,4 +156,12 @@ public class Course {
     public void setRejectionReason(String rejectionReason) {
         this.rejectionReason = rejectionReason;
     }
+
+    public List<Assessment> getAssessments() {
+        return assessments;
+    }
+
+    public void setAssessments(List<Assessment> assessments) {
+        this.assessments = assessments;
+    }
 }
