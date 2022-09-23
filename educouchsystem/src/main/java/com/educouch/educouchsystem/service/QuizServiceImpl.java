@@ -108,7 +108,7 @@ public class QuizServiceImpl implements QuizService{
             quizRepository.save(quizToUpdate);
             return quizToUpdate;
         } else {
-            throw new QuizNotFoundException("Quiz does not exist!");
+            throw new QuizNotFoundException("Quiz to be updated does not exist!");
         }
     }
 
