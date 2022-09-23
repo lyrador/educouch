@@ -34,6 +34,11 @@ public class OrgAdminApprovalReqServiceImpl implements OrgAdminApprovalReqServic
         return orgAdminApprovalReqRepository.findAllPending();
     }
 
+    public OrgAdminApprovalReq getPendingOrgAdminApprovalReqById(String Id) {
+        return orgAdminApprovalReqRepository.findPending(Long.valueOf(Id));
+    }
+
+
     @Override
     public List<OrgAdminApprovalReq> getRejectedOrgAdminApprovalReq() {
         return orgAdminApprovalReqRepository.findAllRejected();
