@@ -6,6 +6,7 @@ public class CourseRejectionModel {
 
     public CourseRejectionModel(Long courseId, String rejectionReason) {
         this.courseId = courseId;
+        this.rejectionReason = rejectionReason;
     }
 
     public Long getCourseId() {
