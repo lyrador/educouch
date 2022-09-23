@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 
-public interface InstructorRepository extends JpaRepository<Instructor, Integer> {
+public interface InstructorRepository extends JpaRepository<Instructor, Long> {
 
     public List<Instructor> findAll();
 
