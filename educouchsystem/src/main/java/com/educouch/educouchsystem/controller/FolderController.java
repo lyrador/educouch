@@ -141,20 +141,7 @@ public class FolderController {
         }
     }
 
-    private Course processCourse(Course c) {
-        List<Forum> forums = c.getForums();
-        for(Forum f: forums) {
-            f.setForumDiscussions(null);
-            f.setCourse(null);
-        }
 
-        List<Folder> childFolders = c.getFolders();
-        for(Folder f: childFolders) {
-            processFolder(f);
-        }
-
-        return c;
-    }
 
     @GetMapping("/renameFolderByFolderId")
     @ResponseBody
