@@ -11,6 +11,9 @@ public interface OrgAdminApprovalReqRepository extends CrudRepository<OrgAdminAp
     @Query("SELECT admin FROM OrgAdminApprovalReq admin WHERE admin.approvalStatusEnum = 0")
     public List<OrgAdminApprovalReq> findAllPending();
 
+    @Query("SELECT admin FROM OrgAdminApprovalReq admin WHERE admin.orgAdminApprovalId=:approvalId")
+    public OrgAdminApprovalReq findPending(Long approvalId);
+
     @Query("SELECT admin FROM OrgAdminApprovalReq admin WHERE admin.approvalStatusEnum = 1")
     public List<OrgAdminApprovalReq> findAllAccepted();
 
