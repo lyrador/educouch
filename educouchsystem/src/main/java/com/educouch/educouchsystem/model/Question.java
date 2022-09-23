@@ -23,6 +23,9 @@ public class Question implements Serializable {
     @NotNull
     private String questionHint;
 
+    @NotNull
+    private Double questionMaxScore;
+
     @Enumerated(EnumType.STRING)
     @NotNull
     private QuestionTypeEnum questionType;
@@ -31,28 +34,25 @@ public class Question implements Serializable {
     @JoinColumn(nullable = false)
     private Quiz quiz;
 
-    @OneToMany(mappedBy = "answerQuestion", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Answer> answers;
-
     @OneToMany(mappedBy = "optionQuestion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Option> options;
 
     @OneToMany(mappedBy = "questionAttempted", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuestionAttempt> questionAttempts;
 
+    @OneToOne
+    private OpenEnded openEnded;
+
     public Question() {
-        this.answers = new ArrayList<>();
         this.options = new ArrayList<>();
         this.questionAttempts = new ArrayList<>();
     }
 
-    public Question(String questionContent, String questionHint, QuestionTypeEnum questionType, Quiz quiz) {
+    public Question(String questionContent, String questionHint, Double questionMaxScore, QuestionTypeEnum questionType, Quiz quiz) {
         this();
-        this.answers = new ArrayList<>();
-        this.options = new ArrayList<>();
-        this.questionAttempts = new ArrayList<>();
         this.questionContent = questionContent;
         this.questionHint = questionHint;
+        this.questionMaxScore = questionMaxScore;
         this.questionType = questionType;
         this.quiz = quiz;
     }
@@ -81,6 +81,14 @@ public class Question implements Serializable {
         this.questionHint = questionHint;
     }
 
+    public Double getQuestionMaxScore() {
+        return questionMaxScore;
+    }
+
+    public void setQuestionMaxScore(Double questionMaxScore) {
+        this.questionMaxScore = questionMaxScore;
+    }
+
     public QuestionTypeEnum getQuestionType() {
         return questionType;
     }
@@ -97,12 +105,12 @@ public class Question implements Serializable {
         this.quiz = quiz;
     }
 
-    public List<Answer> getAnswers() {
-        return answers;
+    public OpenEnded getOpenEnded() {
+        return openEnded;
     }
 
-    public void setAnswers(List<Answer> answers) {
-        this.answers = answers;
+    public void setOpenEnded(OpenEnded openEnded) {
+        this.openEnded = openEnded;
     }
 
     public List<Option> getOptions() {

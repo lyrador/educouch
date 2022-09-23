@@ -20,6 +20,9 @@ public class Option implements Serializable {
     @JoinColumn(nullable = false)
     private Question optionQuestion;
 
+    @NotNull
+    private Boolean isCorrect = Boolean.FALSE;
+
     public Option() {
     }
 
@@ -53,6 +56,13 @@ public class Option implements Serializable {
         this.optionQuestion = optionQuestion;
     }
 
+    public Boolean getCorrect() {
+        return isCorrect;
+    }
+
+    public void setCorrect(Boolean correct) {
+        isCorrect = correct;
+    }
 
     @Override
     public int hashCode() {

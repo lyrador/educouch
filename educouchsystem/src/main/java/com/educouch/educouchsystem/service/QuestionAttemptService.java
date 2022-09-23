@@ -19,6 +19,6 @@ public interface QuestionAttemptService {
 
     public void deleteQuestionAttempt(Long questionAttemptId) throws QuestionAttemptNotFoundException;
 
-    public void calculateQuestionScore(Long questionAttemptId) throws QuestionAttemptNotFoundException, QuestionNotFoundException;
+    /*public void calculateQuestionScore(Long questionAttemptId) throws QuestionAttemptNotFoundException, QuestionNotFoundException;*/
 
 }

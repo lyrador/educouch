@@ -1,19 +1,16 @@
 package com.educouch.educouchsystem.service;
 
 
-import com.educouch.educouchsystem.model.Answer;
 import com.educouch.educouchsystem.model.Option;
 import com.educouch.educouchsystem.model.Question;
 import com.educouch.educouchsystem.model.QuestionAttempt;
 import com.educouch.educouchsystem.repository.OptionRepository;
 import com.educouch.educouchsystem.repository.QuestionRepository;
-import com.educouch.educouchsystem.util.exception.AnswerNotFoundException;
 import com.educouch.educouchsystem.util.exception.EntityInstanceExistsInCollectionException;
 import com.educouch.educouchsystem.util.exception.OptionNotFoundException;
 import com.educouch.educouchsystem.util.exception.QuestionNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionServiceImpl implements QuestionService {
@@ -99,32 +96,6 @@ public class QuestionServiceImpl implements QuestionService {
             saveQuestion(questionToEdit);
         } else {
             throw new OptionNotFoundException("Option does not exist in question!");
-        }
-    }
-
-    @Override
-    public void addAnswerToQuestion(Long questionId, Answer answer) throws QuestionNotFoundException, EntityInstanceExistsInCollectionException {
-        Question questionToEdit = retrieveQuestionById(questionId);
-        List<Answer> questionAnswers = questionToEdit.getAnswers();
-        if (!questionAnswers.contains(answer)) {
-            questionAnswers.add(answer);
-            questionToEdit.setAnswers(questionAnswers);
-            saveQuestion(questionToEdit);
-        } else {
-            throw new EntityInstanceExistsInCollectionException("Answer already exists in question!");
-        }
-    }
-
-    @Override
-    public void removeAnswerFromQuestion(Long questionId, Answer answer) throws QuestionNotFoundException, AnswerNotFoundException {
-        Question questionToEdit = retrieveQuestionById(questionId);
-        List<Answer> questionAnswers = questionToEdit.getAnswers();
-        if (questionAnswers.contains(answer)) {
-            questionAnswers.remove(answer);
-            questionToEdit.setAnswers(questionAnswers);
-            saveQuestion(questionToEdit);
-        } else {
-            throw new AnswerNotFoundException("Answer does not exist in question!");
         }
     }
 }

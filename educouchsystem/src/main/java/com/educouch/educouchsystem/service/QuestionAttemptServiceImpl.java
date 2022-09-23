@@ -1,6 +1,5 @@
 package com.educouch.educouchsystem.service;
 
-import com.educouch.educouchsystem.model.Answer;
 import com.educouch.educouchsystem.model.Option;
 import com.educouch.educouchsystem.model.Question;
 import com.educouch.educouchsystem.model.QuestionAttempt;
@@ -57,6 +56,7 @@ public class QuestionAttemptServiceImpl implements QuestionAttemptService {
         }
     }
 
+    /*
     @Override
     public void calculateQuestionScore(Long questionAttemptId) throws QuestionAttemptNotFoundException, QuestionNotFoundException {
         QuestionAttempt questionAttempt = retrieveQuestionAttemptById(questionAttemptId);
@@ -78,4 +78,5 @@ public class QuestionAttemptServiceImpl implements QuestionAttemptService {
             throw new QuestionNotFoundException("Question does not exist for this Question Attempt!");
         }
     }
+    */
 }
