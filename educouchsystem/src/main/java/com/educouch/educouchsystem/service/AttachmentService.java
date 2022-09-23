@@ -26,4 +26,5 @@ public interface AttachmentService {
 
     public void deleteAttachmentFromFolder(Long attachmentId, Long folderId) throws FolderNotFoundException,
             FileNotFoundException, FolderUnableToSaveException;
+
 }

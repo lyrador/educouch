@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.ws.Response;
 import java.util.List;
 
 @RestController
@@ -22,7 +23,7 @@ public class OrgAdminApprovalReqController {
         this.orgAdminApprovalReqService = orgAdminApprovalReqService;
     }
 
-    @PostMapping("/addOrgAdminApprovalReqService")
+    @PostMapping("/addOrgAdminApprovalReq")
     public ResponseEntity<OrgAdminApprovalReq> createOrgAdminApprovalReqService(@RequestBody OrgAdminApprovalReq orgAdminApprovalReq) {
         OrgAdminApprovalReq newApproval = orgAdminApprovalReqService.createOrgAdminApprovalReq(orgAdminApprovalReq);
         return ResponseEntity.status(HttpStatus.OK).body(newApproval);
@@ -31,5 +32,28 @@ public class OrgAdminApprovalReqController {
     @GetMapping("/getAll")
     public ResponseEntity<List<OrgAdminApprovalReq>> getAllOrgAdminApprovalReq() {
         return ResponseEntity.status(HttpStatus.OK).body(orgAdminApprovalReqService.getAllOrgAdminApprovalReq());
+    }
+
+    @GetMapping("/getAllPending")
+    public ResponseEntity<List<OrgAdminApprovalReq>> getAllPendingOrgAdminApprovalReq() {
+        return ResponseEntity.status(HttpStatus.OK).body(orgAdminApprovalReqService.getPendingOrgAdminApprovalReq());
+    }
+    @GetMapping("/getAllApproved")
+    public ResponseEntity<List<OrgAdminApprovalReq>> getAllApprovedOrgAdminApprovalReq() {
+        return ResponseEntity.status(HttpStatus.OK).body(orgAdminApprovalReqService.getApprovedOrgAdminApprovalReq());
+    }
+    @GetMapping("/getAllRejected")
+    public ResponseEntity<List<OrgAdminApprovalReq>> getAllRejectedOrgAdminApprovalReq() {
+        return ResponseEntity.status(HttpStatus.OK).body(orgAdminApprovalReqService.getRejectedOrgAdminApprovalReq());
+    }
+
+    @PostMapping("/approveOrgAdmin")
+    public ResponseEntity<OrgAdminApprovalReq> approveAdmin(@RequestBody OrgAdminApprovalReq orgAdminApprovalReq) {
+        return ResponseEntity.status(HttpStatus.OK).body(orgAdminApprovalReqService.approveApprovalReq(orgAdminApprovalReq));
+    }
+
+    @PostMapping("/rejectOrgAdmin")
+    public ResponseEntity<OrgAdminApprovalReq> rejectAdmin(@RequestBody OrgAdminApprovalReq orgAdminApprovalReq) {
+        return ResponseEntity.status(HttpStatus.OK).body(orgAdminApprovalReqService.rejectApprovalReq(orgAdminApprovalReq));
     }
 }
