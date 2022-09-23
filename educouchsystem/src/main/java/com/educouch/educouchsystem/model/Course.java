@@ -1,6 +1,8 @@
 package com.educouch.educouchsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,10 +21,10 @@ public class Course {
     @Column(name="courseTitle", nullable = false)
     private String courseTitle;
 
-    @Column(name="courseDescription", nullable = false)
+    @Column(name="courseDescription", nullable = false, columnDefinition = "TEXT")
     private String courseDescription;
 
-    @Column(name="courseTimeline", nullable = false)
+    @Column(name="courseTimeline", nullable = false, columnDefinition = "TEXT")
     private String courseTimeline;
 
     @Column(name="courseMaxScore", columnDefinition = "Decimal(10,2) default '100.0'")
@@ -121,7 +123,7 @@ public class Course {
     public void setCourseApprovalStatus(CourseApprovalStatusEnum courseApprovalStatus) {
         this.courseApprovalStatus = courseApprovalStatus;
     }
-    @JsonManagedReference
+    @JsonIgnore
     public List<Forum> getForums() {
         return forums;
     }
@@ -129,7 +131,7 @@ public class Course {
     public void setForums(List<Forum> forums) {
         this.forums = forums;
     }
-    @JsonManagedReference
+    @JsonIgnore
     public List<Folder> getFolders() {
         return folders;
     }
