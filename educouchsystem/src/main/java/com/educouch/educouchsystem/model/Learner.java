@@ -21,6 +21,8 @@ public class Learner {
     private String username;
     private String profilePictureURL;
 
+    private Boolean isActive;
+
     public Learner() {
     }
 
@@ -31,6 +33,7 @@ public class Learner {
         this.password = password;
         this.username = username;
         this.profilePictureURL = profilePictureURL;
+        isActive = true;
     }
 
     public Long getLearnerId() {
@@ -82,6 +85,14 @@ public class Learner {
 
     public String getProfilePictureURL() {
         return profilePictureURL;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 
     public void setProfilePictureURL(String profilePictureURL) {

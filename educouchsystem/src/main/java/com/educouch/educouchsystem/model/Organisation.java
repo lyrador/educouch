@@ -1,4 +1,7 @@
 package com.educouch.educouchsystem.model;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
@@ -43,7 +46,7 @@ public class Organisation {
     public void setOrganisationName(String organisationName) {
         this.organisationName = organisationName;
     }
-
+    @JsonBackReference
     public OrganisationAdmin getOrganisationAdmin() {
         return organisationAdmin;
     }
@@ -51,7 +54,7 @@ public class Organisation {
     public void setOrganisationAdmin(OrganisationAdmin organisationAdmin) {
         this.organisationAdmin = organisationAdmin;
     }
-
+    @JsonManagedReference
     public List<Instructor> getInstructors() {
         return instructors;
     }
