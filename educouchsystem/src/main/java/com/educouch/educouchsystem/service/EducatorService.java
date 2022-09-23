@@ -3,6 +3,8 @@ package com.educouch.educouchsystem.service;
 import com.educouch.educouchsystem.model.Instructor;
 import com.educouch.educouchsystem.model.OrganisationAdmin;
 
+import java.util.List;
+
 
 public interface EducatorService {
 //    public Educator saveEducator(Educator educator);
@@ -12,5 +14,8 @@ public interface EducatorService {
     public Instructor findInstructorByUsername(String username);
     public Instructor findInstructorById(Long Id);
 
+    public List<OrganisationAdmin> findAllOrgAdmin();
+
+    public OrganisationAdmin updateOrganisationAdmin(OrganisationAdmin organisationAdmin);
 
 }

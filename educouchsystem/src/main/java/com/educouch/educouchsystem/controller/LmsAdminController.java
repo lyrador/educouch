@@ -43,4 +43,11 @@ public class LmsAdminController {
         return ResponseEntity.status(HttpStatus.OK).body(lmsAdminService.login(username,password));
 
     }
+
+    @PostMapping("/deleteLmsAdmin")
+    public ResponseEntity<Long> deleteLmsAdmin(@RequestBody LmsAdmin lmsAdmin) {
+        lmsAdminService.deleteLmsAdmin(lmsAdmin);
+        return ResponseEntity.status(HttpStatus.OK).body(lmsAdmin.getLmsAdminId());
+    }
+
 }
