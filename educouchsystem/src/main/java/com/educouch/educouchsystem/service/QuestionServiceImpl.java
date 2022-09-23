@@ -75,6 +75,21 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    public Question updateQuestion(Question question) throws QuestionNotFoundException {
+        Question questionToUpdate = questionRepository.findById(question.getQuestionId()).get();
+        if (questionToUpdate.getQuestionId().equals(question.getQuestionId())) {
+            questionToUpdate.setQuestionContent(question.getQuestionContent());
+            questionToUpdate.setQuestionHint(question.getQuestionHint());
+            questionToUpdate.setQuestionMaxScore(question.getQuestionMaxScore());
+            questionToUpdate.setQuestionType(question.getQuestionType());
+            questionRepository.save(questionToUpdate);
+            return questionToUpdate;
+        } else {
+            throw new QuestionNotFoundException("Question to be updated does not exist!");
+        }
+    }
+
+    @Override
     public void addOptionToQuestion(Long questionId, Option option) throws QuestionNotFoundException, EntityInstanceExistsInCollectionException {
         Question questionToEdit = retrieveQuestionById(questionId);
         List<Option> questionOptions = questionToEdit.getOptions();
