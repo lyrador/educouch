@@ -78,6 +78,17 @@ public class AttachmentController {
                 .body(resource);
     }
 
+    @GetMapping("/downloadFileFromName/{fileStorageName}")
+    public ResponseEntity<Resource> downloadFileFromName(@PathVariable String fileStorageName) throws Exception {
+        byte[] data = storageService.downloadFile(fileStorageName);
+        ByteArrayResource resource = new ByteArrayResource(data);
+        return ResponseEntity
+                .ok()
+                .contentLength(data.length)
+                .header("Content-type", "application/octet-stream")
+                .header("Content-disposition", "attachment; filename=\"" + fileStorageName + "\"")
+                .body(resource);
+    }
     @RequestMapping(value="/downloadZipFile/{listOfAttachmentIds}", method=RequestMethod.GET)
     @ResponseBody
     public void downloadZipFile(HttpServletResponse response, @PathVariable List<Long> listOfAttachmentIds) throws FileNotFoundException {
