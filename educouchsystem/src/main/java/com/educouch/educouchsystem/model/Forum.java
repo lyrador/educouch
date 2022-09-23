@@ -86,4 +86,20 @@ public class Forum {
     public void setCourse(Course course) {
         this.course = course;
     }
+
+    public List<Learner> getLearners() {
+        return learners;
+    }
+
+    public void setLearners(List<Learner> learners) {
+        this.learners = learners;
+    }
+
+    public List<Educator> getEducators() {
+        return educators;
+    }
+
+    public void setEducators(List<Educator> educators) {
+        this.educators = educators;
+    }
 }
