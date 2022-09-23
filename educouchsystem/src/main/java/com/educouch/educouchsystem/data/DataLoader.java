@@ -74,7 +74,7 @@ public class DataLoader implements CommandLineRunner {
 
         //create organisation
         Organisation org1 = new Organisation("FakeTuition");
-        OrganisationAdmin orgAdmin = new OrganisationAdmin("grinivas", "grini@gmail.com", "grinivas", "password");
+        OrganisationAdmin orgAdmin = new OrganisationAdmin("grinivas", "grini@gmail.com", "password", "grinivas");
 
         organisationService.instantiateOrganisation(orgAdmin, org1);
 

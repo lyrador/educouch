@@ -12,6 +12,8 @@ public interface OrgAdminApprovalReqService {
 
     public List<OrgAdminApprovalReq> getPendingOrgAdminApprovalReq();
 
+    public OrgAdminApprovalReq getPendingOrgAdminApprovalReqById(String Id);
+
     public List<OrgAdminApprovalReq> getRejectedOrgAdminApprovalReq();
 
     public List<OrgAdminApprovalReq> getApprovedOrgAdminApprovalReq();

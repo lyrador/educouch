@@ -1,6 +1,8 @@
 package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.model.Course;
+import com.educouch.educouchsystem.model.Folder;
+import com.educouch.educouchsystem.model.Forum;
 import com.educouch.educouchsystem.service.CourseService;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.webServiceModel.CourseRejectionModel;
@@ -32,10 +34,53 @@ public class CourseController {
         List<Course> allCourses = new ArrayList<Course>();
         if (!courseService.getAllCourses().isEmpty()) {
             allCourses = courseService.getAllCourses();
+            for(Course c: allCourses) {
+                processCourse(c);
+            }
+            return new ResponseEntity<>(allCourses, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(allCourses, HttpStatus.OK);
+
+    }
+
+    private Course processCourse(Course c) {
+        List<Forum> forums = c.getForums();
+        for(Forum f: forums) {
+            f.setForumDiscussions(null);
+            f.setCourse(null);
+//            f.setLearners(null);
+//            f.setEducators(null);
+        }
+
+        List<Folder> childFolders = c.getFolders();
+        for(Folder f: childFolders) {
+            processFolder(f);
+        }
+
+        return c;
+    }
+
+    private Folder processFolder(Folder folder) {
+        List<Folder> subFolders = folder.getChildFolders();
+//        for(Folder cf: subFolders) {
+//            cf.setParentFolder(null);
+//            cf.setAttachments(null);
+//            cf.setChildFolders(null);
+//            cf.setCourse(null);
+//        }
+        Folder parentFolder = folder.getParentFolder();
+        if(parentFolder != null) {
+            parentFolder.setChildFolders(null);
+            parentFolder.setAttachments(null);
+            parentFolder.setParentFolder(null);
+            parentFolder.setCourse(null);
+        }
+        folder.setCourse(null);
+        folder.getAttachments();
+
+        return folder;
+
     }
 
     @GetMapping("/courses/{courseId}")
@@ -99,10 +144,15 @@ public class CourseController {
     }
 
     @PostMapping("/courses/rejectCourse")
-    public String rejectCourse(CourseRejectionModel courseRejectionModel) {
+    public String rejectCourse(@RequestBody CourseRejectionModel courseRejectionModel) {
         try {
+            System.out.println("React A");
             Long courseId = courseRejectionModel.getCourseId();
+            System.out.println("Course ID is " + courseId.toString());
+            System.out.println("React b");
             String rejectionReason = courseRejectionModel.getRejectionReason();
+            System.out.println("Rejection reason is " + rejectionReason);
+            System.out.println("React c");
 
             courseService.rejectCourse(courseId, rejectionReason);
 
