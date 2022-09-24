@@ -7,6 +7,7 @@ import com.educouch.educouchsystem.service.EducatorService;
 import com.educouch.educouchsystem.service.ForumDiscussionService;
 import com.educouch.educouchsystem.service.ForumService;
 import com.educouch.educouchsystem.service.LearnerService;
+import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -72,6 +73,8 @@ public class ForumDiscussionController {
             ForumDiscussion forumDiscussion = forumDiscussionService.saveForumDiscussion(newForumDiscussion);
             return new ResponseEntity<>(forumDiscussion, HttpStatus.OK);
         } catch (NoSuchElementException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (InstructorNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
