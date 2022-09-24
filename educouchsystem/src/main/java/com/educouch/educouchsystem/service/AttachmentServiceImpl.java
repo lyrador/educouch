@@ -1,13 +1,11 @@
 package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.model.Attachment;
+import com.educouch.educouchsystem.model.FileSubmissionAttempt;
 import com.educouch.educouchsystem.model.Folder;
 import com.educouch.educouchsystem.repository.AttachmentRepository;
 import com.educouch.educouchsystem.s3.service.StorageService;
-import com.educouch.educouchsystem.util.exception.FileUnableToSaveException;
-import com.educouch.educouchsystem.util.exception.FilenameContainsInvalidPathSequenceException;
-import com.educouch.educouchsystem.util.exception.FolderNotFoundException;
-import com.educouch.educouchsystem.util.exception.FolderUnableToSaveException;
+import com.educouch.educouchsystem.util.exception.*;
 import com.educouch.educouchsystem.util.logger.LoggingController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +27,9 @@ public class AttachmentServiceImpl implements AttachmentService{
     private StorageService storageService;
     @Autowired
     private FolderService folderService;
+
+    @Autowired
+    private FileSubmissionAttemptService fileSubmissionAttemptService;
 
     public AttachmentServiceImpl(AttachmentRepository attachmentRepository, StorageService storageService) {
         this.attachmentRepository = attachmentRepository;
@@ -95,5 +96,21 @@ public class AttachmentServiceImpl implements AttachmentService{
         folderService.saveFolder(f);
         this.deleteAttachment(attachmentId);
 
+    }
+
+    @Override
+    public void uploadAttachmentToFileSubmissionAttempt(Attachment attachment, Long fileSubmissionAttemptId) throws FileSubmissionAttemptNotFoundException, FileNotFoundException {
+        FileSubmissionAttempt fileSubmissionAttempt = fileSubmissionAttemptService.retrieveFileSubmissionAttemptById(fileSubmissionAttemptId);
+        fileSubmissionAttempt.getAttachments().add(attachment);
+        fileSubmissionAttemptService.saveFileSubmissionAttempt(fileSubmissionAttempt);
+    }
+
+    @Override
+    public void removeAttachmentFromFileSubmissionAttempt(Long attachmentId, Long fileSubmissionAttemptId) throws FileSubmissionAttemptNotFoundException, FileNotFoundException {
+        Attachment attachment = getAttachment(attachmentId);
+        FileSubmissionAttempt fileSubmissionAttempt = fileSubmissionAttemptService.retrieveFileSubmissionAttemptById(fileSubmissionAttemptId);
+        fileSubmissionAttempt.getAttachments().remove(attachment);
+        fileSubmissionAttemptService.saveFileSubmissionAttempt(fileSubmissionAttempt);
+        this.deleteAttachment(attachmentId);
     }
 }

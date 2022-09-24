@@ -4,10 +4,7 @@ import com.educouch.educouchsystem.model.Attachment;
 import com.educouch.educouchsystem.model.ResponseData;
 import com.educouch.educouchsystem.s3.service.StorageService;
 import com.educouch.educouchsystem.service.AttachmentService;
-import com.educouch.educouchsystem.util.exception.FileUnableToSaveException;
-import com.educouch.educouchsystem.util.exception.FilenameContainsInvalidPathSequenceException;
-import com.educouch.educouchsystem.util.exception.FolderNotFoundException;
-import com.educouch.educouchsystem.util.exception.FolderUnableToSaveException;
+import com.educouch.educouchsystem.util.exception.*;
 import com.educouch.educouchsystem.util.logger.LoggingController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -135,6 +132,33 @@ public class AttachmentController {
             attachmentService.deleteAttachmentFromFolder(attachmentId, folderId);
         } catch (FolderNotFoundException | FileNotFoundException | FolderUnableToSaveException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File cannot be deleted.", e);
+        }
+    }
+
+    @PostMapping("/uploadAttachmentToFileSubmissionAttempt")
+    public ResponseData uploadFileSubmissionAttemptAttachment(@RequestParam("file") MultipartFile file, @RequestParam Long fileSubmissionAttemptId) {
+        Attachment attachment = null;
+        try {
+            attachment = attachmentService.saveAttachment(file);
+            attachmentService.uploadAttachmentToFileSubmissionAttempt(attachment, fileSubmissionAttemptId);
+            return new ResponseData(attachment.getAttachmentId(),
+                    attachment.getFileOriginalName(),
+                    attachment.getFileStorageName(),
+                    attachment.getFileURL(),
+                    file.getContentType(),
+                    file.getSize());
+        } catch (FilenameContainsInvalidPathSequenceException | FileUnableToSaveException |
+                 FileSubmissionAttemptNotFoundException | FileNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @DeleteMapping("/deleteFileSubmissionAttemptAttachment")
+    public void deleteAttachmentFromFileSubmissionAttempt(@RequestParam Long attachmentId, @RequestParam Long fileSubmissionAttemptId) {
+        try {
+            attachmentService.removeAttachmentFromFileSubmissionAttempt(attachmentId, fileSubmissionAttemptId);
+        } catch (FileSubmissionAttemptNotFoundException | FileNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File cannot be deleted.", ex);
         }
     }
 }
