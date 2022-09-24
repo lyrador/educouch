@@ -2,12 +2,15 @@ package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.model.Assessment;
 import com.educouch.educouchsystem.model.Course;
+import com.educouch.educouchsystem.model.FileSubmission;
 import com.educouch.educouchsystem.model.Quiz;
 import com.educouch.educouchsystem.service.AssessmentService;
 import com.educouch.educouchsystem.service.CourseService;
+import com.educouch.educouchsystem.service.FileSubmissionService;
 import com.educouch.educouchsystem.service.QuizService;
 import com.educouch.educouchsystem.util.exception.AssessmentNotFoundException;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
+import com.educouch.educouchsystem.util.exception.FileSubmissionNotFoundException;
 import com.educouch.educouchsystem.util.exception.QuizNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,52 +31,60 @@ public class AssessmentController {
     private CourseService courseService;
 
     @Autowired
-    private QuizService quizService;
+    private FileSubmissionService fileSubmissionService;
 
-    @PostMapping("/addNewQuiz/{courseId}")
-    public ResponseEntity<Quiz> addQuiz(@RequestBody Quiz quiz, @PathVariable(value="courseId") Long courseId) {
-        Course course = courseService.retrieveCourseById(courseId);
+//    @Autowired
+//    private QuizService quizService;
+//
+//    @PostMapping("/addNewQuiz/{courseId}")
+//    public ResponseEntity<Quiz> addQuiz(@RequestBody Quiz quiz, @PathVariable(value="courseId") Long courseId) {
+//        try {
+//            Course course = courseService.retrieveCourseById(courseId);
+//            quizService.saveQuiz(courseId, quiz);
+//            return new ResponseEntity<>(quiz, HttpStatus.OK);
+//        } catch (CourseNotFoundException ex) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
+
+    @PostMapping("/addNewFileSubmission/{courseId}")
+    public ResponseEntity<FileSubmission> addFileSubmission(@RequestBody FileSubmission fileSubmission, @PathVariable(value="courseId") Long courseId) {
         try {
-            List<Assessment> assessments = new ArrayList<>();
-            assessments.add(quiz);
-            course.setAssessments(assessments);
-            courseService.saveCourse(course);
-            quizService.saveQuiz(courseId, quiz);
-            return new ResponseEntity<>(quiz, HttpStatus.OK);
+            Course course = courseService.retrieveCourseById(courseId);
+            fileSubmissionService.saveFileSubmission(courseId, fileSubmission);
+            return new ResponseEntity<>(fileSubmission, HttpStatus.OK);
         } catch (CourseNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/getAllAssessmentsByCourseId/{courseId}")
-    public ResponseEntity<List<Assessment>> getAllAssessmentsByCourseId (@PathVariable(value="courseId") Long courseId) {
+    @GetMapping("/getAllFileSubmissionsByCourseId/{courseId}")
+    public ResponseEntity<List<FileSubmission>> getAllFileSubmissionsByCourseId (@PathVariable(value="courseId") Long courseId) {
         try {
-            Course course = courseService.retrieveCourseById(courseId);
-            List<Assessment> assessments = new ArrayList<Assessment>();
-            assessments.addAll(course.getAssessments());
-            return new ResponseEntity<>(assessments, HttpStatus.OK);
+            List<FileSubmission> fileSubmissions = fileSubmissionService.getAllFileSubmissionByCourseId(courseId);
+            return new ResponseEntity<>(fileSubmissions, HttpStatus.OK);
 
-        } catch (NoSuchElementException ex) {
+        } catch (CourseNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/getAssessmentById/{assessmentId}")
-    public ResponseEntity<Assessment> retrieveAssessmentById(@PathVariable("assessmentId") Long assessmentId) {
+    @GetMapping("/getFileSubmissionById/{fileSubmissionId}")
+    public ResponseEntity<FileSubmission> retrieveFileSubmissionById(@PathVariable("fileSubmissionId") Long fileSubmissionId) {
         try {
-            Assessment assessment = assessmentService.retrieveAssessmentById(assessmentId);
-            return new ResponseEntity<Assessment>(assessment, HttpStatus.OK);
-        } catch (AssessmentNotFoundException ex) {
-            return new ResponseEntity<Assessment>(HttpStatus.NOT_FOUND);
+            FileSubmission fileSubmission = fileSubmissionService.retrieveFileSubmissionById(fileSubmissionId);
+            return new ResponseEntity<FileSubmission>(fileSubmission, HttpStatus.OK);
+        } catch (FileSubmissionNotFoundException ex) {
+            return new ResponseEntity<FileSubmission>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @DeleteMapping("/deleteAssessmentById/{assessmentId}")
-    public ResponseEntity<HttpStatus> deleteAssessment(@PathVariable("assessmentId") Long assessmentId) {
+    @DeleteMapping("/deleteFileSubmissionById/{fileSubmissionId}")
+    public ResponseEntity<HttpStatus> deleteFileSubmissionById(@PathVariable("fileSubmissionId") Long fileSubmissionId) {
         try {
-            assessmentService.deleteAssessment(assessmentId);
+            fileSubmissionService.deleteFileSubmission(fileSubmissionId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (AssessmentNotFoundException ex) {
+        } catch (FileSubmissionNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -94,13 +105,13 @@ public class AssessmentController {
         }
     }
 
-    @PutMapping("/updateQuiz")
-    public ResponseEntity<Quiz> updateQuiz(@RequestBody Quiz quiz) {
+    @PutMapping("/updateFileSubmission")
+    public ResponseEntity<FileSubmission> updateFileSubmission(@RequestBody FileSubmission fileSubmission) {
         try {
-            Quiz toUpdateQuiz = quizService.updateQuiz(quiz);
-            return new ResponseEntity<Quiz>(toUpdateQuiz, HttpStatus.OK);
-        } catch (QuizNotFoundException ex) {
-            return new ResponseEntity<Quiz>(HttpStatus.NOT_FOUND);
+            FileSubmission fileSubmissionToUpdate = fileSubmissionService.updateFileSubmission(fileSubmission);
+            return new ResponseEntity<FileSubmission>(fileSubmissionToUpdate, HttpStatus.OK);
+        } catch (FileSubmissionNotFoundException ex) {
+            return new ResponseEntity<FileSubmission>(HttpStatus.NOT_FOUND);
         }
     }
 }

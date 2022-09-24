@@ -107,20 +107,6 @@ public class DataLoader implements CommandLineRunner {
 
 
         //create quizzes
-        Quiz newQuiz = new Quiz();
-        newQuiz.setTitle("QuizA");
-        newQuiz.setDescription("New Quiz A");
-        newQuiz.setMaxScore(20.0);
-        newQuiz.setActualScore(10.0);
-        newQuiz.setStartDate(new Date());
-        newQuiz.setEndDate(new Date());
-        newQuiz.setAutoRelease(Boolean.FALSE);
-        newQuiz.setHasTimeLimit(Boolean.TRUE);
-        quizRepository.save(newQuiz);
-
-        List<Assessment> assessments = new ArrayList<>();
-        assessments.add(newQuiz);
-        cs1010.setAssessments(assessments);
 
     }
 }

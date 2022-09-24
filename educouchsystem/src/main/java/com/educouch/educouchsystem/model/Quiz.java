@@ -6,6 +6,7 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -29,12 +30,12 @@ public class Quiz extends Assessment implements Serializable {
         this.quizAttempts = new ArrayList<>();
     }
 
-    public Quiz(Boolean hasTimeLimit, Boolean isAutoRelease) {
-        super();
-        this.quizQuestions = new ArrayList<>();
-        this.quizAttempts = new ArrayList<>();
+    public Quiz(String title, String description, Double maxScore, Date startDate, Date endDate, Boolean hasTimeLimit, Boolean isAutoRelease) {
+        super(title, description, maxScore, startDate, endDate);
         this.hasTimeLimit = hasTimeLimit;
         this.isAutoRelease = isAutoRelease;
+        this.quizQuestions = new ArrayList<>();
+        this.quizAttempts = new ArrayList<>();
     }
 
     public Boolean getHasTimeLimit() {

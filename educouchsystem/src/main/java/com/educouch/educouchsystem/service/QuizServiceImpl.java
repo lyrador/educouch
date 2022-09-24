@@ -95,7 +95,7 @@ public class QuizServiceImpl implements QuizService{
     @Override
     public Quiz updateQuiz(Quiz quiz) throws QuizNotFoundException {
         Quiz quizToUpdate = quizRepository.findById(quiz.getAssessmentId()).get();
-        if (quizToUpdate.getAssessmentId().equals(quiz.getAssessmentId())) {
+        if (quizToUpdate != null && quizToUpdate.getAssessmentId().equals(quiz.getAssessmentId())) {
             quizToUpdate.setTitle(quiz.getTitle());
             quizToUpdate.setDescription(quiz.getDescription());
             quizToUpdate.setMaxScore(quiz.getMaxScore());
