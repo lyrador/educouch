@@ -5,7 +5,7 @@ import com.educouch.educouchsystem.model.Folder;
 import com.educouch.educouchsystem.model.Forum;
 import com.educouch.educouchsystem.service.CourseService;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
-import com.educouch.educouchsystem.webServiceModel.CourseRejectionModel;
+import com.educouch.educouchsystem.dto.CourseRejectionModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -137,6 +137,18 @@ public class CourseController {
             courseService.approveCourse(courseId);
 
             return "Course has been approved.";
+        } catch(CourseNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Course cannot be found", ex);
+        }
+
+    }
+
+    @GetMapping("/courses/publishCourse/{courseId}")
+    public String publishCourse(@PathVariable("courseId") Long courseId) {
+        try {
+            courseService.publishCourse(courseId);
+
+            return "Course has been published.";
         } catch(CourseNotFoundException ex) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Course cannot be found", ex);
         }

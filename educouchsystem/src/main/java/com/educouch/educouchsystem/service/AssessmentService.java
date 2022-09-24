@@ -1,6 +1,9 @@
 package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.model.Assessment;
+import com.educouch.educouchsystem.util.exception.AssessmentNotFoundException;
+import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
+
 import java.util.List;
 
 public interface AssessmentService {
@@ -9,8 +12,8 @@ public interface AssessmentService {
 
     public List<Assessment> getAllAssessments();
 
-    public Assessment retrieveAssessmentById(Long assessmentId);
+    public Assessment retrieveAssessmentById(Long assessmentId) throws AssessmentNotFoundException;
 
-    public void deleteAssessment(Long assessmentId);
+    public void deleteAssessment(Long assessmentId) throws AssessmentNotFoundException;
 
 }

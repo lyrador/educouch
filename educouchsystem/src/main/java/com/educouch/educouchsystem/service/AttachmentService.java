@@ -1,10 +1,7 @@
 package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.model.Attachment;
-import com.educouch.educouchsystem.util.exception.FileUnableToSaveException;
-import com.educouch.educouchsystem.util.exception.FilenameContainsInvalidPathSequenceException;
-import com.educouch.educouchsystem.util.exception.FolderNotFoundException;
-import com.educouch.educouchsystem.util.exception.FolderUnableToSaveException;
+import com.educouch.educouchsystem.util.exception.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
@@ -27,4 +24,9 @@ public interface AttachmentService {
     public void deleteAttachmentFromFolder(Long attachmentId, Long folderId) throws FolderNotFoundException,
             FileNotFoundException, FolderUnableToSaveException;
 
+    public void uploadAttachmentToFileSubmissionAttempt(Attachment attachment, Long fileSubmissionAttemptId) throws FileSubmissionAttemptNotFoundException,
+            FileNotFoundException;
+
+    public void removeAttachmentFromFileSubmissionAttempt(Long attachmentId, Long fileSubmissionAttemptId) throws FileSubmissionAttemptNotFoundException,
+            FileNotFoundException;
 }

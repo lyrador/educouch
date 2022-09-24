@@ -1,4 +1,4 @@
-package com.educouch.educouchsystem.webServiceModel;
+package com.educouch.educouchsystem.dto;
 
 public class CourseRejectionModel {
     Long courseId;
