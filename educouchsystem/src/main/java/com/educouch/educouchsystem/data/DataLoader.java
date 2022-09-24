@@ -11,7 +11,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Component("loader")
 public class DataLoader implements CommandLineRunner {
@@ -114,8 +116,11 @@ public class DataLoader implements CommandLineRunner {
         newQuiz.setEndDate(new Date());
         newQuiz.setAutoRelease(Boolean.FALSE);
         newQuiz.setHasTimeLimit(Boolean.TRUE);
-        newQuiz.setAssessmentCourse(cs1010);
         quizRepository.save(newQuiz);
+
+        List<Assessment> assessments = new ArrayList<>();
+        assessments.add(newQuiz);
+        cs1010.setAssessments(assessments);
 
     }
 }

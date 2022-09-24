@@ -35,7 +35,7 @@ public class QuizServiceImpl implements QuizService{
     public Quiz saveQuiz(Long courseId, Quiz quiz) throws CourseNotFoundException {
         Course course = courseService.getCourseById(courseId);
         if (course != null) {
-            quiz.setAssessmentCourse(course);
+//            quiz.setAssessmentCourse(course);
             course.getAssessments().add(quiz);
             courseService.saveCourse(course);
             quizRepository.save(quiz);

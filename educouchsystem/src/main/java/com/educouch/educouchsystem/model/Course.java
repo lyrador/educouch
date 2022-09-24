@@ -48,7 +48,7 @@ public class Course {
     @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
     private List<Folder> folders;
 
-    @OneToMany(mappedBy = "assessmentCourse", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Assessment> assessments;
 
     public Course() {
