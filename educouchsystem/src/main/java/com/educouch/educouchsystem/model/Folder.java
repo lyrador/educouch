@@ -30,7 +30,6 @@ public class Folder {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Folder> childFolders;
 
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
     private Folder parentFolder;

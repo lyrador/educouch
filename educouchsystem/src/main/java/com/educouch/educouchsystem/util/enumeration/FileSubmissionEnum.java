@@ -1,5 +1,5 @@
 package com.educouch.educouchsystem.util.enumeration;
 
-public enum DocumentSubmissionEnum {
+public enum FileSubmissionEnum {
     INDIVIDUAL, GROUP
 }
