@@ -28,7 +28,7 @@ public abstract class Assessment implements Serializable {
     private Double maxScore;
 
     @NotNull
-    private Double actualScore;
+    private Double actualScore = 0.0;
 
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull
@@ -45,15 +45,21 @@ public abstract class Assessment implements Serializable {
     @NotNull
     private AssessmentStatusEnum assessmentStatus = AssessmentStatusEnum.PENDING;
 
+//
+//    @ManyToOne(optional = false)
+//    @JoinColumn(nullable = false)
+//    private Course assessmentCourse;
+//
+//
+
     public Assessment() {
     }
 
-    public Assessment(String title, String description, Double maxScore, Double actualScore, Date startDate, Date endDate) {
+    public Assessment(String title, String description, Double maxScore, Date startDate, Date endDate) {
         this();
         this.title = title;
         this.description = description;
         this.maxScore = maxScore;
-        this.actualScore = actualScore;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -129,7 +135,14 @@ public abstract class Assessment implements Serializable {
     public void setAssessmentStatus(AssessmentStatusEnum assessmentStatus) {
         this.assessmentStatus = assessmentStatus;
     }
-
+//
+//    public Course getAssessmentCourse() {
+//        return assessmentCourse;
+//    }
+//
+//    public void setAssessmentCourse(Course assessmentCourse) {
+//        this.assessmentCourse = assessmentCourse;
+//    }
 
     @Override
     public int hashCode() {

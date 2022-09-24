@@ -52,14 +52,18 @@ public class Course {
     @JoinColumn(name = "id")
     private List<CategoryTag> categoryTags;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Assessment> assessments;
+
     public Course() {
         this.categoryTags = new ArrayList<>();
         this.folders = new ArrayList<>();
         this.forums = new ArrayList<>();
+        this.assessments = new ArrayList<>();
     }
 
     public Course(String courseCode, String courseTitle, String courseDescription, String courseTimeline,
-                  Double courseMaxScore, AgeGroupEnum ageGroup, CourseApprovalStatusEnum courseApprovalStatus) {
+            Double courseMaxScore, AgeGroupEnum ageGroup, CourseApprovalStatusEnum courseApprovalStatus) {
         new Course();
         this.courseCode = courseCode;
         this.courseTitle = courseTitle;
@@ -133,6 +137,8 @@ public class Course {
     public void setCourseApprovalStatus(CourseApprovalStatusEnum courseApprovalStatus) {
         this.courseApprovalStatus = courseApprovalStatus;
     }
+
+    @JsonManagedReference
     @JsonIgnore
     public List<Forum> getForums() {
         return forums;
@@ -141,6 +147,8 @@ public class Course {
     public void setForums(List<Forum> forums) {
         this.forums = forums;
     }
+
+    @JsonManagedReference
     @JsonIgnore
     public List<Folder> getFolders() {
         return folders;
@@ -164,5 +172,13 @@ public class Course {
 
     public void setCategoryTags(List<CategoryTag> categoryTags) {
         this.categoryTags = categoryTags;
+    }
+
+    public List<Assessment> getAssessments() {
+        return assessments;
+    }
+
+    public void setAssessments(List<Assessment> assessments) {
+        this.assessments = assessments;
     }
 }
