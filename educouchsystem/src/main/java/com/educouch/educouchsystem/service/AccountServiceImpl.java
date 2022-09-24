@@ -43,7 +43,7 @@ public class AccountServiceImpl implements AccountService {
             updatedUser = new EditAccountDTO(
                     updatedLearner.getLearnerId(),
                     updatedLearner.getName(),
-                    updatedLearner.getAddress(),
+                    null,
                     updatedLearner.getEmail(),
                     updatedLearner.getPassword(),
                     updatedLearner.getUsername(),

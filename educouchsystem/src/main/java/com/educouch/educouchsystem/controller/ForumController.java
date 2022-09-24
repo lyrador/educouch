@@ -107,12 +107,15 @@ public class ForumController {
                 if (forum.getCreatedByLearner() != null) {
                     forumDTO.setCreatedByUserId(forum.getCreatedByLearner().getLearnerId());
                     forumDTO.setCreatedByUserName(forum.getCreatedByLearner().getName());
+                    forumDTO.setCreatedByUserType("LEARNER");
                 } else if (forum.getCreatedByInstructor() != null) {
                     forumDTO.setCreatedByUserId(forum.getCreatedByInstructor().getInstructorId());
                     forumDTO.setCreatedByUserName(forum.getCreatedByInstructor().getName());
+                    forumDTO.setCreatedByUserType("INSTRUCTOR");
                 } else if (forum.getCreatedByOrganisationAdmin() != null) {
                     forumDTO.setCreatedByUserId(forum.getCreatedByOrganisationAdmin().getOrganisationAdminId());
                     forumDTO.setCreatedByUserName(forum.getCreatedByOrganisationAdmin().getName());
+                    forumDTO.setCreatedByUserType("ORG_ADMIN");
                 }
                 forumDTOs.add(forumDTO);
             }
