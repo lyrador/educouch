@@ -105,10 +105,11 @@ public class AssessmentController {
         }
     }
 
-    @PutMapping("/updateFileSubmission")
-    public ResponseEntity<FileSubmission> updateFileSubmission(@RequestBody FileSubmission fileSubmission) {
+    @PutMapping("/updateFileSubmission/{fileSubmissionId}")
+    public ResponseEntity<FileSubmission> updateFileSubmission(@RequestBody FileSubmission fileSubmission, @PathVariable("fileSubmissionId") Long fileSubmissionId) {
         try {
-            FileSubmission fileSubmissionToUpdate = fileSubmissionService.updateFileSubmission(fileSubmission);
+            FileSubmission fileSubmissionToUpdate = fileSubmissionService.retrieveFileSubmissionById(fileSubmissionId);
+            fileSubmissionService.updateFileSubmission(fileSubmissionToUpdate, fileSubmission);
             return new ResponseEntity<FileSubmission>(fileSubmissionToUpdate, HttpStatus.OK);
         } catch (FileSubmissionNotFoundException ex) {
             return new ResponseEntity<FileSubmission>(HttpStatus.NOT_FOUND);

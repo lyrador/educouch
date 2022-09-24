@@ -4,6 +4,7 @@ import com.educouch.educouchsystem.model.Assessment;
 import com.educouch.educouchsystem.model.Course;
 import com.educouch.educouchsystem.model.FileSubmission;
 import com.educouch.educouchsystem.repository.FileSubmissionRepository;
+import com.educouch.educouchsystem.util.exception.AssessmentNotFoundException;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.util.exception.FileSubmissionNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class FileSubmissionServiceImpl implements FileSubmissionService {
     @Autowired
     CourseService courseService;
 
+    @Autowired
+    AssessmentService assessmentService;
+
     @Override
     public FileSubmission saveFileSubmission(FileSubmission fileSubmission) {
         return fileSubmissionRepository.save(fileSubmission);
@@ -32,7 +36,6 @@ public class FileSubmissionServiceImpl implements FileSubmissionService {
         if (course != null) {
             course.getAssessments().add(fileSubmission);
             courseService.saveCourse(course);
-            fileSubmissionRepository.save(fileSubmission);
             return fileSubmission;
         } else {
             throw new CourseNotFoundException("Course Id " + courseId + " does not exist!");
@@ -74,17 +77,17 @@ public class FileSubmissionServiceImpl implements FileSubmissionService {
 
     @Override
     public void deleteFileSubmission(Long fileSubmissionId) throws FileSubmissionNotFoundException {
-        FileSubmission fileSubmission = fileSubmissionRepository.findById(fileSubmissionId).get();
-        if (fileSubmission != null) {
+        try {
+            FileSubmission fileSubmission = fileSubmissionRepository.findById(fileSubmissionId).get();
             fileSubmissionRepository.deleteById(fileSubmissionId);
-        } else {
+            assessmentService.deleteAssessment(fileSubmissionId);
+        } catch (AssessmentNotFoundException ex) {
             throw new FileSubmissionNotFoundException("File Submission " + fileSubmissionId + " cannot be found!");
         }
     }
 
     @Override
-    public FileSubmission updateFileSubmission(FileSubmission fileSubmission) throws FileSubmissionNotFoundException {
-        FileSubmission fileSubmissionToUpdate = fileSubmissionRepository.findById(fileSubmission.getAssessmentId()).get();
+    public FileSubmission updateFileSubmission(FileSubmission fileSubmissionToUpdate, FileSubmission fileSubmission) throws FileSubmissionNotFoundException {
         if (fileSubmissionToUpdate != null && fileSubmissionToUpdate.getAssessmentId().equals(fileSubmission.getAssessmentId())) {
             fileSubmissionToUpdate.setTitle(fileSubmission.getTitle());
             fileSubmissionToUpdate.setDescription(fileSubmission.getDescription());
