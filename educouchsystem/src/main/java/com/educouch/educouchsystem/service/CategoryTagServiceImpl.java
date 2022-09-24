@@ -111,5 +111,56 @@ public class CategoryTagServiceImpl implements CategoryTagService{
         }
     }
 
+    @Override
+    public List<CategoryTag> retrieveTagsNotInCourse(Long courseId) throws CourseNotFoundException {
+        List<CategoryTag> tagsInCourse = retrieveCategoryTagsByCourse(courseId);
+        List<CategoryTag> allTags = retrieveAllCategoryTags();
+
+        for(CategoryTag t: tagsInCourse) {
+            allTags.remove(t);
+        }
+
+        return allTags;
+    }
+
+    @Override
+    public void addTagToCourse(Long courseId, Long tagId) throws CourseNotFoundException, CategoryTagNotFoundException {
+        Course c = courseService.getCourseById(courseId);
+        if(c != null) {
+            CategoryTag cat = retrieveCategoryTagById(tagId);
+
+            List<CategoryTag> currentTags = c.getCategoryTags();
+            if(!currentTags.contains(cat)) {
+                c.getCategoryTags().add(cat);
+                courseService.saveCourse(c);
+            }
+
+        } else {
+            throw new CourseNotFoundException("Course cannot be found.");
+        }
+    }
+
+    @Override
+    public void removeTagFromCourse(Long courseId, Long tagId) throws CourseNotFoundException, CategoryTagNotFoundException {
+        Course c = courseService.getCourseById(courseId);
+        if(c != null) {
+            CategoryTag cat = retrieveCategoryTagById(tagId);
+
+            List<CategoryTag> currentTags = c.getCategoryTags();
+            if(currentTags.contains(cat)) {
+                c.getCategoryTags().remove(cat);
+                courseService.saveCourse(c);
+            }
+
+        } else {
+            throw new CourseNotFoundException("Course cannot be found.");
+        }
+    }
+
+    public Long retrieveTagIdFromName(String tagName) {
+        CategoryTag c = categoryTagRepository.findCategoryTagByName(tagName);
+        return c.getCategoryTagId();
+    }
+
 
 }

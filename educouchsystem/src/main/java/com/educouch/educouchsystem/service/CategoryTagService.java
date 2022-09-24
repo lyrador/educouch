@@ -23,4 +23,12 @@ public interface CategoryTagService{
             CourseNotFoundException;
 
     public List<CategoryTag> retrieveCategoryTagsByCourse(Long courseId) throws CourseNotFoundException;
+
+    public void addTagToCourse(Long courseId, Long tagId) throws CourseNotFoundException, CategoryTagNotFoundException;
+
+    public void removeTagFromCourse(Long courseId, Long tagId) throws CourseNotFoundException, CategoryTagNotFoundException;
+
+    public List<CategoryTag> retrieveTagsNotInCourse(Long courseId) throws CourseNotFoundException;
+
+    public Long retrieveTagIdFromName(String tagName);
 }

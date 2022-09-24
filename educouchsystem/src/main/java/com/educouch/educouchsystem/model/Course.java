@@ -48,7 +48,8 @@ public class Course {
     @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
     private List<Folder> folders;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany
+    @JoinColumn(name = "id")
     private List<CategoryTag> categoryTags;
 
     public Course() {
