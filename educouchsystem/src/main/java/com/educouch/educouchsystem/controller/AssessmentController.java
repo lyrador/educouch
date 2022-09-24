@@ -30,10 +30,14 @@ public class AssessmentController {
     @Autowired
     private QuizService quizService;
 
-    @PostMapping("/addNewQuiz")
-    public ResponseEntity<Quiz> addQuiz(@RequestBody Quiz quiz) {
-        Long courseId = quiz.getAssessmentCourse().getCourseId();
+    @PostMapping("/addNewQuiz/{courseId}")
+    public ResponseEntity<Quiz> addQuiz(@RequestBody Quiz quiz, @PathVariable(value="courseId") Long courseId) {
+        Course course = courseService.retrieveCourseById(courseId);
         try {
+            List<Assessment> assessments = new ArrayList<>();
+            assessments.add(quiz);
+            course.setAssessments(assessments);
+            courseService.saveCourse(course);
             quizService.saveQuiz(courseId, quiz);
             return new ResponseEntity<>(quiz, HttpStatus.OK);
         } catch (CourseNotFoundException ex) {
