@@ -2,16 +2,17 @@ package com.educouch.educouchsystem.data;
 
 import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.repository.*;
-import com.educouch.educouchsystem.service.EducatorService;
-import com.educouch.educouchsystem.service.FolderService;
-import com.educouch.educouchsystem.service.LmsAdminService;
-import com.educouch.educouchsystem.service.OrganisationService;
+import com.educouch.educouchsystem.service.*;
 import com.educouch.educouchsystem.util.enumeration.CourseApprovalStatusEnum;
+import com.educouch.educouchsystem.util.enumeration.FileSubmissionEnum;
 import com.educouch.educouchsystem.util.enumeration.InstructorAccessRight;
 import com.educouch.educouchsystem.util.exception.FolderUnableToSaveException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
+import java.util.List;
 
 @Component("loader")
 public class DataLoader implements CommandLineRunner {
@@ -25,6 +26,18 @@ public class DataLoader implements CommandLineRunner {
     private CourseRepository courseRepository;
 
     @Autowired
+    private AssessmentRepository assessmentRepository;
+
+    @Autowired
+    private QuizRepository quizRepository;
+
+    @Autowired
+    private FileSubmissionRepository fileSubmissionRepository;
+
+    @Autowired
+    private FileSubmissionService fileSubmissionService;
+
+    @Autowired
     private FolderService folderService;
 
     @Autowired
@@ -32,6 +45,11 @@ public class DataLoader implements CommandLineRunner {
 
     @Autowired
     private OrganisationService organisationService;
+
+    @Autowired
+    private QuizService quizService;
+
+
 
     public DataLoader(LmsAdminService lmsAdminService) {
         this.lmsAdminService = lmsAdminService;
@@ -92,9 +110,12 @@ public class DataLoader implements CommandLineRunner {
 //            childB = folderService.saveFolder(cs1010.getCourseId(), a.getFolderId(), childB);
 //            childC = folderService.saveFolder(cs1010.getCourseId(), a.getFolderId(), childC);
         } catch (FolderUnableToSaveException ex) {
-            System.out.println("Unable to save folder during initization");
+            System.out.println("Unable to save folder during initialisation");
         }
 
 
+        //create FileSubmission Assessment
+        FileSubmission newFileSubmission = new FileSubmission("Quiz A", "abcde", 20.0, new Date(), new Date(), FileSubmissionEnum.INDIVIDUAL);
+        fileSubmissionRepository.save(newFileSubmission);
     }
 }
