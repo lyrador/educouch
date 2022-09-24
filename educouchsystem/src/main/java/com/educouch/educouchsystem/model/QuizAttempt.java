@@ -26,12 +26,11 @@ public class QuizAttempt implements Serializable {
     private List<QuestionAttempt> questionAttempts;
 
     public QuizAttempt() {
-        this.questionAttempts = new ArrayList<>();
+
     }
 
     public QuizAttempt(Quiz quizAttempted) {
         this();
-        this.questionAttempts = new ArrayList<>();
         this.quizAttempted = quizAttempted;
     }
 

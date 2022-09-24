@@ -16,45 +16,49 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long courseId;
 
-    @Column(name="courseCode", unique = true, nullable = false, length = 10)
+    @Column(name = "courseCode", unique = true, nullable = false, length = 10)
     private String courseCode;
 
-    @Column(name="courseTitle", nullable = false)
+    @Column(name = "courseTitle", nullable = false)
     private String courseTitle;
 
-    @Column(name="courseDescription", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "courseDescription", nullable = false, columnDefinition = "TEXT")
     private String courseDescription;
 
-    @Column(name="courseTimeline", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "courseTimeline", nullable = false, columnDefinition = "TEXT")
     private String courseTimeline;
 
-    @Column(name="courseMaxScore", columnDefinition = "Decimal(10,2) default '100.0'")
+    @Column(name = "courseMaxScore", columnDefinition = "Decimal(10,2) default '100.0'")
     private Double courseMaxScore;
 
-    @Column(name="rejectionReason")
+    @Column(name = "rejectionReason")
     private String rejectionReason;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="ageGroup", nullable = false)
+    @Column(name = "ageGroup", nullable = false)
     private AgeGroupEnum ageGroup;
     @Enumerated(EnumType.STRING)
-    @Column(name="courseApprovalStatus")
+    @Column(name = "courseApprovalStatus")
     private CourseApprovalStatusEnum courseApprovalStatus;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name="course_id")
+    @JoinColumn(name = "course_id")
     private List<Forum> forums;
 
     @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
     private List<Folder> folders;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Assessment> assessments;
+
     public Course() {
         this.folders = new ArrayList<>();
         this.forums = new ArrayList<>();
+        this.assessments = new ArrayList<>();
     }
 
     public Course(String courseCode, String courseTitle, String courseDescription, String courseTimeline,
-                  Double courseMaxScore, AgeGroupEnum ageGroup, CourseApprovalStatusEnum courseApprovalStatus) {
+            Double courseMaxScore, AgeGroupEnum ageGroup, CourseApprovalStatusEnum courseApprovalStatus) {
         new Course();
         this.courseCode = courseCode;
         this.courseTitle = courseTitle;
@@ -128,6 +132,8 @@ public class Course {
     public void setCourseApprovalStatus(CourseApprovalStatusEnum courseApprovalStatus) {
         this.courseApprovalStatus = courseApprovalStatus;
     }
+
+    @JsonManagedReference
     @JsonIgnore
     public List<Forum> getForums() {
         return forums;
@@ -136,6 +142,8 @@ public class Course {
     public void setForums(List<Forum> forums) {
         this.forums = forums;
     }
+
+    @JsonManagedReference
     @JsonIgnore
     public List<Folder> getFolders() {
         return folders;
@@ -151,5 +159,13 @@ public class Course {
 
     public void setRejectionReason(String rejectionReason) {
         this.rejectionReason = rejectionReason;
+    }
+
+    public List<Assessment> getAssessments() {
+        return assessments;
+    }
+
+    public void setAssessments(List<Assessment> assessments) {
+        this.assessments = assessments;
     }
 }
