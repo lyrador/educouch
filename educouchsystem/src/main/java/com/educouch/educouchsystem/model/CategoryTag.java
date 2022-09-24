@@ -1,9 +1,6 @@
 package com.educouch.educouchsystem.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -14,6 +11,7 @@ public class CategoryTag {
     private Long categoryTagId;
 
     @NotNull
+    @Column(unique=true)
     private String tagName;
 
     public CategoryTag() {}
