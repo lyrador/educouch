@@ -2,6 +2,7 @@ package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.model.FileSubmission;
 import com.educouch.educouchsystem.model.FileSubmissionAttempt;
+import com.educouch.educouchsystem.repository.AssessmentRepository;
 import com.educouch.educouchsystem.repository.FileSubmissionAttemptRepository;
 import com.educouch.educouchsystem.util.exception.FileSubmissionAttemptNotFoundException;
 import com.educouch.educouchsystem.util.exception.FileSubmissionNotFoundException;
@@ -68,6 +69,7 @@ public class FileSubmissionAttemptServiceImpl implements FileSubmissionAttemptSe
         FileSubmissionAttempt fileSubmissionAttempt = fileSubmissionAttemptRepository.findById(fileSubmissionAttemptId).get();
         if (fileSubmissionAttempt != null) {
             fileSubmissionAttemptRepository.deleteById(fileSubmissionAttemptId);
+
         } else {
             throw new FileSubmissionAttemptNotFoundException("File Submission Attempt" + fileSubmissionAttemptId + " cannot be found!");
         }

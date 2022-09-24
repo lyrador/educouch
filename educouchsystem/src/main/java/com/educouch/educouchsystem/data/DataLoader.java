@@ -4,14 +4,13 @@ import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.repository.*;
 import com.educouch.educouchsystem.service.*;
 import com.educouch.educouchsystem.util.enumeration.CourseApprovalStatusEnum;
+import com.educouch.educouchsystem.util.enumeration.FileSubmissionEnum;
 import com.educouch.educouchsystem.util.enumeration.InstructorAccessRight;
 import com.educouch.educouchsystem.util.exception.FolderUnableToSaveException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,8 +27,15 @@ public class DataLoader implements CommandLineRunner {
 
     @Autowired
     private AssessmentRepository assessmentRepository;
+
     @Autowired
     private QuizRepository quizRepository;
+
+    @Autowired
+    private FileSubmissionRepository fileSubmissionRepository;
+
+    @Autowired
+    private FileSubmissionService fileSubmissionService;
 
     @Autowired
     private FolderService folderService;
@@ -42,6 +48,8 @@ public class DataLoader implements CommandLineRunner {
 
     @Autowired
     private QuizService quizService;
+
+
 
     public DataLoader(LmsAdminService lmsAdminService) {
         this.lmsAdminService = lmsAdminService;
@@ -106,7 +114,8 @@ public class DataLoader implements CommandLineRunner {
         }
 
 
-        //create quizzes
-
+        //create FileSubmission Assessment
+        FileSubmission newFileSubmission = new FileSubmission("Quiz A", "abcde", 20.0, new Date(), new Date(), FileSubmissionEnum.INDIVIDUAL);
+        fileSubmissionRepository.save(newFileSubmission);
     }
 }
