@@ -32,6 +32,8 @@ public class OrgAdminApprovalReq {
 
     private String fileStorageName;
 
+    private String rejMessage;
+
 
     public OrgAdminApprovalReq() {
     }
@@ -47,7 +49,16 @@ public class OrgAdminApprovalReq {
         this.orgDescription = orgDescription;
         this.paymentAcc = paymentAcc;
         this.fileStorageName = fileStorageName;
+        this.rejMessage = "";
 
+    }
+
+    public String getRejMessage() {
+        return rejMessage;
+    }
+
+    public void setRejMessage(String rejMessage) {
+        this.rejMessage = rejMessage;
     }
 
     public String getUsername() {
