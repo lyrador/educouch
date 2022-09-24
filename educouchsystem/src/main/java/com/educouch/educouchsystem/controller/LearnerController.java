@@ -1,5 +1,6 @@
 package com.educouch.educouchsystem.controller;
 
+import com.educouch.educouchsystem.dto.LearnerDTO;
 import com.educouch.educouchsystem.model.Learner;
 import com.educouch.educouchsystem.service.LearnerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,14 @@ public class LearnerController {
 
     //giving path here
     @PostMapping("/add")
-    public String add(@RequestBody Learner learner) {
-        learnerService.saveLearner(learner);
+    public String add(@RequestBody LearnerDTO learnerDTO) {
+        Boolean isKid = true;
+        if (learnerDTO.getIsKid().equals("false")) {
+            isKid = false;
+        }
+        learnerService.saveLearner(
+                new Learner(learnerDTO.getName(), learnerDTO.getEmail(), learnerDTO.getPassword(), learnerDTO.getUsername(), learnerDTO.getProfilePictureURL(), isKid)
+        );
         return "New learner is added";
     }
 
