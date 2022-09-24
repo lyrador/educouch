@@ -19,6 +19,9 @@ public class OrgAdminApprovalReqServiceImpl implements OrgAdminApprovalReqServic
     @Autowired
     private OrganisationService organisationService;
 
+    @Autowired
+    private EmailSenderService emailSenderService;
+
     @Override
     public OrgAdminApprovalReq createOrgAdminApprovalReq(OrgAdminApprovalReq orgAdminApprovalReq) {
         OrgAdminApprovalReq newOrgAdminApprovalReq = new OrgAdminApprovalReq(orgAdminApprovalReq.getAdminName(), orgAdminApprovalReq.getAdminEmail(), orgAdminApprovalReq.getAdminNumber(), orgAdminApprovalReq.getOrgName(), orgAdminApprovalReq.getOrgDescription(), orgAdminApprovalReq.getPaymentAcc(), orgAdminApprovalReq.getFileStorageName(), orgAdminApprovalReq.getUsername(), orgAdminApprovalReq.getPassword());
@@ -53,6 +56,7 @@ public class OrgAdminApprovalReqServiceImpl implements OrgAdminApprovalReqServic
     public OrgAdminApprovalReq rejectApprovalReq(OrgAdminApprovalReq orgAdminApprovalReq) {
         orgAdminApprovalReq.setApprovalStatusEnum(ApprovalStatusEnum.DECLINED);
         orgAdminApprovalReqRepository.save(orgAdminApprovalReq);
+        emailSenderService.sendEmail(orgAdminApprovalReq.getAdminEmail(), "Unsuccessful Educouch Organisation Admin Account Application", "Your educouch Organisation Admin account request has been rejected. The LMS admin has added some comments as to why it was rejected below.\n \n" + orgAdminApprovalReq.getRejMessage());
         return orgAdminApprovalReq;
     }
 
@@ -63,6 +67,7 @@ public class OrgAdminApprovalReqServiceImpl implements OrgAdminApprovalReqServic
         OrganisationAdmin newAdmin = new OrganisationAdmin(orgAdminApprovalReq.getAdminName(), orgAdminApprovalReq.getAdminEmail(), orgAdminApprovalReq.getPassword(),orgAdminApprovalReq.getUsername());
         Organisation newOrg = new Organisation(orgAdminApprovalReq.getOrgName());
         organisationService.instantiateOrganisation(newAdmin, newOrg);
+        emailSenderService.sendEmail(orgAdminApprovalReq.getAdminEmail(), "Successful Educouch Organisation Admin Account Application", "Your educouch Organisation Admin account has been created. You may now log in to educouch and use our services. Toodles!");
         return orgAdminApprovalReq;
     }
 
