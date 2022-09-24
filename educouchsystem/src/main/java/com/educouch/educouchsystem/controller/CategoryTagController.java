@@ -3,10 +3,7 @@ package com.educouch.educouchsystem.controller;
 import com.educouch.educouchsystem.dto.EditCourseTagsDTO;
 import com.educouch.educouchsystem.model.CategoryTag;
 import com.educouch.educouchsystem.service.CategoryTagService;
-import com.educouch.educouchsystem.util.exception.CategoryTagNotFoundException;
-import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
-import com.educouch.educouchsystem.util.exception.UnableToDeleteCategoryTagException;
-import com.educouch.educouchsystem.util.exception.UnableToSaveCategoryTagException;
+import com.educouch.educouchsystem.util.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -80,7 +77,19 @@ public class CategoryTagController {
         return categoryTags;
     }
 
-    @GetMapping("/getCurseCategoryTag/{courseId}")
+    @GetMapping("/getCategoryTagNotInCourse")
+    @ResponseBody
+    public List<CategoryTag> retrieveTagsNotInCourse(@RequestParam String courseId) {
+        try {
+            List<CategoryTag> categoryTags = categoryTagService.retrieveTagsNotInCourse(new Long(courseId));
+            return categoryTags;
+        } catch(CourseNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Course cannot be found.", ex);
+        }
+    }
+
+
+    @GetMapping("/getCourseCategoryTag/{courseId}")
     public List<CategoryTag> retrieveListOfCategoryTags(@PathVariable String courseId) {
         Long courseIdInLong = new Long(courseId);
         try {
@@ -90,6 +99,32 @@ public class CategoryTagController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Course cannot be found.", ex);
         }
     }
+
+    @GetMapping("/addTagToCourse")
+    @ResponseBody
+    public String addTagToCourse(@RequestParam Long courseId, @RequestParam String tagId) {
+        try{
+            categoryTagService.addTagToCourse(new Long(courseId), new Long(tagId));
+            return "Successfully added category tag to course.";
+        }catch(CourseNotFoundException | CategoryTagNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Course cannot be found.", ex);
+        }
+
+    }
+
+    @GetMapping("/removeTagFromCourse")
+    @ResponseBody
+    public String removeTagFromCourse(@RequestParam Long courseId, @RequestParam String tagId) {
+        try{
+            categoryTagService.removeTagFromCourse(new Long(courseId), new Long(tagId));
+            return "Successfully removed category tag to course.";
+        }catch(CourseNotFoundException | CategoryTagNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Course cannot be found.", ex);
+        }
+
+    }
+
+
 
 
 
