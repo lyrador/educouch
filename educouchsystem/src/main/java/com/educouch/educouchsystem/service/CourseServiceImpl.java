@@ -70,6 +70,18 @@ public class CourseServiceImpl implements CourseService{
     }
 
     @Override
+    public void publishCourse(Long courseId) throws CourseNotFoundException {
+        Course c = retrieveCourseById(courseId);
+        if(c != null) {
+            c.setCourseApprovalStatus(CourseApprovalStatusEnum.LIVE);
+            courseRepository.save(c);
+        } else {
+            throw new CourseNotFoundException("Course cannot be found.");
+        }
+
+    }
+
+    @Override
     public void approveCourse(Long courseId) throws CourseNotFoundException {
         Course c = retrieveCourseById(courseId);
         if(c != null) {

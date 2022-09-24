@@ -5,11 +5,17 @@ import com.educouch.educouchsystem.repository.EducatorRepository;
 import com.educouch.educouchsystem.repository.InstructorRepository;
 import com.educouch.educouchsystem.repository.OrganisationAdminRepository;
 import com.educouch.educouchsystem.repository.OrganisationRepository;
+import com.educouch.educouchsystem.util.enumeration.InstructorAccessRight;
 import com.educouch.educouchsystem.util.exception.InvalidLoginCredentialsException;
 import com.educouch.educouchsystem.util.exception.UsernameNotFoundException;
+import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
+import com.educouch.educouchsystem.util.exception.InvalidInstructorAccessRight;
+import com.educouch.educouchsystem.util.exception.OngoingClassRunException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.NoResultException;
 import java.util.List;
 
 //educator service handles instructors, organisation admin
@@ -36,8 +42,70 @@ public class EducatorServiceImpl implements EducatorService{
     }
 
     //not done
-    public Instructor findInstructorById(Long Id) {
-        return new Instructor();
+    public Instructor findInstructorById(Long Id) throws InstructorNotFoundException {
+        try {
+            Instructor instructor = instructorRepository.findInstructorById(Id);
+            if (instructor==null) {
+                throw new InstructorNotFoundException("No Instructor with id: " + Id + " exists!");
+            } else {
+                return instructor;
+            }
+        } catch (NoResultException exception) {
+            throw new InstructorNotFoundException("No Instructor with id: " + Id + " exists!");
+        }
+    }
+
+    public Instructor updateInstructor(Instructor updatedInstructor) throws InstructorNotFoundException {
+
+        //can update everything except InstructorId, password, organisation
+        try {
+            Instructor managedInstructor = findInstructorById(updatedInstructor.getInstructorId());
+            managedInstructor.setEmail(updatedInstructor.getEmail());
+            managedInstructor.setName(updatedInstructor.getName());
+            managedInstructor.setProfilePictureURL(updatedInstructor.getProfilePictureURL());
+            managedInstructor.setUsername(updatedInstructor.getUsername());
+            managedInstructor.setInstructorAccessRight(updatedInstructor.getInstructorAccessRight());
+            instructorRepository.save(managedInstructor);
+            return managedInstructor;
+        } catch (InstructorNotFoundException exception) {
+            throw new InstructorNotFoundException("No Instructor with id: " + updatedInstructor.getInstructorId() + " exists!");
+        }
+    }
+
+
+    public Instructor updateInstructorAccessRight(String instructorId, String accessRight) throws InstructorNotFoundException, InvalidInstructorAccessRight {
+
+        try {
+            Instructor managedInstructor = findInstructorById(Long.valueOf(instructorId));
+            if (accessRight.equals("INSTRUCTOR")) {
+                managedInstructor.setInstructorAccessRight(InstructorAccessRight.INSTRUCTOR);
+            } else if (accessRight.equals("HEADINSTRUCTOR")){
+                managedInstructor.setInstructorAccessRight(InstructorAccessRight.HEADINSTRUCTOR);
+            } else {
+                throw new InvalidInstructorAccessRight();
+            }
+            instructorRepository.save(managedInstructor);
+            return managedInstructor;
+        } catch (InstructorNotFoundException exception) {
+            throw new InstructorNotFoundException("Instructor with id: " + instructorId + " does not exists!");
+        }
+    }
+
+    //not complete, validations required
+    public Long deleteInstructor(String instructorId) throws InstructorNotFoundException, OngoingClassRunException {
+
+        try {
+            Instructor instructorToDelete = findInstructorById(Long.valueOf(instructorId));
+            //check if instructor exists in any courses
+            if(false) {
+                throw new OngoingClassRunException();
+            } else {
+                instructorRepository.delete(instructorToDelete);
+                return Long.valueOf(instructorId);
+            }
+        } catch (InstructorNotFoundException exception) {
+            throw new InstructorNotFoundException("Instructor with id: " + instructorId + " does not exists!");
+        }
     }
 
     @Override
@@ -83,10 +151,6 @@ public class EducatorServiceImpl implements EducatorService{
         return instructorRepository.save(instructor);
     }
 
-    @Override
-    public void deleteInstructor(Long id) {
-        instructorRepository.deleteById(id);
-    }
 
     @Override
     public void deleteOrganisationAdmin(Long id) {
