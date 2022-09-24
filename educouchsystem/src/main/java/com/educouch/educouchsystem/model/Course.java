@@ -48,7 +48,11 @@ public class Course {
     @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
     private List<Folder> folders;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<CategoryTag> categoryTags;
+
     public Course() {
+        this.categoryTags = new ArrayList<>();
         this.folders = new ArrayList<>();
         this.forums = new ArrayList<>();
     }
@@ -151,5 +155,13 @@ public class Course {
 
     public void setRejectionReason(String rejectionReason) {
         this.rejectionReason = rejectionReason;
+    }
+
+    public List<CategoryTag> getCategoryTags() {
+        return categoryTags;
+    }
+
+    public void setCategoryTags(List<CategoryTag> categoryTags) {
+        this.categoryTags = categoryTags;
     }
 }
