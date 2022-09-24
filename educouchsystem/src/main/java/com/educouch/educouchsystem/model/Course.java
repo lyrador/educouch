@@ -16,42 +16,47 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long courseId;
 
-    @Column(name = "courseCode", unique = true, nullable = false, length = 10)
+    @Column(name="courseCode", unique = true, nullable = false, length = 10)
     private String courseCode;
 
-    @Column(name = "courseTitle", nullable = false)
+    @Column(name="courseTitle", nullable = false)
     private String courseTitle;
 
-    @Column(name = "courseDescription", nullable = false, columnDefinition = "TEXT")
+    @Column(name="courseDescription", nullable = false, columnDefinition = "TEXT")
     private String courseDescription;
 
-    @Column(name = "courseTimeline", nullable = false, columnDefinition = "TEXT")
+    @Column(name="courseTimeline", nullable = false, columnDefinition = "TEXT")
     private String courseTimeline;
 
-    @Column(name = "courseMaxScore", columnDefinition = "Decimal(10,2) default '100.0'")
+    @Column(name="courseMaxScore", columnDefinition = "Decimal(10,2) default '100.0'")
     private Double courseMaxScore;
 
-    @Column(name = "rejectionReason")
+    @Column(name="rejectionReason")
     private String rejectionReason;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "ageGroup", nullable = false)
+    @Column(name="ageGroup", nullable = false)
     private AgeGroupEnum ageGroup;
     @Enumerated(EnumType.STRING)
-    @Column(name = "courseApprovalStatus")
+    @Column(name="courseApprovalStatus")
     private CourseApprovalStatusEnum courseApprovalStatus;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "course_id")
+    @JoinColumn(name="course_id")
     private List<Forum> forums;
 
     @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
     private List<Folder> folders;
 
+    @OneToMany
+    @JoinColumn(name = "id")
+    private List<CategoryTag> categoryTags;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Assessment> assessments;
 
     public Course() {
+        this.categoryTags = new ArrayList<>();
         this.folders = new ArrayList<>();
         this.forums = new ArrayList<>();
         this.assessments = new ArrayList<>();
@@ -159,6 +164,14 @@ public class Course {
 
     public void setRejectionReason(String rejectionReason) {
         this.rejectionReason = rejectionReason;
+    }
+
+    public List<CategoryTag> getCategoryTags() {
+        return categoryTags;
+    }
+
+    public void setCategoryTags(List<CategoryTag> categoryTags) {
+        this.categoryTags = categoryTags;
     }
 
     public List<Assessment> getAssessments() {
