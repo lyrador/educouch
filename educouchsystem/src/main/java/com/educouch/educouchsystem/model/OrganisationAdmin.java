@@ -83,7 +83,7 @@ public class OrganisationAdmin {
     public void setProfilePictureURL(String profilePictureURL) {
         this.profilePictureURL = profilePictureURL;
     }
-    @JsonManagedReference
+
     public Organisation getOrganisation() {
         return organisation;
     }
