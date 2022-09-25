@@ -66,15 +66,24 @@ public class DataLoader implements CommandLineRunner {
 
     public void loadData() {
         lmsAdminService.saveLmsAdmin(new LmsAdmin("manager", "manager@gmail.com", "password", "manager"));
-        learnerRepository.save(new Learner("Alex", "alex@gmail.com", "password",
-                "alex", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true));
+//        learnerRepository.save(new Learner("Alex", "alex@gmail.com", "password",
+//                "alex", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true));
 
 //        Course cs1010 = new Course("CS1010", "CS1010 Introduction to Computer Science",
 //                "xxx", "xxx", 100.0, AgeGroupEnum.ADULTS,
 //                CourseApprovalStatusEnum.UNDERCONSTRUCTION);
 //        Course bio4000 = new Course("BIO4000", "BIO4000 Molecular Genetics", "xxx",
 //                "xxx", 100.0, AgeGroupEnum.ADULTS, CourseApprovalStatusEnum.UNDERCONSTRUCTION);
+//        learnerRepository.save(new Learner("Alex", "alex@gmail.com", "password",
+//                "alex", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true));
 //
+//        Course cs1010 = new Course("CS1010", "CS1010 Introduction to Computer Science",
+//                "xxx", "xxx", 100.0, AgeGroupEnum.ADULTS,
+//                CourseApprovalStatusEnum.UNDERCONSTRUCTION);
+//        Course bio4000 = new Course("BIO4000", "BIO4000 Molecular Genetics", "xxx",
+//                "xxx", 100.0, AgeGroupEnum.ADULTS, CourseApprovalStatusEnum.UNDERCONSTRUCTION);
+//
+
 //
 //        cs1010 = courseRepository.save(cs1010);
 //        bio4000 = courseRepository.save(bio4000);
