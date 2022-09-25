@@ -2,9 +2,11 @@ package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.dto.CourseDTO;
 import com.educouch.educouchsystem.model.*;
+import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.service.CourseService;
 import com.educouch.educouchsystem.service.EducatorService;
 import com.educouch.educouchsystem.util.enumeration.CourseApprovalStatusEnum;
+import com.educouch.educouchsystem.service.OrganisationService;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.dto.CourseRejectionModel;
 import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
@@ -28,6 +30,9 @@ public class CourseController {
     @Autowired
     private EducatorService educatorService;
 
+    @Autowired
+    private OrganisationService organisationService;
+
     @PostMapping("{instructorId}/courses")
     public ResponseEntity<Course> addCourse(@PathVariable(value="instructorId") Long instructorId, @RequestBody Course courseRequest) {
         try{
@@ -37,12 +42,26 @@ public class CourseController {
                 instructor.setCourses(courseList);
             }
             instructor.getCourses().add(courseRequest);
-            Course course = courseService.saveCourse(courseRequest);
-            if (course.getInstructors() == null) {
-                List<Instructor> instructorList = new ArrayList<>();
-                course.setInstructors(instructorList);
+
+            Organisation organisation = organisationService.findOrganisationById(instructor.getOrganisation().getOrganisationId());
+            if (organisation.getCourses() == null) {
+                List<Course> courseList = new ArrayList<>();
+                organisation.setCourses(courseList);
             }
-            course.getInstructors().add(instructor);
+            organisation.getCourses().add(courseRequest);
+
+            courseRequest.setOrganisation(organisation);
+
+            if (courseRequest.getInstructors() == null) {
+                List<Instructor> instructorList = new ArrayList<>();
+                courseRequest.setInstructors(instructorList);
+            }
+            courseRequest.getInstructors().add(instructor);
+
+            Course course = courseService.saveCourse(courseRequest);
+
+
+
             return new ResponseEntity<>(course, HttpStatus.OK);
         } catch (NoSuchElementException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -117,6 +136,15 @@ public class CourseController {
 
     @DeleteMapping("/courses/{courseId}")
     public ResponseEntity<HttpStatus> deleteCourse(@PathVariable("courseId") Long courseId) {
+        Course existingCourse = courseService.retrieveCourseById(courseId);
+        List<Instructor> instructorList = existingCourse.getInstructors();
+        for (Instructor instructor : instructorList) {
+            instructor.getCourses().remove(existingCourse);
+        }
+        existingCourse.getInstructors().clear();
+
+        existingCourse.getOrganisation().getCourses().remove(existingCourse);
+
         courseService.deleteCourse(courseId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -152,6 +180,19 @@ public class CourseController {
         } catch (NoSuchElementException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (InstructorNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/organisation/{organisationId}/courses")
+    public ResponseEntity<List<Course>> getAllCoursesByOrganisationId (@PathVariable(value="organisationId") Long organisationId) {
+        try {
+            Organisation organisation = organisationService.findOrganisationById(organisationId);
+            List<Course> courses = new ArrayList<>();
+            courses.addAll(organisation.getCourses());
+
+            return new ResponseEntity<>(courses, HttpStatus.OK);
+        } catch (NoSuchElementException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
