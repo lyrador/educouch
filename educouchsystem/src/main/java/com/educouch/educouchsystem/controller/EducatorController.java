@@ -19,6 +19,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 @RestController
@@ -64,6 +65,18 @@ public class EducatorController {
             }
             return new ResponseEntity<>(instr, HttpStatus.OK);
         } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/instructors/{instructorId}")
+    public ResponseEntity<Instructor> findInstructorById (@PathVariable("instructorId") Long instructorId) {
+        try {
+            Instructor existingInstructor = educatorService.findInstructorById(instructorId);
+            return new ResponseEntity<Instructor>(existingInstructor, HttpStatus.OK);
+        } catch (NoSuchElementException ex) {
+            return new ResponseEntity<Instructor>(HttpStatus.NOT_FOUND);
+        } catch (InstructorNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

@@ -42,6 +42,7 @@ public class EducatorServiceImpl implements EducatorService{
     }
 
     //not done
+    @Override
     public Instructor findInstructorById(Long Id) throws InstructorNotFoundException {
         try {
             Instructor instructor = instructorRepository.findInstructorById(Id);
