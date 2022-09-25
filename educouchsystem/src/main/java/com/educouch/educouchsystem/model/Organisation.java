@@ -1,5 +1,6 @@
 package com.educouch.educouchsystem.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -21,6 +22,9 @@ public class Organisation {
     private OrganisationAdmin organisationAdmin;
     @OneToMany(mappedBy = "organisation")
     private List<Instructor> instructors;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "organisation")
+    private List<Course> courses;
 
     public Organisation() {
         this.instructors = new ArrayList<>();
@@ -61,5 +65,14 @@ public class Organisation {
 
     public void setInstructors(List<Instructor> instructors) {
         this.instructors = instructors;
+    }
+
+    @JsonIgnore
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
     }
 }

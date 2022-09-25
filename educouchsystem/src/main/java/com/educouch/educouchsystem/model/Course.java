@@ -58,6 +58,10 @@ public class Course {
     @ManyToMany(mappedBy = "courses")
     private List<Instructor> instructors;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organisation_id")
+    private Organisation organisation;
+
     public Course() {
         this.categoryTags = new ArrayList<>();
         this.folders = new ArrayList<>();
@@ -141,7 +145,6 @@ public class Course {
         this.courseApprovalStatus = courseApprovalStatus;
     }
 
-    @JsonManagedReference
     @JsonIgnore
     public List<Forum> getForums() {
         return forums;
@@ -151,7 +154,6 @@ public class Course {
         this.forums = forums;
     }
 
-    @JsonManagedReference
     @JsonIgnore
     public List<Folder> getFolders() {
         return folders;
@@ -184,6 +186,7 @@ public class Course {
     public void setAssessments(List<Assessment> assessments) {
         this.assessments = assessments;
     }
+    @JsonManagedReference
     @JsonIgnore
     public List<Instructor> getInstructors() {
         return instructors;
@@ -191,5 +194,14 @@ public class Course {
 
     public void setInstructors(List<Instructor> instructors) {
         this.instructors = instructors;
+    }
+
+    @JsonIgnore
+    public Organisation getOrganisation() {
+        return organisation;
+    }
+
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
     }
 }
