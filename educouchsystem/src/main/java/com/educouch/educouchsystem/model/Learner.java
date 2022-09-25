@@ -1,10 +1,7 @@
 package com.educouch.educouchsystem.model;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Learner {
@@ -13,27 +10,55 @@ public class Learner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long learnerId;
+    @Column(nullable = false)
     private String name;
-    private String address;
-
+//    private String address;
+    @Column(nullable = false, unique = true)
     private String email;
+    @Column(nullable = false)
     private String password;
+    @Column(nullable = false, unique = true)
     private String username;
+
     private String profilePictureURL;
 
     private Boolean isActive;
+    @Column(nullable = false)
+    private Boolean isKid;
 
     public Learner() {
     }
 
-    public Learner(String name, String address, String email, String password, String username, String profilePictureURL) {
+//    public Learner(String name, String address, String email, String password, String username, String profilePictureURL) {
+//        this.name = name;
+//        this.address = address;
+//        this.email = email;
+//        this.password = password;
+//        this.username = username;
+//        this.profilePictureURL = profilePictureURL;
+//        isActive = true;
+//    }
+
+//    public Learner(String name, String address, String email, String password, String username, String profilePictureURL, Boolean isKid) {
+//        this.name = name;
+//        this.address = address;
+//        this.email = email;
+//        this.password = password;
+//        this.username = username;
+//        this.profilePictureURL = profilePictureURL;
+//        this.isActive = true;
+//        this.isKid = isKid;
+//    }
+
+
+    public Learner(String name, String email, String password, String username, String profilePictureURL, Boolean isKid) {
         this.name = name;
-        this.address = address;
         this.email = email;
         this.password = password;
         this.username = username;
         this.profilePictureURL = profilePictureURL;
-        isActive = true;
+        this.isActive = true;
+        this.isKid = isKid;
     }
 
     public Long getLearnerId() {
@@ -51,13 +76,13 @@ public class Learner {
         this.name = name;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
+//    public String getAddress() {
+//        return address;
+//    }
+//
+//    public void setAddress(String address) {
+//        this.address = address;
+//    }
 
     public String getEmail() {
         return email;
@@ -97,5 +122,13 @@ public class Learner {
 
     public void setProfilePictureURL(String profilePictureURL) {
         this.profilePictureURL = profilePictureURL;
+    }
+
+    public Boolean getIsKid() {
+        return isKid;
+    }
+
+    public void setIsKid(Boolean isKid) {
+        isKid = isKid;
     }
 }
