@@ -1,7 +1,10 @@
 package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.model.Course;
+import com.educouch.educouchsystem.model.Educator;
+import com.educouch.educouchsystem.model.Instructor;
 import com.educouch.educouchsystem.service.CourseService;
+import com.educouch.educouchsystem.service.EducatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +21,28 @@ public class CourseController {
     @Autowired
     private CourseService courseService;
 
-    @PostMapping("/courses")
-    public String addCourse(@RequestBody Course course) {
-        courseService.saveCourse(course);
-        return "New course has been added";
+    @Autowired
+    private EducatorService educatorService;
+
+    @PostMapping("{instructorId}/courses")
+    public ResponseEntity<Course> addCourse(@PathVariable(value="instructorId") Long instructorId, @RequestBody Course courseRequest) {
+        try{
+            Instructor instructor = educatorService.findInstructorById(instructorId);
+            if (instructor.getCourses() == null) {
+                List<Course> courseList = new ArrayList<>();
+                instructor.setCourses(courseList);
+            }
+            instructor.getCourses().add(courseRequest);
+            Course course = courseService.saveCourse(courseRequest);
+            if (course.getInstructors() == null) {
+                List<Instructor> instructorList = new ArrayList<>();
+                course.setInstructors(instructorList);
+            }
+            course.getInstructors().add(instructor);
+            return new ResponseEntity<>(course, HttpStatus.OK);
+        } catch (NoSuchElementException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/courses")
@@ -69,6 +90,19 @@ public class CourseController {
             return new ResponseEntity<Course>(HttpStatus.NOT_FOUND);
         }
 
+    }
+
+    @GetMapping("/instructors/{instructorId}/courses")
+    public ResponseEntity<List<Course>> getAllCoursesByInstructorId (@PathVariable(value="instructorId") Long instructorId) {
+        try {
+            Instructor instructor = educatorService.findInstructorById(instructorId);
+            List<Course> courses = new ArrayList<>();
+            courses.addAll(instructor.getCourses());
+
+            return new ResponseEntity<>(courses, HttpStatus.OK);
+        } catch (NoSuchElementException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 
