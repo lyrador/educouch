@@ -14,4 +14,12 @@ public interface CourseService {
     public Course getCourseByCourseCode(String courseCode);
     public Course retrieveCourseById(Long id);
     public void deleteCourse(Long id);
+
+    public void submitCourseForApproval(Long courseId) throws CourseNotFoundException;
+
+    public void approveCourse(Long courseId) throws CourseNotFoundException;
+
+    public void rejectCourse(Long courseId, String rejectionReason) throws CourseNotFoundException;
+
+    public void publishCourse(Long courseId) throws CourseNotFoundException;
 }

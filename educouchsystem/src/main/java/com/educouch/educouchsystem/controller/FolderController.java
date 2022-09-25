@@ -6,8 +6,8 @@ import com.educouch.educouchsystem.model.Forum;
 import com.educouch.educouchsystem.service.FolderService;
 import com.educouch.educouchsystem.util.exception.FolderNotFoundException;
 import com.educouch.educouchsystem.util.exception.FolderUnableToSaveException;
-import com.educouch.educouchsystem.webServiceModel.ChildFolder;
-import com.educouch.educouchsystem.webServiceModel.ParentFolder;
+import com.educouch.educouchsystem.dto.ChildFolder;
+import com.educouch.educouchsystem.dto.ParentFolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -58,6 +58,7 @@ public class FolderController {
     @GetMapping("/getAll")
     public List<Folder> getAllFolder(){
         List<Folder> folders = folderService.getAllFolders();
+        System.out.println("Length of folders list is " + folders.size());
         for(Folder folder: folders){
             processFolder(folder);
         }
@@ -88,7 +89,9 @@ public class FolderController {
     }
 
     private Folder processFolder(Folder folder) {
+        System.out.println("When folder is folder " + folder.getFolderId());
         List<Folder> subFolders = folder.getChildFolders();
+        System.out.println("SubFolders is " + subFolders.toString());
         for(Folder cf: subFolders) {
             cf.setParentFolder(null);
             cf.setAttachments(null);
@@ -124,7 +127,7 @@ public class FolderController {
     }
 
     @GetMapping("/getFoldersByCourseId/{courseId}")
-    public List<Folder> getFoldersByFolderId(@PathVariable String courseId) {
+    public List<Folder> getFoldersByCourseId(@PathVariable String courseId) {
         Long courseIdInLong = new Long(courseId);
         try {
             List<Folder> folders = folderService.getFoldersByCourseId(courseIdInLong);
@@ -138,18 +141,17 @@ public class FolderController {
         }
     }
 
-    private Course processCourse(Course c) {
-        List<Forum> forums = c.getForums();
-        for(Forum f: forums) {
-            f.setForumDiscussions(null);
-            f.setCourse(null);
+
+
+    @GetMapping("/renameFolderByFolderId")
+    @ResponseBody
+    public String renameFolderByFolderId(@RequestParam String folderId, @RequestParam String folderName) {
+        try{
+            folderService.renameFolderByFolderId(folderName, new Long(folderId));
+            return "Successfully renamed the folder.";
+        }catch(FolderNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Folder cannot be found.", ex);
         }
 
-        List<Folder> childFolders = c.getFolders();
-        for(Folder f: childFolders) {
-            processFolder(f);
-        }
-
-        return c;
     }
 }

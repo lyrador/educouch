@@ -1,4 +1,4 @@
-package com.educouch.educouchsystem.webServiceModel;
+package com.educouch.educouchsystem.dto;
 
 import com.educouch.educouchsystem.model.Folder;
 
