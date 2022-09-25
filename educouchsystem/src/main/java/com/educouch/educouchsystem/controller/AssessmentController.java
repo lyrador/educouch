@@ -1,10 +1,7 @@
 package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.dto.FileSubmissionDTO;
-import com.educouch.educouchsystem.model.Assessment;
-import com.educouch.educouchsystem.model.Course;
-import com.educouch.educouchsystem.model.FileSubmission;
-import com.educouch.educouchsystem.model.Quiz;
+import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.service.AssessmentService;
 import com.educouch.educouchsystem.service.CourseService;
 import com.educouch.educouchsystem.service.FileSubmissionService;
@@ -114,6 +111,26 @@ public class AssessmentController {
                 fileSubmissionDTO.setAssessmentStartDate(formatter.format(filesubmission.getStartDate()));
                 fileSubmissionDTO.setAssessmentEndDate(formatter.format(filesubmission.getEndDate()));
 
+                if (filesubmission.getFileSubmissionEnum() == FileSubmissionEnum.INDIVIDUAL) {
+                    fileSubmissionDTO.setAssessmentFileSubmissionEnum("INDIVIDUAL");
+                } else if (filesubmission.getFileSubmissionEnum() == FileSubmissionEnum.GROUP) {
+                    fileSubmissionDTO.setAssessmentFileSubmissionEnum("GROUP");
+                }
+
+                if (filesubmission.getOpen()) {
+                    fileSubmissionDTO.setAssessmentIsOpen("true");
+                } else if (filesubmission.getOpen() == false) {
+                    fileSubmissionDTO.setAssessmentIsOpen("false");
+                }
+
+                if (filesubmission.getAssessmentStatus() == AssessmentStatusEnum.PENDING) {
+                    fileSubmissionDTO.setAssessmentStatusEnum("PENDING");
+                } else if (filesubmission.getAssessmentStatus() == AssessmentStatusEnum.INCOMPLETE) {
+                    fileSubmissionDTO.setAssessmentStatusEnum("INCOMPLETE");
+                } else if (filesubmission.getAssessmentStatus() == AssessmentStatusEnum.COMPLETE) {
+                    fileSubmissionDTO.setAssessmentStatusEnum("COMPLETE");
+                }
+
                 fileSubmissionDTOs.add(fileSubmissionDTO);
             }
             return new ResponseEntity<>(fileSubmissionDTOs, HttpStatus.OK);
@@ -143,6 +160,17 @@ public class AssessmentController {
         }
     }
 
+    @DeleteMapping("/deleteAssessmentByIdFromCourseId/{assessmentId}/{courseId}")
+    public ResponseEntity<HttpStatus> deleteAssessmentById(@PathVariable("assessmentId") Long assessmentId, @PathVariable("courseId") Long courseId) {
+        try {
+//            assessmentService.deleteAssessment(assessmentId);
+            assessmentService.deleteAssessmentFromCourseId(assessmentId, courseId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (AssessmentNotFoundException | CourseNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @DeleteMapping("/deleteAllAssessmentsByCourseId/{courseId}")
     public ResponseEntity<HttpStatus> deleteAllAssessmentsOfCourse(@PathVariable(value="courseId") Long courseId) {
         try {
@@ -160,13 +188,46 @@ public class AssessmentController {
     }
 
     @PutMapping("/updateFileSubmission/{fileSubmissionId}")
-    public ResponseEntity<FileSubmission> updateFileSubmission(@RequestBody FileSubmission fileSubmission, @PathVariable("fileSubmissionId") Long fileSubmissionId) {
+    public ResponseEntity<FileSubmission> updateFileSubmission(@RequestBody FileSubmissionDTO fileSubmissionDTO, @PathVariable("fileSubmissionId") Long fileSubmissionId) {
         try {
             FileSubmission fileSubmissionToUpdate = fileSubmissionService.retrieveFileSubmissionById(fileSubmissionId);
-            fileSubmissionService.updateFileSubmission(fileSubmissionToUpdate, fileSubmission);
-            return new ResponseEntity<FileSubmission>(fileSubmissionToUpdate, HttpStatus.OK);
+
+            fileSubmissionToUpdate.setTitle(fileSubmissionDTO.getAssessmentTitle());
+            fileSubmissionToUpdate.setDescription(fileSubmissionDTO.getAssessmentDescription());
+            fileSubmissionToUpdate.setMaxScore(fileSubmissionDTO.getAssessmentMaxScore());
+
+            if (fileSubmissionDTO.getAssessmentFileSubmissionEnum().equals("INDIVIDUAL")) {
+                fileSubmissionToUpdate.setFileSubmissionEnum(FileSubmissionEnum.INDIVIDUAL);
+            } else if (fileSubmissionDTO.getAssessmentFileSubmissionEnum().equals("GROUP")) {
+                fileSubmissionToUpdate.setFileSubmissionEnum(FileSubmissionEnum.GROUP);
+            }
+
+            if (fileSubmissionDTO.getAssessmentIsOpen().equals("true")) {
+                fileSubmissionToUpdate.setOpen(Boolean.TRUE);
+            } else if (fileSubmissionDTO.getAssessmentIsOpen().equals("false")) {
+                fileSubmissionToUpdate.setOpen(Boolean.FALSE);
+            }
+
+            if (fileSubmissionDTO.getAssessmentStatusEnum().equals("PENDING")) {
+                fileSubmissionToUpdate.setAssessmentStatus(AssessmentStatusEnum.PENDING);
+            } else if (fileSubmissionDTO.getAssessmentStatusEnum().equals("INCOMPLETE")) {
+                fileSubmissionToUpdate.setAssessmentStatus(AssessmentStatusEnum.INCOMPLETE);
+            } else if (fileSubmissionDTO.getAssessmentStatusEnum().equals("COMPLETE")) {
+                fileSubmissionToUpdate.setAssessmentStatus(AssessmentStatusEnum.COMPLETE);
+            }
+
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date startDate = (Date)formatter.parse(fileSubmissionDTO.getAssessmentStartDate());
+            Date endDate = (Date)formatter.parse(fileSubmissionDTO.getAssessmentEndDate());
+            fileSubmissionToUpdate.setStartDate(startDate);
+            fileSubmissionToUpdate.setEndDate(endDate);
+
+            fileSubmissionService.updateFileSubmission(fileSubmissionToUpdate, fileSubmissionToUpdate);
+            return new ResponseEntity<FileSubmission>(fileSubmissionService.saveFileSubmission(fileSubmissionToUpdate), HttpStatus.OK);
         } catch (FileSubmissionNotFoundException ex) {
             return new ResponseEntity<FileSubmission>(HttpStatus.NOT_FOUND);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
     }
 }
