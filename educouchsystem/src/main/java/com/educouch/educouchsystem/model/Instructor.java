@@ -111,7 +111,7 @@ public class Instructor {
     public void setInstructorAccessRight(InstructorAccessRight instructorAccessRight) {
         this.instructorAccessRight = instructorAccessRight;
     }
-    @JsonManagedReference
+
     @JsonIgnore
     public List<Course> getCourses() {
         return courses;

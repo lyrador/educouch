@@ -197,7 +197,7 @@ public class Course {
     public void setAssessments(List<Assessment> assessments) {
         this.assessments = assessments;
     }
-    @JsonManagedReference
+
     @JsonIgnore
     public List<Instructor> getInstructors() {
         return instructors;
