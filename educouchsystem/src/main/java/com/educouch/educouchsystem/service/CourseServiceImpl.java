@@ -58,6 +58,24 @@ public class CourseServiceImpl implements CourseService{
     }
 
     @Override
+    public List<Course> getCoursesByCourseApprovalStatus(String courseApprovalStatus) {
+        CourseApprovalStatusEnum courseApprovalStatusEnum = CourseApprovalStatusEnum.LIVE;
+        if (courseApprovalStatus.equals("LIVE")) {
+            courseApprovalStatusEnum = CourseApprovalStatusEnum.LIVE;
+        } else if (courseApprovalStatus.equals("PENDINGAPPROVAL")) {
+            courseApprovalStatusEnum = CourseApprovalStatusEnum.PENDINGAPPROVAL;
+        } else if (courseApprovalStatus.equals("REJECTED")) {
+            courseApprovalStatusEnum = CourseApprovalStatusEnum.REJECTED;
+        } else if (courseApprovalStatus.equals("ACCEPTED")) {
+            courseApprovalStatusEnum = CourseApprovalStatusEnum.ACCEPTED;
+        } else if (courseApprovalStatus.equals("UNDERCONSTRUCTION")) {
+            courseApprovalStatusEnum = CourseApprovalStatusEnum.UNDERCONSTRUCTION;
+        }
+        List<Course> courses = courseRepository.findCoursesByCourseApprovalStatus(courseApprovalStatusEnum);
+        return courses;
+    }
+
+    @Override
     public void submitCourseForApproval(Long courseId) throws CourseNotFoundException {
         Course c = retrieveCourseById(courseId);
         if(c != null) {
