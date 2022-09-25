@@ -88,7 +88,7 @@ public class Course {
         this.courseTimeline = courseTimeline;
         this.courseMaxScore = courseMaxScore;
         this.ageGroup = ageGroup;
-        this.courseApprovalStatus = CourseApprovalStatusEnum.UNDERCONSTRUCTION;
+        this.setCourseApprovalStatus(CourseApprovalStatusEnum.UNDERCONSTRUCTION);
     }
 
     public Long getCourseId() {
