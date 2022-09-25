@@ -27,7 +27,7 @@ public class Instructor {
     private InstructorAccessRight instructorAccessRight;
     private String profilePictureURL;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Organisation organisation;
 
     @ManyToMany(cascade = CascadeType.ALL)
