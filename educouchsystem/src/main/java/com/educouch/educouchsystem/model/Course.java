@@ -43,6 +43,9 @@ public class Course {
     @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
     private List<Folder> folders;
 
+    @ManyToMany(mappedBy = "courses")
+    private List<Instructor> instructors;
+
     public Course() {
         this.folders = new ArrayList<>();
         this.forums = new ArrayList<>();
@@ -140,4 +143,12 @@ public class Course {
         this.folders = folders;
     }
 
+    @JsonIgnore
+    public List<Instructor> getInstructors() {
+        return instructors;
+    }
+
+    public void setInstructors(List<Instructor> instructors) {
+        this.instructors = instructors;
+    }
 }

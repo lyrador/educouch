@@ -1,9 +1,11 @@
 package com.educouch.educouchsystem.model;
 import com.educouch.educouchsystem.util.enumeration.InstructorAccessRight;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 public class Instructor {
@@ -25,6 +27,12 @@ public class Instructor {
 
     @ManyToOne(optional = false)
     private Organisation organisation;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "instructor_course",
+            joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "instructorId"),
+            inverseJoinColumns = @JoinColumn(name = "instructor_id", referencedColumnName = "courseId"))
+    private List<Course> courses;
 
     public Instructor() {
     }
@@ -85,6 +93,7 @@ public class Instructor {
         this.profilePictureURL = profilePictureURL;
     }
 
+    @JsonIgnore
     public Organisation getOrganisation() {
         return organisation;
     }
@@ -99,5 +108,14 @@ public class Instructor {
 
     public void setInstructorAccessRight(InstructorAccessRight instructorAccessRight) {
         this.instructorAccessRight = instructorAccessRight;
+    }
+
+    @JsonIgnore
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
     }
 }
