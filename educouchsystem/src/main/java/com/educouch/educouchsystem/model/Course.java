@@ -55,6 +55,9 @@ public class Course {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Assessment> assessments;
 
+    @ManyToMany(mappedBy = "courses")
+    private List<Instructor> instructors;
+
     public Course() {
         this.categoryTags = new ArrayList<>();
         this.folders = new ArrayList<>();
@@ -63,7 +66,7 @@ public class Course {
     }
 
     public Course(String courseCode, String courseTitle, String courseDescription, String courseTimeline,
-            Double courseMaxScore, AgeGroupEnum ageGroup, CourseApprovalStatusEnum courseApprovalStatus) {
+                  Double courseMaxScore, AgeGroupEnum ageGroup, CourseApprovalStatusEnum courseApprovalStatus) {
         new Course();
         this.courseCode = courseCode;
         this.courseTitle = courseTitle;
@@ -180,5 +183,13 @@ public class Course {
 
     public void setAssessments(List<Assessment> assessments) {
         this.assessments = assessments;
+    }
+    @JsonIgnore
+    public List<Instructor> getInstructors() {
+        return instructors;
+    }
+
+    public void setInstructors(List<Instructor> instructors) {
+        this.instructors = instructors;
     }
 }
