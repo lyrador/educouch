@@ -76,6 +76,8 @@ public class EducatorController {
             return new ResponseEntity<Instructor>(existingInstructor, HttpStatus.OK);
         } catch (NoSuchElementException ex) {
             return new ResponseEntity<Instructor>(HttpStatus.NOT_FOUND);
+        } catch (InstructorNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

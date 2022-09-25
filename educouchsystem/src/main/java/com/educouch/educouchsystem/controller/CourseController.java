@@ -9,6 +9,7 @@ import com.educouch.educouchsystem.service.CourseService;
 import com.educouch.educouchsystem.service.EducatorService;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.dto.CourseRejectionModel;
+import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class CourseController {
     @PostMapping("{instructorId}/courses")
     public ResponseEntity<Course> addCourse(@PathVariable(value="instructorId") Long instructorId, @RequestBody Course courseRequest) {
         try{
-            Instructor instructor = educatorService.findInstructorById(String.valueOf(instructorId));
+            Instructor instructor = educatorService.findInstructorById(instructorId);
             if (instructor.getCourses() == null) {
                 List<Course> courseList = new ArrayList<>();
                 instructor.setCourses(courseList);
@@ -46,6 +47,8 @@ public class CourseController {
             course.getInstructors().add(instructor);
             return new ResponseEntity<>(course, HttpStatus.OK);
         } catch (NoSuchElementException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (InstructorNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -149,6 +152,8 @@ public class CourseController {
 
             return new ResponseEntity<>(courses, HttpStatus.OK);
         } catch (NoSuchElementException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (InstructorNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
