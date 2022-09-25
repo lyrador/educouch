@@ -69,7 +69,7 @@ public class Course {
         this.assessments = new ArrayList<>();
     }
 
-    public Course(String courseCode, String courseTitle, String courseDescription, String courseTimeline,
+    /*public Course(String courseCode, String courseTitle, String courseDescription, String courseTimeline,
                   Double courseMaxScore, AgeGroupEnum ageGroup, CourseApprovalStatusEnum courseApprovalStatus) {
         new Course();
         this.courseCode = courseCode;
@@ -79,6 +79,16 @@ public class Course {
         this.courseMaxScore = courseMaxScore;
         this.ageGroup = ageGroup;
         this.courseApprovalStatus = courseApprovalStatus;
+    }*/
+
+    public Course(String courseCode, String courseTitle, String courseDescription, String courseTimeline, Double courseMaxScore, AgeGroupEnum ageGroup) {
+        this.courseCode = courseCode;
+        this.courseTitle = courseTitle;
+        this.courseDescription = courseDescription;
+        this.courseTimeline = courseTimeline;
+        this.courseMaxScore = courseMaxScore;
+        this.ageGroup = ageGroup;
+        this.courseApprovalStatus = CourseApprovalStatusEnum.UNDERCONSTRUCTION;
     }
 
     public Long getCourseId() {
