@@ -52,7 +52,7 @@ public class LearnerServiceImpl implements LearnerService {
         Learner updateLearner = learnerRepository.findById(learner.getLearnerId()).get();
         if(updateLearner.getUsername().equals(learner.getUsername()) && updateLearner.getPassword().equals(learner.getPassword())) {
             updateLearner.setActive(learner.getActive());
-            updateLearner.setAddress(learner.getAddress());
+//            updateLearner.setAddress(learner.getAddress());
             updateLearner.setEmail(learner.getEmail());
             updateLearner.setName(learner.getName());
             updateLearner.setProfilePictureURL(learner.getProfilePictureURL());
