@@ -18,6 +18,10 @@ public class OrgAdminApprovalReq {
 
     private String adminNumber;
 
+    private String username;
+
+    private String password;
+
     private String orgName;
 
     private String orgDescription;
@@ -26,18 +30,59 @@ public class OrgAdminApprovalReq {
 
     private ApprovalStatusEnum approvalStatusEnum;
 
+    private String fileStorageName;
+
+    private String rejMessage;
+
 
     public OrgAdminApprovalReq() {
     }
 
-    public OrgAdminApprovalReq(String adminName, String adminEmail, String adminNumber, String orgName, String orgDescription, String paymentAcc) {
+    public OrgAdminApprovalReq(String adminName, String adminEmail, String adminNumber, String orgName, String orgDescription, String paymentAcc, String fileStorageName, String username, String password) {
         this.approvalStatusEnum = ApprovalStatusEnum.PENDING;
+        this.username = username;
+        this.password = password;
         this.adminName = adminName;
         this.adminEmail = adminEmail;
         this.adminNumber = adminNumber;
         this.orgName = orgName;
         this.orgDescription = orgDescription;
         this.paymentAcc = paymentAcc;
+        this.fileStorageName = fileStorageName;
+        this.rejMessage = "";
+
+    }
+
+    public String getRejMessage() {
+        return rejMessage;
+    }
+
+    public void setRejMessage(String rejMessage) {
+        this.rejMessage = rejMessage;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getFileStorageName() {
+        return fileStorageName;
+    }
+
+    public void setFileStorageName(String fileStorageName) {
+        this.fileStorageName = fileStorageName;
     }
 
     public Long getOrgAdminApprovalId() {

@@ -3,12 +3,17 @@ package com.educouch.educouchsystem.controller;
 import com.educouch.educouchsystem.model.Course;
 import com.educouch.educouchsystem.model.Educator;
 import com.educouch.educouchsystem.model.Instructor;
+import com.educouch.educouchsystem.model.Folder;
+import com.educouch.educouchsystem.model.Forum;
 import com.educouch.educouchsystem.service.CourseService;
 import com.educouch.educouchsystem.service.EducatorService;
+import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
+import com.educouch.educouchsystem.dto.CourseRejectionModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +32,7 @@ public class CourseController {
     @PostMapping("{instructorId}/courses")
     public ResponseEntity<Course> addCourse(@PathVariable(value="instructorId") Long instructorId, @RequestBody Course courseRequest) {
         try{
-            Instructor instructor = educatorService.findInstructorById(instructorId);
+            Instructor instructor = educatorService.findInstructorById(String.valueOf(instructorId));
             if (instructor.getCourses() == null) {
                 List<Course> courseList = new ArrayList<>();
                 instructor.setCourses(courseList);
@@ -50,10 +55,53 @@ public class CourseController {
         List<Course> allCourses = new ArrayList<Course>();
         if (!courseService.getAllCourses().isEmpty()) {
             allCourses = courseService.getAllCourses();
+            for(Course c: allCourses) {
+                processCourse(c);
+            }
+            return new ResponseEntity<>(allCourses, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(allCourses, HttpStatus.OK);
+
+    }
+
+    private Course processCourse(Course c) {
+        List<Forum> forums = c.getForums();
+        for(Forum f: forums) {
+            f.setForumDiscussions(null);
+            f.setCourse(null);
+//            f.setLearners(null);
+//            f.setEducators(null);
+        }
+
+        List<Folder> childFolders = c.getFolders();
+        for(Folder f: childFolders) {
+            processFolder(f);
+        }
+
+        return c;
+    }
+
+    private Folder processFolder(Folder folder) {
+        List<Folder> subFolders = folder.getChildFolders();
+//        for(Folder cf: subFolders) {
+//            cf.setParentFolder(null);
+//            cf.setAttachments(null);
+//            cf.setChildFolders(null);
+//            cf.setCourse(null);
+//        }
+        Folder parentFolder = folder.getParentFolder();
+        if(parentFolder != null) {
+            parentFolder.setChildFolders(null);
+            parentFolder.setAttachments(null);
+            parentFolder.setParentFolder(null);
+            parentFolder.setCourse(null);
+        }
+        folder.setCourse(null);
+        folder.getAttachments();
+
+        return folder;
+
     }
 
     @GetMapping("/courses/{courseId}")
@@ -104,6 +152,66 @@ public class CourseController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/courses/submitCourseForApproval/{courseId}")
+    public String submitCourseForApproval(@PathVariable("courseId") Long courseId) {
+        try {
+            courseService.submitCourseForApproval(courseId);
+
+            return "Course has been successfully submitted for approval.";
+        } catch(CourseNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Course cannot be found", ex);
+        }
+
+    }
+
+    @GetMapping("/courses/approveCourse/{courseId}")
+    public String approveCourse(@PathVariable("courseId") Long courseId) {
+        try {
+            courseService.approveCourse(courseId);
+
+            return "Course has been approved.";
+        } catch(CourseNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Course cannot be found", ex);
+        }
+
+    }
+
+    @GetMapping("/courses/publishCourse/{courseId}")
+    public String publishCourse(@PathVariable("courseId") Long courseId) {
+        try {
+            courseService.publishCourse(courseId);
+
+            return "Course has been published.";
+        } catch(CourseNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Course cannot be found", ex);
+        }
+
+    }
+
+    @PostMapping("/courses/rejectCourse")
+    public String rejectCourse(@RequestBody CourseRejectionModel courseRejectionModel) {
+        try {
+            System.out.println("React A");
+            Long courseId = courseRejectionModel.getCourseId();
+            System.out.println("Course ID is " + courseId.toString());
+            System.out.println("React b");
+            String rejectionReason = courseRejectionModel.getRejectionReason();
+            System.out.println("Rejection reason is " + rejectionReason);
+            System.out.println("React c");
+
+            courseService.rejectCourse(courseId, rejectionReason);
+
+            return "Course has been rejected.";
+        } catch(CourseNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Course cannot be found", ex);
+        }
+
+    }
+
+
+
+
 
 
 }

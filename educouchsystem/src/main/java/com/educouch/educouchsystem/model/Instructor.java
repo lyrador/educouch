@@ -1,6 +1,7 @@
 package com.educouch.educouchsystem.model;
 import com.educouch.educouchsystem.util.enumeration.InstructorAccessRight;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -92,6 +93,7 @@ public class Instructor {
     public void setProfilePictureURL(String profilePictureURL) {
         this.profilePictureURL = profilePictureURL;
     }
+    @JsonBackReference
 
     @JsonIgnore
     public Organisation getOrganisation() {

@@ -7,6 +7,7 @@ import com.educouch.educouchsystem.service.CourseService;
 import com.educouch.educouchsystem.service.EducatorService;
 import com.educouch.educouchsystem.service.ForumService;
 import com.educouch.educouchsystem.service.LearnerService;
+import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -73,6 +74,8 @@ public class ForumController {
             return new ResponseEntity<>(forum, HttpStatus.OK);
         } catch (NoSuchElementException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (InstructorNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -107,12 +110,15 @@ public class ForumController {
                 if (forum.getCreatedByLearner() != null) {
                     forumDTO.setCreatedByUserId(forum.getCreatedByLearner().getLearnerId());
                     forumDTO.setCreatedByUserName(forum.getCreatedByLearner().getName());
+                    forumDTO.setCreatedByUserType("LEARNER");
                 } else if (forum.getCreatedByInstructor() != null) {
                     forumDTO.setCreatedByUserId(forum.getCreatedByInstructor().getInstructorId());
                     forumDTO.setCreatedByUserName(forum.getCreatedByInstructor().getName());
+                    forumDTO.setCreatedByUserType("INSTRUCTOR");
                 } else if (forum.getCreatedByOrganisationAdmin() != null) {
                     forumDTO.setCreatedByUserId(forum.getCreatedByOrganisationAdmin().getOrganisationAdminId());
                     forumDTO.setCreatedByUserName(forum.getCreatedByOrganisationAdmin().getName());
+                    forumDTO.setCreatedByUserType("ORG_ADMIN");
                 }
                 forumDTOs.add(forumDTO);
             }

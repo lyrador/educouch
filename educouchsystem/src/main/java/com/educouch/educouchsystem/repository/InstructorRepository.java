@@ -18,6 +18,9 @@ public interface InstructorRepository extends JpaRepository<Instructor, Long> {
     @Query("SELECT i FROM Instructor i WHERE i.username=:username")
     Instructor findInstructorByUsername(String username);
 
+    @Query("SELECT i FROM Instructor i WHERE i.instructorId=:Id")
+    Instructor findInstructorById(Long Id);
+
     @Query("SELECT i FROM Instructor i WHERE i.organisation.organisationId=:organisationId")
     List<Instructor> findAllInstructorsInOrganisation(Long organisationId);
 }

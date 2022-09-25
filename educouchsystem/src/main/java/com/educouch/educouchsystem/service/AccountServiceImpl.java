@@ -7,7 +7,9 @@ import com.educouch.educouchsystem.dto.LoggedInUserRequestDTO;
 import com.educouch.educouchsystem.model.Instructor;
 import com.educouch.educouchsystem.model.Learner;
 import com.educouch.educouchsystem.model.OrganisationAdmin;
+import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
 import com.educouch.educouchsystem.util.exception.InvalidLoginCredentialsException;
+import com.educouch.educouchsystem.util.exception.OngoingClassRunException;
 import com.educouch.educouchsystem.util.logger.LoggingController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +45,7 @@ public class AccountServiceImpl implements AccountService {
             updatedUser = new EditAccountDTO(
                     updatedLearner.getLearnerId(),
                     updatedLearner.getName(),
-                    updatedLearner.getAddress(),
+                    null,
                     updatedLearner.getEmail(),
                     updatedLearner.getPassword(),
                     updatedLearner.getUsername(),
@@ -93,12 +95,18 @@ public class AccountServiceImpl implements AccountService {
 
         EditAccountDTO userToDelete = new EditAccountDTO();
 
-        if (entityType.equals("LEARNER")) {
-            learnerService.deleteLearner(editAccountRequestDTO.getUserId());
-        } else if (entityType.equals("INSTRUCTOR")) {
-            educatorService.deleteInstructor(editAccountRequestDTO.getUserId());
-        } else if (entityType.equals("ORG_ADMIN")) {
-            educatorService.deleteOrganisationAdmin(editAccountRequestDTO.getUserId());
+        try {
+            if (entityType.equals("LEARNER")) {
+                learnerService.deleteLearner(editAccountRequestDTO.getUserId());
+            } else if (entityType.equals("INSTRUCTOR")) {
+                educatorService.deleteInstructor(String.valueOf(editAccountRequestDTO.getUserId()));
+            } else if (entityType.equals("ORG_ADMIN")) {
+                educatorService.deleteOrganisationAdmin(editAccountRequestDTO.getUserId());
+            }
+        } catch (OngoingClassRunException ex) {
+
+        } catch (InstructorNotFoundException ex) {
+
         }
     }
 }

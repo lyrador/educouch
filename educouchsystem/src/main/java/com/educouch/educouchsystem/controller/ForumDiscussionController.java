@@ -7,6 +7,7 @@ import com.educouch.educouchsystem.service.EducatorService;
 import com.educouch.educouchsystem.service.ForumDiscussionService;
 import com.educouch.educouchsystem.service.ForumService;
 import com.educouch.educouchsystem.service.LearnerService;
+import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,6 +74,8 @@ public class ForumDiscussionController {
             return new ResponseEntity<>(forumDiscussion, HttpStatus.OK);
         } catch (NoSuchElementException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (InstructorNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -108,12 +111,15 @@ public class ForumDiscussionController {
                 if (forumDiscussion.getCreatedByLearner() != null) {
                     forumDiscussionDTO.setCreatedByUserId(forumDiscussion.getCreatedByLearner().getLearnerId());
                     forumDiscussionDTO.setCreatedByUserName(forumDiscussion.getCreatedByLearner().getName());
+                    forumDiscussionDTO.setCreatedByUserType("LEARNER");
                 } else if (forumDiscussion.getCreatedByInstructor() != null) {
                     forumDiscussionDTO.setCreatedByUserId(forumDiscussion.getCreatedByInstructor().getInstructorId());
                     forumDiscussionDTO.setCreatedByUserName(forumDiscussion.getCreatedByInstructor().getName());
+                    forumDiscussionDTO.setCreatedByUserType("INSTRUCTOR");
                 } else if (forumDiscussion.getCreatedByOrganisationAdmin() != null) {
                     forumDiscussionDTO.setCreatedByUserId(forumDiscussion.getCreatedByOrganisationAdmin().getOrganisationAdminId());
                     forumDiscussionDTO.setCreatedByUserName(forumDiscussion.getCreatedByOrganisationAdmin().getName());
+                    forumDiscussionDTO.setCreatedByUserType("ORG_ADMIN");
                 }
                 forumDiscussionDTOs.add(forumDiscussionDTO);
             }

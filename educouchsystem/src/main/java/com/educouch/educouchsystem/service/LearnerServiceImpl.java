@@ -4,6 +4,7 @@ import com.educouch.educouchsystem.model.Learner;
 import com.educouch.educouchsystem.repository.LearnerRepository;
 import com.educouch.educouchsystem.util.exception.UsernameNotFoundException;
 import org.apache.catalina.User;
+import com.educouch.educouchsystem.util.exception.InvalidLoginCredentialsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,5 +45,21 @@ public class LearnerServiceImpl implements LearnerService {
     @Override
     public void deleteLearner(Long id) {
         learnerRepository.deleteById(id);
+    }
+
+    @Override
+    public Learner updateLearner(Learner learner) throws InvalidLoginCredentialsException{
+        Learner updateLearner = learnerRepository.findById(learner.getLearnerId()).get();
+        if(updateLearner.getUsername().equals(learner.getUsername()) && updateLearner.getPassword().equals(learner.getPassword())) {
+            updateLearner.setActive(learner.getActive());
+//            updateLearner.setAddress(learner.getAddress());
+            updateLearner.setEmail(learner.getEmail());
+            updateLearner.setName(learner.getName());
+            updateLearner.setProfilePictureURL(learner.getProfilePictureURL());
+            learnerRepository.save(updateLearner);
+            return updateLearner;
+        }
+        throw new InvalidLoginCredentialsException("Could not update as Lms Admin object to update has a different password");
+
     }
 }
