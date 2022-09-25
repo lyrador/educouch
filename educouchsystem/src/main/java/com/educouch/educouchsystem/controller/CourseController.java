@@ -133,6 +133,15 @@ public class CourseController {
 
     @DeleteMapping("/courses/{courseId}")
     public ResponseEntity<HttpStatus> deleteCourse(@PathVariable("courseId") Long courseId) {
+        Course existingCourse = courseService.retrieveCourseById(courseId);
+        List<Instructor> instructorList = existingCourse.getInstructors();
+        for (Instructor instructor : instructorList) {
+            instructor.getCourses().remove(existingCourse);
+        }
+        existingCourse.getInstructors().clear();
+
+        existingCourse.getOrganisation().getCourses().remove(existingCourse);
+
         courseService.deleteCourse(courseId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
