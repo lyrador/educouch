@@ -5,6 +5,7 @@ import com.educouch.educouchsystem.dto.LoggedInUserRequestDTO;
 import com.educouch.educouchsystem.model.Instructor;
 import com.educouch.educouchsystem.model.Learner;
 import com.educouch.educouchsystem.model.OrganisationAdmin;
+import com.educouch.educouchsystem.util.enumeration.InstructorAccessRight;
 import com.educouch.educouchsystem.util.exception.InvalidLoginCredentialsException;
 import com.educouch.educouchsystem.util.exception.UsernameNotFoundException;
 import com.educouch.educouchsystem.util.logger.LoggingController;
@@ -42,18 +43,30 @@ public class LoginServiceImpl implements LoginService {
         LoggedInUserDTO retrievedUser = new LoggedInUserDTO();
         if (entityType.equals("LEARNER")) {
             Learner retrievedLearner = learnerService.findLearnerByUsername(username);
+            String learnerUserEnum = "";
+            if (retrievedLearner.getIsKid()) {
+                learnerUserEnum = "KID";
+            } else {
+                learnerUserEnum = "ADULT";
+            }
             retrievedUser = new LoggedInUserDTO(
                     retrievedLearner.getLearnerId(),
                     retrievedLearner.getName(),
-                    retrievedLearner.getAddress(),
+                    null,
                     retrievedLearner.getEmail(),
                     retrievedLearner.getPassword(),
                     retrievedLearner.getUsername(),
                     retrievedLearner.getProfilePictureURL(),
                     "LEARNER",
-                    "YOUNG");
+                    learnerUserEnum);
         } else if (entityType.equals("INSTRUCTOR")) {
             Instructor retrievedInstructor = educatorService.findInstructorByUsername(username);
+            String instructorUserEnum = "";
+            if (retrievedInstructor.getInstructorAccessRight() == InstructorAccessRight.INSTRUCTOR) {
+                instructorUserEnum = "INSTRUCTOR";
+            } else {
+                instructorUserEnum = "HEAD_INSTRUCTOR";
+            }
             retrievedUser = new LoggedInUserDTO(
                     retrievedInstructor.getInstructorId(),
                     retrievedInstructor.getName(),
@@ -63,7 +76,7 @@ public class LoginServiceImpl implements LoginService {
                     retrievedInstructor.getUsername(),
                     retrievedInstructor.getProfilePictureURL(),
                     "INSTRUCTOR",
-                    "HEAD_INSTRUCTOR");
+                    instructorUserEnum);
         } else if (entityType.equals("ORG_ADMIN")) {
             OrganisationAdmin retrievedOrganisationAdmin = educatorService.findOrganisationAdminByUsername(username);
             retrievedUser = new LoggedInUserDTO(

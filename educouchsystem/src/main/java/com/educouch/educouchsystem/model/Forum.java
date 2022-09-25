@@ -122,4 +122,20 @@ public class Forum {
     public void setCreatedByOrganisationAdmin(OrganisationAdmin createdByOrganisationAdmin) {
         this.createdByOrganisationAdmin = createdByOrganisationAdmin;
     }
+
+//    public List<Learner> getLearners() {
+//        return learners;
+//    }
+//
+//    public void setLearners(List<Learner> learners) {
+//        this.learners = learners;
+//    }
+//
+//    public List<Educator> getEducators() {
+//        return educators;
+//    }
+//
+//    public void setEducators(List<Educator> educators) {
+//        this.educators = educators;
+//    }
 }

@@ -1,6 +1,7 @@
 package com.educouch.educouchsystem.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.educouch.educouchsystem.util.enumeration.CourseApprovalStatusEnum;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Type;
 
@@ -29,6 +30,10 @@ public class Course {
 
     @Column(name="courseMaxScore", columnDefinition = "Decimal(10,2) default '100.0'")
     private Double courseMaxScore;
+
+    @Column(name="rejectionReason")
+    private String rejectionReason;
+
     @Enumerated(EnumType.STRING)
     @Column(name="ageGroup", nullable = false)
     private AgeGroupEnum ageGroup;
@@ -43,12 +48,21 @@ public class Course {
     @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
     private List<Folder> folders;
 
+    @OneToMany
+    @JoinColumn(name = "id")
+    private List<CategoryTag> categoryTags;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Assessment> assessments;
+
     @ManyToMany(mappedBy = "courses")
     private List<Instructor> instructors;
 
     public Course() {
+        this.categoryTags = new ArrayList<>();
         this.folders = new ArrayList<>();
         this.forums = new ArrayList<>();
+        this.assessments = new ArrayList<>();
     }
 
     public Course(String courseCode, String courseTitle, String courseDescription, String courseTimeline,
@@ -126,6 +140,8 @@ public class Course {
     public void setCourseApprovalStatus(CourseApprovalStatusEnum courseApprovalStatus) {
         this.courseApprovalStatus = courseApprovalStatus;
     }
+
+    @JsonManagedReference
     @JsonIgnore
     public List<Forum> getForums() {
         return forums;
@@ -134,6 +150,8 @@ public class Course {
     public void setForums(List<Forum> forums) {
         this.forums = forums;
     }
+
+    @JsonManagedReference
     @JsonIgnore
     public List<Folder> getFolders() {
         return folders;
@@ -143,6 +161,29 @@ public class Course {
         this.folders = folders;
     }
 
+    public String getRejectionReason() {
+        return rejectionReason;
+    }
+
+    public void setRejectionReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
+    }
+
+    public List<CategoryTag> getCategoryTags() {
+        return categoryTags;
+    }
+
+    public void setCategoryTags(List<CategoryTag> categoryTags) {
+        this.categoryTags = categoryTags;
+    }
+
+    public List<Assessment> getAssessments() {
+        return assessments;
+    }
+
+    public void setAssessments(List<Assessment> assessments) {
+        this.assessments = assessments;
+    }
     @JsonIgnore
     public List<Instructor> getInstructors() {
         return instructors;

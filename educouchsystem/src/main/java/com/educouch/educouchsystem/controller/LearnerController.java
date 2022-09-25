@@ -1,8 +1,11 @@
 package com.educouch.educouchsystem.controller;
 
+import com.educouch.educouchsystem.dto.LearnerDTO;
 import com.educouch.educouchsystem.model.Learner;
 import com.educouch.educouchsystem.service.LearnerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,13 +23,25 @@ public class LearnerController {
 
     //giving path here
     @PostMapping("/add")
-    public String add(@RequestBody Learner learner) {
-        learnerService.saveLearner(learner);
+    public String add(@RequestBody LearnerDTO learnerDTO) {
+        Boolean isKid = true;
+        if (learnerDTO.getIsKid().equals("false")) {
+            isKid = false;
+        }
+        learnerService.saveLearner(
+                new Learner(learnerDTO.getName(), learnerDTO.getEmail(), learnerDTO.getPassword(), learnerDTO.getUsername(), learnerDTO.getProfilePictureURL(), isKid)
+        );
         return "New learner is added";
     }
 
     @GetMapping("/getAll")
     public List<Learner> getAllLearners(){
         return learnerService.getAllLearners();
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<Learner> updateLearner(@RequestBody Learner learner) {
+        Learner updatedLearner = learnerService.updateLearner(learner);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedLearner);
     }
 }
