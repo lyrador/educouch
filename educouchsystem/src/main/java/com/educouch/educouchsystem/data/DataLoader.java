@@ -77,6 +77,7 @@ public class DataLoader implements CommandLineRunner {
 //        Course bio4000 = new Course("BIO4000", "BIO4000 Molecular Genetics", "xxx",
 //                "xxx", 100.0, AgeGroupEnum.ADULTS, CourseApprovalStatusEnum.UNDERCONSTRUCTION);
 //
+<<<<<<< Updated upstream
 //        cs1010 = courseRepository.save(cs1010);
 //        bio4000 = courseRepository.save(bio4000);
 //
@@ -119,5 +120,13 @@ public class DataLoader implements CommandLineRunner {
 //        //create FileSubmission Assessment
 //        FileSubmission newFileSubmission = new FileSubmission("Quiz A", "abcde", 20.0, new Date(), new Date(), FileSubmissionEnum.INDIVIDUAL);
 //        fileSubmissionRepository.save(newFileSubmission);
+=======
+//            childA = folderService.saveFolder(cs1010.getCourseId(), a.getFolderId(), childA);
+//            childB = folderService.saveFolder(cs1010.getCourseId(), a.getFolderId(), childB);
+//            childC = folderService.saveFolder(cs1010.getCourseId(), a.getFolderId(), childC);
+        } catch (FolderUnableToSaveException ex) {
+            System.out.println("Unable to save folder during initialisation");
+        }
+>>>>>>> Stashed changes
     }
 }
