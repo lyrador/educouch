@@ -58,7 +58,7 @@ public class Organisation {
     public void setOrganisationAdmin(OrganisationAdmin organisationAdmin) {
         this.organisationAdmin = organisationAdmin;
     }
-    @JsonManagedReference
+
     public List<Instructor> getInstructors() {
         return instructors;
     }
