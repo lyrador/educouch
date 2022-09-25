@@ -140,7 +140,7 @@ public class ForumController {
     }
 
     @PutMapping("/forums/{forumId}")
-    public ResponseEntity<Forum> updateForum(@PathVariable("forumId") Long forumId, @RequestBody Forum forumRequest) {
+    public ResponseEntity<Forum> updateForum(@PathVariable("forumId") Long forumId, @RequestBody ForumDTO forumRequest) {
         try {
             Forum existingForum = forumService.retrieveForumById(forumId);
             existingForum.setForumTitle(forumRequest.getForumTitle());
