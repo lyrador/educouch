@@ -33,8 +33,10 @@ public class EducatorServiceImpl implements EducatorService{
     }
 
     //not done
+    @Override
     public Instructor findInstructorById(Long Id) {
-        return new Instructor();
+
+        return instructorRepository.findById(Id).get();
     }
 
     //not tested
