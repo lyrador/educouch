@@ -2,6 +2,7 @@ package com.educouch.educouchsystem.model;
 import com.educouch.educouchsystem.util.enumeration.InstructorAccessRight;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -31,8 +32,8 @@ public class Instructor {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "instructor_course",
-            joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "instructorId"),
-            inverseJoinColumns = @JoinColumn(name = "instructor_id", referencedColumnName = "courseId"))
+            joinColumns = @JoinColumn(name = "instructor_id", referencedColumnName = "instructorId"),
+            inverseJoinColumns = @JoinColumn(name = "course_id", referencedColumnName = "courseId"))
     private List<Course> courses;
 
     public Instructor() {
@@ -93,7 +94,6 @@ public class Instructor {
     public void setProfilePictureURL(String profilePictureURL) {
         this.profilePictureURL = profilePictureURL;
     }
-    @JsonBackReference
 
     @JsonIgnore
     public Organisation getOrganisation() {
@@ -111,7 +111,7 @@ public class Instructor {
     public void setInstructorAccessRight(InstructorAccessRight instructorAccessRight) {
         this.instructorAccessRight = instructorAccessRight;
     }
-
+    @JsonManagedReference
     @JsonIgnore
     public List<Course> getCourses() {
         return courses;
