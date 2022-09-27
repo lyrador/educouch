@@ -48,4 +48,15 @@ public class AssessmentServiceImpl implements AssessmentService {
             throw new AssessmentNotFoundException("Assessment Id " + assessmentId + " does not exist!");
         }
     }
+
+    @Override
+    public void deleteAssessmentFromCourseId(Long assessmentId, Long courseId) throws AssessmentNotFoundException, CourseNotFoundException {
+        Assessment assessment = assessmentRepository.findById(assessmentId).get();
+        courseService.getCourseById(courseId).getAssessments().remove(assessment);
+        if (assessment != null) {
+            assessmentRepository.deleteById(assessmentId);
+        } else {
+            throw new AssessmentNotFoundException("Assessment Id " + assessmentId + " does not exist!");
+        }
+    }
 }
