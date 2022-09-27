@@ -59,6 +59,11 @@ public class LoginServiceImpl implements LoginService {
                     retrievedLearner.getProfilePictureURL(),
                     "LEARNER",
                     learnerUserEnum);
+            if (retrievedLearner.getActive() == false) {
+                retrievedUser.setIsActive("false");
+            } else {
+                retrievedUser.setIsActive("true");
+            }
         } else if (entityType.equals("INSTRUCTOR")) {
             Instructor retrievedInstructor = educatorService.findInstructorByUsername(username);
             String instructorUserEnum = "";
@@ -77,6 +82,7 @@ public class LoginServiceImpl implements LoginService {
                     retrievedInstructor.getProfilePictureURL(),
                     "INSTRUCTOR",
                     instructorUserEnum);
+            retrievedUser.setIsActive("true");
         } else if (entityType.equals("ORG_ADMIN")) {
             OrganisationAdmin retrievedOrganisationAdmin = educatorService.findOrganisationAdminByUsername(username);
             retrievedUser = new LoggedInUserDTO(
@@ -89,6 +95,11 @@ public class LoginServiceImpl implements LoginService {
                     retrievedOrganisationAdmin.getProfilePictureURL(),
                     "ORG_ADMIN",
                     null);
+            if (retrievedOrganisationAdmin.getActive() == false) {
+                retrievedUser.setIsActive("false");
+            } else {
+                retrievedUser.setIsActive("true");
+            }
         }
         return retrievedUser;
     }
