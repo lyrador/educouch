@@ -95,6 +95,7 @@ public class LoginServiceImpl implements LoginService {
                     retrievedOrganisationAdmin.getProfilePictureURL(),
                     "ORG_ADMIN",
                     null);
+            retrievedUser.setOrganisationId(retrievedOrganisationAdmin.getOrganisationAdminId());
             if (retrievedOrganisationAdmin.getActive() == false) {
                 retrievedUser.setIsActive("false");
             } else {

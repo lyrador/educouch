@@ -13,6 +13,8 @@ public class LoggedInUserDTO {
 
     private String isActive;
 
+    private Long organisationId;
+
     public LoggedInUserDTO() {
     }
 
@@ -39,6 +41,20 @@ public class LoggedInUserDTO {
         this.userType = userType;
         this.userEnum = userEnum;
         this.isActive = isActive;
+    }
+
+    public LoggedInUserDTO(Long userId, String name, String address, String email, String password, String username, String profilePictureURL, String userType, String userEnum, String isActive, Long organisationId) {
+        this.userId = userId;
+        this.name = name;
+        this.address = address;
+        this.email = email;
+        this.password = password;
+        this.username = username;
+        this.profilePictureURL = profilePictureURL;
+        this.userType = userType;
+        this.userEnum = userEnum;
+        this.isActive = isActive;
+        this.organisationId = organisationId;
     }
 
     public Long getUserId() {
@@ -119,5 +135,13 @@ public class LoggedInUserDTO {
 
     public void setIsActive(String isActive) {
         this.isActive = isActive;
+    }
+
+    public Long getOrganisationId() {
+        return organisationId;
+    }
+
+    public void setOrganisationId(Long organisationId) {
+        this.organisationId = organisationId;
     }
 }
