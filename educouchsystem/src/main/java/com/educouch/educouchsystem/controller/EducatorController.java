@@ -135,6 +135,19 @@ public class EducatorController {
             return new ResponseEntity<>("Instructor has Ongoing ClassRun", HttpStatus.CONFLICT);
         }
     }
+
+    @GetMapping("/findOrganisation/{instructorId}")
+    public ResponseEntity<Organisation> getOrganisationByInstructorId(@PathVariable(value="instructorId") Long instructorId) {
+        try {
+            Instructor instructor = educatorService.findInstructorById(instructorId);
+            Organisation organisation = organisationService.findOrganisationById(instructor.getOrganisation().getOrganisationId());
+            return new ResponseEntity<Organisation>(organisation, HttpStatus.OK);
+        } catch (InstructorNotFoundException exception) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
     public Instructor deserializeInstructor(Instructor i) {
 
         Organisation tempOrg = i.getOrganisation();
