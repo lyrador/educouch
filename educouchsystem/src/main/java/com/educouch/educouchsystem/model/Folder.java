@@ -26,7 +26,7 @@ public class Folder {
     @NotNull
     private String folderName;
 
-    @OneToMany(mappedBy="parentFolder")
+    @OneToMany(cascade = {CascadeType.REMOVE}, mappedBy="parentFolder")
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Folder> childFolders;
 

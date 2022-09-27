@@ -22,4 +22,6 @@ public interface CourseService {
     public void rejectCourse(Long courseId, String rejectionReason) throws CourseNotFoundException;
 
     public void publishCourse(Long courseId) throws CourseNotFoundException;
+    public List<Course> getCoursesByCourseApprovalStatus(String courseApprovalStatus);
+
 }
