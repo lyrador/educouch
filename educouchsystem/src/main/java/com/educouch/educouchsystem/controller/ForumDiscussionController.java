@@ -142,7 +142,7 @@ public class ForumDiscussionController {
     }
 
     @PutMapping("/forumDiscussions/{forumDiscussionId}")
-    public ResponseEntity<ForumDiscussion> updateForumDiscussion(@PathVariable("forumDiscussionId") Long forumDiscussionId, @RequestBody ForumDiscussion forumDiscussionRequest) {
+    public ResponseEntity<ForumDiscussion> updateForumDiscussion(@PathVariable("forumDiscussionId") Long forumDiscussionId, @RequestBody ForumDiscussionDTO forumDiscussionRequest) {
         try {
             ForumDiscussion existingForumDiscussion = forumDiscussionService.retrieveForumDiscussionById(forumDiscussionId);
             existingForumDiscussion.setForumDiscussionTitle(forumDiscussionRequest.getForumDiscussionTitle());
