@@ -1,7 +1,9 @@
 package com.educouch.educouchsystem.service;
 
+import com.educouch.educouchsystem.model.Attachment;
 import com.educouch.educouchsystem.model.Course;
 import com.educouch.educouchsystem.model.Folder;
+import com.educouch.educouchsystem.repository.AttachmentRepository;
 import com.educouch.educouchsystem.repository.FolderRepository;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.util.exception.FolderNotFoundException;
@@ -26,6 +28,9 @@ public class FolderServiceImpl implements FolderService{
     private FolderRepository folderRepository;
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private AttachmentRepository attachmentRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -52,6 +57,25 @@ public class FolderServiceImpl implements FolderService{
     @Override
     public void deleteFolder(Long folderId) throws FolderNotFoundException{
         try {
+            Folder folderToDelete = getFolder(folderId);
+            List<Folder> listOfFolders = folderToDelete.getChildFolders();
+            List<Attachment> listOfAttachments = folderToDelete.getAttachments();
+
+            Folder parentFolder = folderToDelete.getParentFolder();
+            Course course = folderToDelete.getCourse();
+
+            //remove from course
+            course.getFolders().remove(folderToDelete);
+            courseService.saveCourse(course);
+
+            // remove from parent
+            if(parentFolder != null) {
+                parentFolder.getChildFolders().remove(folderToDelete);
+                folderRepository.save(parentFolder);
+            }
+
+
+
             folderRepository.deleteById(folderId);
         } catch (Exception ex) {
             throw new FolderNotFoundException(ex.getMessage());
