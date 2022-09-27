@@ -11,6 +11,8 @@ public class LoggedInUserDTO {
     private String userType;
     private String userEnum;
 
+    private String isActive;
+
     public LoggedInUserDTO() {
     }
 
@@ -24,6 +26,19 @@ public class LoggedInUserDTO {
         this.profilePictureURL = profilePictureURL;
         this.userType = userType;
         this.userEnum = userEnum;
+    }
+
+    public LoggedInUserDTO(Long userId, String name, String address, String email, String password, String username, String profilePictureURL, String userType, String userEnum, String isActive) {
+        this.userId = userId;
+        this.name = name;
+        this.address = address;
+        this.email = email;
+        this.password = password;
+        this.username = username;
+        this.profilePictureURL = profilePictureURL;
+        this.userType = userType;
+        this.userEnum = userEnum;
+        this.isActive = isActive;
     }
 
     public Long getUserId() {
@@ -96,5 +111,13 @@ public class LoggedInUserDTO {
 
     public void setUserEnum(String userEnum) {
         this.userEnum = userEnum;
+    }
+
+    public String getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(String isActive) {
+        this.isActive = isActive;
     }
 }

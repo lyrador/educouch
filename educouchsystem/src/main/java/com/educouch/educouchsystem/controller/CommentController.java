@@ -149,7 +149,7 @@ public class CommentController {
     }
 
     @PutMapping("/comments/{commentId}")
-    public ResponseEntity<Comment> updateComment(@PathVariable("commentId") Long commentId, @RequestBody Comment commentRequest) {
+    public ResponseEntity<Comment> updateComment(@PathVariable("commentId") Long commentId, @RequestBody CommentDTO commentRequest) {
         try {
             Comment existingComment = commentService.retrieveCommentById(commentId);
             existingComment.setCommentTitle(commentRequest.getCommentTitle());
