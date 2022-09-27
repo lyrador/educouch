@@ -66,7 +66,7 @@ public class DataLoader implements CommandLineRunner {
 
     public void loadData() {
         lmsAdminService.saveLmsAdmin(new LmsAdmin("manager", "manager@gmail.com", "password", "manager"));
-        learnerRepository.save(new Learner("Alex", "alex@gmail.com", "password", "alex", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true));
+//        learnerRepository.save(new Learner("Alex", "alex@gmail.com", "password", "alex", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true));
 
 //        Course cs1010 = new Course("CS1010", "CS1010 Introduction to Computer Science",
 //                "xxx", "xxx", 100.0, AgeGroupEnum.ADULTS,
@@ -92,17 +92,17 @@ public class DataLoader implements CommandLineRunner {
 //        Folder c = new Folder("Week 3: Iterative Control");
 //
 //        //create organisation
-        Organisation org1 = new Organisation("FakeTuition");
-        OrganisationAdmin orgAdmin = new OrganisationAdmin("grinivas", "grini@gmail.com", "password", "grinivas");
-
-        organisationService.instantiateOrganisation(orgAdmin, org1);
+//        Organisation org1 = new Organisation("FakeTuition");
+//        OrganisationAdmin orgAdmin = new OrganisationAdmin("grinivas", "grini@gmail.com", "password", "grinivas");
+//
+//        organisationService.instantiateOrganisation(orgAdmin, org1);
 //
 //        //create instructors
-        Instructor i1 = new Instructor("milo", "milo@gmail.com", "milo", "password", InstructorAccessRight.INSTRUCTOR);
-        Instructor i2 = new Instructor("horlicks", "horlicks@gmail.com", "horlicks", "password", InstructorAccessRight.HEADINSTRUCTOR);
-
-        organisationService.addInstructor("1", i1);
-        organisationService.addInstructor("1", i2);
+//        Instructor i1 = new Instructor("milo", "milo@gmail.com", "milo", "password", InstructorAccessRight.INSTRUCTOR);
+//        Instructor i2 = new Instructor("horlicks", "horlicks@gmail.com", "horlicks", "password", InstructorAccessRight.HEADINSTRUCTOR);
+//
+//        organisationService.addInstructor("1", i1);
+//        organisationService.addInstructor("1", i2);
 //
 ////        Folder saveFolder(Long courseId, Folder folder) throws FolderUnableToSaveException;
 //        try {
