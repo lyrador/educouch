@@ -16,11 +16,10 @@ public class QuizAttempt implements Serializable {
     private Long quizAttemptId;
 
     @NotNull
-    private Double obtainedScore = 0.0;
+    private String quizAttemptDescription;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
-    private Quiz quizAttempted;
+    @NotNull
+    private Double obtainedScore = 0.0;
 
     @OneToMany(mappedBy = "quizAttempt", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuestionAttempt> questionAttempts;
@@ -29,9 +28,9 @@ public class QuizAttempt implements Serializable {
 
     }
 
-    public QuizAttempt(Quiz quizAttempted) {
+    public QuizAttempt(String quizAttemptDescription) {
         this();
-        this.quizAttempted = quizAttempted;
+        this.quizAttemptDescription = quizAttemptDescription;
     }
 
     public Long getQuizAttemptId() {
@@ -50,12 +49,12 @@ public class QuizAttempt implements Serializable {
         this.obtainedScore = obtainedScore;
     }
 
-    public Quiz getQuizAttempted() {
-        return quizAttempted;
+    public String getQuizAttemptDescription() {
+        return quizAttemptDescription;
     }
 
-    public void setQuizAttempted(Quiz quizAttempted) {
-        this.quizAttempted = quizAttempted;
+    public void setQuizAttemptDescription(String quizAttemptDescription) {
+        this.quizAttemptDescription = quizAttemptDescription;
     }
 
     public List<QuestionAttempt> getQuestionAttempts() {
