@@ -1,9 +1,8 @@
 package com.educouch.educouchsystem.model;
 
+import com.educouch.educouchsystem.util.enumeration.AgeGroupEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.educouch.educouchsystem.util.enumeration.CourseApprovalStatusEnum;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.ArrayList;
