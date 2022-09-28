@@ -16,20 +16,15 @@ public class Option implements Serializable {
     @NotNull
     private String optionContent;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
-    private Question optionQuestion;
-
     @NotNull
     private Boolean isCorrect = Boolean.FALSE;
 
     public Option() {
     }
 
-    public Option(String optionContent, Question optionQuestion) {
+    public Option(String optionContent) {
         this();
         this.optionContent = optionContent;
-        this.optionQuestion = optionQuestion;
     }
 
     public Long getOptionId() {
@@ -46,14 +41,6 @@ public class Option implements Serializable {
 
     public void setOptionContent(String optionContent) {
         this.optionContent = optionContent;
-    }
-
-    public Question getOptionQuestion() {
-        return optionQuestion;
-    }
-
-    public void setOptionQuestion(Question optionQuestion) {
-        this.optionQuestion = optionQuestion;
     }
 
     public Boolean getCorrect() {
