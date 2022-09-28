@@ -75,8 +75,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Question updateQuestion(Question question) throws QuestionNotFoundException {
-        Question questionToUpdate = questionRepository.findById(question.getQuestionId()).get();
+    public Question updateQuestion(Question questionToUpdate, Question question) throws QuestionNotFoundException {
         if (questionToUpdate.getQuestionId().equals(question.getQuestionId())) {
             questionToUpdate.setQuestionContent(question.getQuestionContent());
             questionToUpdate.setQuestionHint(question.getQuestionHint());
