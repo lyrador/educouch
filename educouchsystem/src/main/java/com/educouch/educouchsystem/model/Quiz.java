@@ -1,8 +1,6 @@
 package com.educouch.educouchsystem.model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,10 +16,12 @@ public class Quiz extends Assessment implements Serializable {
     @NotNull
     private Boolean isAutoRelease;
 
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name="quiz_id")
     private List<Question> quizQuestions;
 
-    @OneToMany(mappedBy = "quizAttempted", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name="quiz_id")
     private List<QuizAttempt> quizAttempts;
 
     public Quiz() {

@@ -5,13 +5,11 @@ import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.service.AssessmentService;
 import com.educouch.educouchsystem.service.CourseService;
 import com.educouch.educouchsystem.service.FileSubmissionService;
-import com.educouch.educouchsystem.service.QuizService;
 import com.educouch.educouchsystem.util.enumeration.AssessmentStatusEnum;
 import com.educouch.educouchsystem.util.enumeration.FileSubmissionEnum;
 import com.educouch.educouchsystem.util.exception.AssessmentNotFoundException;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.util.exception.FileSubmissionNotFoundException;
-import com.educouch.educouchsystem.util.exception.QuizNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -163,7 +159,6 @@ public class AssessmentController {
     @DeleteMapping("/deleteAssessmentByIdFromCourseId/{assessmentId}/{courseId}")
     public ResponseEntity<HttpStatus> deleteAssessmentById(@PathVariable("assessmentId") Long assessmentId, @PathVariable("courseId") Long courseId) {
         try {
-//            assessmentService.deleteAssessment(assessmentId);
             assessmentService.deleteAssessmentFromCourseId(assessmentId, courseId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (AssessmentNotFoundException | CourseNotFoundException ex) {
