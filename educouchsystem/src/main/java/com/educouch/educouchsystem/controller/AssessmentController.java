@@ -12,6 +12,7 @@ import com.educouch.educouchsystem.util.enumeration.FileSubmissionEnum;
 import com.educouch.educouchsystem.util.exception.AssessmentNotFoundException;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.util.exception.FileSubmissionNotFoundException;
+import com.educouch.educouchsystem.util.exception.QuizNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -324,6 +325,56 @@ public class AssessmentController {
             return new ResponseEntity<FileSubmission>(fileSubmissionService.saveFileSubmission(fileSubmissionToUpdate), HttpStatus.OK);
         } catch (FileSubmissionNotFoundException ex) {
             return new ResponseEntity<FileSubmission>(HttpStatus.NOT_FOUND);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PutMapping("/updateQuiz/{quizId}")
+    public ResponseEntity<Quiz> updateQuiz(@RequestBody QuizDTO quizDTO, @PathVariable("quizId") Long quizId) {
+        try {
+            Quiz quizToUpdate = quizService.retrieveQuizById(quizId);
+
+            quizToUpdate.setTitle(quizDTO.getAssessmentTitle());
+            quizToUpdate.setDescription(quizDTO.getAssessmentDescription());
+            quizToUpdate.setMaxScore(quizDTO.getAssessmentMaxScore());
+
+            if (quizDTO.getAssessmentIsOpen().equals("true")) {
+                quizToUpdate.setOpen(Boolean.TRUE);
+            } else if (quizDTO.getAssessmentIsOpen().equals("false")) {
+                quizToUpdate.setOpen(Boolean.FALSE);
+            }
+
+            if (quizDTO.getAssessmentHasTimeLimit().equals("true")) {
+                quizToUpdate.setHasTimeLimit(Boolean.TRUE);
+            } else if (quizDTO.getAssessmentHasTimeLimit().equals("false")) {
+                quizToUpdate.setHasTimeLimit(Boolean.FALSE);
+            }
+
+            if (quizDTO.getAssessmentIsAutoRelease().equals("true")) {
+                quizToUpdate.setAutoRelease(Boolean.TRUE);
+            } else if (quizDTO.getAssessmentIsAutoRelease().equals("false")) {
+                quizToUpdate.setAutoRelease(Boolean.FALSE);
+            }
+
+            if (quizDTO.getAssessmentStatusEnum().equals("PENDING")) {
+                quizToUpdate.setAssessmentStatus(AssessmentStatusEnum.PENDING);
+            } else if (quizDTO.getAssessmentStatusEnum().equals("INCOMPLETE")) {
+                quizToUpdate.setAssessmentStatus(AssessmentStatusEnum.INCOMPLETE);
+            } else if (quizDTO.getAssessmentStatusEnum().equals("COMPLETE")) {
+                quizToUpdate.setAssessmentStatus(AssessmentStatusEnum.COMPLETE);
+            }
+
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date startDate = (Date)formatter.parse(quizDTO.getAssessmentStartDate());
+            Date endDate = (Date)formatter.parse(quizDTO.getAssessmentEndDate());
+            quizToUpdate.setStartDate(startDate);
+            quizToUpdate.setEndDate(endDate);
+
+            quizService.updateQuiz(quizToUpdate, quizToUpdate);
+            return new ResponseEntity<Quiz>(quizService.saveQuiz(quizToUpdate), HttpStatus.OK);
+        } catch (QuizNotFoundException ex) {
+            return new ResponseEntity<Quiz>(HttpStatus.NOT_FOUND);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
