@@ -2,6 +2,8 @@ package com.educouch.educouchsystem.model;
 
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Learner {
@@ -26,7 +28,14 @@ public class Learner {
     @Column(nullable = false)
     private Boolean isKid;
 
+    @ManyToMany
+    @JoinTable(name = "Learner_ClassRun",
+    joinColumns = {@JoinColumn(name = "learnerId")},
+    inverseJoinColumns = {@JoinColumn(name = "classRunId")})
+    List<ClassRun> classRuns;
+
     public Learner() {
+        this.classRuns = new ArrayList<>();
     }
 
 //    public Learner(String name, String address, String email, String password, String username, String profilePictureURL) {
@@ -51,7 +60,10 @@ public class Learner {
 //    }
 
 
+
+
     public Learner(String name, String email, String password, String username, String profilePictureURL, Boolean isKid) {
+        new Learner();
         this.name = name;
         this.email = email;
         this.password = password;
@@ -130,5 +142,21 @@ public class Learner {
 
     public void setIsKid(Boolean isKid) {
         isKid = isKid;
+    }
+
+    public Boolean getKid() {
+        return isKid;
+    }
+
+    public void setKid(Boolean kid) {
+        isKid = kid;
+    }
+
+    public List<ClassRun> getClassRuns() {
+        return classRuns;
+    }
+
+    public void setClassRuns(List<ClassRun> classRuns) {
+        this.classRuns = classRuns;
     }
 }
