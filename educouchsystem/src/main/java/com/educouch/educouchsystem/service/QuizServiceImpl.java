@@ -3,10 +3,7 @@ package com.educouch.educouchsystem.service;
 import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.repository.QuestionRepository;
 import com.educouch.educouchsystem.repository.QuizRepository;
-import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
-import com.educouch.educouchsystem.util.exception.EntityInstanceExistsInCollectionException;
-import com.educouch.educouchsystem.util.exception.QuestionNotFoundException;
-import com.educouch.educouchsystem.util.exception.QuizNotFoundException;
+import com.educouch.educouchsystem.util.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -141,15 +138,13 @@ public class QuizServiceImpl implements QuizService{
     }
 
     @Override
-    public void removeQuestionFromQuiz(Long quizId, Question question) throws QuizNotFoundException, QuestionNotFoundException {
-        Quiz quizToEdit = retrieveQuizById(quizId);
-        List<Question> quizQuestions = quizToEdit.getQuizQuestions();
-        if (quizQuestions.contains(question)) {
-            quizQuestions.remove(question);
-            quizToEdit.setQuizQuestions(quizQuestions);
-            saveQuiz(quizToEdit);
+    public void deleteQuestionFromQuizId(Long questionId, Long quizId) throws QuizNotFoundException, QuestionNotFoundException {
+        Question question = questionRepository.findById(questionId).get();
+        retrieveQuizById(quizId).getQuizQuestions().remove(question);
+        if (question != null) {
+            questionRepository.deleteById(questionId);
         } else {
-            throw new QuestionNotFoundException("Question does not exist in quiz!");
+            throw new QuestionNotFoundException("Question Id " + questionId + " does not exist!");
         }
     }
 }
