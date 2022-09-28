@@ -1,10 +1,12 @@
 package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.dto.FileSubmissionDTO;
+import com.educouch.educouchsystem.dto.QuizDTO;
 import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.service.AssessmentService;
 import com.educouch.educouchsystem.service.CourseService;
 import com.educouch.educouchsystem.service.FileSubmissionService;
+import com.educouch.educouchsystem.service.QuizService;
 import com.educouch.educouchsystem.util.enumeration.AssessmentStatusEnum;
 import com.educouch.educouchsystem.util.enumeration.FileSubmissionEnum;
 import com.educouch.educouchsystem.util.exception.AssessmentNotFoundException;
@@ -34,6 +36,9 @@ public class AssessmentController {
 
     @Autowired
     private FileSubmissionService fileSubmissionService;
+
+    @Autowired
+    private QuizService quizService;
 
 //    @Autowired
 //    private QuizService quizService;
@@ -130,6 +135,104 @@ public class AssessmentController {
                 fileSubmissionDTOs.add(fileSubmissionDTO);
             }
             return new ResponseEntity<>(fileSubmissionDTOs, HttpStatus.OK);
+
+        } catch (CourseNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/addNewQuiz/{courseId}")
+    public ResponseEntity<Quiz> addQuiz(@RequestBody QuizDTO quizDTO, @PathVariable(value="courseId") Long courseId) {
+        try {
+            Quiz newQuiz = new Quiz();
+            newQuiz.setTitle(quizDTO.getAssessmentTitle());
+            newQuiz.setDescription(quizDTO.getAssessmentDescription());
+            newQuiz.setMaxScore(quizDTO.getAssessmentMaxScore());
+
+            if (quizDTO.getAssessmentIsOpen().equals("true")) {
+                newQuiz.setOpen(Boolean.TRUE);
+            } else if (quizDTO.getAssessmentIsOpen().equals("false")) {
+                newQuiz.setOpen(Boolean.FALSE);
+            }
+
+            if (quizDTO.getAssessmentHasTimeLimit().equals("true")) {
+                newQuiz.setHasTimeLimit(Boolean.TRUE);
+            } else if (quizDTO.getAssessmentHasTimeLimit().equals("false")) {
+                newQuiz.setHasTimeLimit(Boolean.FALSE);
+            }
+
+            if (quizDTO.getAssessmentIsAutoRelease().equals("true")) {
+                newQuiz.setAutoRelease(Boolean.TRUE);
+            } else if (quizDTO.getAssessmentIsAutoRelease().equals("false")) {
+                newQuiz.setAutoRelease(Boolean.FALSE);
+            }
+
+            if (quizDTO.getAssessmentStatusEnum().equals("PENDING")) {
+                newQuiz.setAssessmentStatus(AssessmentStatusEnum.PENDING);
+            } else if (quizDTO.getAssessmentStatusEnum().equals("INCOMPLETE")) {
+                newQuiz.setAssessmentStatus(AssessmentStatusEnum.INCOMPLETE);
+            } else if (quizDTO.getAssessmentStatusEnum().equals("COMPLETE")) {
+                newQuiz.setAssessmentStatus(AssessmentStatusEnum.COMPLETE);
+            }
+
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date startDate = (Date)formatter.parse(quizDTO.getAssessmentStartDate());
+            Date endDate = (Date)formatter.parse(quizDTO.getAssessmentEndDate());
+            newQuiz.setStartDate(startDate);
+            newQuiz.setEndDate(endDate);
+
+            quizService.saveQuiz(courseId, newQuiz);
+            return new ResponseEntity<>(newQuiz, HttpStatus.OK);
+        } catch (CourseNotFoundException | ParseException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/getAllQuizzesByCourseId/{courseId}")
+    public ResponseEntity<List<QuizDTO>> getAllQuizzesByCourseId(@PathVariable(value="courseId") Long courseId) {
+        try {
+            List<Quiz> quizzes = quizService.getAllQuizzesByCourseId(courseId);
+            List<QuizDTO> quizDTOs = new ArrayList<>();
+            for (Quiz quiz : quizzes) {
+                QuizDTO quizDTO = new QuizDTO();
+                quizDTO.setAssessmentId(quiz.getAssessmentId());
+                quizDTO.setAssessmentTitle(quiz.getTitle());
+                quizDTO.setAssessmentDescription(quiz.getDescription());
+                quizDTO.setAssessmentMaxScore(quiz.getMaxScore());
+
+                DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                quizDTO.setAssessmentStartDate(formatter.format(quiz.getStartDate()));
+                quizDTO.setAssessmentEndDate(formatter.format(quiz.getEndDate()));
+
+                if (quiz.getOpen()) {
+                    quizDTO.setAssessmentIsOpen("true");
+                } else if (quiz.getOpen() == false) {
+                    quizDTO.setAssessmentIsOpen("false");
+                }
+
+                if (quiz.getHasTimeLimit()) {
+                    quizDTO.setAssessmentHasTimeLimit("true");
+                } else if (quiz.getHasTimeLimit() == false) {
+                    quizDTO.setAssessmentHasTimeLimit("false");
+                }
+
+                if (quiz.getAutoRelease()) {
+                    quizDTO.setAssessmentIsAutoRelease("true");
+                } else if (quiz.getAutoRelease() == false) {
+                    quizDTO.setAssessmentIsAutoRelease("false");
+                }
+
+                if (quiz.getAssessmentStatus() == AssessmentStatusEnum.PENDING) {
+                    quizDTO.setAssessmentStatusEnum("PENDING");
+                } else if (quiz.getAssessmentStatus() == AssessmentStatusEnum.INCOMPLETE) {
+                    quizDTO.setAssessmentStatusEnum("INCOMPLETE");
+                } else if (quiz.getAssessmentStatus() == AssessmentStatusEnum.COMPLETE) {
+                    quizDTO.setAssessmentStatusEnum("COMPLETE");
+                }
+
+                quizDTOs.add(quizDTO);
+            }
+            return new ResponseEntity<>(quizDTOs, HttpStatus.OK);
 
         } catch (CourseNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
