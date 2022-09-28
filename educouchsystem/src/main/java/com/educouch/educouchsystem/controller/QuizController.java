@@ -1,16 +1,24 @@
 package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.dto.QuestionDTO;
+import com.educouch.educouchsystem.dto.QuizDTO;
 import com.educouch.educouchsystem.model.Question;
 import com.educouch.educouchsystem.model.Quiz;
+import com.educouch.educouchsystem.service.QuestionService;
 import com.educouch.educouchsystem.service.QuizService;
+import com.educouch.educouchsystem.util.enumeration.AssessmentStatusEnum;
 import com.educouch.educouchsystem.util.enumeration.QuestionTypeEnum;
 import com.educouch.educouchsystem.util.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -20,6 +28,9 @@ public class QuizController {
 
     @Autowired
     private QuizService quizService;
+
+    @Autowired
+    private QuestionService questionService;
 
     @PostMapping("/addNewQuestion/{quizId}")
     public ResponseEntity<Question> addQuestionToQuiz(@RequestBody QuestionDTO questionDTO, @PathVariable(value="quizId") Long quizId) {
@@ -86,6 +97,32 @@ public class QuizController {
 
         } catch (QuizNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/updateQuestion/{questionId}")
+    public ResponseEntity<Question> updateQuestion(@RequestBody QuestionDTO questionDTO, @PathVariable("questionId") Long questionId) {
+        try {
+            Question questionToUpdate = questionService.retrieveQuestionById(questionId);
+
+            questionToUpdate.setQuestionContent(questionDTO.getQuestionContent());
+            questionToUpdate.setQuestionHint(questionDTO.getQuestionHint());
+            questionToUpdate.setQuestionMaxScore(questionDTO.getQuestionMaxScore());
+
+            if (questionDTO.getQuestionType().equals("TRUE FALSE")) {
+                questionToUpdate.setQuestionType(QuestionTypeEnum.TRUE_FALSE);
+            } else if (questionDTO.getQuestionType().equals("OPEN ENDED")) {
+                questionToUpdate.setQuestionType(QuestionTypeEnum.OPEN_ENDED);
+            } else if (questionDTO.getQuestionType().equals("MCQ")) {
+                questionToUpdate.setQuestionType(QuestionTypeEnum.MCQ);
+            } else if (questionDTO.getQuestionType().equals("MRQ")) {
+                questionToUpdate.setQuestionType(QuestionTypeEnum.MRQ);
+            }
+
+            questionService.updateQuestion(questionToUpdate, questionToUpdate);
+            return new ResponseEntity<Question>(questionService.saveQuestion(questionToUpdate), HttpStatus.OK);
+        } catch (QuestionNotFoundException ex) {
+            return new ResponseEntity<Question>(HttpStatus.NOT_FOUND);
         }
     }
 }
