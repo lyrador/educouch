@@ -54,8 +54,7 @@ public class OptionServiceImpl implements OptionService {
     }
 
     @Override
-    public Option updateOption(Option option) throws OptionNotFoundException {
-        Option optionToUpdate = optionRepository.findById(option.getOptionId()).get();
+    public Option updateOption(Option optionToUpdate, Option option) throws OptionNotFoundException {
         if (optionToUpdate.getOptionId().equals(option.getOptionId())) {
             optionToUpdate.setOptionContent(option.getOptionContent());
             optionToUpdate.setCorrect(option.getCorrect()); //for determining if this is a correct answer for MCQ/MRQ
