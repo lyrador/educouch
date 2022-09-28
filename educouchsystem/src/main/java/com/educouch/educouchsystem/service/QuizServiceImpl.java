@@ -1,9 +1,6 @@
 package com.educouch.educouchsystem.service;
 
-import com.educouch.educouchsystem.model.Course;
-import com.educouch.educouchsystem.model.Question;
-import com.educouch.educouchsystem.model.Quiz;
-import com.educouch.educouchsystem.model.QuizAttempt;
+import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.repository.QuestionRepository;
 import com.educouch.educouchsystem.repository.QuizRepository;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
@@ -13,6 +10,7 @@ import com.educouch.educouchsystem.util.exception.QuizNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 @Service
 public class QuizServiceImpl implements QuizService{
@@ -79,6 +77,24 @@ public class QuizServiceImpl implements QuizService{
             return quiz;
         } else {
             throw new QuizNotFoundException("Quiz Id " + quizId + " does not exist!");
+        }
+    }
+
+    @Override
+    public List<Quiz> getAllQuizzesByCourseId(Long courseId) throws CourseNotFoundException {
+        Course course = courseService.retrieveCourseById(courseId);
+        if (course != null) {
+            List<Assessment> assessments = course.getAssessments();
+            List<Quiz> quizzes = new ArrayList<>();
+            for (Assessment assessment : assessments) {
+                if (assessment instanceof Quiz) {
+                    Quiz quiz = (Quiz) assessment;
+                    quizzes.add(quiz);
+                }
+            }
+            return quizzes;
+        } else {
+            throw new CourseNotFoundException("Course Id " + courseId + " does not exist!");
         }
     }
 

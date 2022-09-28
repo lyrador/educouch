@@ -1,13 +1,16 @@
 package com.educouch.educouchsystem.controller;
 
+import com.educouch.educouchsystem.dto.FileSubmissionDTO;
 import com.educouch.educouchsystem.dto.QuizDTO;
 import com.educouch.educouchsystem.model.Assessment;
 import com.educouch.educouchsystem.model.Course;
+import com.educouch.educouchsystem.model.FileSubmission;
 import com.educouch.educouchsystem.model.Quiz;
 import com.educouch.educouchsystem.service.AssessmentService;
 import com.educouch.educouchsystem.service.CourseService;
 import com.educouch.educouchsystem.service.QuizService;
 import com.educouch.educouchsystem.util.enumeration.AssessmentStatusEnum;
+import com.educouch.educouchsystem.util.enumeration.FileSubmissionEnum;
 import com.educouch.educouchsystem.util.exception.AssessmentNotFoundException;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.util.exception.QuizNotFoundException;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -84,6 +88,57 @@ public class QuizController {
         }
     }
 
+    @GetMapping("/getAllQuizzesByCourseId/{courseId}")
+    public ResponseEntity<List<QuizDTO>> getAllQuizzesByCourseId(@PathVariable(value="courseId") Long courseId) {
+        try {
+            List<Quiz> quizzes = quizService.getAllQuizzesByCourseId(courseId);
+            List<QuizDTO> quizDTOs = new ArrayList<>();
+            for (Quiz quiz : quizzes) {
+                QuizDTO quizDTO = new QuizDTO();
+                quizDTO.setAssessmentId(quiz.getAssessmentId());
+                quizDTO.setAssessmentTitle(quiz.getTitle());
+                quizDTO.setAssessmentDescription(quiz.getDescription());
+                quizDTO.setAssessmentMaxScore(quiz.getMaxScore());
+
+                DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                quizDTO.setAssessmentStartDate(formatter.format(quiz.getStartDate()));
+                quizDTO.setAssessmentEndDate(formatter.format(quiz.getEndDate()));
+
+                if (quiz.getOpen()) {
+                    quizDTO.setAssessmentIsOpen("true");
+                } else if (quiz.getOpen() == false) {
+                    quizDTO.setAssessmentIsOpen("false");
+                }
+
+                if (quiz.getHasTimeLimit()) {
+                    quizDTO.setAssessmentHasTimeLimit("true");
+                } else if (quiz.getHasTimeLimit() == false) {
+                    quizDTO.setAssessmentHasTimeLimit("false");
+                }
+
+                if (quiz.getAutoRelease()) {
+                    quizDTO.setAssessmentIsAutoRelease("true");
+                } else if (quiz.getAutoRelease() == false) {
+                    quizDTO.setAssessmentIsAutoRelease("false");
+                }
+
+                if (quiz.getAssessmentStatus() == AssessmentStatusEnum.PENDING) {
+                    quizDTO.setAssessmentStatusEnum("PENDING");
+                } else if (quiz.getAssessmentStatus() == AssessmentStatusEnum.INCOMPLETE) {
+                    quizDTO.setAssessmentStatusEnum("INCOMPLETE");
+                } else if (quiz.getAssessmentStatus() == AssessmentStatusEnum.COMPLETE) {
+                    quizDTO.setAssessmentStatusEnum("COMPLETE");
+                }
+
+                quizDTOs.add(quizDTO);
+            }
+            return new ResponseEntity<>(quizDTOs, HttpStatus.OK);
+
+        } catch (CourseNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/getQuizById/{quizId}")
     public ResponseEntity<Quiz> retrieveQuizById(@PathVariable("quizId") Long quizId) {
         try {
@@ -93,6 +148,8 @@ public class QuizController {
             return new ResponseEntity<Quiz>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/{quizId}/getQ")
 
     @DeleteMapping("/deleteAssessmentById/{assessmentId}")
     public ResponseEntity<HttpStatus> deleteAssessmentById(@PathVariable("assessmentId") Long assessmentId) {
