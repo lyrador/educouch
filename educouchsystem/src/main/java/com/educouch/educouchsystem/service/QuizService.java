@@ -30,6 +30,6 @@ public interface QuizService {
     public Quiz updateQuiz(Quiz quizToUpdate, Quiz quiz) throws QuizNotFoundException;
 
     public void addQuestionToQuiz(Long quizId, Question question) throws QuizNotFoundException, EntityInstanceExistsInCollectionException;
-    public void removeQuestionFromQuiz(Long quizId, Question question) throws QuizNotFoundException, QuestionNotFoundException;
+    public void deleteQuestionFromQuizId(Long questionId, Long quizId) throws QuizNotFoundException, QuestionNotFoundException;
 
 }
