@@ -27,7 +27,7 @@ public interface QuizService {
 
     public void deleteQuiz(Long quizId) throws QuizNotFoundException;
 
-    public Quiz updateQuiz(Quiz quiz) throws QuizNotFoundException;
+    public Quiz updateQuiz(Quiz quizToUpdate, Quiz quiz) throws QuizNotFoundException;
 
     public void addQuestionToQuiz(Long quizId, Question question) throws QuizNotFoundException, EntityInstanceExistsInCollectionException;
     public void removeQuestionFromQuiz(Long quizId, Question question) throws QuizNotFoundException, QuestionNotFoundException;
