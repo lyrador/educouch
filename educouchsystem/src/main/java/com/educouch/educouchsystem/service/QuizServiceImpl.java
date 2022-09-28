@@ -130,8 +130,8 @@ public class QuizServiceImpl implements QuizService{
         List<Question> quizQuestions = quizToEdit.getQuizQuestions();
         if (!quizQuestions.contains(question)) {
             quizQuestions.add(question);
-            quizToEdit.setQuizQuestions(quizQuestions);
             saveQuiz(quizToEdit);
+            quizRepository.save(quizToEdit);
         } else {
             throw new EntityInstanceExistsInCollectionException("Question already exists in quiz!");
         }
