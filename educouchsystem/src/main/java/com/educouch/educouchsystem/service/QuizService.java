@@ -17,6 +17,8 @@ public interface QuizService {
 
     public List<Quiz> getAllQuizzes();
 
+    public List<Quiz> getAllQuizzesByCourseId(Long courseId) throws CourseNotFoundException;
+
     public List<Question> getAllQuestionsInQuiz(Long quizId) throws QuizNotFoundException;
 
     public List<QuizAttempt> getAllQuizAttemptsInQuiz(Long quizId) throws QuizNotFoundException;
