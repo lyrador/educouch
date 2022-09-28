@@ -44,6 +44,10 @@ public class Course {
     @JoinColumn(name="course_id")
     private List<Forum> forums;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name="course_id")
+    private List<ClassRun> classRuns;
+
     @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
     private List<Folder> folders;
 
@@ -66,10 +70,12 @@ public class Course {
         this.folders = new ArrayList<>();
         this.forums = new ArrayList<>();
         this.assessments = new ArrayList<>();
+        this.classRuns = new ArrayList<>();
         this.courseApprovalStatus = CourseApprovalStatusEnum.UNDERCONSTRUCTION;
     }
 
-    /*public Course(String courseCode, String courseTitle, String courseDescription, String courseTimeline,
+    // for uploading data purposes
+    public Course(String courseCode, String courseTitle, String courseDescription, String courseTimeline,
                   Double courseMaxScore, AgeGroupEnum ageGroup, CourseApprovalStatusEnum courseApprovalStatus) {
         new Course();
         this.courseCode = courseCode;
@@ -79,7 +85,7 @@ public class Course {
         this.courseMaxScore = courseMaxScore;
         this.ageGroup = ageGroup;
         this.courseApprovalStatus = courseApprovalStatus;
-    }*/
+    }
 
     public Course(String courseCode, String courseTitle, String courseDescription, String courseTimeline, Double courseMaxScore, AgeGroupEnum ageGroup) {
         new Course();
@@ -213,5 +219,13 @@ public class Course {
 
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
+    }
+
+    public List<ClassRun> getClassRuns() {
+        return classRuns;
+    }
+
+    public void setClassRuns(List<ClassRun> classRuns) {
+        this.classRuns = classRuns;
     }
 }
