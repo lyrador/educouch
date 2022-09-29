@@ -99,6 +99,13 @@ public class CourseController {
         for(Folder f: childFolders) {
             processFolder(f);
         }
+        List<ClassRun> listOfClassRuns = c.getClassRuns();
+        for(ClassRun r: listOfClassRuns) {
+            r.setCourse(null);
+            r.setCalendar(null);
+            r.setInstructor(null);
+            r.setEnrolledLearners(null);
+        }
 
         return c;
     }
@@ -129,6 +136,7 @@ public class CourseController {
     public ResponseEntity<Course> retrieveCourseById(@PathVariable("courseId") Long courseId) {
         try {
             Course existingCourse = courseService.retrieveCourseById(courseId);
+            processCourse(existingCourse);
             return new ResponseEntity<Course>(existingCourse, HttpStatus.OK);
         } catch (NoSuchElementException ex) {
             return new ResponseEntity<Course>(HttpStatus.NOT_FOUND);
