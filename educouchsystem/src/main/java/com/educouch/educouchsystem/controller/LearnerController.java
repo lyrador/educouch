@@ -3,10 +3,12 @@ package com.educouch.educouchsystem.controller;
 import com.educouch.educouchsystem.dto.LearnerDTO;
 import com.educouch.educouchsystem.model.Learner;
 import com.educouch.educouchsystem.service.LearnerService;
+import com.educouch.educouchsystem.util.exception.FolderNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -43,5 +45,12 @@ public class LearnerController {
     public ResponseEntity<Learner> updateLearner(@RequestBody Learner learner) {
         Learner updatedLearner = learnerService.updateLearner(learner);
         return ResponseEntity.status(HttpStatus.OK).body(updatedLearner);
+    }
+
+    @GetMapping("/learnerEnrolled")
+    @ResponseBody
+    public Boolean learnerEnrolled(@RequestParam String courseId, @RequestParam String learnerId) {
+        return true;
+
     }
 }

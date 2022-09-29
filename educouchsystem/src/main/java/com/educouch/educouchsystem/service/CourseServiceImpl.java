@@ -1,6 +1,8 @@
 package com.educouch.educouchsystem.service;
 
+import com.educouch.educouchsystem.model.ClassRun;
 import com.educouch.educouchsystem.model.Course;
+import com.educouch.educouchsystem.repository.ClassRunRepository;
 import com.educouch.educouchsystem.util.enumeration.CourseApprovalStatusEnum;
 import com.educouch.educouchsystem.repository.CourseRepository;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
@@ -15,6 +17,9 @@ public class CourseServiceImpl implements CourseService{
 
     @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    private ClassRunRepository classRunRepository;
 
     //creating a course
     @Override
@@ -121,6 +126,30 @@ public class CourseServiceImpl implements CourseService{
             throw new CourseNotFoundException("Course cannot be found.");
         }
 
+    }
+
+    public List<ClassRun> retrieveClassRuns(Long courseId) throws CourseNotFoundException {
+        Course c = retrieveCourseById(courseId);
+        if (c != null) {
+            return c.getClassRuns();
+        } else {
+            throw new CourseNotFoundException("Course cannot be found.");
+        }
+    }
+
+    public void addClassRunToCourse(Long courseId, ClassRun classRun) throws CourseNotFoundException{
+        Course c = retrieveCourseById(courseId);
+        if (c != null) {
+
+            classRun.setCourse(c);
+            classRun = classRunRepository.save(classRun);
+
+            c.getClassRuns();
+            c.getClassRuns().add(classRun);
+            courseRepository.save(c);
+        } else {
+            throw new CourseNotFoundException("Course cannot be found.");
+        }
     }
 
 
