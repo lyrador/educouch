@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -87,9 +88,12 @@ public class DataLoader implements CommandLineRunner {
         Course cs1010 = new Course("CS1010", "CS1010 Introduction to Computer Science",
                 "xxx", "xxx", 100.0, AgeGroupEnum.ADULTS);
         cs1010.setCourseApprovalStatus(CourseApprovalStatusEnum.LIVE);
+        cs1010.setCourseFee(new BigDecimal(1000));
         Course bio4000 = new Course("BIO4000", "BIO4000 Molecular Genetics", "xxx",
                 "xxx", 100.0, AgeGroupEnum.KIDS);
         bio4000.setCourseApprovalStatus(CourseApprovalStatusEnum.LIVE);
+        bio4000.setCourseFee(new BigDecimal(1000));
+
 
         System.out.println("Creating class runs...");
         ClassRun c1 = new ClassRun(LocalDate.parse("2022-09-30"), LocalDate.parse("2022-12-30"), 1, 3);
