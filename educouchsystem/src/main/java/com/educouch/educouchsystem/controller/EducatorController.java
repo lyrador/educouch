@@ -1,8 +1,6 @@
 package com.educouch.educouchsystem.controller;
 
-import com.educouch.educouchsystem.model.Instructor;
-import com.educouch.educouchsystem.model.Organisation;
-import com.educouch.educouchsystem.model.OrganisationAdmin;
+import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.service.EducatorService;
 import com.educouch.educouchsystem.service.OrganisationService;
 import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
@@ -163,7 +161,60 @@ public class EducatorController {
             i.setOrganisation(null);
         }
         o.getOrganisationAdmin().setOrganisation(null);
+
+        List<Course> courses = o.getCourses();
+        for(Course c: courses) {
+            processCourse(c);
+        }
+
+
         return o;
+    }
+
+    private Course processCourse(Course c) {
+        List<Forum> forums = c.getForums();
+        for(Forum f: forums) {
+            f.setForumDiscussions(null);
+            f.setCourse(null);
+//            f.setLearners(null);
+//            f.setEducators(null);
+        }
+
+        List<Folder> childFolders = c.getFolders();
+        for(Folder f: childFolders) {
+            processFolder(f);
+        }
+        List<ClassRun> listOfClassRuns = c.getClassRuns();
+        for(ClassRun r: listOfClassRuns) {
+            r.setCourse(null);
+            r.setCalendar(null);
+            r.setInstructor(null);
+            r.setEnrolledLearners(null);
+        }
+
+        return c;
+    }
+
+    private Folder processFolder(Folder folder) {
+        List<Folder> subFolders = folder.getChildFolders();
+//        for(Folder cf: subFolders) {
+//            cf.setParentFolder(null);
+//            cf.setAttachments(null);
+//            cf.setChildFolders(null);
+//            cf.setCourse(null);
+//        }
+        Folder parentFolder = folder.getParentFolder();
+        if(parentFolder != null) {
+            parentFolder.setChildFolders(null);
+            parentFolder.setAttachments(null);
+            parentFolder.setParentFolder(null);
+            parentFolder.setCourse(null);
+        }
+        folder.setCourse(null);
+        folder.getAttachments();
+
+        return folder;
+
     }
 }
 

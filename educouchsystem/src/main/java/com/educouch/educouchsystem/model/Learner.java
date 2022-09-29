@@ -1,6 +1,9 @@
 package com.educouch.educouchsystem.model;
 
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +37,14 @@ public class Learner {
     inverseJoinColumns = {@JoinColumn(name = "classRunId")})
     List<ClassRun> classRuns;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinColumn(name = "learnerId")
+    List<EnrolmentStatusTracker> enrolmentStatusTrackers;
+
     public Learner() {
         this.classRuns = new ArrayList<>();
+        this.enrolmentStatusTrackers = new ArrayList<>();
     }
 
 //    public Learner(String name, String address, String email, String password, String username, String profilePictureURL) {
@@ -158,5 +167,13 @@ public class Learner {
 
     public void setClassRuns(List<ClassRun> classRuns) {
         this.classRuns = classRuns;
+    }
+
+    public List<EnrolmentStatusTracker> getEnrolmentStatusTrackers() {
+        return enrolmentStatusTrackers;
+    }
+
+    public void setEnrolmentStatusTrackers(List<EnrolmentStatusTracker> enrolmentStatusTrackers) {
+        this.enrolmentStatusTrackers = enrolmentStatusTrackers;
     }
 }

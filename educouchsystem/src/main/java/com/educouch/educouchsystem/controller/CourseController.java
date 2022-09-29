@@ -200,6 +200,10 @@ public class CourseController {
             List<Course> courses = new ArrayList<>();
             courses.addAll(organisation.getCourses());
 
+            for(Course c: courses) {
+                processCourse(c);
+            }
+
             return new ResponseEntity<>(courses, HttpStatus.OK);
         } catch (NoSuchElementException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -330,8 +334,16 @@ public class CourseController {
     private void processClassRun(ClassRun c) {
         Instructor i = c.getInstructor();
 
+        List<EnrolmentStatusTracker> statusTrackers = c.getEnrolmentStatusTrackers();
+        for(EnrolmentStatusTracker e: statusTrackers) {
+            Learner l = e.getLearner();
+            l.setClassRuns(null);
+            l.setEnrolmentStatusTrackers(null);
+
+        }
         c.setCourse(null);
         c.setEnrolledLearners(null);
+
 
     }
 

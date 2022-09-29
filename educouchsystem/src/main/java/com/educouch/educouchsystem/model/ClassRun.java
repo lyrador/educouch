@@ -1,5 +1,8 @@
 package com.educouch.educouchsystem.model;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -35,7 +38,12 @@ public class ClassRun {
     @ManyToMany(mappedBy = "classRuns")
     private List<Learner> enrolledLearners;
 
+    @OneToMany(mappedBy = "classRun", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, orphanRemoval = true)
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<EnrolmentStatusTracker> enrolmentStatusTrackers;
+
     public ClassRun() {
+        this.enrolmentStatusTrackers = new ArrayList<>();
         this.enrolledLearners = new ArrayList<>();
     }
 
@@ -128,5 +136,13 @@ public class ClassRun {
 
     public void setMaximumCapacity(Integer maximumCapacity) {
         this.maximumCapacity = maximumCapacity;
+    }
+
+    public List<EnrolmentStatusTracker> getEnrolmentStatusTrackers() {
+        return enrolmentStatusTrackers;
+    }
+
+    public void setEnrolmentStatusTrackers(List<EnrolmentStatusTracker> enrolmentStatusTrackers) {
+        this.enrolmentStatusTrackers = enrolmentStatusTrackers;
     }
 }
