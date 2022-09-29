@@ -10,34 +10,34 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long eventId;
 
-    @Column(name="eventName", nullable = false)
-    private String eventName;
+    @Column(name="title", nullable = false)
+    private String title;
 
     @Column(name="eventDescription", nullable = false)
     private String eventDescription;
 
-    @Column(name="eventStartDate", nullable = false)
-    private LocalDateTime eventStartDate;
+    @Column(name="startDate", nullable = false)
+    private LocalDateTime startDate;
 
-    @Column(name="eventEndDate", nullable = false)
-    private LocalDateTime eventEndDate;
+    @Column(name="endDate", nullable = false)
+    private LocalDateTime endDate;
 
-    public Event(String eventName, String eventDescription, LocalDateTime eventStartDate, LocalDateTime eventEndDate) {
-        this.eventName = eventName;
+    public Event(String title, String eventDescription, LocalDateTime startDate, LocalDateTime endDate) {
+        this.title = title;
         this.eventDescription = eventDescription;
-        this.eventStartDate = eventStartDate;
-        this.eventEndDate = eventEndDate;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public Event() {
     }
 
-    public String getEventName() {
-        return eventName;
+    public String getTitle() {
+        return title;
     }
 
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getEventDescription() {
@@ -48,19 +48,19 @@ public class Event {
         this.eventDescription = eventDescription;
     }
 
-    public LocalDateTime getEventStartDate() {
-        return this.eventStartDate;
+    public LocalDateTime getStartDate() {
+        return this.startDate;
     }
 
-    public void setEventStartDate(LocalDateTime eventStartDate) {
-        this.eventStartDate = eventStartDate;
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
     }
 
-    public LocalDateTime getEventEndDate() {
-        return eventEndDate;
+    public LocalDateTime getEndDate() {
+        return endDate;
     }
 
     public void setEventEndDate(LocalDateTime eventEndDate) {
-        this.eventEndDate = eventEndDate;
+        this.endDate = eventEndDate;
     }
 }

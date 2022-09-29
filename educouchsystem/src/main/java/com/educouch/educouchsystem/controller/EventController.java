@@ -58,10 +58,10 @@ public class EventController {
     public ResponseEntity<Event> updateEvent(@RequestBody Event event, @PathVariable("eventId") Long eventId) {
         try {
             Event existingEvent = eventService.getEventById(eventId);
-            existingEvent.setEventName(event.getEventName());
+            existingEvent.setTitle(event.getTitle());
             existingEvent.setEventDescription(event.getEventDescription());
-            existingEvent.setEventStartDate(event.getEventStartDate());
-            existingEvent.setEventEndDate(event.getEventEndDate());
+            existingEvent.setStartDate(event.getStartDate());
+            existingEvent.setEventEndDate(event.getEndDate());
             eventService.saveEvent(existingEvent);
             return new ResponseEntity<Event>(existingEvent, HttpStatus.OK);
         } catch (EventNotFoundException e) {
