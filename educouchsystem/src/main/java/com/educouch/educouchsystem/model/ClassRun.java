@@ -18,6 +18,10 @@ public class ClassRun {
     @Column(nullable = false)
     private LocalDate classRunEnd;
 
+    private Integer minClassSize;
+
+    private Integer maximumCapacity;
+
     @OneToOne
     @JoinColumn(name = "calendar")
     private Calendar calendar;
@@ -39,6 +43,13 @@ public class ClassRun {
         new ClassRun();
         this.classRunStart = classRunStart;
         this.classRunEnd = classRunEnd;
+    }
+
+    public ClassRun(LocalDate classRunStart, LocalDate classRunEnd, Integer minClassSize, Integer maximumCapacity) {
+        this.classRunStart = classRunStart;
+        this.classRunEnd = classRunEnd;
+        this.minClassSize = minClassSize;
+        this.maximumCapacity = maximumCapacity;
     }
 
     public ClassRun(LocalDate c, LocalDate e, Instructor instructor, Calendar calendar) {
@@ -101,5 +112,21 @@ public class ClassRun {
 
     public void setCourse(Course course) {
         this.course = course;
+    }
+
+    public Integer getMinClassSize() {
+        return minClassSize;
+    }
+
+    public void setMinClassSize(Integer minClassSize) {
+        this.minClassSize = minClassSize;
+    }
+
+    public Integer getMaximumCapacity() {
+        return maximumCapacity;
+    }
+
+    public void setMaximumCapacity(Integer maximumCapacity) {
+        this.maximumCapacity = maximumCapacity;
     }
 }
