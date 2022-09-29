@@ -7,12 +7,14 @@ import com.educouch.educouchsystem.util.enumeration.AgeGroupEnum;
 import com.educouch.educouchsystem.util.enumeration.CourseApprovalStatusEnum;
 import com.educouch.educouchsystem.util.enumeration.FileSubmissionEnum;
 import com.educouch.educouchsystem.util.enumeration.InstructorAccessRight;
+import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.util.exception.FolderUnableToSaveException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +28,9 @@ public class DataLoader implements CommandLineRunner {
 
     @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    private CourseService courseService;
 
     @Autowired
     private AssessmentRepository assessmentRepository;
@@ -78,6 +83,7 @@ public class DataLoader implements CommandLineRunner {
         learnerRepository.save(new Learner("Alex", "alex@gmail.com", "password",
                 "alex", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true));
 
+        System.out.println("Creating course...");
         Course cs1010 = new Course("CS1010", "CS1010 Introduction to Computer Science",
                 "xxx", "xxx", 100.0, AgeGroupEnum.ADULTS);
         cs1010.setCourseApprovalStatus(CourseApprovalStatusEnum.LIVE);
@@ -85,32 +91,29 @@ public class DataLoader implements CommandLineRunner {
                 "xxx", 100.0, AgeGroupEnum.KIDS);
         bio4000.setCourseApprovalStatus(CourseApprovalStatusEnum.LIVE);
 
-
-
-        // make class runs
+        System.out.println("Creating class runs...");
         ClassRun c1 = new ClassRun(LocalDate.parse("2022-09-30"), LocalDate.parse("2022-12-30"));
         ClassRun c2 = new ClassRun(LocalDate.parse("2022-10-01"), LocalDate.parse("2023-01-30"));
-        c1.setCourse(cs1010);
-        c1.setCourse(cs1010);
 
         ClassRun c3 = new ClassRun(LocalDate.parse("2022-09-30"), LocalDate.parse("2022-12-30"));
         ClassRun c4 = new ClassRun(LocalDate.parse("2022-10-01"), LocalDate.parse("2023-01-30"));
-        c3.setCourse(bio4000);
-        c4.setCourse(bio4000);
 
-        cs1010.getClassRuns().add(c1);
-        cs1010.getClassRuns().add(c2);
 
-        bio4000.getClassRuns().add(c3);
-        bio4000.getClassRuns().add(c4);
+        cs1010 =  courseService.saveCourse(cs1010);
+        bio4000 =  courseService.saveCourse(bio4000);
 
-        cs1010 = courseRepository.save(cs1010);
-        bio4000 = courseRepository.save(bio4000);
+        try {
+            courseService.addClassRunToCourse(cs1010.getCourseId(), c1);
+            courseService.addClassRunToCourse(cs1010.getCourseId(), c2);
 
-        c1 = classRunRepository.save(c1);
-        c2 = classRunRepository.save(c2);
-        c3 = classRunRepository.save(c3);
-        c4 = classRunRepository.save(c4);
+            courseService.addClassRunToCourse(bio4000.getCourseId(), c3);
+            courseService.addClassRunToCourse(bio4000.getCourseId(), c4);
+        } catch(CourseNotFoundException ex) {
+            System.out.println("Course not found exception.");
+        }
+
+
+
 
 
 
