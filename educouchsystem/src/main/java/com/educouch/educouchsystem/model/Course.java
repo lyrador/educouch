@@ -7,6 +7,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,9 @@ public class Course {
 
     @Column(name="rejectionReason")
     private String rejectionReason;
+
+    @Column(name="courseFee")
+    private BigDecimal courseFee;
 
     @Enumerated(EnumType.STRING)
     @Column(name="ageGroup", nullable = false)
@@ -88,6 +92,19 @@ public class Course {
         this.courseMaxScore = courseMaxScore;
         this.ageGroup = ageGroup;
         this.courseApprovalStatus = courseApprovalStatus;
+    }
+
+    public Course(String courseCode, String courseTitle, String courseDescription, String courseTimeline,
+                  Double courseMaxScore, AgeGroupEnum ageGroup, CourseApprovalStatusEnum courseApprovalStatus, BigDecimal courseFee) {
+        new Course();
+        this.courseCode = courseCode;
+        this.courseTitle = courseTitle;
+        this.courseDescription = courseDescription;
+        this.courseTimeline = courseTimeline;
+        this.courseMaxScore = courseMaxScore;
+        this.ageGroup = ageGroup;
+        this.courseApprovalStatus = courseApprovalStatus;
+        this.courseFee = courseFee;
     }
 
     public Course(String courseCode, String courseTitle, String courseDescription, String courseTimeline, Double courseMaxScore, AgeGroupEnum ageGroup) {
@@ -230,5 +247,13 @@ public class Course {
 
     public void setClassRuns(List<ClassRun> classRuns) {
         this.classRuns = classRuns;
+    }
+
+    public BigDecimal getCourseFee() {
+        return courseFee;
+    }
+
+    public void setCourseFee(BigDecimal courseFee) {
+        this.courseFee = courseFee;
     }
 }
