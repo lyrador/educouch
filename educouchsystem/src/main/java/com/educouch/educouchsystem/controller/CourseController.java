@@ -2,13 +2,14 @@ package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.dto.CourseDTO;
 import com.educouch.educouchsystem.model.*;
-import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.service.CourseService;
 import com.educouch.educouchsystem.service.EducatorService;
+import com.educouch.educouchsystem.util.enumeration.AgeGroupEnum;
 import com.educouch.educouchsystem.util.enumeration.CourseApprovalStatusEnum;
 import com.educouch.educouchsystem.service.OrganisationService;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.dto.CourseRejectionModel;
+import com.educouch.educouchsystem.util.exception.FolderNotFoundException;
 import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -304,4 +305,27 @@ public class CourseController {
         }
 
     }
+
+    @GetMapping("/getClassRunByCourseId/{courseId}")
+    public List<ClassRun> getClassRunByCourseId(@PathVariable Long courseId) {
+        try {
+            List<ClassRun> classRuns = courseService.retrieveClassRuns(courseId);
+            for(ClassRun c: classRuns) {
+                processClassRun(c);
+            }
+            return classRuns;
+        } catch(CourseNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Folder not found", ex);
+        }
+    }
+
+    private void processClassRun(ClassRun c) {
+        Instructor i = c.getInstructor();
+
+        c.setCourse(null);
+        c.setEnrolledLearners(null);
+
+    }
+
+
 }
