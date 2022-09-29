@@ -72,6 +72,8 @@ public class Course {
     @JoinColumn(name = "organisation_id")
     private Organisation organisation;
 
+
+
     public Course() {
         this.categoryTags = new ArrayList<>();
         this.folders = new ArrayList<>();
