@@ -1,9 +1,10 @@
 package com.educouch.educouchsystem.model;
 
+import com.educouch.educouchsystem.util.enumeration.AgeGroupEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.educouch.educouchsystem.util.enumeration.CourseApprovalStatusEnum;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -45,6 +46,11 @@ public class Course {
     @JoinColumn(name="course_id")
     private List<Forum> forums;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinColumn(name="course_id")
+    private List<ClassRun> classRuns;
+
     @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
     private List<Folder> folders;
 
@@ -67,10 +73,12 @@ public class Course {
         this.folders = new ArrayList<>();
         this.forums = new ArrayList<>();
         this.assessments = new ArrayList<>();
+        this.classRuns = new ArrayList<>();
         this.courseApprovalStatus = CourseApprovalStatusEnum.UNDERCONSTRUCTION;
     }
 
-    /*public Course(String courseCode, String courseTitle, String courseDescription, String courseTimeline,
+    // for uploading data purposes
+    public Course(String courseCode, String courseTitle, String courseDescription, String courseTimeline,
                   Double courseMaxScore, AgeGroupEnum ageGroup, CourseApprovalStatusEnum courseApprovalStatus) {
         new Course();
         this.courseCode = courseCode;
@@ -80,7 +88,7 @@ public class Course {
         this.courseMaxScore = courseMaxScore;
         this.ageGroup = ageGroup;
         this.courseApprovalStatus = courseApprovalStatus;
-    }*/
+    }
 
     public Course(String courseCode, String courseTitle, String courseDescription, String courseTimeline, Double courseMaxScore, AgeGroupEnum ageGroup) {
         new Course();
@@ -214,5 +222,13 @@ public class Course {
 
     public void setOrganisation(Organisation organisation) {
         this.organisation = organisation;
+    }
+
+    public List<ClassRun> getClassRuns() {
+        return classRuns;
+    }
+
+    public void setClassRuns(List<ClassRun> classRuns) {
+        this.classRuns = classRuns;
     }
 }

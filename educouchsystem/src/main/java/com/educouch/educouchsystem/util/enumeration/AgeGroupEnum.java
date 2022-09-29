@@ -1,4 +1,4 @@
-package com.educouch.educouchsystem.model;
+package com.educouch.educouchsystem.util.enumeration;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
