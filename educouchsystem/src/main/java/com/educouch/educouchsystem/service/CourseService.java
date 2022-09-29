@@ -1,5 +1,6 @@
 package com.educouch.educouchsystem.service;
 
+import com.educouch.educouchsystem.model.ClassRun;
 import com.educouch.educouchsystem.model.Course;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 
@@ -23,5 +24,9 @@ public interface CourseService {
 
     public void publishCourse(Long courseId) throws CourseNotFoundException;
     public List<Course> getCoursesByCourseApprovalStatus(String courseApprovalStatus);
+
+    public List<ClassRun> retrieveClassRuns(Long courseId) throws CourseNotFoundException;
+
+    public void addClassRunToCourse(Long courseId, ClassRun classRun) throws CourseNotFoundException;
 
 }

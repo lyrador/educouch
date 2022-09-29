@@ -1,6 +1,7 @@
 package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.model.ClassRun;
+import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 
 import java.util.List;
 
