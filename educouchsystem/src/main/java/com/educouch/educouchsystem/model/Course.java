@@ -3,6 +3,8 @@ package com.educouch.educouchsystem.model;
 import com.educouch.educouchsystem.util.enumeration.AgeGroupEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.educouch.educouchsystem.util.enumeration.CourseApprovalStatusEnum;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -44,7 +46,8 @@ public class Course {
     @JoinColumn(name="course_id")
     private List<Forum> forums;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name="course_id")
     private List<ClassRun> classRuns;
 
