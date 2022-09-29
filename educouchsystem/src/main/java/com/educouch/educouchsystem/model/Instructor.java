@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,6 +26,9 @@ public class Instructor {
     private String password;
     @Column(nullable = false)
     private InstructorAccessRight instructorAccessRight;
+
+    @OneToMany(mappedBy="instructor")
+    private List<ClassRun> classRuns;
     private String profilePictureURL;
 
     @ManyToOne
@@ -37,9 +41,11 @@ public class Instructor {
     private List<Course> courses;
 
     public Instructor() {
+        this.classRuns = new ArrayList<>();
     }
 
     public Instructor(@NotBlank(message = "Name is mandatory") String name, String email, String username, String password, InstructorAccessRight instructorAccessRight) {
+        this.classRuns = new ArrayList<>();
         this.name = name;
         this.email = email;
         this.password = password;
@@ -119,5 +125,13 @@ public class Instructor {
 
     public void setCourses(List<Course> courses) {
         this.courses = courses;
+    }
+
+    public List<ClassRun> getClassRuns() {
+        return classRuns;
+    }
+
+    public void setClassRuns(List<ClassRun> classRuns) {
+        this.classRuns = classRuns;
     }
 }

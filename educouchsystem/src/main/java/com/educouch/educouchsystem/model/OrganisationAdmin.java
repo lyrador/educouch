@@ -16,7 +16,7 @@ public class OrganisationAdmin {
     private String email;
     @Column(nullable = false)
     private String password;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
     private String profilePictureURL;
 
