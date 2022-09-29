@@ -92,11 +92,11 @@ public class DataLoader implements CommandLineRunner {
         bio4000.setCourseApprovalStatus(CourseApprovalStatusEnum.LIVE);
 
         System.out.println("Creating class runs...");
-        ClassRun c1 = new ClassRun(LocalDate.parse("2022-09-30"), LocalDate.parse("2022-12-30"));
-        ClassRun c2 = new ClassRun(LocalDate.parse("2022-10-01"), LocalDate.parse("2023-01-30"));
+        ClassRun c1 = new ClassRun(LocalDate.parse("2022-09-30"), LocalDate.parse("2022-12-30"), 1, 3);
+        ClassRun c2 = new ClassRun(LocalDate.parse("2022-10-01"), LocalDate.parse("2023-01-30"), 10, 20);
 
-        ClassRun c3 = new ClassRun(LocalDate.parse("2022-09-30"), LocalDate.parse("2022-12-30"));
-        ClassRun c4 = new ClassRun(LocalDate.parse("2022-10-01"), LocalDate.parse("2023-01-30"));
+        ClassRun c3 = new ClassRun(LocalDate.parse("2022-09-30"), LocalDate.parse("2022-12-30"), 1, 3);
+        ClassRun c4 = new ClassRun(LocalDate.parse("2022-10-01"), LocalDate.parse("2023-01-30"), 10, 20);
 
 
         cs1010 =  courseService.saveCourse(cs1010);
