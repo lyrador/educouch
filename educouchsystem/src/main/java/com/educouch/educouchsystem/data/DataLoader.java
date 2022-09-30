@@ -96,11 +96,30 @@ public class DataLoader implements CommandLineRunner {
 
 
         System.out.println("Creating class runs...");
-        ClassRun c1 = new ClassRun(LocalDate.parse("2022-09-30"), LocalDate.parse("2022-12-30"), 1, 3);
-        ClassRun c2 = new ClassRun(LocalDate.parse("2022-10-01"), LocalDate.parse("2023-01-30"), 10, 20);
 
-        ClassRun c3 = new ClassRun(LocalDate.parse("2022-09-30"), LocalDate.parse("2022-12-30"), 1, 3);
-        ClassRun c4 = new ClassRun(LocalDate.parse("2022-10-01"), LocalDate.parse("2023-01-30"), 10, 20);
+        ClassRun c1 = new ClassRun();
+        c1.setClassRunStart(LocalDate.parse("2022-09-30"));
+        c1.setClassRunEnd(LocalDate.parse("2022-12-30"));
+        c1.setMinClassSize(1);
+        c1.setMaximumCapacity(3);
+
+        ClassRun c2 = new ClassRun();
+        c2.setClassRunStart(LocalDate.parse("2022-10-01"));
+        c2.setClassRunEnd(LocalDate.parse("2023-01-30"));
+        c2.setMinClassSize(10);
+        c2.setMaximumCapacity(20);
+
+        ClassRun c3 = new ClassRun();
+        c3.setClassRunStart(LocalDate.parse("2022-09-30"));
+        c3.setClassRunEnd(LocalDate.parse("2022-12-30"));
+        c3.setMinClassSize(1);
+        c3.setMaximumCapacity(3);
+
+        ClassRun c4 = new ClassRun();
+        c4.setClassRunStart(LocalDate.parse("2022-10-01"));
+        c4.setClassRunEnd(LocalDate.parse("2023-01-30"));
+        c4.setMinClassSize(10);
+        c4.setMaximumCapacity(20);
 
 
         cs1010 =  courseService.saveCourse(cs1010);
