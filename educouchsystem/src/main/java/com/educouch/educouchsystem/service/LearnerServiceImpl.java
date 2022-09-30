@@ -8,6 +8,7 @@ import com.educouch.educouchsystem.util.exception.InvalidLoginCredentialsExcepti
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 //to annotate that it is a service class
