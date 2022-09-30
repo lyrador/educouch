@@ -1,7 +1,11 @@
 package com.educouch.educouchsystem.model;
 
+import com.educouch.educouchsystem.util.enumeration.RecurringEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,13 +22,30 @@ public class ClassRun {
     @Column(nullable = false)
     private LocalDate classRunEnd;
 
+    @Column(nullable = false)
+    private LocalTime classRunStartTime;
+
+    @Column(nullable = false)
+    private LocalTime classRunEndTime;
+
     private Integer minClassSize;
 
     private Integer maximumCapacity;
 
+    private Integer[] classRunDaysOfTheWeek;
+
+    private RecurringEnum recurringEnum;
+
+    private String classRunName;
+
+    private String classRunDescription;
+
     @OneToOne
     @JoinColumn(name = "calendar")
     private Calendar calendar;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Event> events;
 
     @ManyToOne
     private Instructor instructor;
@@ -56,6 +77,21 @@ public class ClassRun {
         new ClassRun(c, e);
         this.instructor = instructor;
         this.calendar = calendar;
+    }
+
+    public ClassRun(LocalDate classRunStart, LocalDate classRunEnd, Integer minClassSize, Integer maximumCapacity, Integer[] classRunDaysOfTheWeek, RecurringEnum recurringEnum, String classRunName, String classRunDescription, Calendar calendar, Instructor instructor, Course course, List<Learner> enrolledLearners) {
+        this.classRunStart = classRunStart;
+        this.classRunEnd = classRunEnd;
+        this.minClassSize = minClassSize;
+        this.maximumCapacity = maximumCapacity;
+        this.classRunDaysOfTheWeek = classRunDaysOfTheWeek;
+        this.recurringEnum = recurringEnum;
+        this.classRunName = classRunName;
+        this.classRunDescription = classRunDescription;
+        this.calendar = calendar;
+        this.instructor = instructor;
+        this.course = course;
+        this.enrolledLearners = enrolledLearners;
     }
 
     public Long getClassRunId() {
@@ -90,6 +126,7 @@ public class ClassRun {
         this.enrolledLearners = enrolledLearners;
     }
 
+    @JsonIgnore
     public Instructor getInstructor() {
         return instructor;
     }
@@ -106,6 +143,7 @@ public class ClassRun {
         this.calendar = calendar;
     }
 
+    @JsonIgnore
     public Course getCourse() {
         return course;
     }
@@ -128,5 +166,61 @@ public class ClassRun {
 
     public void setMaximumCapacity(Integer maximumCapacity) {
         this.maximumCapacity = maximumCapacity;
+    }
+
+    public Integer[] getClassRunDaysOfTheWeek() {
+        return classRunDaysOfTheWeek;
+    }
+
+    public void setClassRunDaysOfTheWeek(Integer[] classRunDaysOfTheWeek) {
+        this.classRunDaysOfTheWeek = classRunDaysOfTheWeek;
+    }
+
+    public RecurringEnum getRecurringEnum() {
+        return recurringEnum;
+    }
+
+    public void setRecurringEnum(RecurringEnum recurringEnum) {
+        this.recurringEnum = recurringEnum;
+    }
+
+    public String getClassRunName() {
+        return classRunName;
+    }
+
+    public void setClassRunName(String classRunName) {
+        this.classRunName = classRunName;
+    }
+
+    public String getClassRunDescription() {
+        return classRunDescription;
+    }
+
+    public void setClassRunDescription(String classRunDescription) {
+        this.classRunDescription = classRunDescription;
+    }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
+
+    public LocalTime getClassRunStartTime() {
+        return classRunStartTime;
+    }
+
+    public void setClassRunStartTime(LocalTime classRunStartTime) {
+        this.classRunStartTime = classRunStartTime;
+    }
+
+    public LocalTime getClassRunEndTime() {
+        return classRunEndTime;
+    }
+
+    public void setClassRunEndTime(LocalTime classRunEndTime) {
+        this.classRunEndTime = classRunEndTime;
     }
 }
