@@ -63,9 +63,15 @@ public class ClassRun {
     @Fetch(value = FetchMode.SUBSELECT)
     private List<EnrolmentStatusTracker> enrolmentStatusTrackers;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinColumn(name = "classRunId")
+    private List<LearnerTransaction> learnerTransactions;
+
     public ClassRun() {
         this.enrolmentStatusTrackers = new ArrayList<>();
         this.enrolledLearners = new ArrayList<>();
+        this.learnerTransactions = new ArrayList<>();
     }
 
     public ClassRun(LocalDate classRunStart, LocalDate classRunEnd) {
@@ -238,5 +244,13 @@ public class ClassRun {
 
     public void setClassRunEndTime(LocalTime classRunEndTime) {
         this.classRunEndTime = classRunEndTime;
+    }
+
+    public List<LearnerTransaction> getLearnerTransactions() {
+        return learnerTransactions;
+    }
+
+    public void setLearnerTransactions(List<LearnerTransaction> learnerTransactions) {
+        this.learnerTransactions = learnerTransactions;
     }
 }
