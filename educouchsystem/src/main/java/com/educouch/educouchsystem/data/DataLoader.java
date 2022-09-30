@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -102,24 +103,32 @@ public class DataLoader implements CommandLineRunner {
         c1.setClassRunEnd(LocalDate.parse("2022-12-30"));
         c1.setMinClassSize(1);
         c1.setMaximumCapacity(3);
+        c1.setClassRunStartTime(LocalTime.MIDNIGHT);
+        c1.setClassRunEndTime(LocalTime.NOON);
 
         ClassRun c2 = new ClassRun();
         c2.setClassRunStart(LocalDate.parse("2022-10-01"));
         c2.setClassRunEnd(LocalDate.parse("2023-01-30"));
         c2.setMinClassSize(10);
         c2.setMaximumCapacity(20);
+        c2.setClassRunStartTime(LocalTime.MIDNIGHT);
+        c2.setClassRunEndTime(LocalTime.NOON);
 
         ClassRun c3 = new ClassRun();
         c3.setClassRunStart(LocalDate.parse("2022-09-30"));
         c3.setClassRunEnd(LocalDate.parse("2022-12-30"));
         c3.setMinClassSize(1);
         c3.setMaximumCapacity(3);
+        c3.setClassRunStartTime(LocalTime.MIDNIGHT);
+        c3.setClassRunEndTime(LocalTime.NOON);
 
         ClassRun c4 = new ClassRun();
         c4.setClassRunStart(LocalDate.parse("2022-10-01"));
         c4.setClassRunEnd(LocalDate.parse("2023-01-30"));
         c4.setMinClassSize(10);
         c4.setMaximumCapacity(20);
+        c4.setClassRunStartTime(LocalTime.MIDNIGHT);
+        c4.setClassRunEndTime(LocalTime.NOON);
 
 
         cs1010 =  courseService.saveCourse(cs1010);
