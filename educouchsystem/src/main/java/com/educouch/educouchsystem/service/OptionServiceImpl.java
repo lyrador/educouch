@@ -8,9 +8,11 @@ import com.educouch.educouchsystem.repository.QuestionRepository;
 import com.educouch.educouchsystem.util.exception.OptionNotFoundException;
 import com.educouch.educouchsystem.util.exception.QuestionNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class OptionServiceImpl implements OptionService {
     @Autowired
     OptionRepository optionRepository;
