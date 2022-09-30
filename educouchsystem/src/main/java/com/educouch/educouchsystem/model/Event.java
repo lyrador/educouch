@@ -22,6 +22,10 @@ public class Event {
     @Column(name="endDate", nullable = false)
     private LocalDateTime endDate;
 
+    @ManyToOne
+    @JoinColumn(name="classRun_id")
+    private ClassRun classRun;
+
     public Event(String title, String eventDescription, LocalDateTime startDate, LocalDateTime endDate) {
         this.title = title;
         this.eventDescription = eventDescription;
@@ -62,5 +66,13 @@ public class Event {
 
     public void setEventEndDate(LocalDateTime eventEndDate) {
         this.endDate = eventEndDate;
+    }
+
+    public ClassRun getClassRun() {
+        return classRun;
+    }
+
+    public void setClassRun(ClassRun classRun) {
+        this.classRun = classRun;
     }
 }
