@@ -3,6 +3,7 @@ package com.educouch.educouchsystem.model;
 
 import com.stripe.exception.*;
 import com.stripe.model.Customer;
+
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -42,16 +43,22 @@ public class Learner {
     @JoinTable(name = "Learner_ClassRun",
     joinColumns = {@JoinColumn(name = "learnerId")},
     inverseJoinColumns = {@JoinColumn(name = "classRunId")})
-    List<ClassRun> classRuns;
+    private List<ClassRun> classRuns;
 
     @OneToMany(fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "learnerId")
-    List<EnrolmentStatusTracker> enrolmentStatusTrackers;
+    private List<EnrolmentStatusTracker> enrolmentStatusTrackers;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinColumn(name = "learnerId")
+    private List<LearnerTransaction> learnerTransactions;
 
     public Learner() {
         this.classRuns = new ArrayList<>();
         this.enrolmentStatusTrackers = new ArrayList<>();
+        this.learnerTransactions = new ArrayList<>();
     }
 
 //    public Learner(String name, String address, String email, String password, String username, String profilePictureURL) {
@@ -225,4 +232,13 @@ public class Learner {
 //
 //        return id;
 //    }
+
+
+    public List<LearnerTransaction> getLearnerTransactions() {
+        return learnerTransactions;
+    }
+
+    public void setLearnerTransactions(List<LearnerTransaction> learnerTransactions) {
+        this.learnerTransactions = learnerTransactions;
+    }
 }
