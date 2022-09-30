@@ -83,6 +83,7 @@ public class LoginServiceImpl implements LoginService {
                     "INSTRUCTOR",
                     instructorUserEnum);
             retrievedUser.setIsActive("true");
+            retrievedUser.setOrganisationId(retrievedInstructor.getOrganisation().getOrganisationId());
         } else if (entityType.equals("ORG_ADMIN")) {
             OrganisationAdmin retrievedOrganisationAdmin = educatorService.findOrganisationAdminByUsername(username);
             retrievedUser = new LoggedInUserDTO(
@@ -95,7 +96,7 @@ public class LoginServiceImpl implements LoginService {
                     retrievedOrganisationAdmin.getProfilePictureURL(),
                     "ORG_ADMIN",
                     null);
-            retrievedUser.setOrganisationId(retrievedOrganisationAdmin.getOrganisationAdminId());
+            retrievedUser.setOrganisationId(retrievedOrganisationAdmin.getOrganisation().getOrganisationId());
             if (retrievedOrganisationAdmin.getActive() == false) {
                 retrievedUser.setIsActive("false");
             } else {
