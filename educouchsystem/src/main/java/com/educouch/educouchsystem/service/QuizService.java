@@ -17,6 +17,8 @@ public interface QuizService {
 
     public List<Quiz> getAllQuizzes();
 
+    public List<Quiz> getAllQuizzesByCourseId(Long courseId) throws CourseNotFoundException;
+
     public List<Question> getAllQuestionsInQuiz(Long quizId) throws QuizNotFoundException;
 
     public List<QuizAttempt> getAllQuizAttemptsInQuiz(Long quizId) throws QuizNotFoundException;
@@ -25,9 +27,9 @@ public interface QuizService {
 
     public void deleteQuiz(Long quizId) throws QuizNotFoundException;
 
-    public Quiz updateQuiz(Quiz quiz) throws QuizNotFoundException;
+    public Quiz updateQuiz(Quiz quizToUpdate, Quiz quiz) throws QuizNotFoundException;
 
     public void addQuestionToQuiz(Long quizId, Question question) throws QuizNotFoundException, EntityInstanceExistsInCollectionException;
-    public void removeQuestionFromQuiz(Long quizId, Question question) throws QuizNotFoundException, QuestionNotFoundException;
+    public void deleteQuestionFromQuizId(Long questionId, Long quizId) throws QuizNotFoundException, QuestionNotFoundException;
 
 }
