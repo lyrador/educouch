@@ -61,7 +61,7 @@ public class EventController {
             existingEvent.setTitle(event.getTitle());
             existingEvent.setEventDescription(event.getEventDescription());
             existingEvent.setStartDate(event.getStartDate());
-            existingEvent.setEventEndDate(event.getEndDate());
+            existingEvent.setEndDate(event.getEndDate());
             eventService.saveEvent(existingEvent);
             return new ResponseEntity<Event>(existingEvent, HttpStatus.OK);
         } catch (EventNotFoundException e) {
