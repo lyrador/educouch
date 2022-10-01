@@ -86,12 +86,4 @@ public class Event {
     public void setClassRun(ClassRun classRun) {
         this.classRun = classRun;
     }
-
-    public Long getEventId() {
-        return eventId;
-    }
-
-    public void setEventId(Long eventId) {
-        this.eventId = eventId;
-    }
 }

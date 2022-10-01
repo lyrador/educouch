@@ -204,7 +204,7 @@ public class ClassRunServiceImpl implements ClassRunService {
                     newEvent.setTitle(classRun.getClassRunName() + " " + "Class Event");
                     newEvent.setEventDescription(classRun.getClassRunName() + " " + "Class Event");
                     newEvent.setStartDate(LocalDateTime.of(localDatePointer, classRun.getClassRunStartTime()));
-                    newEvent.setEventEndDate(LocalDateTime.of(localDatePointer, classRun.getClassRunEndTime()));
+                    newEvent.setEndDate(LocalDateTime.of(localDatePointer, classRun.getClassRunEndTime()));
                     eventService.saveEvent(newEvent);
                     newEvents.add(newEvent);
 
@@ -227,7 +227,7 @@ public class ClassRunServiceImpl implements ClassRunService {
                     newEvent.setTitle(classRun.getClassRunName() + " " + "Class Event");
                     newEvent.setEventDescription(classRun.getClassRunName() + " " + "Class Event");
                     newEvent.setStartDate(LocalDateTime.of(localDatePointer, classRun.getClassRunStartTime()));
-                    newEvent.setEventEndDate(LocalDateTime.of(localDatePointer, classRun.getClassRunEndTime()));
+                    newEvent.setEndDate(LocalDateTime.of(localDatePointer, classRun.getClassRunEndTime()));
                     eventService.saveEvent(newEvent);
                     newEvents.add(newEvent);
 
