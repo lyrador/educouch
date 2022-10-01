@@ -53,4 +53,13 @@ public class TransactionController {
         return ResponseEntity.status(HttpStatus.OK).body(transactionService.findAllLmsToLearner());
     }
 
+    @PostMapping("/payCourseDeposit")
+    public String payCourseDeposit(@RequestBody Transaction transaction) {
+
+
+        return "Successfully paid deposit.";
+    }
+
+
+
 }
