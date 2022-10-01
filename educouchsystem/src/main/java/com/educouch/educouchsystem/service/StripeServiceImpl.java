@@ -1,11 +1,13 @@
 package com.educouch.educouchsystem.service;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import com.educouch.educouchsystem.model.ClassRun;
 import com.educouch.educouchsystem.model.EnrolmentStatusTracker;
 import com.educouch.educouchsystem.model.Learner;
 import com.educouch.educouchsystem.model.LearnerTransaction;
 import com.educouch.educouchsystem.repository.LearnerTransactionRepository;
+import com.educouch.educouchsystem.util.enumeration.EnrolmentStatusTrackerEnum;
 import com.educouch.educouchsystem.util.enumeration.LearnerPaymentEnum;
 import com.educouch.educouchsystem.util.exception.ClassRunNotFoundException;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
@@ -70,6 +72,7 @@ public class StripeServiceImpl implements StripeService {
             Learner l = learnerService.getLearnerById(learnerId);
             if(l != null) {
                 LearnerTransaction transaction = new LearnerTransaction(amount, transactionType);
+                transaction.setTimestamp(LocalDateTime.now());
                 transaction = learnerTransactionRepository.save(transaction);
 
                 c.getLearnerTransactions().add(transaction);
@@ -88,14 +91,14 @@ public class StripeServiceImpl implements StripeService {
     }
 
     @Override
-    public void payDeposit(Long classRunId, Long learnerId,
-                                         LearnerPaymentEnum transactionType, BigDecimal amount) throws
+    public void payDeposit(Long classRunId, Long learnerId,BigDecimal amount) throws
             ClassRunNotFoundException, LearnerNotFoundException {
         ClassRun c = classRunService.retrieveClassRunById(classRunId);
         if (c != null) {
             Learner l = learnerService.getLearnerById(learnerId);
             if(l != null) {
                 EnrolmentStatusTracker e = new EnrolmentStatusTracker(c, l);
+                e.setEnrolmentStatus(EnrolmentStatusTrackerEnum.DEPOSITPAID);
                 enrolmentStatusTrackerService.saveEnrolmentStatusTracker(e);
 
                 c.getEnrolmentStatusTrackers().add(e);
@@ -103,7 +106,6 @@ public class StripeServiceImpl implements StripeService {
 
                 l.getEnrolmentStatusTrackers().add(e);
                 learnerService.saveLearner(l);
-
                 createNewLearnerTransaction(c.getClassRunId(), l.getLearnerId(), LearnerPaymentEnum.DEPOSIT, amount);
 
 

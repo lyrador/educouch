@@ -87,4 +87,77 @@ public class ClassRunController {
         List<ClassRunDTO> classRuns = classRunService.findClassRunsFromCourseId(courseId);
         return classRuns;
     }
+
+    @GetMapping("/getDepositPaidClassRuns/{learnerId}")
+    public List<ClassRun> findClassRunsWithPaidDeposits(@PathVariable Long learnerId) {
+        List<ClassRun> classRuns = classRunService.retrieveListOfAllClassRunsDepositPaid(learnerId);
+        for(ClassRun c: classRuns) {
+            processClassRun(c);
+        }
+        return classRuns;
+    }
+
+    @GetMapping("/getNeedPaymentClassRuns/{learnerId}")
+    public List<ClassRun> findClassRunsNeedsPayment(@PathVariable Long learnerId) {
+        List<ClassRun> classRuns = classRunService.retrieveListOfAllClassRunsNeedPayment(learnerId);
+        for(ClassRun c: classRuns) {
+            processClassRun(c);
+        }
+        return classRuns;
+    }
+
+    @GetMapping("/getNeedScheduleChangeClassRuns/{learnerId}")
+    public List<ClassRun> findClassRunsNeedsScheduleChange(@PathVariable Long learnerId) {
+        List<ClassRun> classRuns = classRunService.retrieveListOfAllClassRunsNeedAction(learnerId);
+        for(ClassRun c: classRuns) {
+            processClassRun(c);
+        }
+        return classRuns;
+    }
+
+    @GetMapping("/getEnrolledClassRun/{learnerId}")
+    public List<ClassRun> getEnrolledClassRun(@PathVariable Long learnerId) {
+        List<ClassRun> classRuns = classRunService.retrieveListOfAllClassRunsEnrolled(learnerId);
+        for(ClassRun c: classRuns) {
+            processClassRun(c);
+        }
+        return classRuns;
+    }
+
+    @GetMapping("/getEnrolledRefundRequest/{learnerId}")
+    public List<ClassRun> getEnrolledRefundRequest(@PathVariable Long learnerId) {
+        List<ClassRun> classRuns = classRunService.retrieveListOfAllClassRunsRequestRefund(learnerId);
+        for(ClassRun c: classRuns) {
+            processClassRun(c);
+        }
+        return classRuns;
+    }
+
+    private void processClassRun(ClassRun c) {
+        List<EnrolmentStatusTracker> enrolmentStatusTrackers = c.getEnrolmentStatusTrackers();
+        for(EnrolmentStatusTracker e: enrolmentStatusTrackers) {
+            e.setClassRun(null);
+            e.setLearner(null);
+        }
+
+        c.setCalendar(null);
+        c.setEvents(null);
+        Instructor i = c.getInstructor();
+        i.setClassRuns(null);
+        i.setOrganisation(null);
+        i.setCourses(null);
+
+        Course course = c.getCourse();
+        course.setFolders(null);
+        course.setClassRuns(null);
+        course.setFolders(null);
+        course.setAssessments(null);
+        course.setInstructors(null);
+        course.setOrganisation(null);
+
+        c.setEnrolledLearners(null);
+        c.setEnrolmentStatusTrackers(null);
+        c.setLearnerTransactions(null);
+
+    }
 }

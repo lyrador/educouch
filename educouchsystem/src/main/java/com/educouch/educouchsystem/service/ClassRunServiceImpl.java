@@ -5,7 +5,9 @@ import com.educouch.educouchsystem.dto.ForumDTO;
 import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.repository.ClassRunRepository;
 import com.educouch.educouchsystem.repository.CourseRepository;
+import com.educouch.educouchsystem.util.enumeration.EnrolmentStatusTrackerEnum;
 import com.educouch.educouchsystem.util.enumeration.RecurringEnum;
+import com.educouch.educouchsystem.util.exception.EnrolmentStatusTrackerNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -187,5 +189,47 @@ public class ClassRunServiceImpl implements ClassRunService {
             }
         }
         return newEvents;
+    }
+
+    public List<ClassRun> retrieveListOfAllClassRunsReserved(Long learnerId) {
+
+        return filterClassRunsByStatus(learnerId, EnrolmentStatusTrackerEnum.RESERVED);
+
+    }
+
+    public List<ClassRun> retrieveListOfAllClassRunsDepositPaid(Long learnerId) {
+
+        return filterClassRunsByStatus(learnerId, EnrolmentStatusTrackerEnum.DEPOSITPAID);
+
+    }
+
+    public List<ClassRun> retrieveListOfAllClassRunsNeedAction(Long learnerId) {
+        return filterClassRunsByStatus(learnerId, EnrolmentStatusTrackerEnum.DROPPED);
+    }
+
+    public List<ClassRun> retrieveListOfAllClassRunsNeedPayment(Long learnerId) {
+        return filterClassRunsByStatus(learnerId, EnrolmentStatusTrackerEnum.RESERVED);
+    }
+
+    public List<ClassRun> retrieveListOfAllClassRunsRequestRefund(Long learnerId) {
+        return filterClassRunsByStatus(learnerId, EnrolmentStatusTrackerEnum.REFUNDREQUEST);
+    }
+
+    public List<ClassRun> retrieveListOfAllClassRunsEnrolled(Long learnerId) {
+        Learner l = learnerService.getLearnerById(learnerId);
+        return l.getClassRuns();
+    }
+
+    private List<ClassRun> filterClassRunsByStatus(Long learnerId, EnrolmentStatusTrackerEnum enrolmentStatusTrackerEnum) {
+        Learner l = learnerService.getLearnerById(learnerId);
+        List<EnrolmentStatusTracker> enrolmentStatusTrackers = l.getEnrolmentStatusTrackers();
+        List<ClassRun> classRuns = new ArrayList<>();
+        for(EnrolmentStatusTracker e:enrolmentStatusTrackers) {
+            if(e.getEnrolmentStatus() == enrolmentStatusTrackerEnum) {
+                classRuns.add(e.getClassRun());
+            }
+
+        }
+        return classRuns;
     }
 }
