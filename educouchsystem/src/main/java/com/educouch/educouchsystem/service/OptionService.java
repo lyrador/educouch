@@ -15,5 +15,5 @@ public interface OptionService {
 
     public void deleteOptionById(Long optionId) throws OptionNotFoundException;
 
-    public Option updateOption(Option option) throws OptionNotFoundException;
+    public Option updateOption(Option optionToUpdate, Option option) throws OptionNotFoundException;
 }
