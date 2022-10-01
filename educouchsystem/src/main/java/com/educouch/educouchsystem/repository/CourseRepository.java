@@ -16,4 +16,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     @Query("SELECT c FROM Course c WHERE c.courseApprovalStatus=:courseApprovalStatusEnum")
     List<Course> findCoursesByCourseApprovalStatus(CourseApprovalStatusEnum courseApprovalStatusEnum);
+
+
 }
