@@ -1,5 +1,7 @@
 package com.educouch.educouchsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -76,12 +78,20 @@ public class Event {
     public void setEndDate(LocalDateTime eventEndDate) {
         this.endDate = eventEndDate;
     }
-
+    @JsonIgnore
     public ClassRun getClassRun() {
         return classRun;
     }
 
     public void setClassRun(ClassRun classRun) {
         this.classRun = classRun;
+    }
+
+    public Long getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
     }
 }
