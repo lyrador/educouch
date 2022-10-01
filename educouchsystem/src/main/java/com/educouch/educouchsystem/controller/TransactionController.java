@@ -20,38 +20,18 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-    @PostMapping("/createLearnerToLmsTransaction")
-    public ResponseEntity<Transaction> learnerToLmsTransaction(@RequestBody Transaction transaction) {
-        Transaction transaction1 = transactionService.createLearnerToLmsTransaction(transaction);
-        return ResponseEntity.status(HttpStatus.OK).body(transaction1);
-    }
-
     @PostMapping("/createLmsToOrgTransaction")
-    public ResponseEntity<Transaction> lmsToOrgTransaction(@RequestBody Transaction transaction) {
-        Transaction transaction1 = transactionService.createLmsToOrgTransaction(transaction);
+    public ResponseEntity<Transaction> learnerToLmsTransaction(@RequestBody Transaction transaction) {
+        Transaction transaction1 = transactionService.createTransaction(transaction);
         return ResponseEntity.status(HttpStatus.OK).body(transaction1);
     }
 
-    @PostMapping("/createLmsToLearnerTransaction")
-    public ResponseEntity<Transaction> lmsToLearnerTransaction(@RequestBody Transaction transaction) {
-        Transaction transaction1 = transactionService.createLmsToLearnerTransaction(transaction);
-        return ResponseEntity.status(HttpStatus.OK).body(transaction1);
-    }
 
-    @GetMapping("/getAllLearnerToLms")
+    @GetMapping("/getAllLmsToOrgTransaction")
     public ResponseEntity<List<Transaction>> getAllLearnerToLms() {
-        return ResponseEntity.status(HttpStatus.OK).body(transactionService.findAllLearnerToLms());
+        return ResponseEntity.status(HttpStatus.OK).body(transactionService.findAllTransactions());
     }
 
-    @GetMapping("/getAllLmsToOrg")
-    public ResponseEntity<List<Transaction>> getAllLmsToOrg() {
-        return ResponseEntity.status(HttpStatus.OK).body(transactionService.findAllLmsToOrg());
-    }
-
-    @GetMapping("/getAllLmsToLearner")
-    public ResponseEntity<List<Transaction>> getAllLmsToLearner() {
-        return ResponseEntity.status(HttpStatus.OK).body(transactionService.findAllLmsToLearner());
-    }
 
     @PostMapping("/payCourseDeposit")
     public String payCourseDeposit(@RequestBody Transaction transaction) {
