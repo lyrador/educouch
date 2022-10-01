@@ -13,4 +13,8 @@ public interface EnrolmentStatusTrackerService {
 
     public List<EnrolmentStatusTracker> retrieveListOfEnrolmentStatusTrackersByCourse(Long classRunId)
             throws ClassRunNotFoundException;
+
+    public String retrieveLearnerStatusWithCourse(Long courseId, Long learnerId) throws EnrolmentStatusTrackerNotFoundException;
+
+
 }

@@ -97,7 +97,13 @@ public class DataLoader implements CommandLineRunner {
 
 
         System.out.println("Creating class runs...");
+        Integer[] test1 = new Integer[2];
+        test1[0] = 2;
+        test1[1] = 5;
 
+        Integer[] test2 = new Integer[2];
+        test2[0] = 1;
+        test2[1] = 3;
         ClassRun c1 = new ClassRun();
         c1.setClassRunStart(LocalDate.parse("2022-09-30"));
         c1.setClassRunEnd(LocalDate.parse("2022-12-30"));
@@ -106,6 +112,8 @@ public class DataLoader implements CommandLineRunner {
         c1.setClassRunStartTime(LocalTime.MIDNIGHT);
         c1.setClassRunEndTime(LocalTime.NOON);
 
+        c1.setClassRunDaysOfTheWeek(test1);
+
         ClassRun c2 = new ClassRun();
         c2.setClassRunStart(LocalDate.parse("2022-10-01"));
         c2.setClassRunEnd(LocalDate.parse("2023-01-30"));
@@ -113,6 +121,7 @@ public class DataLoader implements CommandLineRunner {
         c2.setMaximumCapacity(20);
         c2.setClassRunStartTime(LocalTime.MIDNIGHT);
         c2.setClassRunEndTime(LocalTime.NOON);
+        c2.setClassRunDaysOfTheWeek(test2);
 
         ClassRun c3 = new ClassRun();
         c3.setClassRunStart(LocalDate.parse("2022-09-30"));
@@ -121,6 +130,7 @@ public class DataLoader implements CommandLineRunner {
         c3.setMaximumCapacity(3);
         c3.setClassRunStartTime(LocalTime.MIDNIGHT);
         c3.setClassRunEndTime(LocalTime.NOON);
+        c3.setClassRunDaysOfTheWeek(test1);
 
         ClassRun c4 = new ClassRun();
         c4.setClassRunStart(LocalDate.parse("2022-10-01"));
@@ -129,6 +139,7 @@ public class DataLoader implements CommandLineRunner {
         c4.setMaximumCapacity(20);
         c4.setClassRunStartTime(LocalTime.MIDNIGHT);
         c4.setClassRunEndTime(LocalTime.NOON);
+        c4.setClassRunDaysOfTheWeek(test2);
 
 
         cs1010 =  courseService.saveCourse(cs1010);

@@ -4,11 +4,14 @@ import com.educouch.educouchsystem.dto.CourseDTO;
 import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.service.CourseService;
 import com.educouch.educouchsystem.service.EducatorService;
+import com.educouch.educouchsystem.service.EnrolmentStatusTrackerService;
 import com.educouch.educouchsystem.util.enumeration.AgeGroupEnum;
 import com.educouch.educouchsystem.util.enumeration.CourseApprovalStatusEnum;
 import com.educouch.educouchsystem.service.OrganisationService;
+import com.educouch.educouchsystem.util.enumeration.EnrolmentStatusTrackerEnum;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.dto.CourseRejectionModel;
+import com.educouch.educouchsystem.util.exception.EnrolmentStatusTrackerNotFoundException;
 import com.educouch.educouchsystem.util.exception.FolderNotFoundException;
 import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,9 @@ public class CourseController {
 
     @Autowired
     private OrganisationService organisationService;
+
+    @Autowired
+    private EnrolmentStatusTrackerService enrolmentStatusTrackerService;
 
     @PostMapping("{instructorId}/courses")
     public ResponseEntity<Course> addCourse(@PathVariable(value="instructorId") Long instructorId, @RequestBody Course courseRequest) {
@@ -89,6 +95,9 @@ public class CourseController {
     private Course processCourse(Course c) {
         List<Forum> forums = c.getForums();
         for(Forum f: forums) {
+            f.setCreatedByLearner(null);
+            f.setCreatedByInstructor(null);
+            f.setCreatedByOrganisationAdmin(null);
             f.setForumDiscussions(null);
             f.setCourse(null);
 //            f.setLearners(null);
@@ -101,10 +110,7 @@ public class CourseController {
         }
         List<ClassRun> listOfClassRuns = c.getClassRuns();
         for(ClassRun r: listOfClassRuns) {
-            r.setCourse(null);
-            r.setCalendar(null);
-            r.setInstructor(null);
-            r.setEnrolledLearners(null);
+            processClassRun(r);
         }
 
         return c;
@@ -332,18 +338,46 @@ public class CourseController {
     }
 
     private void processClassRun(ClassRun c) {
-        Instructor i = c.getInstructor();
-
-        List<EnrolmentStatusTracker> statusTrackers = c.getEnrolmentStatusTrackers();
-        for(EnrolmentStatusTracker e: statusTrackers) {
-            Learner l = e.getLearner();
-            l.setClassRuns(null);
-            l.setEnrolmentStatusTrackers(null);
-
+        List<EnrolmentStatusTracker> enrolmentStatusTrackers = c.getEnrolmentStatusTrackers();
+        for(EnrolmentStatusTracker e: enrolmentStatusTrackers) {
+            e.setClassRun(null);
+            e.setLearner(null);
         }
-        c.setCourse(null);
-        c.setEnrolledLearners(null);
 
+        c.setCalendar(null);
+        c.setEvents(null);
+        Instructor i = c.getInstructor();
+        if(i != null) {
+            i.setClassRuns(null);
+            i.setOrganisation(null);
+            i.setCourses(null);
+        }
+
+
+        Course course = c.getCourse();
+        course.setFolders(null);
+        course.setClassRuns(null);
+        course.setFolders(null);
+        course.setAssessments(null);
+        course.setInstructors(null);
+        course.setOrganisation(null);
+
+        c.setEnrolledLearners(null);
+        c.setEnrolmentStatusTrackers(null);
+        c.setLearnerTransactions(null);
+
+
+    }
+
+    @GetMapping("/enquiryCourseStatus")
+    @ResponseBody
+    public String enquireCourseStatus(@RequestParam String learnerId, @RequestParam String courseId) {
+        try{
+            String status = enrolmentStatusTrackerService.retrieveLearnerStatusWithCourse(new Long(courseId), new Long(learnerId));
+            return status;
+        }catch(EnrolmentStatusTrackerNotFoundException ex) {
+            return "NOTENROLLED";
+        }
 
     }
 

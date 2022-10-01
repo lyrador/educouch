@@ -2,9 +2,12 @@ package com.educouch.educouchsystem.controller;
 
 import ch.qos.logback.core.net.server.Client;
 import com.educouch.educouchsystem.dto.ClientSecretHandler;
+import com.educouch.educouchsystem.dto.DepositTracker;
 import com.educouch.educouchsystem.model.ChargeRequest;
 import com.educouch.educouchsystem.model.Course;
 import com.educouch.educouchsystem.service.StripeService;
+import com.educouch.educouchsystem.util.exception.ClassRunNotFoundException;
+import com.educouch.educouchsystem.util.exception.LearnerNotFoundException;
 import com.educouch.educouchsystem.util.logger.LoggingController;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
@@ -44,6 +47,21 @@ public class CheckoutController {
         } catch(StripeException ex) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Payment cannot be processed. ", ex);
         }
+    }
+
+    @PostMapping("/trackDeposit")
+    public String trackDepositPayment(@RequestBody DepositTracker depositTracker) {
+        Long learnerId = new Long(depositTracker.getLearnerId());
+        Long classRunId = new Long(depositTracker.getClassRunId());
+        BigDecimal amount = new BigDecimal(depositTracker.getAmount());
+
+        try {
+            stripeService.payDeposit(classRunId, learnerId, amount);
+            return "Successfully recorded the deposit.";
+        } catch(ClassRunNotFoundException | LearnerNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to make deposit record.", ex);
+        }
+
     }
 
 }

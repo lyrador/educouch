@@ -12,4 +12,11 @@ import java.util.List;
 public interface ClassRunRepository extends CrudRepository<ClassRun, Long> {
     @Query("SELECT r FROM ClassRun r WHERE r.course.courseId =:courseId")
     List<ClassRun> findClassRunsFromCourseId(Long courseId);
+
+    @Query("SELECT c FROM ClassRun c, IN (c.enrolmentStatusTrackers) est WHERE est.learner.learnerId = :learnerId ")
+    List<ClassRun> retrieveListOfAllClassRunsReserved(Long learnerId);
+
+
+
+
 }

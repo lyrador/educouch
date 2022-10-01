@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 
 public interface StripeService {
     public PaymentIntent createPaymentIntent(BigDecimal amount) throws StripeException;
-    public void payDeposit(Long classRunId, Long learnerId,
-                           LearnerPaymentEnum transactionType, BigDecimal amount) throws
+    public void payDeposit(Long classRunId, Long learnerId,BigDecimal amount) throws
             ClassRunNotFoundException, LearnerNotFoundException;
 }
