@@ -30,14 +30,12 @@ public class Question implements Serializable {
     @NotNull
     private QuestionTypeEnum questionType;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
-    private Quiz quiz;
-
-    @OneToMany(mappedBy = "optionQuestion", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name="question_id")
     private List<Option> options;
 
-    @OneToMany(mappedBy = "questionAttempted", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name="question_id")
     private List<QuestionAttempt> questionAttempts;
 
     @OneToOne
@@ -48,13 +46,12 @@ public class Question implements Serializable {
         this.questionAttempts = new ArrayList<>();
     }
 
-    public Question(String questionContent, String questionHint, Double questionMaxScore, QuestionTypeEnum questionType, Quiz quiz) {
+    public Question(String questionContent, String questionHint, Double questionMaxScore, QuestionTypeEnum questionType) {
         this();
         this.questionContent = questionContent;
         this.questionHint = questionHint;
         this.questionMaxScore = questionMaxScore;
         this.questionType = questionType;
-        this.quiz = quiz;
     }
 
     public Long getQuestionId() {
@@ -95,14 +92,6 @@ public class Question implements Serializable {
 
     public void setQuestionType(QuestionTypeEnum questionType) {
         this.questionType = questionType;
-    }
-
-    public Quiz getQuiz() {
-        return quiz;
-    }
-
-    public void setQuiz(Quiz quiz) {
-        this.quiz = quiz;
     }
 
     public OpenEnded getOpenEnded() {
