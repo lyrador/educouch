@@ -8,7 +8,7 @@ public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long eventId;
+    private Long id;
 
     @Column(name="title", nullable = false)
     private String title;
@@ -35,6 +35,15 @@ public class Event {
 
     public Event() {
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 
     public String getTitle() {
         return title;
@@ -64,7 +73,7 @@ public class Event {
         return endDate;
     }
 
-    public void setEventEndDate(LocalDateTime eventEndDate) {
+    public void setEndDate(LocalDateTime eventEndDate) {
         this.endDate = eventEndDate;
     }
 
