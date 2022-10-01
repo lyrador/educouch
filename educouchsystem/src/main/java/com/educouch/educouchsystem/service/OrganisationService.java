@@ -9,6 +9,7 @@ public interface OrganisationService {
     public Organisation saveOrganisation(Organisation organisation);
     public Organisation instantiateOrganisation(OrganisationAdmin organisationAdmin, Organisation organisation);
     public Organisation findOrganisationById(Long Id);
+    public List<Organisation> findAllOrganisation();
     public Organisation findOrganisationByOrganisationName(String organisationName);
     public Instructor addInstructor(String organisationId, Instructor instructor);
     public List<Instructor> findAllInstructors(String organisationId);
