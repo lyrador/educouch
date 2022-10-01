@@ -15,15 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ClassRunServiceImpl implements ClassRunService {
@@ -65,17 +59,23 @@ public class ClassRunServiceImpl implements ClassRunService {
 
     @Override
     public void deleteClassRun(Long id) {
+        ClassRun classRunToDelete = retrieveClassRunById(id);
+        for (Event event : classRunToDelete.getEvents()) {
+            event.setClassRun(null);
+        }
+        classRunToDelete.getEvents().clear();
         classRunRepository.deleteById(id);
     }
 
     @Override
     public ClassRun addClassRunFromCourseId(Long courseId, ClassRunDTO classRunDTORequest) throws ParseException {
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         Course course = courseService.retrieveCourseById(courseId);
         ClassRun classRun = new ClassRun();
         classRun.setCourse(course);
-        Date startDate = (Date)formatter.parse(classRunDTORequest.getClassRunStart());
-        Date endDate = (Date)formatter.parse(classRunDTORequest.getClassRunEnd());
+        Date startDate = (Date) formatter.parse(classRunDTORequest.getClassRunStart());
+        Date endDate = (Date) formatter.parse(classRunDTORequest.getClassRunEnd());
         classRun.setClassRunStart(startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         classRun.setClassRunEnd(endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         classRun.setMinClassSize(classRunDTORequest.getMinClassSize());
@@ -93,6 +93,8 @@ public class ClassRunServiceImpl implements ClassRunService {
         classRun.setEnrolledLearners(learners);
         classRun.setClassRunName(classRunDTORequest.getClassRunName());
         classRun.setClassRunDescription(classRunDTORequest.getClassRunDescription());
+        classRun.setClassRunStartTime(LocalTime.parse(classRunDTORequest.getClassRunStartTime(), timeFormatter));
+        classRun.setClassRunEndTime(LocalTime.parse(classRunDTORequest.getClassRunEndTime(), timeFormatter));
         classRunRepository.save(classRun);
         course.getClassRuns().add(classRun);
         courseRepository.save(course);
@@ -104,8 +106,9 @@ public class ClassRunServiceImpl implements ClassRunService {
         ClassRun classRunToUpdate = classRunRepository.findById(classRunDTORequest.getClassRunId()).get();
 
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date startDate = (Date)formatter.parse(classRunDTORequest.getClassRunStart());
-        Date endDate = (Date)formatter.parse(classRunDTORequest.getClassRunEnd());
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        Date startDate = (Date) formatter.parse(classRunDTORequest.getClassRunStart());
+        Date endDate = (Date) formatter.parse(classRunDTORequest.getClassRunEnd());
         classRunToUpdate.setClassRunStart(startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         classRunToUpdate.setClassRunEnd(endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         classRunToUpdate.setMinClassSize(classRunDTORequest.getMinClassSize());
@@ -123,15 +126,18 @@ public class ClassRunServiceImpl implements ClassRunService {
         classRunToUpdate.setEnrolledLearners(learners);
         classRunToUpdate.setClassRunName(classRunDTORequest.getClassRunName());
         classRunToUpdate.setClassRunDescription(classRunDTORequest.getClassRunDescription());
+        classRunToUpdate.setClassRunStartTime(LocalTime.parse(classRunDTORequest.getClassRunStartTime(), timeFormatter));
+        classRunToUpdate.setClassRunEndTime(LocalTime.parse(classRunDTORequest.getClassRunEndTime(), timeFormatter));
         classRunRepository.save(classRunToUpdate);
         return classRunToUpdate;
     }
 
     @Override
-    public List<ClassRunDTO> findClassRunsFromCourseId (Long courseId) {
+    public List<ClassRunDTO> findClassRunsFromCourseId(Long courseId) {
         List<ClassRun> classRuns = classRunRepository.findClassRunsFromCourseId(courseId);
-        List<ClassRunDTO> classRunDTOs= new ArrayList<>();
+        List<ClassRunDTO> classRunDTOs = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         for (ClassRun classRun : classRuns) {
             ClassRunDTO classRunDTO = new ClassRunDTO(
                     classRun.getClassRunId(),
@@ -145,7 +151,10 @@ public class ClassRunServiceImpl implements ClassRunService {
                     classRun.getInstructor().getUsername(),
                     null,
                     classRun.getClassRunName(),
-                    classRun.getClassRunDescription());
+                    classRun.getClassRunDescription(),
+                    classRun.getClassRunStartTime().format(timeFormatter),
+                    classRun.getClassRunEndTime().format(timeFormatter));
+            classRunDTO.setClassEvents(classRun.getEvents());
             classRunDTOs.add(classRunDTO);
         }
         return classRunDTOs;
@@ -155,35 +164,78 @@ public class ClassRunServiceImpl implements ClassRunService {
     public List<Event> generateClassEventsFromClassRunId(Long classRunId) {
         List<Event> newEvents = new ArrayList<>();
         ClassRun classRun = classRunRepository.findById(classRunId).get();
-        HashMap<Integer, DayOfWeek> numToDateOfWeekMap = new HashMap<>();
-        numToDateOfWeekMap.put(0, DayOfWeek.SUNDAY);
-        numToDateOfWeekMap.put(1, DayOfWeek.MONDAY);
-        numToDateOfWeekMap.put(2, DayOfWeek.TUESDAY);
-        numToDateOfWeekMap.put(3, DayOfWeek.WEDNESDAY);
-        numToDateOfWeekMap.put(4, DayOfWeek.THURSDAY);
-        numToDateOfWeekMap.put(5, DayOfWeek.FRIDAY);
-        numToDateOfWeekMap.put(6, DayOfWeek.SATURDAY);
+//        HashMap<Integer, DayOfWeek> numToDateOfWeekMap = new HashMap<>();
+//        numToDateOfWeekMap.put(0, DayOfWeek.SUNDAY);
+//        numToDateOfWeekMap.put(1, DayOfWeek.MONDAY);
+//        numToDateOfWeekMap.put(2, DayOfWeek.TUESDAY);
+//        numToDateOfWeekMap.put(3, DayOfWeek.WEDNESDAY);
+//        numToDateOfWeekMap.put(4, DayOfWeek.THURSDAY);
+//        numToDateOfWeekMap.put(5, DayOfWeek.FRIDAY);
+//        numToDateOfWeekMap.put(6, DayOfWeek.SATURDAY);
 
-        //check if its only occuring on 1 day of the week
-        if (classRun.getClassRunDaysOfTheWeek().length == 1) {
-            //check if its occuring weekly
-            if (classRun.getRecurringEnum() == RecurringEnum.WEEKLY) {
-                //initiate a pointer at the start date
-                LocalDate localDatePointer = classRun.getClassRunStart();
-                while (localDatePointer.getDayOfWeek() != numToDateOfWeekMap.get(classRun.getClassRunDaysOfTheWeek()[0])) {
-                    localDatePointer.plusDays(1);
-                }
-                while (localDatePointer.isBefore(classRun.getClassRunEnd())) {
+        Set<DayOfWeek> daysOfWeekSet = new HashSet<>();
+        //0 in classRunDaysOfTheWeek means sunday, 1 means monday and so on till 6 means saturday
+        for (Integer dayOfWeekInInteger : classRun.getClassRunDaysOfTheWeek()) {
+            if (dayOfWeekInInteger == 0) {
+                daysOfWeekSet.add(DayOfWeek.SUNDAY);
+            } else if (dayOfWeekInInteger == 1) {
+                daysOfWeekSet.add(DayOfWeek.MONDAY);
+            } else if (dayOfWeekInInteger == 2) {
+                daysOfWeekSet.add(DayOfWeek.TUESDAY);
+            } else if (dayOfWeekInInteger == 3) {
+                daysOfWeekSet.add(DayOfWeek.WEDNESDAY);
+            } else if (dayOfWeekInInteger == 4) {
+                daysOfWeekSet.add(DayOfWeek.THURSDAY);
+            } else if (dayOfWeekInInteger == 5) {
+                daysOfWeekSet.add(DayOfWeek.FRIDAY);
+            } else if (dayOfWeekInInteger == 6) {
+                daysOfWeekSet.add(DayOfWeek.SATURDAY);
+            }
+        }
+
+        //check if its occuring weekly
+        if (classRun.getRecurringEnum() == RecurringEnum.WEEKLY) {
+            //initiate a pointer at the start date
+            LocalDate localDatePointer = classRun.getClassRunStart();
+            while (localDatePointer.isBefore(classRun.getClassRunEnd())) {
+                if (daysOfWeekSet.contains(localDatePointer.getDayOfWeek())) {
                     Event newEvent = new Event();
                     newEvent.setClassRun(classRun);
                     newEvent.setTitle(classRun.getClassRunName() + " " + "Class Event");
                     newEvent.setEventDescription(classRun.getClassRunName() + " " + "Class Event");
-                    newEvent.setStartDate(LocalDateTime.of(classRun.getClassRunStart(), classRun.getClassRunStartTime()));
-                    newEvent.setEventEndDate(LocalDateTime.of(classRun.getClassRunEnd(), classRun.getClassRunEndTime()));
+                    newEvent.setStartDate(LocalDateTime.of(localDatePointer, classRun.getClassRunStartTime()));
+                    newEvent.setEventEndDate(LocalDateTime.of(localDatePointer, classRun.getClassRunEndTime()));
                     eventService.saveEvent(newEvent);
                     newEvents.add(newEvent);
-                    localDatePointer.plusDays(7);
+
+                    classRun.getEvents().add(newEvent);
+                    saveClassRun(classRun);
                 }
+                localDatePointer = localDatePointer.plusDays(1);
+            }
+        } else if (classRun.getRecurringEnum() == RecurringEnum.ALTERNATE) {
+            Integer weekNum = 0;
+            Integer daysCount = 0;
+            LocalDate localDatePointer = classRun.getClassRunStart();
+            while (localDatePointer.isBefore(classRun.getClassRunEnd())) {
+                if (daysCount != 0 && daysCount % 7 == 0) {
+                    localDatePointer = localDatePointer.plusDays(7);
+                }
+                if (daysOfWeekSet.contains(localDatePointer.getDayOfWeek())) {
+                    Event newEvent = new Event();
+                    newEvent.setClassRun(classRun);
+                    newEvent.setTitle(classRun.getClassRunName() + " " + "Class Event");
+                    newEvent.setEventDescription(classRun.getClassRunName() + " " + "Class Event");
+                    newEvent.setStartDate(LocalDateTime.of(localDatePointer, classRun.getClassRunStartTime()));
+                    newEvent.setEventEndDate(LocalDateTime.of(localDatePointer, classRun.getClassRunEndTime()));
+                    eventService.saveEvent(newEvent);
+                    newEvents.add(newEvent);
+
+                    classRun.getEvents().add(newEvent);
+                    saveClassRun(classRun);
+                }
+                localDatePointer = localDatePointer.plusDays(1);
+                daysCount++;
             }
         }
         return newEvents;
