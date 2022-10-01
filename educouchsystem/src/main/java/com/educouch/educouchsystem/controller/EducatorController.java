@@ -145,7 +145,7 @@ public class EducatorController {
         }
     }
 
-    @GetMapping("/findAllOrgansations")
+    @GetMapping("/findAllOrganisation")
         public ResponseEntity<List<Organisation>> getAllOrganisation() {
         return new ResponseEntity<List<Organisation>>(organisationService.findAllOrganisation(), HttpStatus.OK);
 
