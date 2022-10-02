@@ -45,6 +45,7 @@ public abstract class Assessment implements Serializable {
     @NotNull
     private AssessmentStatusEnum assessmentStatus = AssessmentStatusEnum.PENDING;
 
+
 //
 //    @ManyToOne(optional = false)
 //    @JoinColumn(nullable = false)

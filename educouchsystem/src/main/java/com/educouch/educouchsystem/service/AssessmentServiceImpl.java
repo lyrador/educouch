@@ -30,6 +30,14 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
+    public List<Assessment> getAllAssessmentsByCourseId(Long courseId) throws CourseNotFoundException{
+            Course course = courseService.getCourseById(courseId);
+            List<Assessment> assessments = course.getAssessments();
+            return assessments;
+    }
+
+
+    @Override
     public Assessment retrieveAssessmentById(Long assessmentId) throws AssessmentNotFoundException {
         Assessment assessment = assessmentRepository.findById(assessmentId).get();
         if (assessment != null) {
