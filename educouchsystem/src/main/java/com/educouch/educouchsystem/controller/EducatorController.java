@@ -145,6 +145,13 @@ public class EducatorController {
         }
     }
 
+    @GetMapping("/findAllOrganisation")
+        public ResponseEntity<List<Organisation>> getAllOrganisation() {
+        return new ResponseEntity<List<Organisation>>(organisationService.findAllOrganisation(), HttpStatus.OK);
+
+        }
+
+
 
     public Instructor deserializeInstructor(Instructor i) {
 

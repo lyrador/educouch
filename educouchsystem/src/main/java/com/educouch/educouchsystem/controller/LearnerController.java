@@ -53,4 +53,11 @@ public class LearnerController {
         return true;
 
     }
+
+    @GetMapping("/getById")
+    public ResponseEntity<Learner> getLearnerById(@RequestParam Long learnerId) {
+        return ResponseEntity.status(HttpStatus.OK).body(learnerService.getLearnerById(learnerId));
+
+
+    }
 }

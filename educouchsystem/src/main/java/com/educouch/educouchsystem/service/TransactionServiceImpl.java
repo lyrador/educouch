@@ -15,34 +15,14 @@ public class TransactionServiceImpl implements TransactionService{
     private TransactionRepository transactionRepository;
 
     @Override
-    public Transaction createLearnerToLmsTransaction(Transaction transaction) {
-        transaction.setPaymentType(PaymentTypeEnum.LEARNERTOLMS);
+    public Transaction createTransaction(Transaction transaction) {
         return transactionRepository.save(transaction);
     }
 
-    @Override
-    public Transaction createLmsToOrgTransaction(Transaction transaction) {
-        transaction.setPaymentType(PaymentTypeEnum.LMSTOORG);
-        return transactionRepository.save(transaction);
-    }
 
     @Override
-    public Transaction createLmsToLearnerTransaction(Transaction transaction) {        transaction.setPaymentType(PaymentTypeEnum.LEARNERTOLMS);
-        transaction.setPaymentType(PaymentTypeEnum.LMSTOLEARNER);
-        return transactionRepository.save(transaction);    }
-
-    @Override
-    public List<Transaction> findAllLearnerToLms() {
-        return transactionRepository.findAllLearnerToLms();
+    public List<Transaction> findAllTransactions() {
+        return transactionRepository.findAll();
     }
 
-    @Override
-    public List<Transaction> findAllLmsToOrg() {
-        return transactionRepository.findAllLmsToOrg();
-    }
-
-    @Override
-    public List<Transaction> findAllLmsToLearner() {
-        return transactionRepository.findAllLmsToLearner();
-    }
 }
