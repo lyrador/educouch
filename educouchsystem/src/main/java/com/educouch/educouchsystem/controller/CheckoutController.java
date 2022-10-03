@@ -1,12 +1,10 @@
 package com.educouch.educouchsystem.controller;
 
-import ch.qos.logback.core.net.server.Client;
 import com.educouch.educouchsystem.dto.ClientSecretHandler;
-import com.educouch.educouchsystem.dto.DepositTracker;
-import com.educouch.educouchsystem.model.ChargeRequest;
-import com.educouch.educouchsystem.model.Course;
+import com.educouch.educouchsystem.dto.LearnerPaymentTracker;
 import com.educouch.educouchsystem.service.StripeService;
 import com.educouch.educouchsystem.util.exception.ClassRunNotFoundException;
+import com.educouch.educouchsystem.util.exception.EnrolmentStatusTrackerNotFoundException;
 import com.educouch.educouchsystem.util.exception.LearnerNotFoundException;
 import com.educouch.educouchsystem.util.logger.LoggingController;
 import com.stripe.exception.StripeException;
@@ -15,13 +13,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @RestController
 //giving learner path here
@@ -50,16 +45,46 @@ public class CheckoutController {
     }
 
     @PostMapping("/trackDeposit")
-    public String trackDepositPayment(@RequestBody DepositTracker depositTracker) {
-        Long learnerId = new Long(depositTracker.getLearnerId());
-        Long classRunId = new Long(depositTracker.getClassRunId());
-        BigDecimal amount = new BigDecimal(depositTracker.getAmount());
+    public String trackDepositPayment(@RequestBody LearnerPaymentTracker learnerPaymentTracker) {
+        Long learnerId = new Long(learnerPaymentTracker.getLearnerId());
+        Long classRunId = new Long(learnerPaymentTracker.getClassRunId());
+        BigDecimal amount = new BigDecimal(learnerPaymentTracker.getAmount());
 
         try {
             stripeService.payDeposit(classRunId, learnerId, amount);
             return "Successfully recorded the deposit.";
         } catch(ClassRunNotFoundException | LearnerNotFoundException ex) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to make deposit record.", ex);
+        }
+
+    }
+
+    @PostMapping("/trackRemainingCourseFee")
+    public String trackRemainingCourseFee(@RequestBody LearnerPaymentTracker learnerPaymentTracker) {
+        Long learnerId = new Long(learnerPaymentTracker.getLearnerId());
+        Long classRunId = new Long(learnerPaymentTracker.getClassRunId());
+        BigDecimal amount = new BigDecimal(learnerPaymentTracker.getAmount());
+
+        try {
+            stripeService.payCourseFee(classRunId, learnerId, amount);
+            return "Successfully recorded the course fee payment.";
+        } catch(ClassRunNotFoundException | LearnerNotFoundException | EnrolmentStatusTrackerNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to find the correct record.", ex);
+        }
+
+    }
+
+    @PostMapping("/refundDepositRequest")
+    public String trackRefundDepositRequest(@RequestBody LearnerPaymentTracker learnerPaymentTracker) {
+        Long learnerId = new Long(learnerPaymentTracker.getLearnerId());
+        Long classRunId = new Long(learnerPaymentTracker.getClassRunId());
+        BigDecimal amount = new BigDecimal(learnerPaymentTracker.getAmount());
+
+        try {
+            stripeService.requestRefund(classRunId, learnerId, amount);
+            return "Successfully recorded the refund request. ";
+        } catch(ClassRunNotFoundException | LearnerNotFoundException | EnrolmentStatusTrackerNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to find the correct record.", ex);
         }
 
     }

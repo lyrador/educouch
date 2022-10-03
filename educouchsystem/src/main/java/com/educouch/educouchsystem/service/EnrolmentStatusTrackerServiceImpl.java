@@ -8,6 +8,7 @@ import com.educouch.educouchsystem.repository.EnrolmentStatusTrackerRepository;
 import com.educouch.educouchsystem.util.enumeration.EnrolmentStatusTrackerEnum;
 import com.educouch.educouchsystem.util.exception.ClassRunNotFoundException;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
+import com.educouch.educouchsystem.util.exception.DuplicateEnrolmentTrackerException;
 import com.educouch.educouchsystem.util.exception.EnrolmentStatusTrackerNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -74,5 +75,18 @@ public class EnrolmentStatusTrackerServiceImpl implements EnrolmentStatusTracker
         }
 
         throw new EnrolmentStatusTrackerNotFoundException("Unable to find status.");
+    }
+
+    @Override
+    public EnrolmentStatusTracker retrieveEnrolmentByLearnerIdAndClassRunId(Long classRunId, Long learnerId) throws
+            DuplicateEnrolmentTrackerException{
+        List<EnrolmentStatusTracker> listOfTrackers = enrolmentStatusTrackerRepository.retrieveEnrolmentStatusTrackerByLearnerIdAndClassRunId(learnerId, classRunId);
+
+        if(listOfTrackers.size() != 1) {
+            return listOfTrackers.get(0);
+        } else {
+            throw new DuplicateEnrolmentTrackerException("There is a duplicate enrolment status tracker.");
+
+        }
     }
 }
