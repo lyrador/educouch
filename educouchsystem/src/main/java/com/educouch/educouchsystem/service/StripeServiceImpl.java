@@ -69,7 +69,7 @@ public class StripeServiceImpl implements StripeService {
         if (c != null) {
             Learner l = learnerService.getLearnerById(learnerId);
             if(l != null) {
-                LearnerTransaction transaction = new LearnerTransaction(amount, transactionType);
+                LearnerTransaction transaction = new LearnerTransaction(amount, transactionType, learnerId);
                 transaction = learnerTransactionRepository.save(transaction);
 
                 c.getLearnerTransactions().add(transaction);

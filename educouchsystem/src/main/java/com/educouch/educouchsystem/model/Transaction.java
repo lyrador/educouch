@@ -28,14 +28,16 @@ public class Transaction {
     private LocalDateTime paymentTime;
 
     public Transaction() {
+        this.paymentTime = LocalDateTime.now();
+
     }
 
-    public Transaction(Long payTo, String orgName, String orgAccNumber, String amountPaid, LocalDateTime paymentTime) {
+    public Transaction(Long payTo, String orgName, String orgAccNumber, String amountPaid) {
         this.payTo = payTo;
         this.orgName = orgName;
         this.orgAccNumber = orgAccNumber;
         this.amountPaid = new BigDecimal(amountPaid);
-        this.paymentTime = paymentTime;
+        this.paymentTime = LocalDateTime.now();
     }
     public Long getTransactionId() {
         return transactionId;
