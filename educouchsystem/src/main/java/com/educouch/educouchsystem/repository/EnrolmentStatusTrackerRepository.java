@@ -13,4 +13,7 @@ public interface EnrolmentStatusTrackerRepository extends JpaRepository<Enrolmen
 
     @Query("SELECT e FROM EnrolmentStatusTracker e WHERE e.learner.learnerId =:learnerId")
     List<EnrolmentStatusTracker> retrieveEnrolmentStatusTrackerByLearnerId(Long learnerId);
+
+    @Query("SELECT e FROM EnrolmentStatusTracker e WHERE e.learner.learnerId =:learnerId AND e.classRun.classRunId = :classRunId ")
+    List<EnrolmentStatusTracker> retrieveEnrolmentStatusTrackerByLearnerIdAndClassRunId(Long learnerId, Long classRunId);
 }

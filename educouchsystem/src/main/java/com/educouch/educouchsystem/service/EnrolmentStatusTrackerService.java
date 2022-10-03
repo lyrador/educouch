@@ -2,6 +2,7 @@ package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.model.EnrolmentStatusTracker;
 import com.educouch.educouchsystem.util.exception.ClassRunNotFoundException;
+import com.educouch.educouchsystem.util.exception.DuplicateEnrolmentTrackerException;
 import com.educouch.educouchsystem.util.exception.EnrolmentStatusTrackerNotFoundException;
 
 import java.util.List;
@@ -16,5 +17,6 @@ public interface EnrolmentStatusTrackerService {
 
     public String retrieveLearnerStatusWithCourse(Long courseId, Long learnerId) throws EnrolmentStatusTrackerNotFoundException;
 
-
+    public EnrolmentStatusTracker retrieveEnrolmentByLearnerIdAndClassRunId(Long classRunId, Long learnerId) throws
+            DuplicateEnrolmentTrackerException;
 }

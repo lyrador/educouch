@@ -1,15 +1,15 @@
 package com.educouch.educouchsystem.dto;
 
-public class DepositTracker {
+public class LearnerPaymentTracker {
 
     private String classRunId;
     private String learnerId;
     private String amount;
 
-    public DepositTracker() {
+    public LearnerPaymentTracker() {
     }
 
-    public DepositTracker(String classRunId, String learnerId, String amount) {
+    public LearnerPaymentTracker(String classRunId, String learnerId, String amount) {
         this.classRunId = classRunId;
         this.learnerId = learnerId;
         this.amount = amount;
