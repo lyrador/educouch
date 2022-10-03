@@ -9,8 +9,11 @@ import com.educouch.educouchsystem.util.enumeration.FileSubmissionEnum;
 import com.educouch.educouchsystem.util.enumeration.InstructorAccessRight;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.util.exception.FolderUnableToSaveException;
+import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -19,6 +22,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Component("loader")
 public class DataLoader implements CommandLineRunner {
@@ -95,7 +99,6 @@ public class DataLoader implements CommandLineRunner {
         bio4000.setCourseApprovalStatus(CourseApprovalStatusEnum.LIVE);
         bio4000.setCourseFee(new BigDecimal(1000));
 
-
         System.out.println("Creating class runs...");
         Integer[] test1 = new Integer[2];
         test1[0] = 2;
@@ -162,7 +165,7 @@ public class DataLoader implements CommandLineRunner {
 
 
         //create organisation
-        Organisation org1 = new Organisation("FakeTuition");
+        Organisation org1 = new Organisation("FakeTuition", "issa fake tuition", "23423423234234");
         OrganisationAdmin orgAdmin = new OrganisationAdmin("grinivas", "grini@gmail.com", "password", "grinivas");
 
         organisationService.instantiateOrganisation(orgAdmin, org1);
@@ -174,8 +177,35 @@ public class DataLoader implements CommandLineRunner {
         organisationService.addInstructor("1", i1);
         organisationService.addInstructor("1", i2);
 
+        //linking a course to horlicks head instructor and org 1
+        Course courseRequest = new Course();
+        courseRequest.setCourseCode("TEST123");
+        courseRequest.setCourseTitle("TESTING 123");
+        courseRequest.setCourseDescription("TESTING 123");
+        courseRequest.setCourseTimeline("TILL END 2022");
+        courseRequest.setCourseMaxScore(100.00);
+        courseRequest.setAgeGroup(AgeGroupEnum.ADULTS);
 
+        if (i2.getCourses() == null) {
+            List<Course> courseList = new ArrayList<>();
+            i2.setCourses(courseList);
+        }
+        i2.getCourses().add(courseRequest);
 
+        if (org1.getCourses() == null) {
+            List<Course> courseList = new ArrayList<>();
+            org1.setCourses(courseList);
+        }
+        org1.getCourses().add(courseRequest);
+        courseRequest.setOrganisation(org1);
+
+        if (courseRequest.getInstructors() == null) {
+            List<Instructor> instructorList = new ArrayList<>();
+            courseRequest.setInstructors(instructorList);
+        }
+        courseRequest.getInstructors().add(i2);
+
+        Course course = courseService.saveCourse(courseRequest);
 //
 //        //create FileSubmission Assessment
 //        FileSubmission newFileSubmission = new FileSubmission("Quiz A", "abcde", 20.0, new Date(), new Date(), FileSubmissionEnum.INDIVIDUAL);

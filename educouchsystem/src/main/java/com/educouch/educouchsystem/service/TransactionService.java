@@ -5,15 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 public interface TransactionService {
-    public Transaction createLearnerToLmsTransaction(Transaction transaction);
+    public Transaction createTransaction(Transaction transaction);
+    public List<Transaction> findAllTransactions();
 
-    public Transaction createLmsToOrgTransaction(Transaction transaction);
-
-    public Transaction createLmsToLearnerTransaction(Transaction transaction);
-
-    public List<Transaction> findAllLearnerToLms();
-
-    public List<Transaction> findAllLmsToOrg();
-
-    public List<Transaction> findAllLmsToLearner();
 }

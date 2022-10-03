@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,13 +27,39 @@ public class Organisation {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "organisation")
     private List<Course> courses;
 
+    @Column(nullable = false)
+    private String orgDescription;
+
+    @Column(nullable = false)
+    private String paymentAcc;
+    private BigDecimal orgBalance;
+
     public Organisation() {
         this.instructors = new ArrayList<>();
+        this.orgBalance = new BigDecimal(0);
     }
 
-    public Organisation(String organisationName) {
+    public Organisation(String organisationName, String orgDescription, String paymentAcc) {
         this();
+        this.orgDescription = orgDescription;
+        this.paymentAcc = paymentAcc;
         this.organisationName = organisationName;
+    }
+
+    public String getOrgDescription() {
+        return orgDescription;
+    }
+
+    public void setOrgDescription(String orgDescription) {
+        this.orgDescription = orgDescription;
+    }
+
+    public String getPaymentAcc() {
+        return paymentAcc;
+    }
+
+    public void setPaymentAcc(String paymentAcc) {
+        this.paymentAcc = paymentAcc;
     }
 
     public Long getOrganisationId() {
@@ -74,5 +101,13 @@ public class Organisation {
 
     public void setCourses(List<Course> courses) {
         this.courses = courses;
+    }
+
+    public BigDecimal getOrgBalance() {
+        return orgBalance;
+    }
+
+    public void setOrgBalance(BigDecimal orgBalance) {
+        this.orgBalance = orgBalance;
     }
 }
