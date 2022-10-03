@@ -2,16 +2,11 @@ package com.educouch.educouchsystem.service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import com.educouch.educouchsystem.model.ClassRun;
-import com.educouch.educouchsystem.model.EnrolmentStatusTracker;
-import com.educouch.educouchsystem.model.Learner;
-import com.educouch.educouchsystem.model.LearnerTransaction;
+import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.repository.LearnerTransactionRepository;
 import com.educouch.educouchsystem.util.enumeration.EnrolmentStatusTrackerEnum;
 import com.educouch.educouchsystem.util.enumeration.LearnerPaymentEnum;
-import com.educouch.educouchsystem.util.exception.ClassRunNotFoundException;
-import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
-import com.educouch.educouchsystem.util.exception.LearnerNotFoundException;
+import com.educouch.educouchsystem.util.exception.*;
 import com.stripe.exception.*;
 import com.stripe.param.PaymentIntentCreateParams;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +31,9 @@ public class StripeServiceImpl implements StripeService {
 
     @Autowired
     EnrolmentStatusTrackerService enrolmentStatusTrackerService;
+
+    @Autowired
+    DepositRefundRequestService depositRefundRequestService;
 
     String secretKey = "sk_test_51LnPrnBx7BYbBg97Zhhw2HorPZqL5srUqYdFgcYuldnNJlMMO4shzH979NrcJ4NDJGHAg0IQ2KuhR19vnEIaUiF800k3CzgsHu";
 
@@ -118,6 +116,72 @@ public class StripeServiceImpl implements StripeService {
         }
 
     }
+
+    @Override
+    public void payCourseFee(Long classRunId, Long learnerId,BigDecimal amount) throws
+            ClassRunNotFoundException, LearnerNotFoundException,
+            EnrolmentStatusTrackerNotFoundException {
+        ClassRun c = classRunService.retrieveClassRunById(classRunId);
+        if (c != null) {
+            Learner l = learnerService.getLearnerById(learnerId);
+            if(l != null) {
+                try {
+                    EnrolmentStatusTracker e = enrolmentStatusTrackerService.retrieveEnrolmentByLearnerIdAndClassRunId(classRunId, learnerId);
+                    e.setEnrolmentStatus(EnrolmentStatusTrackerEnum.ENROLLED);
+                    enrolmentStatusTrackerService.saveEnrolmentStatusTracker(e);
+                    c.getEnrolledLearners().add(l);
+                    classRunService.saveClassRun(c);
+
+                    l.getClassRuns().add(c);
+                    learnerService.saveLearner(l);
+
+                    createNewLearnerTransaction(c.getClassRunId(), l.getLearnerId(), LearnerPaymentEnum.REMAININGCOURSEFEE, amount);
+                } catch(DuplicateEnrolmentTrackerException ex) {
+                    throw new EnrolmentStatusTrackerNotFoundException("Unexpected administration error has occured. Please contact our LMS Admin to sort out your duplicate record. ");
+                }
+
+
+            }else {
+                throw new LearnerNotFoundException("Unable to find learner");
+            }
+        } else {
+            throw new ClassRunNotFoundException("Unable to find class run. ");
+        }
+
+    }
+
+
+    @Override
+    public void requestRefund(Long classRunId, Long learnerId,BigDecimal amount) throws
+            ClassRunNotFoundException, LearnerNotFoundException,
+            EnrolmentStatusTrackerNotFoundException {
+        ClassRun c = classRunService.retrieveClassRunById(classRunId);
+        if (c != null) {
+            Learner l = learnerService.getLearnerById(learnerId);
+            if(l != null) {
+                try {
+                    EnrolmentStatusTracker e = enrolmentStatusTrackerService.retrieveEnrolmentByLearnerIdAndClassRunId(classRunId, learnerId);
+                    e.setEnrolmentStatus(EnrolmentStatusTrackerEnum.REFUNDREQUEST);
+                    enrolmentStatusTrackerService.saveEnrolmentStatusTracker(e);
+
+                    DepositRefundRequest refundRequest = new DepositRefundRequest(learnerId,amount);
+                    depositRefundRequestService.saveRefundRequest(refundRequest);
+
+                } catch(DuplicateEnrolmentTrackerException ex) {
+                    throw new EnrolmentStatusTrackerNotFoundException("Unexpected administration error has occured. Please contact our LMS Admin to sort out your duplicate record. ");
+                }
+
+
+            }else {
+                throw new LearnerNotFoundException("Unable to find learner");
+            }
+        } else {
+            throw new ClassRunNotFoundException("Unable to find class run. ");
+        }
+
+    }
+
+
 
 
 
