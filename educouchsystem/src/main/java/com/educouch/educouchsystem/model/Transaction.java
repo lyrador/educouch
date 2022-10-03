@@ -3,6 +3,7 @@ package com.educouch.educouchsystem.model;
 import com.educouch.educouchsystem.util.enumeration.PaymentTypeEnum;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,22 +16,28 @@ public class Transaction {
     private Long payTo;
 
     @Column(nullable = false)
-    private Long payFrom;
+    private String orgName;
 
     @Column(nullable = false)
-    private PaymentTypeEnum paymentType;
+    private String orgAccNumber;
+
+    @Column(nullable = false)
+    private BigDecimal amountPaid;
 
     @Column(nullable = false)
     private LocalDateTime paymentTime;
 
     public Transaction() {
+        this.paymentTime = LocalDateTime.now();
+
     }
 
-    public Transaction(Long payTo, Long payFrom, PaymentTypeEnum paymentType, LocalDateTime paymentTime) {
+    public Transaction(Long payTo, String orgName, String orgAccNumber, String amountPaid) {
         this.payTo = payTo;
-        this.payFrom = payFrom;
-        this.paymentType = paymentType;
-        this.paymentTime = paymentTime;
+        this.orgName = orgName;
+        this.orgAccNumber = orgAccNumber;
+        this.amountPaid = new BigDecimal(amountPaid);
+        this.paymentTime = LocalDateTime.now();
     }
     public Long getTransactionId() {
         return transactionId;
@@ -48,20 +55,28 @@ public class Transaction {
         this.payTo = payTo;
     }
 
-    public Long getPayFrom() {
-        return payFrom;
+    public String getOrgName() {
+        return orgName;
     }
 
-    public void setPayFrom(Long payFrom) {
-        this.payFrom = payFrom;
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
     }
 
-    public PaymentTypeEnum getPaymentType() {
-        return paymentType;
+    public String getOrgAccNumber() {
+        return orgAccNumber;
     }
 
-    public void setPaymentType(PaymentTypeEnum paymentType) {
-        this.paymentType = paymentType;
+    public void setOrgAccNumber(String orgAccNumber) {
+        this.orgAccNumber = orgAccNumber;
+    }
+
+    public BigDecimal getAmountPaid() {
+        return amountPaid;
+    }
+
+    public void setAmountPaid(BigDecimal amountPaid) {
+        this.amountPaid = amountPaid;
     }
 
     public LocalDateTime getPaymentTime() {

@@ -65,7 +65,7 @@ public class OrgAdminApprovalReqServiceImpl implements OrgAdminApprovalReqServic
         orgAdminApprovalReq.setApprovalStatusEnum(ApprovalStatusEnum.ACCEPTED);
         orgAdminApprovalReqRepository.save(orgAdminApprovalReq);
         OrganisationAdmin newAdmin = new OrganisationAdmin(orgAdminApprovalReq.getAdminName(), orgAdminApprovalReq.getAdminEmail(), orgAdminApprovalReq.getPassword(),orgAdminApprovalReq.getUsername());
-        Organisation newOrg = new Organisation(orgAdminApprovalReq.getOrgName());
+        Organisation newOrg = new Organisation(orgAdminApprovalReq.getOrgName(), orgAdminApprovalReq.getOrgDescription(), orgAdminApprovalReq.getPaymentAcc());
         organisationService.instantiateOrganisation(newAdmin, newOrg);
         emailSenderService.sendEmail(orgAdminApprovalReq.getAdminEmail(), "Successful Educouch Organisation Admin Account Application", "Your educouch Organisation Admin account has been created. You may now log in to educouch and use our services. Toodles!");
         return orgAdminApprovalReq;

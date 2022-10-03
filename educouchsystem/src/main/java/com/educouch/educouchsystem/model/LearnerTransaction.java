@@ -18,6 +18,9 @@ public class LearnerTransaction {
     private LearnerPaymentEnum transactionType;
 
     @Column(nullable = false)
+    private Long learnerId;
+
+    @Column(nullable = false)
     private LocalDateTime timestamp;
 
     @Column(nullable = false)
@@ -27,10 +30,19 @@ public class LearnerTransaction {
         this.timestamp = LocalDateTime.now();
     }
 
-    public LearnerTransaction(BigDecimal amount, LearnerPaymentEnum transactionType) {
+    public LearnerTransaction(BigDecimal amount, LearnerPaymentEnum transactionType, Long learnerId) {
         new LearnerTransaction();
+        this.learnerId = learnerId;
         this.amount = amount;
         this.transactionType = transactionType;
+    }
+
+    public Long getLearnerId() {
+        return learnerId;
+    }
+
+    public void setLearnerId(Long learnerId) {
+        this.learnerId = learnerId;
     }
 
     public Long getLearnerTransactionId() {

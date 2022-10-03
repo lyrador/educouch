@@ -1,4 +1,6 @@
 package com.educouch.educouchsystem.dto;
+import com.educouch.educouchsystem.model.Event;
+
 import java.util.List;
 
 public class ClassRunDTO {
@@ -26,10 +28,16 @@ public class ClassRunDTO {
     private String classRunName;
     private String classRunDescription;
 
+    private String classRunStartTime;
+
+    private String classRunEndTime;
+
+    private List<Event> classEvents;
+
     public ClassRunDTO() {
     }
 
-    public ClassRunDTO(Long classRunId, String classRunStart, String classRunEnd, Integer minClassSize, Integer maximumCapacity, Integer[] classRunDaysOfTheWeek, String recurringEnumString, Long calendarId, String instructorUsername, List<String> enrolledLearnersUsernames, String classRunName, String classRunDescription) {
+    public ClassRunDTO(Long classRunId, String classRunStart, String classRunEnd, Integer minClassSize, Integer maximumCapacity, Integer[] classRunDaysOfTheWeek, String recurringEnumString, Long calendarId, String instructorUsername, List<String> enrolledLearnersUsernames, String classRunName, String classRunDescription, String classRunStartTime, String classRunEndTime) {
         this.classRunId = classRunId;
         this.classRunStart = classRunStart;
         this.classRunEnd = classRunEnd;
@@ -42,6 +50,8 @@ public class ClassRunDTO {
         this.enrolledLearnersUsernames = enrolledLearnersUsernames;
         this.classRunName = classRunName;
         this.classRunDescription = classRunDescription;
+        this.classRunStartTime = classRunStartTime;
+        this.classRunEndTime = classRunEndTime;
     }
 
     public Long getClassRunId() {
@@ -138,5 +148,29 @@ public class ClassRunDTO {
 
     public void setClassRunDescription(String classRunDescription) {
         this.classRunDescription = classRunDescription;
+    }
+
+    public String getClassRunStartTime() {
+        return classRunStartTime;
+    }
+
+    public void setClassRunStartTime(String classRunStartTime) {
+        this.classRunStartTime = classRunStartTime;
+    }
+
+    public String getClassRunEndTime() {
+        return classRunEndTime;
+    }
+
+    public void setClassRunEndTime(String classRunEndTime) {
+        this.classRunEndTime = classRunEndTime;
+    }
+
+    public List<Event> getClassEvents() {
+        return classEvents;
+    }
+
+    public void setClassEvents(List<Event> classEvents) {
+        this.classEvents = classEvents;
     }
 }

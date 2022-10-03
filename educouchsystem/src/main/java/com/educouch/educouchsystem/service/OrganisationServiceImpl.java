@@ -76,4 +76,8 @@ public class OrganisationServiceImpl implements OrganisationService {
         return managedInstructor;
 
     }
+
+    public List<Organisation> findAllOrganisation() {
+        return organisationRepository.findAll();
+    }
 }
