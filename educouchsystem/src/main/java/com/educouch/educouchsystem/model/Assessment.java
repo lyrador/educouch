@@ -27,9 +27,6 @@ public abstract class Assessment implements Serializable {
     @NotNull
     private Double maxScore;
 
-    @NotNull
-    private Double actualScore = 0.0;
-
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull
     private Date startDate;
@@ -95,14 +92,6 @@ public abstract class Assessment implements Serializable {
 
     public void setMaxScore(Double maxScore) {
         this.maxScore = maxScore;
-    }
-
-    public Double getActualScore() {
-        return actualScore;
-    }
-
-    public void setActualScore(Double actualScore) {
-        this.actualScore = actualScore;
     }
 
     public Date getStartDate() {
