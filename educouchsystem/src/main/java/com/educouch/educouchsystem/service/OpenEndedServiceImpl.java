@@ -3,6 +3,7 @@ package com.educouch.educouchsystem.service;
 import com.educouch.educouchsystem.model.OpenEnded;
 import com.educouch.educouchsystem.repository.OpenEndedRepository;
 import com.educouch.educouchsystem.util.exception.OpenEndedNotFoundException;
+import com.educouch.educouchsystem.util.exception.OptionNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +41,17 @@ public class OpenEndedServiceImpl implements OpenEndedService {
             openEndedRepository.deleteById(openEndedId);
         } else {
             throw new OpenEndedNotFoundException("OpenEnded Id " + openEndedId + " does not exist!");
+        }
+    }
+
+    @Override
+    public OpenEnded updateOpenEnded(OpenEnded openEndedToUpdate, OpenEnded openEnded) throws OpenEndedNotFoundException {
+        if (openEndedToUpdate.getOpenEndedId().equals(openEnded.getOpenEndedId())) {
+            openEndedToUpdate.setContent(openEnded.getContent());
+            openEndedRepository.save(openEndedToUpdate);
+            return openEndedToUpdate;
+        } else {
+            throw new OpenEndedNotFoundException("OpenEnded Question to be updated does not exist!");
         }
     }
 }

@@ -1,18 +1,13 @@
 package com.educouch.educouchsystem.service;
 
-import com.educouch.educouchsystem.model.Course;
-import com.educouch.educouchsystem.model.Question;
-import com.educouch.educouchsystem.model.Quiz;
-import com.educouch.educouchsystem.model.QuizAttempt;
+import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.repository.QuestionRepository;
 import com.educouch.educouchsystem.repository.QuizRepository;
-import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
-import com.educouch.educouchsystem.util.exception.EntityInstanceExistsInCollectionException;
-import com.educouch.educouchsystem.util.exception.QuestionNotFoundException;
-import com.educouch.educouchsystem.util.exception.QuizNotFoundException;
+import com.educouch.educouchsystem.util.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 @Service
 public class QuizServiceImpl implements QuizService{
@@ -83,6 +78,24 @@ public class QuizServiceImpl implements QuizService{
     }
 
     @Override
+    public List<Quiz> getAllQuizzesByCourseId(Long courseId) throws CourseNotFoundException {
+        Course course = courseService.retrieveCourseById(courseId);
+        if (course != null) {
+            List<Assessment> assessments = course.getAssessments();
+            List<Quiz> quizzes = new ArrayList<>();
+            for (Assessment assessment : assessments) {
+                if (assessment instanceof Quiz) {
+                    Quiz quiz = (Quiz) assessment;
+                    quizzes.add(quiz);
+                }
+            }
+            return quizzes;
+        } else {
+            throw new CourseNotFoundException("Course Id " + courseId + " does not exist!");
+        }
+    }
+
+    @Override
     public void deleteQuiz(Long quizId) throws QuizNotFoundException {
         Quiz quiz = quizRepository.findById(quizId).get();
         if (quiz != null) {
@@ -93,8 +106,7 @@ public class QuizServiceImpl implements QuizService{
     }
 
     @Override
-    public Quiz updateQuiz(Quiz quiz) throws QuizNotFoundException {
-        Quiz quizToUpdate = quizRepository.findById(quiz.getAssessmentId()).get();
+    public Quiz updateQuiz(Quiz quizToUpdate, Quiz quiz) throws QuizNotFoundException {
         if (quizToUpdate != null && quizToUpdate.getAssessmentId().equals(quiz.getAssessmentId())) {
             quizToUpdate.setTitle(quiz.getTitle());
             quizToUpdate.setDescription(quiz.getDescription());
@@ -118,23 +130,21 @@ public class QuizServiceImpl implements QuizService{
         List<Question> quizQuestions = quizToEdit.getQuizQuestions();
         if (!quizQuestions.contains(question)) {
             quizQuestions.add(question);
-            quizToEdit.setQuizQuestions(quizQuestions);
             saveQuiz(quizToEdit);
+            quizRepository.save(quizToEdit);
         } else {
             throw new EntityInstanceExistsInCollectionException("Question already exists in quiz!");
         }
     }
 
     @Override
-    public void removeQuestionFromQuiz(Long quizId, Question question) throws QuizNotFoundException, QuestionNotFoundException {
-        Quiz quizToEdit = retrieveQuizById(quizId);
-        List<Question> quizQuestions = quizToEdit.getQuizQuestions();
-        if (quizQuestions.contains(question)) {
-            quizQuestions.remove(question);
-            quizToEdit.setQuizQuestions(quizQuestions);
-            saveQuiz(quizToEdit);
+    public void deleteQuestionFromQuizId(Long questionId, Long quizId) throws QuizNotFoundException, QuestionNotFoundException {
+        Question question = questionRepository.findById(questionId).get();
+        retrieveQuizById(quizId).getQuizQuestions().remove(question);
+        if (question != null) {
+            questionRepository.deleteById(questionId);
         } else {
-            throw new QuestionNotFoundException("Question does not exist in quiz!");
+            throw new QuestionNotFoundException("Question Id " + questionId + " does not exist!");
         }
     }
 }

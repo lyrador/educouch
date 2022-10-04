@@ -99,6 +99,13 @@ public class CourseController {
         for(Folder f: childFolders) {
             processFolder(f);
         }
+        List<ClassRun> listOfClassRuns = c.getClassRuns();
+        for(ClassRun r: listOfClassRuns) {
+            r.setCourse(null);
+            r.setCalendar(null);
+            r.setInstructor(null);
+            r.setEnrolledLearners(null);
+        }
 
         return c;
     }
@@ -129,6 +136,7 @@ public class CourseController {
     public ResponseEntity<Course> retrieveCourseById(@PathVariable("courseId") Long courseId) {
         try {
             Course existingCourse = courseService.retrieveCourseById(courseId);
+            processCourse(existingCourse);
             return new ResponseEntity<Course>(existingCourse, HttpStatus.OK);
         } catch (NoSuchElementException ex) {
             return new ResponseEntity<Course>(HttpStatus.NOT_FOUND);
@@ -191,6 +199,10 @@ public class CourseController {
             Organisation organisation = organisationService.findOrganisationById(organisationId);
             List<Course> courses = new ArrayList<>();
             courses.addAll(organisation.getCourses());
+
+            for(Course c: courses) {
+                processCourse(c);
+            }
 
             return new ResponseEntity<>(courses, HttpStatus.OK);
         } catch (NoSuchElementException ex) {
@@ -322,8 +334,16 @@ public class CourseController {
     private void processClassRun(ClassRun c) {
         Instructor i = c.getInstructor();
 
+        List<EnrolmentStatusTracker> statusTrackers = c.getEnrolmentStatusTrackers();
+        for(EnrolmentStatusTracker e: statusTrackers) {
+            Learner l = e.getLearner();
+            l.setClassRuns(null);
+            l.setEnrolmentStatusTrackers(null);
+
+        }
         c.setCourse(null);
         c.setEnrolledLearners(null);
+
 
     }
 

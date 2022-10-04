@@ -9,15 +9,20 @@ import com.educouch.educouchsystem.util.enumeration.FileSubmissionEnum;
 import com.educouch.educouchsystem.util.enumeration.InstructorAccessRight;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.util.exception.FolderUnableToSaveException;
+import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Component("loader")
 public class DataLoader implements CommandLineRunner {
@@ -94,13 +99,39 @@ public class DataLoader implements CommandLineRunner {
         bio4000.setCourseApprovalStatus(CourseApprovalStatusEnum.LIVE);
         bio4000.setCourseFee(new BigDecimal(1000));
 
-
         System.out.println("Creating class runs...");
-        ClassRun c1 = new ClassRun(LocalDate.parse("2022-09-30"), LocalDate.parse("2022-12-30"), 1, 3);
-        ClassRun c2 = new ClassRun(LocalDate.parse("2022-10-01"), LocalDate.parse("2023-01-30"), 10, 20);
 
-        ClassRun c3 = new ClassRun(LocalDate.parse("2022-09-30"), LocalDate.parse("2022-12-30"), 1, 3);
-        ClassRun c4 = new ClassRun(LocalDate.parse("2022-10-01"), LocalDate.parse("2023-01-30"), 10, 20);
+        ClassRun c1 = new ClassRun();
+        c1.setClassRunStart(LocalDate.parse("2022-09-30"));
+        c1.setClassRunEnd(LocalDate.parse("2022-12-30"));
+        c1.setMinClassSize(1);
+        c1.setMaximumCapacity(3);
+        c1.setClassRunStartTime(LocalTime.MIDNIGHT);
+        c1.setClassRunEndTime(LocalTime.NOON);
+
+        ClassRun c2 = new ClassRun();
+        c2.setClassRunStart(LocalDate.parse("2022-10-01"));
+        c2.setClassRunEnd(LocalDate.parse("2023-01-30"));
+        c2.setMinClassSize(10);
+        c2.setMaximumCapacity(20);
+        c2.setClassRunStartTime(LocalTime.MIDNIGHT);
+        c2.setClassRunEndTime(LocalTime.NOON);
+
+        ClassRun c3 = new ClassRun();
+        c3.setClassRunStart(LocalDate.parse("2022-09-30"));
+        c3.setClassRunEnd(LocalDate.parse("2022-12-30"));
+        c3.setMinClassSize(1);
+        c3.setMaximumCapacity(3);
+        c3.setClassRunStartTime(LocalTime.MIDNIGHT);
+        c3.setClassRunEndTime(LocalTime.NOON);
+
+        ClassRun c4 = new ClassRun();
+        c4.setClassRunStart(LocalDate.parse("2022-10-01"));
+        c4.setClassRunEnd(LocalDate.parse("2023-01-30"));
+        c4.setMinClassSize(10);
+        c4.setMaximumCapacity(20);
+        c4.setClassRunStartTime(LocalTime.MIDNIGHT);
+        c4.setClassRunEndTime(LocalTime.NOON);
 
 
         cs1010 =  courseService.saveCourse(cs1010);
@@ -135,8 +166,35 @@ public class DataLoader implements CommandLineRunner {
         organisationService.addInstructor("1", i1);
         organisationService.addInstructor("1", i2);
 
+        //linking a course to horlicks head instructor and org 1
+        Course courseRequest = new Course();
+        courseRequest.setCourseCode("TEST123");
+        courseRequest.setCourseTitle("TESTING 123");
+        courseRequest.setCourseDescription("TESTING 123");
+        courseRequest.setCourseTimeline("TILL END 2022");
+        courseRequest.setCourseMaxScore(100.00);
+        courseRequest.setAgeGroup(AgeGroupEnum.ADULTS);
 
+        if (i2.getCourses() == null) {
+            List<Course> courseList = new ArrayList<>();
+            i2.setCourses(courseList);
+        }
+        i2.getCourses().add(courseRequest);
 
+        if (org1.getCourses() == null) {
+            List<Course> courseList = new ArrayList<>();
+            org1.setCourses(courseList);
+        }
+        org1.getCourses().add(courseRequest);
+        courseRequest.setOrganisation(org1);
+
+        if (courseRequest.getInstructors() == null) {
+            List<Instructor> instructorList = new ArrayList<>();
+            courseRequest.setInstructors(instructorList);
+        }
+        courseRequest.getInstructors().add(i2);
+
+        Course course = courseService.saveCourse(courseRequest);
 //
 //        //create FileSubmission Assessment
 //        FileSubmission newFileSubmission = new FileSubmission("Quiz A", "abcde", 20.0, new Date(), new Date(), FileSubmissionEnum.INDIVIDUAL);
