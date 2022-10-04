@@ -14,5 +14,11 @@ public interface OrganisationService {
     public Instructor addInstructor(String organisationId, Instructor instructor);
     public List<Instructor> findAllInstructors(String organisationId);
 
+    public void dayOneOrgScheduling();
+
+    public void daySevenOrgScheduling();
+
+    public List<Organisation> findAllDue();
+
 
 }
