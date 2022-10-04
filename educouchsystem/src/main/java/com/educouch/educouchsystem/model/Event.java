@@ -1,7 +1,8 @@
 package com.educouch.educouchsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -14,7 +15,7 @@ public class Event {
     @Column(name="title", nullable = false)
     private String title;
 
-    @Column(name="eventDescription", nullable = false)
+    @Column(name="notes", nullable = false)
     private String notes;
 
     @Column(name="startDate", nullable = false)
@@ -26,14 +27,17 @@ public class Event {
     @Column(name="allDay", nullable = false)
     private Boolean allDay;
 
-    public Event(String title, String eventDescription, Date startDate, Date endDate, Boolean allDay) {
+    @ManyToOne
+    @JoinColumn(name="classRun_id")
+    private ClassRun classRun;
+
+    public Event(String title, String notes, Date startDate, Date endDate, Boolean allDay) {
         this.title = title;
-        this.notes = eventDescription;
+        this.notes = notes;
         this.startDate = startDate;
         this.endDate = endDate;
         this.allDay = allDay;
     }
-
 
     public Event() {
     }
@@ -85,5 +89,13 @@ public class Event {
 
     public void setAllDay(Boolean allDay) {
         this.allDay = allDay;
+    }
+    @JsonIgnore
+    public ClassRun getClassRun() {
+        return classRun;
+    }
+
+    public void setClassRun(ClassRun classRun) {
+        this.classRun = classRun;
     }
 }
