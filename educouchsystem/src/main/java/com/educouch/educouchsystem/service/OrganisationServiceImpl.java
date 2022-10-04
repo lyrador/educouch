@@ -5,11 +5,13 @@ import com.educouch.educouchsystem.model.Organisation;
 import com.educouch.educouchsystem.model.OrganisationAdmin;
 import com.educouch.educouchsystem.repository.InstructorRepository;
 import com.educouch.educouchsystem.repository.OrganisationRepository;
+import com.educouch.educouchsystem.util.enumeration.PaymentStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +63,32 @@ public class OrganisationServiceImpl implements OrganisationService {
             List<Instructor> instructors = instructorRepository.findAllInstructorsInOrganisation(Long.parseLong(organisationId));
             return instructors;
 
+    }
+
+    @Override
+    public void dayOneOrgScheduling() {
+        List<Organisation> list = findAllOrganisation();
+        for(Organisation org : list) {
+            if(!(org.getOrgBalance().compareTo(BigDecimal.ZERO) == 0)) {
+                org.setPaymentStatus(PaymentStatusEnum.DUE);
+                organisationRepository.save(org);
+            }
+        }
+    }
+
+    @Override
+    public void daySevenOrgScheduling() {
+        List<Organisation> list = findAllDue();
+        for(Organisation org: list) {
+            org.setPaymentStatus(PaymentStatusEnum.OVERDUE);
+            organisationRepository.save(org);
+        }
+
+    }
+
+    @Override
+    public List<Organisation> findAllDue() {
+        return organisationRepository.findAllDueOrganisations();
     }
 
     //not tested
