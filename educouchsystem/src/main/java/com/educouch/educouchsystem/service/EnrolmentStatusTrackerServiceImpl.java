@@ -58,7 +58,7 @@ public class EnrolmentStatusTrackerServiceImpl implements EnrolmentStatusTracker
 
     }
 
-    public String retrieveLearnerStatusWithCourse(Long courseId, Long learnerId) throws
+    public EnrolmentStatusTracker retrieveLearnerStatusWithCourse(Long courseId, Long learnerId) throws
             EnrolmentStatusTrackerNotFoundException{
         List<EnrolmentStatusTracker> listOfTrackers = enrolmentStatusTrackerRepository.retrieveEnrolmentStatusTrackerByLearnerId(learnerId);
         for(EnrolmentStatusTracker e: listOfTrackers) {
@@ -67,10 +67,7 @@ public class EnrolmentStatusTrackerServiceImpl implements EnrolmentStatusTracker
             Course course = c.getCourse();
             System.out.println("Course is " + course.getCourseCode());
             if (course.getCourseId().equals(courseId)) {
-                System.out.println(e.getEnrolmentStatus());
-                EnrolmentStatusTrackerEnum status = e.getEnrolmentStatus();
-                System.out.println("Returning status " + status.toString());
-                return status.toString();
+                return e;
             }
         }
 
