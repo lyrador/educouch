@@ -87,7 +87,7 @@ public class DataLoader implements CommandLineRunner {
         lmsAdminService.saveLmsAdmin(new LmsAdmin("manager", "manager@gmail.com", "password", "manager"));
 
         learnerRepository.save(new Learner("Alex", "alex@gmail.com", "password",
-                "alex", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true));
+                "alex", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true, "23432423"));
 
         System.out.println("Creating course...");
         Course cs1010 = new Course("CS1010", "CS1010 Introduction to Computer Science",

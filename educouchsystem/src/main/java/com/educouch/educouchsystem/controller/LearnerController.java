@@ -31,7 +31,7 @@ public class LearnerController {
             isKid = false;
         }
         learnerService.saveLearner(
-                new Learner(learnerDTO.getName(), learnerDTO.getEmail(), learnerDTO.getPassword(), learnerDTO.getUsername(), learnerDTO.getProfilePictureURL(), isKid)
+                new Learner(learnerDTO.getName(), learnerDTO.getEmail(), learnerDTO.getPassword(), learnerDTO.getUsername(), learnerDTO.getProfilePictureURL(), isKid, "123123312")
         );
         return "New learner is added";
     }
