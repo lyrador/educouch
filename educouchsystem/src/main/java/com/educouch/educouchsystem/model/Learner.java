@@ -1,9 +1,17 @@
 package com.educouch.educouchsystem.model;
 
 
+import com.stripe.exception.*;
+import com.stripe.model.Customer;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 public class Learner {
@@ -25,6 +33,9 @@ public class Learner {
     private String profilePictureURL;
 
     private Boolean isActive;
+
+    private String stripeCustomerId;
+
     @Column(nullable = false)
     private Boolean isKid;
 
@@ -32,10 +43,22 @@ public class Learner {
     @JoinTable(name = "Learner_ClassRun",
     joinColumns = {@JoinColumn(name = "learnerId")},
     inverseJoinColumns = {@JoinColumn(name = "classRunId")})
-    List<ClassRun> classRuns;
+    private List<ClassRun> classRuns;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinColumn(name = "learnerId")
+    private List<EnrolmentStatusTracker> enrolmentStatusTrackers;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinColumn(name = "learnerId")
+    private List<LearnerTransaction> learnerTransactions;
 
     public Learner() {
         this.classRuns = new ArrayList<>();
+        this.enrolmentStatusTrackers = new ArrayList<>();
+        this.learnerTransactions = new ArrayList<>();
     }
 
 //    public Learner(String name, String address, String email, String password, String username, String profilePictureURL) {
@@ -71,6 +94,7 @@ public class Learner {
         this.profilePictureURL = profilePictureURL;
         this.isActive = true;
         this.isKid = isKid;
+//        createCustomer();
     }
 
     public Long getLearnerId() {
@@ -158,5 +182,63 @@ public class Learner {
 
     public void setClassRuns(List<ClassRun> classRuns) {
         this.classRuns = classRuns;
+    }
+
+    public List<EnrolmentStatusTracker> getEnrolmentStatusTrackers() {
+        return enrolmentStatusTrackers;
+    }
+
+    public void setEnrolmentStatusTrackers(List<EnrolmentStatusTracker> enrolmentStatusTrackers) {
+        this.enrolmentStatusTrackers = enrolmentStatusTrackers;
+    }
+
+    public String getStripeCustomerId() {
+        return stripeCustomerId;
+    }
+
+    public void setStripeCustomerId(String stripeCustomerId) {
+        this.stripeCustomerId = stripeCustomerId;
+    }
+
+//    private String createCustomer() {
+//
+//        Map<String, Object> customerParams = new HashMap<String, Object>();
+//        customerParams.put("description",
+//                this.getName());
+//        customerParams.put("email", this.getEmail());
+//
+//        String id = null;
+//
+//        try {
+//            // Create customer
+//            Customer stripeCustomer = Customer.create(customerParams);
+//            id = stripeCustomer.getId();
+//            System.out.println(stripeCustomer);
+//        } catch (CardException e) {
+//            // Transaction failure
+//        } catch (RateLimitException e) {
+//            // Too many requests made to the API too quickly
+//        } catch (InvalidRequestException e) {
+//            // Invalid parameters were supplied to Stripe's API
+//        } catch (AuthenticationException e) {
+//            // Authentication with Stripe's API failed (wrong API key?)
+//        } catch (APIConnectionException e) {
+//            // Network communication with Stripe failed
+//        } catch (StripeException e) {
+//            // Generic error
+//        } catch (Exception e) {
+//            // Something else happened unrelated to Stripe
+//        }
+//
+//        return id;
+//    }
+
+
+    public List<LearnerTransaction> getLearnerTransactions() {
+        return learnerTransactions;
+    }
+
+    public void setLearnerTransactions(List<LearnerTransaction> learnerTransactions) {
+        this.learnerTransactions = learnerTransactions;
     }
 }
