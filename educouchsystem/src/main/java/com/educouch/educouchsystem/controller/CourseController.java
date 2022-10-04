@@ -371,14 +371,20 @@ public class CourseController {
 
     @GetMapping("/enquiryCourseStatus")
     @ResponseBody
-    public String enquireCourseStatus(@RequestParam String learnerId, @RequestParam String courseId) {
+    public EnrolmentStatusTracker enquireCourseStatus(@RequestParam String learnerId, @RequestParam String courseId) {
         try{
-            String status = enrolmentStatusTrackerService.retrieveLearnerStatusWithCourse(new Long(courseId), new Long(learnerId));
+            EnrolmentStatusTracker status = enrolmentStatusTrackerService.retrieveLearnerStatusWithCourse(new Long(courseId), new Long(learnerId));
+            processEnrolmentStatusTracker(status);
             return status;
         }catch(EnrolmentStatusTrackerNotFoundException ex) {
-            return "NOTENROLLED";
+            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "Tracker not found.", ex);
         }
 
+    }
+
+    private void processEnrolmentStatusTracker(EnrolmentStatusTracker e) {
+        e.setClassRun(null);
+        e.setLearner(null);
     }
 
 
