@@ -2,6 +2,7 @@ package com.educouch.educouchsystem.model;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 public class Event {
@@ -14,20 +15,25 @@ public class Event {
     private String title;
 
     @Column(name="eventDescription", nullable = false)
-    private String eventDescription;
+    private String notes;
 
     @Column(name="startDate", nullable = false)
-    private LocalDateTime startDate;
+    private Date startDate;
 
     @Column(name="endDate", nullable = false)
-    private LocalDateTime endDate;
+    private Date endDate;
 
-    public Event(String title, String eventDescription, LocalDateTime startDate, LocalDateTime endDate) {
+    @Column(name="allDay", nullable = false)
+    private Boolean allDay;
+
+    public Event(String title, String eventDescription, Date startDate, Date endDate, Boolean allDay) {
         this.title = title;
-        this.eventDescription = eventDescription;
+        this.notes = eventDescription;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.allDay = allDay;
     }
+
 
     public Event() {
     }
@@ -49,27 +55,35 @@ public class Event {
         this.title = title;
     }
 
-    public String getEventDescription() {
-        return eventDescription;
+    public String getNotes() {
+        return notes;
     }
 
-    public void setEventDescription(String eventDescription) {
-        this.eventDescription = eventDescription;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
-    public LocalDateTime getStartDate() {
+    public Date getStartDate() {
         return this.startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime eventEndDate) {
+    public void setEndDate(Date eventEndDate) {
         this.endDate = eventEndDate;
+    }
+
+    public Boolean getAllDay() {
+        return allDay;
+    }
+
+    public void setAllDay(Boolean allDay) {
+        this.allDay = allDay;
     }
 }
