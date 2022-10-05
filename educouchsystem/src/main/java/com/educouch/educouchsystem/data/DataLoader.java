@@ -7,9 +7,7 @@ import com.educouch.educouchsystem.util.enumeration.AgeGroupEnum;
 import com.educouch.educouchsystem.util.enumeration.CourseApprovalStatusEnum;
 import com.educouch.educouchsystem.util.enumeration.FileSubmissionEnum;
 import com.educouch.educouchsystem.util.enumeration.InstructorAccessRight;
-import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
-import com.educouch.educouchsystem.util.exception.FolderUnableToSaveException;
-import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
+import com.educouch.educouchsystem.util.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.http.HttpStatus;
@@ -65,6 +63,12 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     private ClassRunRepository classRunRepository;
 
+    @Autowired
+    private EnrolmentStatusTrackerService enrolmentStatusTrackerService;
+
+    @Autowired
+    private StripeService stripeService;
+
 
 
     public DataLoader(LmsAdminService lmsAdminService) {
@@ -83,23 +87,36 @@ public class DataLoader implements CommandLineRunner {
     public void loadData() {
 
 
-        // data for irene's part - course enrollment
+        // lms admin
         lmsAdminService.saveLmsAdmin(new LmsAdmin("manager", "manager@gmail.com", "password", "manager"));
 
-        learnerRepository.save(new Learner("Alex", "alex@gmail.com", "password",
+        // learner
+        Learner learner_1  = learnerRepository.save(new Learner("Alex", "irenelie@u.nus.edu", "password",
                 "alex", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true));
 
-        System.out.println("Creating course...");
-        Course cs1010 = new Course("CS1010", "CS1010 Introduction to Computer Science",
+        Learner learner_2 = learnerRepository.save(new Learner("Beatrice", "irenelie1412@gmail.com", "password",
+                "beatrice", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true));
+
+        Learner learner_3 =  learnerRepository.save(new Learner("Diana", "irenelie@nushackers.org", "password",
+                "diana", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true));
+
+        Learner learner_4 =  learnerRepository.save(new Learner("Beatrice", "lielieirene@gmail.com", "password",
+                "david", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true));
+
+        // courses
+        Course cs1010 = new Course("CS1010", "Introduction to Computer Science",
                 "xxx", "xxx", 100.0, AgeGroupEnum.ADULTS);
         cs1010.setCourseApprovalStatus(CourseApprovalStatusEnum.LIVE);
         cs1010.setCourseFee(new BigDecimal(1000));
-        Course bio4000 = new Course("BIO4000", "BIO4000 Molecular Genetics", "xxx",
+        cs1010.setStartDate(LocalDate.now().plusDays(7));
+
+        Course bio4000 = new Course("BIO4000", "Molecular Genetics", "xxx",
                 "xxx", 100.0, AgeGroupEnum.KIDS);
         bio4000.setCourseApprovalStatus(CourseApprovalStatusEnum.LIVE);
         bio4000.setCourseFee(new BigDecimal(1000));
+        bio4000.setStartDate(LocalDate.now().plusDays(10));
 
-        System.out.println("Creating class runs...");
+        // class run
         Integer[] test1 = new Integer[2];
         test1[0] = 2;
         test1[1] = 5;
@@ -107,9 +124,10 @@ public class DataLoader implements CommandLineRunner {
         Integer[] test2 = new Integer[2];
         test2[0] = 1;
         test2[1] = 3;
+
         ClassRun c1 = new ClassRun();
-        c1.setClassRunStart(LocalDate.parse("2022-09-30"));
-        c1.setClassRunEnd(LocalDate.parse("2022-12-30"));
+        c1.setClassRunStart(LocalDate.now().plusDays(7));
+        c1.setClassRunEnd(LocalDate.now().plusMonths(3));
         c1.setMinClassSize(1);
         c1.setMaximumCapacity(3);
         c1.setClassRunStartTime(LocalTime.MIDNIGHT);
@@ -118,8 +136,8 @@ public class DataLoader implements CommandLineRunner {
         c1.setClassRunDaysOfTheWeek(test1);
 
         ClassRun c2 = new ClassRun();
-        c2.setClassRunStart(LocalDate.parse("2022-10-01"));
-        c2.setClassRunEnd(LocalDate.parse("2023-01-30"));
+        c2.setClassRunStart(LocalDate.now().plusDays(10));
+        c2.setClassRunEnd(LocalDate.now().plusMonths(3));
         c2.setMinClassSize(10);
         c2.setMaximumCapacity(20);
         c2.setClassRunStartTime(LocalTime.MIDNIGHT);
@@ -127,8 +145,8 @@ public class DataLoader implements CommandLineRunner {
         c2.setClassRunDaysOfTheWeek(test2);
 
         ClassRun c3 = new ClassRun();
-        c3.setClassRunStart(LocalDate.parse("2022-09-30"));
-        c3.setClassRunEnd(LocalDate.parse("2022-12-30"));
+        c3.setClassRunStart(LocalDate.now().plusDays(7));
+        c3.setClassRunEnd(LocalDate.now().plusMonths(3));
         c3.setMinClassSize(1);
         c3.setMaximumCapacity(3);
         c3.setClassRunStartTime(LocalTime.MIDNIGHT);
@@ -136,8 +154,8 @@ public class DataLoader implements CommandLineRunner {
         c3.setClassRunDaysOfTheWeek(test1);
 
         ClassRun c4 = new ClassRun();
-        c4.setClassRunStart(LocalDate.parse("2022-10-01"));
-        c4.setClassRunEnd(LocalDate.parse("2023-01-30"));
+        c4.setClassRunStart(LocalDate.now().plusDays(7));
+        c4.setClassRunEnd(LocalDate.now().plusMonths(3));
         c4.setMinClassSize(10);
         c4.setMaximumCapacity(20);
         c4.setClassRunStartTime(LocalTime.MIDNIGHT);
@@ -159,8 +177,21 @@ public class DataLoader implements CommandLineRunner {
         }
 
 
+        try {
+            // to test maximum class enrolment
+            stripeService.payDeposit(c1.getClassRunId(), learner_1.getLearnerId(), new BigDecimal(100));
+            stripeService.payDeposit(c1.getClassRunId(), learner_2.getLearnerId(), new BigDecimal(100));
+            stripeService.payDeposit(c1.getClassRunId(), learner_3.getLearnerId(), new BigDecimal(100));
+            stripeService.payDeposit(c1.getClassRunId(), learner_4.getLearnerId(), new BigDecimal(100));
 
-
+            // to test if nvr hit min capacity
+            stripeService.payDeposit(c4.getClassRunId(), learner_1.getLearnerId(), new BigDecimal(100));
+            stripeService.payDeposit(c4.getClassRunId(), learner_2.getLearnerId(), new BigDecimal(100));
+            stripeService.payDeposit(c4.getClassRunId(), learner_3.getLearnerId(), new BigDecimal(100));
+            stripeService.payDeposit(c4.getClassRunId(), learner_4.getLearnerId(), new BigDecimal(100));
+        } catch(ClassRunNotFoundException | LearnerNotFoundException ex) {
+            System.out.println("Could not add deposit record data");
+        }
 
 
 
@@ -210,5 +241,9 @@ public class DataLoader implements CommandLineRunner {
 //        //create FileSubmission Assessment
 //        FileSubmission newFileSubmission = new FileSubmission("Quiz A", "abcde", 20.0, new Date(), new Date(), FileSubmissionEnum.INDIVIDUAL);
 //        fileSubmissionRepository.save(newFileSubmission);
+    }
+
+    private void testDataForTimer() {
+
     }
 }

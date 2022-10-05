@@ -260,6 +260,7 @@ public class ClassRunServiceImpl implements ClassRunService {
     }
 
     public List<ClassRun> retrieveListOfAllClassRunsNeedPayment(Long learnerId) {
+        System.out.println("Reach B");
         return filterClassRunsByStatus(learnerId, EnrolmentStatusTrackerEnum.RESERVED);
     }
 
@@ -273,6 +274,8 @@ public class ClassRunServiceImpl implements ClassRunService {
     }
 
     private List<ClassRun> filterClassRunsByStatus(Long learnerId, EnrolmentStatusTrackerEnum enrolmentStatusTrackerEnum) {
+        System.out.println("Filtering by status: " + enrolmentStatusTrackerEnum.toString());
+        System.out.println("For learner: " + learnerId);
         Learner l = learnerService.getLearnerById(learnerId);
         List<EnrolmentStatusTracker> enrolmentStatusTrackers = l.getEnrolmentStatusTrackers();
         List<ClassRun> classRuns = new ArrayList<>();
@@ -282,6 +285,10 @@ public class ClassRunServiceImpl implements ClassRunService {
             }
 
         }
+        for(ClassRun c: classRuns) {
+            System.out.println("Class run is " + c.getClassRunId());
+        }
+
         return classRuns;
     }
 }

@@ -128,6 +128,7 @@ public class StripeServiceImpl implements StripeService {
                 try {
                     EnrolmentStatusTracker e = enrolmentStatusTrackerService.retrieveEnrolmentByLearnerIdAndClassRunId(classRunId, learnerId);
                     e.setEnrolmentStatus(EnrolmentStatusTrackerEnum.ENROLLED);
+
                     enrolmentStatusTrackerService.saveEnrolmentStatusTracker(e);
                     c.getEnrolledLearners().add(l);
                     classRunService.saveClassRun(c);

@@ -375,7 +375,9 @@ public class CourseController {
     public CourseStatusTracker enquireCourseStatus(@RequestParam String learnerId, @RequestParam String courseId) {
         try{
             EnrolmentStatusTracker status = enrolmentStatusTrackerService.retrieveLearnerStatusWithCourse(new Long(courseId), new Long(learnerId));
-            CourseStatusTracker  statusTracker = new CourseStatusTracker(status.getEnrolmentStatus().toString());
+            ClassRun classRun = status.getClassRun();
+            processClassRun(classRun);
+            CourseStatusTracker  statusTracker = new CourseStatusTracker(status.getEnrolmentStatus().toString(), classRun);
             return statusTracker;
         }catch(EnrolmentStatusTrackerNotFoundException ex) {
             CourseStatusTracker statusTracker = new CourseStatusTracker("NOTENROLLED");
