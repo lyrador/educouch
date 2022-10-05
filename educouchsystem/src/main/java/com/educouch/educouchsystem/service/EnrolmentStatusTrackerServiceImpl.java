@@ -62,10 +62,8 @@ public class EnrolmentStatusTrackerServiceImpl implements EnrolmentStatusTracker
             EnrolmentStatusTrackerNotFoundException{
         List<EnrolmentStatusTracker> listOfTrackers = enrolmentStatusTrackerRepository.retrieveEnrolmentStatusTrackerByLearnerId(learnerId);
         for(EnrolmentStatusTracker e: listOfTrackers) {
-            System.out.println("Tracker ID" + e.getEnrolmentStatusTrackerId());
             ClassRun c = e.getClassRun();
             Course course = c.getCourse();
-            System.out.println("Course is " + course.getCourseCode());
             if (course.getCourseId().equals(courseId)) {
                 return e;
             }
@@ -79,7 +77,7 @@ public class EnrolmentStatusTrackerServiceImpl implements EnrolmentStatusTracker
             DuplicateEnrolmentTrackerException{
         List<EnrolmentStatusTracker> listOfTrackers = enrolmentStatusTrackerRepository.retrieveEnrolmentStatusTrackerByLearnerIdAndClassRunId(learnerId, classRunId);
 
-        if(listOfTrackers.size() != 1) {
+        if(listOfTrackers.size() == 1) {
             return listOfTrackers.get(0);
         } else {
             throw new DuplicateEnrolmentTrackerException("There is a duplicate enrolment status tracker.");
