@@ -161,4 +161,31 @@ public class AttachmentController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File cannot be deleted.", ex);
         }
     }
+
+    @PostMapping("/uploadAttachmentToFileSubmission")
+    public ResponseData uploadFileSubmissionAttachment(@RequestParam("file") MultipartFile file, @RequestParam Long fileSubmissionId) {
+        Attachment attachment = null;
+        try {
+            attachment = attachmentService.saveAttachment(file);
+            attachmentService.uploadAttachmentToFileSubmissionAssessment(attachment, fileSubmissionId);
+            return new ResponseData(attachment.getAttachmentId(),
+                    attachment.getFileOriginalName(),
+                    attachment.getFileStorageName(),
+                    attachment.getFileURL(),
+                    file.getContentType(),
+                    file.getSize());
+        } catch (FilenameContainsInvalidPathSequenceException | FileUnableToSaveException |
+                 FileSubmissionNotFoundException | FileNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @DeleteMapping("/deleteFileSubmissionAttachment")
+    public void deleteAttachmentFromFileSubmission(@RequestParam Long attachmentId, @RequestParam Long fileSubmissionId) {
+        try {
+            attachmentService.removeAttachmentFromFileSubmissionAssessment(attachmentId, fileSubmissionId);
+        } catch (FileSubmissionNotFoundException | FileNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File cannot be deleted.", ex);
+        }
+    }
 }
