@@ -3,7 +3,10 @@ package com.educouch.educouchsystem.service;
 import com.educouch.educouchsystem.model.ClassRun;
 import com.educouch.educouchsystem.model.Course;
 import com.educouch.educouchsystem.model.EnrolmentStatusTracker;
+import com.educouch.educouchsystem.timer.ScheduledTask;
 import com.educouch.educouchsystem.util.enumeration.EnrolmentStatusTrackerEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -27,13 +30,14 @@ public class TimerServiceImpl implements TimerService{
     @Autowired
     private EnrolmentStatusTrackerService enrolmentStatusTrackerService;
 
+    private static final Logger log = LoggerFactory.getLogger(ScheduledTask.class);
+
     @Async
     @Override
     public void convertEnrolmentStatus() {
         List<Course> listOfAllCourses = courseService.getAllCourses();
         for(Course course: listOfAllCourses) {
             LocalDate startDate = course.getStartDate();
-
             if(startDate != null) {
                 if(startDate.minusDays(7).equals(LocalDate.now())) {
                     List<ClassRun> listOfClassRuns = course.getClassRuns();
@@ -55,13 +59,16 @@ public class TimerServiceImpl implements TimerService{
                                     String learnerEmail = statusTracker.getLearner().getEmail();
                                     emailSenderService.sendEmail(learnerEmail, "Your requested class run is available.",
                                             "Please visit EduCouch portal to pay the course fee in full to confirm your enrolment.");
+                                    log.info("We are currently putting " + statusTracker.getLearner().getUsername() + " under reserved. ");
                                     numOfEnrolment = numOfEnrolment + 1;
                                 }
 
                                 i = i  + 1;
                             }
 
-                            while( i < capacity - 1 && i < numberOfReservations) {
+
+
+                            while( i < numberOfReservations) {
                                 EnrolmentStatusTracker statusTracker = statusTrackers.get(i);
                                 if(statusTracker.getEnrolmentStatus() == EnrolmentStatusTrackerEnum.DEPOSITPAID) {
                                     statusTracker.setEnrolmentStatus(EnrolmentStatusTrackerEnum.DROPPED);
@@ -69,6 +76,7 @@ public class TimerServiceImpl implements TimerService{
                                     String learnerEmail = statusTracker.getLearner().getEmail();
                                     emailSenderService.sendEmail(learnerEmail, "Your requested class run is not available.",
                                             "Please visit EduCouch portal to either choose another class run, or request for refund deposit.");
+                                    log.info("We are putting " + statusTracker.getLearner().getUsername() + " under dropped status.");
                                 }
 
                                 i = i  + 1;
@@ -80,6 +88,7 @@ public class TimerServiceImpl implements TimerService{
                                     statusTracker.setEnrolmentStatus(EnrolmentStatusTrackerEnum.DROPPED);
                                     enrolmentStatusTrackerService.saveEnrolmentStatusTracker(statusTracker);
                                     String learnerEmail = statusTracker.getLearner().getEmail();
+                                    log.info("Dropping student " + statusTracker.getLearner().getUsername());
                                     emailSenderService.sendEmail(learnerEmail, "Your requested class run is not available.",
                                             "Please visit EduCouch portal to either choose another class run, or request for refund deposit.");
                                 }
@@ -93,5 +102,7 @@ public class TimerServiceImpl implements TimerService{
                 }
             }
         }
+
+        log.info("Daily task is done. ");
     }
 }
