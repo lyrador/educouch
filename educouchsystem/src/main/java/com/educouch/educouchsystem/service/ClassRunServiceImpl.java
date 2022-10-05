@@ -202,9 +202,9 @@ public class ClassRunServiceImpl implements ClassRunService {
                     Event newEvent = new Event();
                     newEvent.setClassRun(classRun);
                     newEvent.setTitle(classRun.getClassRunName() + " " + "Class Event");
-                    newEvent.setEventDescription(classRun.getClassRunName() + " " + "Class Event");
-                    newEvent.setStartDate(LocalDateTime.of(localDatePointer, classRun.getClassRunStartTime()));
-                    newEvent.setEndDate(LocalDateTime.of(localDatePointer, classRun.getClassRunEndTime()));
+                    newEvent.setNotes(classRun.getClassRunName() + " " + "Class Event");
+                    //newEvent.setStartDate(classRun.getClassRunStart().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    //newEvent.setEndDate(classRun.getClassRunEnd().atStartOfDay(ZoneId.systemDefault()).toInstant());
                     eventService.saveEvent(newEvent);
                     newEvents.add(newEvent);
 
@@ -225,9 +225,9 @@ public class ClassRunServiceImpl implements ClassRunService {
                     Event newEvent = new Event();
                     newEvent.setClassRun(classRun);
                     newEvent.setTitle(classRun.getClassRunName() + " " + "Class Event");
-                    newEvent.setEventDescription(classRun.getClassRunName() + " " + "Class Event");
-                    newEvent.setStartDate(LocalDateTime.of(localDatePointer, classRun.getClassRunStartTime()));
-                    newEvent.setEndDate(LocalDateTime.of(localDatePointer, classRun.getClassRunEndTime()));
+                    newEvent.setNotes(classRun.getClassRunName() + " " + "Class Event");
+                    //newEvent.setStartDate(LocalDateTime.of(localDatePointer, classRun.getClassRunStartTime()));
+                    //newEvent.setEndDate(LocalDateTime.of(localDatePointer, classRun.getClassRunEndTime()));
                     eventService.saveEvent(newEvent);
                     newEvents.add(newEvent);
 
