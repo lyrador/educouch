@@ -1,17 +1,25 @@
 package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.dto.QuestionDTO;
+import com.educouch.educouchsystem.dto.QuizDTO;
 import com.educouch.educouchsystem.model.Question;
 import com.educouch.educouchsystem.model.Quiz;
 import com.educouch.educouchsystem.service.QuestionService;
 import com.educouch.educouchsystem.service.QuizService;
+import com.educouch.educouchsystem.util.enumeration.AssessmentStatusEnum;
 import com.educouch.educouchsystem.util.enumeration.QuestionTypeEnum;
 import com.educouch.educouchsystem.util.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.config.RepositoryNameSpaceHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -24,6 +32,21 @@ public class QuizController {
 
     @Autowired
     private QuestionService questionService;
+
+    @PostMapping("/createQuiz/{courseId}")
+    public ResponseEntity<Quiz> createQuiz(@RequestBody QuizDTO quizDTO, @PathVariable(value="courseId") Long courseId) {
+
+        //Instantiate quiz
+        try {
+            Quiz instantiatedQuiz = instantiateQuiz(quizDTO, courseId);
+            //Add questions
+            return new ResponseEntity<>(new Quiz(), HttpStatus.OK);
+        } catch (CourseNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (ParseException ex) {
+            return new ResponseEntity<>(new Quiz(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @PostMapping("/addNewQuestion/{quizId}")
     public ResponseEntity<Question> addQuestionToQuiz(@RequestBody QuestionDTO questionDTO, @PathVariable(value="quizId") Long quizId) {
@@ -118,4 +141,36 @@ public class QuizController {
             return new ResponseEntity<Question>(HttpStatus.NOT_FOUND);
         }
     }
-}
+
+    public Quiz instantiateQuiz(QuizDTO quizDTO, Long courseId) throws CourseNotFoundException, ParseException{
+
+            Quiz newQuiz = new Quiz();
+            newQuiz.setTitle(quizDTO.getAssessmentTitle());
+            newQuiz.setDescription(quizDTO.getAssessmentDescription());
+            newQuiz.setMaxScore(quizDTO.getAssessmentMaxScore());
+
+            newQuiz.setOpen(Boolean.FALSE);
+
+            if (quizDTO.getAssessmentHasTimeLimit().equals("true")) {
+                newQuiz.setHasTimeLimit(Boolean.TRUE);
+            } else if (quizDTO.getAssessmentHasTimeLimit().equals("false")) {
+                newQuiz.setHasTimeLimit(Boolean.FALSE);
+            }
+
+            if (quizDTO.getAssessmentIsAutoRelease().equals("true")) {
+                newQuiz.setAutoRelease(Boolean.TRUE);
+            } else if (quizDTO.getAssessmentIsAutoRelease().equals("false")) {
+                newQuiz.setAutoRelease(Boolean.FALSE);
+            }
+
+            newQuiz.setAssessmentStatus(AssessmentStatusEnum.PENDING);
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date startDate = (Date) formatter.parse(quizDTO.getAssessmentStartDate());
+            Date endDate = (Date) formatter.parse(quizDTO.getAssessmentEndDate());
+            newQuiz.setStartDate(startDate);
+            newQuiz.setEndDate(endDate);
+
+            quizService.saveQuiz(courseId, newQuiz);
+            return newQuiz;
+        }
+    }
