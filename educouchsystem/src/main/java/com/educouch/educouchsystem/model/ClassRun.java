@@ -47,7 +47,7 @@ public class ClassRun {
     @JoinColumn(name = "calendar")
     private Calendar calendar;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Event> events;
 
     @ManyToOne
