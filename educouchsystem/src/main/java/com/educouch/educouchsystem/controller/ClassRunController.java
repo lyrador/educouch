@@ -9,6 +9,8 @@ import com.educouch.educouchsystem.service.CourseService;
 import com.educouch.educouchsystem.service.EducatorService;
 import com.educouch.educouchsystem.service.OrganisationService;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
+import com.educouch.educouchsystem.util.exception.EventNotFoundException;
+import com.educouch.educouchsystem.util.exception.EventNotFoundException;
 import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,6 +53,12 @@ public class ClassRunController {
 //        }
 //    }
 
+    @DeleteMapping("/classEvents/delete/{eventId}")
+    public ResponseEntity<Event> deleteClassEvent(@PathVariable("eventId") Long eventId) throws EventNotFoundException {
+        classRunService.deleteClassEvent(eventId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     @PostMapping("addToCourseId/{courseId}")
     public ResponseEntity<ClassRun> addClassRun(@PathVariable(value="courseId") Long courseId, @RequestBody ClassRunDTO classRunDTORequest) {
         try {
@@ -86,6 +94,17 @@ public class ClassRunController {
         }
     }
 
+    @GetMapping("/getClassEventsFromClassRunId/{classRunId}")
+    public ResponseEntity<List<Event>> getClassEventsFromClassRunId(@PathVariable("classRunId") Long classRunId) {
+        try {
+            ClassRun classRun = classRunService.retrieveClassRunById(classRunId);
+            List<Event> events = classRun.getEvents();
+            return new ResponseEntity<>(events, HttpStatus.OK);
+        } catch (NoSuchElementException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @DeleteMapping("/delete/{classRunId}")
     public ResponseEntity<HttpStatus> deleteClassRun(@PathVariable("classRunId") Long classRunId) {
         classRunService.deleteClassRun(classRunId);
@@ -95,6 +114,18 @@ public class ClassRunController {
     @GetMapping("/getClassRunsFromCourseId/{courseId}")
     public List<ClassRunDTO> findClassRunsFromCourseId(@PathVariable Long courseId) {
         List<ClassRunDTO> classRuns = classRunService.findClassRunsFromCourseId(courseId);
+        return classRuns;
+    }
+
+    @PostMapping("/classEvents/add/{classRunId}")
+    public ResponseEntity<Event> addClassEvent(@PathVariable("classRunId") Long classRunId, @RequestBody Event eventRequest) throws EventNotFoundException {
+        Event event = classRunService.addClassEvent(classRunId, eventRequest);
+        return new ResponseEntity<>(event, HttpStatus.OK);
+    }
+
+    @GetMapping("/getClassRunsFromInstructorId/{instructorId}")
+    public List<ClassRunDTO> findClassRunsFromInstructorId(@PathVariable Long instructorId) {
+        List<ClassRunDTO> classRuns = classRunService.findClassRunsFromInstructorId(instructorId);
         return classRuns;
     }
 

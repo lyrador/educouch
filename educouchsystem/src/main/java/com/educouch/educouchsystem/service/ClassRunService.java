@@ -6,6 +6,7 @@ import com.educouch.educouchsystem.model.Event;
 import com.educouch.educouchsystem.model.Learner;
 import com.educouch.educouchsystem.util.enumeration.EnrolmentStatusTrackerEnum;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
+import com.educouch.educouchsystem.util.exception.EventNotFoundException;
 
 import java.text.ParseException;
 import java.util.List;
@@ -23,7 +24,11 @@ public interface ClassRunService {
 
     public ClassRun updateClassRun(Long courseId, ClassRunDTO classRunDTORequest) throws ParseException;
 
-    public List<ClassRunDTO> findClassRunsFromCourseId (Long courseId);
+    public List<ClassRunDTO> findClassRunsFromCourseId(Long courseId);
+
+    public List<ClassRunDTO> findClassRunsFromInstructorId(Long instructorId);
+
+//    public List<ClassRunDTO> findClassRunsFromLearnerId (Long learnerId);
 
     public List<Event> generateClassEventsFromClassRunId(Long classRunId);
 
@@ -38,4 +43,9 @@ public interface ClassRunService {
     public List<ClassRun> retrieveListOfAllClassRunsNeedPayment(Long learnerId);
 
     public List<ClassRun> retrieveListOfAvailableClassRun(Long courseId);
+
+    public void deleteClassEvent(Long id) throws EventNotFoundException;
+
+    public Event addClassEvent(Long classRunId, Event eventRequest) throws EventNotFoundException;
 }
+
