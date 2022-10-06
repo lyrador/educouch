@@ -10,8 +10,6 @@ public class QuizDTO {
 
     private Double assessmentMaxScore;
 
-    private Double assessmentActualScore;
-
     private String assessmentStartDate;
 
     private String assessmentEndDate;
@@ -32,6 +30,8 @@ public class QuizDTO {
 
     private String createdByUserType;
 
+    private Integer quizLength;
+
     public QuizDTO() {
     }
 
@@ -39,7 +39,6 @@ public class QuizDTO {
         this.assessmentTitle = assessmentTitle;
         this.assessmentDescription = assessmentDescription;
         this.assessmentMaxScore = assessmentMaxScore;
-        this.assessmentActualScore = assessmentActualScore;
         this.assessmentStartDate = assessmentStartDate;
         this.assessmentEndDate = assessmentEndDate;
         this.assessmentIsOpen = assessmentIsOpen;
@@ -82,14 +81,6 @@ public class QuizDTO {
 
     public void setAssessmentMaxScore(Double assessmentMaxScore) {
         this.assessmentMaxScore = assessmentMaxScore;
-    }
-
-    public Double getAssessmentActualScore() {
-        return assessmentActualScore;
-    }
-
-    public void setAssessmentActualScore(Double assessmentActualScore) {
-        this.assessmentActualScore = assessmentActualScore;
     }
 
     public String getAssessmentStartDate() {
@@ -170,5 +161,13 @@ public class QuizDTO {
 
     public void setCreatedByUserType(String createdByUserType) {
         this.createdByUserType = createdByUserType;
+    }
+
+    public Integer getQuizLength() {
+        return quizLength;
+    }
+
+    public void setQuizLength(Integer quizLength) {
+        this.quizLength = quizLength;
     }
 }
