@@ -8,24 +8,12 @@ public class OptionDTO {
 
     private String optionIsCorrect;
 
-    private String createdDateTime;
-
-    private Long createdByUserId;
-
-    private String createdByUserName;
-
-    private String createdByUserType;
-
     public OptionDTO() {
     }
 
     public OptionDTO(String optionContent, String optionIsCorrect, String createdDateTime, Long createdByUserId, String createdByUserName, String createdByUserType) {
         this.optionContent = optionContent;
         this.optionIsCorrect = optionIsCorrect;
-        this.createdDateTime = createdDateTime;
-        this.createdByUserId = createdByUserId;
-        this.createdByUserName = createdByUserName;
-        this.createdByUserType = createdByUserType;
     }
 
     public Long getOptionId() {
@@ -50,37 +38,5 @@ public class OptionDTO {
 
     public void setOptionIsCorrect(String optionIsCorrect) {
         this.optionIsCorrect = optionIsCorrect;
-    }
-
-    public String getCreatedDateTime() {
-        return createdDateTime;
-    }
-
-    public void setCreatedDateTime(String createdDateTime) {
-        this.createdDateTime = createdDateTime;
-    }
-
-    public Long getCreatedByUserId() {
-        return createdByUserId;
-    }
-
-    public void setCreatedByUserId(Long createdByUserId) {
-        this.createdByUserId = createdByUserId;
-    }
-
-    public String getCreatedByUserName() {
-        return createdByUserName;
-    }
-
-    public void setCreatedByUserName(String createdByUserName) {
-        this.createdByUserName = createdByUserName;
-    }
-
-    public String getCreatedByUserType() {
-        return createdByUserType;
-    }
-
-    public void setCreatedByUserType(String createdByUserType) {
-        this.createdByUserType = createdByUserType;
     }
 }
