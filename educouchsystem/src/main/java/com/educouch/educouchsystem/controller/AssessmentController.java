@@ -1,5 +1,6 @@
 package com.educouch.educouchsystem.controller;
 
+import com.educouch.educouchsystem.dto.AssessmentDTO;
 import com.educouch.educouchsystem.dto.FileSubmissionDTO;
 import com.educouch.educouchsystem.dto.QuizDTO;
 import com.educouch.educouchsystem.model.*;
@@ -13,6 +14,8 @@ import com.educouch.educouchsystem.util.exception.AssessmentNotFoundException;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.util.exception.FileSubmissionNotFoundException;
 import com.educouch.educouchsystem.util.exception.QuizNotFoundException;
+import com.sun.mail.iap.Response;
+import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -188,6 +191,21 @@ public class AssessmentController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/getAllAssessmentsByCourseId")
+    public ResponseEntity<List<AssessmentDTO>> getAllAssessmentsByCourseId(@RequestParam String courseId) {
+
+        try {
+            List<Assessment> assessments = new ArrayList<>();
+            assessments = assessmentService.getAllAssessmentsByCourseId(Long.parseLong(courseId));
+            List<AssessmentDTO> assessmentDTOS = setAssessmentDTOList(assessments);
+
+            return new ResponseEntity<List<AssessmentDTO>>(assessmentDTOS, HttpStatus.OK);
+        } catch (CourseNotFoundException exception) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     @GetMapping("/getAllQuizzesByCourseId/{courseId}")
     public ResponseEntity<List<QuizDTO>> getAllQuizzesByCourseId(@PathVariable(value="courseId") Long courseId) {
@@ -378,5 +396,31 @@ public class AssessmentController {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    List<AssessmentDTO> setAssessmentDTOList (List<Assessment> assessments) {
+
+        List<AssessmentDTO> assessmentDTOS = new ArrayList<>();
+        for(Assessment a : assessments) {
+
+            AssessmentDTO dtoItem = new AssessmentDTO();
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+            dtoItem.setAssessmentId(a.getAssessmentId());
+            dtoItem.setTitle(a.getTitle());
+            dtoItem.setDescription(a.getDescription());
+            dtoItem.setMaxScore(a.getMaxScore());
+            dtoItem.setStartDate(formatter.format(a.getStartDate()));
+            dtoItem.setEndDate(formatter.format(a.getEndDate()));
+            dtoItem.setOpen(a.getOpen());
+            dtoItem.setAssessmentStatus(a.getAssessmentStatus());
+            String s = a.getClass().getName();
+            String[] assessmentTypeArray = s.split("\\.");
+            System.out.println(assessmentTypeArray[4]);
+            dtoItem.setAssessmentType(assessmentTypeArray[4]);
+            assessmentDTOS.add(dtoItem);
+        }
+
+        return assessmentDTOS;
     }
 }

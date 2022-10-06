@@ -1,6 +1,7 @@
 package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.model.Attachment;
+import com.educouch.educouchsystem.model.FileSubmission;
 import com.educouch.educouchsystem.model.FileSubmissionAttempt;
 import com.educouch.educouchsystem.model.Folder;
 import com.educouch.educouchsystem.repository.AttachmentRepository;
@@ -30,6 +31,9 @@ public class AttachmentServiceImpl implements AttachmentService{
 
     @Autowired
     private FileSubmissionAttemptService fileSubmissionAttemptService;
+
+    @Autowired
+    private FileSubmissionService fileSubmissionService;
 
     public AttachmentServiceImpl(AttachmentRepository attachmentRepository, StorageService storageService) {
         this.attachmentRepository = attachmentRepository;
@@ -111,6 +115,22 @@ public class AttachmentServiceImpl implements AttachmentService{
         FileSubmissionAttempt fileSubmissionAttempt = fileSubmissionAttemptService.retrieveFileSubmissionAttemptById(fileSubmissionAttemptId);
         fileSubmissionAttempt.getAttachments().remove(attachment);
         fileSubmissionAttemptService.saveFileSubmissionAttempt(fileSubmissionAttempt);
+        this.deleteAttachment(attachmentId);
+    }
+
+    @Override
+    public void uploadAttachmentToFileSubmissionAssessment(Attachment attachment, Long fileSubmissionId) throws FileSubmissionNotFoundException, FileNotFoundException {
+        FileSubmission fileSubmission = fileSubmissionService.retrieveFileSubmissionById(fileSubmissionId);
+        fileSubmission.getAttachments().add(attachment);
+        fileSubmissionService.saveFileSubmission(fileSubmission);
+    }
+
+    @Override
+    public void removeAttachmentFromFileSubmissionAssessment(Long attachmentId, Long fileSubmissionId) throws FileSubmissionNotFoundException, FileNotFoundException {
+        Attachment attachment = getAttachment(attachmentId);
+        FileSubmission fileSubmission = fileSubmissionService.retrieveFileSubmissionById(fileSubmissionId);
+        fileSubmission.getAttachments().remove(attachment);
+        fileSubmissionService.saveFileSubmission(fileSubmission);
         this.deleteAttachment(attachmentId);
     }
 }
