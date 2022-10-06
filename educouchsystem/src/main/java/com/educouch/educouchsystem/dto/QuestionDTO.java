@@ -14,11 +14,6 @@ public class QuestionDTO {
 
     private String createdDateTime;
 
-    private Long createdByUserId;
-
-    private String createdByUserName;
-
-    private String createdByUserType;
 
     public QuestionDTO() {
     }
@@ -29,9 +24,6 @@ public class QuestionDTO {
         this.questionMaxScore = questionMaxScore;
         this.questionType = questionType;
         this.createdDateTime = createdDateTime;
-        this.createdByUserId = createdByUserId;
-        this.createdByUserName = createdByUserName;
-        this.createdByUserType = createdByUserType;
     }
 
     public Long getQuestionId() {
@@ -82,27 +74,4 @@ public class QuestionDTO {
         this.createdDateTime = createdDateTime;
     }
 
-    public Long getCreatedByUserId() {
-        return createdByUserId;
-    }
-
-    public void setCreatedByUserId(Long createdByUserId) {
-        this.createdByUserId = createdByUserId;
-    }
-
-    public String getCreatedByUserName() {
-        return createdByUserName;
-    }
-
-    public void setCreatedByUserName(String createdByUserName) {
-        this.createdByUserName = createdByUserName;
-    }
-
-    public String getCreatedByUserType() {
-        return createdByUserType;
-    }
-
-    public void setCreatedByUserType(String createdByUserType) {
-        this.createdByUserType = createdByUserType;
-    }
 }
