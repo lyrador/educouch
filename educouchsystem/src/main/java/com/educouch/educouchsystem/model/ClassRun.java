@@ -72,6 +72,7 @@ public class ClassRun {
         this.enrolmentStatusTrackers = new ArrayList<>();
         this.enrolledLearners = new ArrayList<>();
         this.learnerTransactions = new ArrayList<>();
+        this.events = new ArrayList<>();
     }
 
     public ClassRun(LocalDate classRunStart, LocalDate classRunEnd) {
