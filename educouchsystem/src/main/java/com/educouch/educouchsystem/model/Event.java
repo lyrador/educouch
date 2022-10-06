@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-public class sEvent {
+public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

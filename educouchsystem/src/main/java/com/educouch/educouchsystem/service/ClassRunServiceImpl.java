@@ -101,6 +101,7 @@ public class ClassRunServiceImpl implements ClassRunService {
         classRunRepository.save(classRun);
         course.getClassRuns().add(classRun);
         courseRepository.save(course);
+        generateClassEventsFromClassRunId(classRun.getClassRunId());
         return classRun;
     }
 
@@ -264,8 +265,11 @@ public class ClassRunServiceImpl implements ClassRunService {
                     newEvent.setClassRun(classRun);
                     newEvent.setTitle(classRun.getClassRunName() + " " + "Class Event");
                     newEvent.setNotes(classRun.getClassRunName() + " " + "Class Event");
-                    //newEvent.setStartDate(classRun.getClassRunStart().atStartOfDay(ZoneId.systemDefault()).toInstant());
-                    //newEvent.setEndDate(classRun.getClassRunEnd().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    LocalDateTime startLocalDateTime = LocalDateTime.of(localDatePointer, classRun.getClassRunStartTime());
+                    LocalDateTime endLocalDateTime = LocalDateTime.of(localDatePointer, classRun.getClassRunEndTime());
+                    newEvent.setStartDate(Date.from(startLocalDateTime.atZone(ZoneId.systemDefault()).toInstant()));
+                    newEvent.setEndDate(Date.from(endLocalDateTime.atZone(ZoneId.systemDefault()).toInstant()));
+                    newEvent.setAllDay(false);
                     eventService.saveEvent(newEvent);
                     newEvents.add(newEvent);
 
@@ -287,8 +291,11 @@ public class ClassRunServiceImpl implements ClassRunService {
                     newEvent.setClassRun(classRun);
                     newEvent.setTitle(classRun.getClassRunName() + " " + "Class Event");
                     newEvent.setNotes(classRun.getClassRunName() + " " + "Class Event");
-                    //newEvent.setStartDate(LocalDateTime.of(localDatePointer, classRun.getClassRunStartTime()));
-                    //newEvent.setEndDate(LocalDateTime.of(localDatePointer, classRun.getClassRunEndTime()));
+                    LocalDateTime startLocalDateTime = LocalDateTime.of(localDatePointer, classRun.getClassRunStartTime());
+                    LocalDateTime endLocalDateTime = LocalDateTime.of(localDatePointer, classRun.getClassRunEndTime());
+                    newEvent.setStartDate(Date.from(startLocalDateTime.atZone(ZoneId.systemDefault()).toInstant()));
+                    newEvent.setEndDate(Date.from(endLocalDateTime.atZone(ZoneId.systemDefault()).toInstant()));
+                    newEvent.setAllDay(false);
                     eventService.saveEvent(newEvent);
                     newEvents.add(newEvent);
 
