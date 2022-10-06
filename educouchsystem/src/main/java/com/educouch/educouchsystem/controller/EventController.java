@@ -114,17 +114,17 @@ public class EventController {
         ClassRun classRun = classRunService.retrieveClassRunById(classRunId);
         List<Event> events = new ArrayList<>();
         events.addAll(classRun.getEvents());
-        for (Event event : events) {
-            Date eventStartDate = event.getStartDate();
-            LocalDateTime ldtStart = LocalDateTime.ofInstant(eventStartDate.toInstant(), ZoneId.systemDefault());
-            ldtStart = ldtStart.plusHours(8);
-            event.setStartDate(Date.from(ldtStart.atZone(ZoneId.systemDefault()).toInstant()));
-
-            Date eventEndDate = event.getEndDate();
-            LocalDateTime ldtEnd = LocalDateTime.ofInstant(eventEndDate.toInstant(), ZoneId.systemDefault());
-            ldtEnd = ldtEnd.plusHours(8);
-            event.setEndDate(Date.from(ldtEnd.atZone(ZoneId.systemDefault()).toInstant()));
-        }
+//        for (Event event : events) {
+//            Date eventStartDate = event.getStartDate();
+//            LocalDateTime ldtStart = LocalDateTime.ofInstant(eventStartDate.toInstant(), ZoneId.systemDefault());
+//            ldtStart = ldtStart.plusHours(8);
+//            event.setStartDate(Date.from(ldtStart.atZone(ZoneId.systemDefault()).toInstant()));
+//
+//            Date eventEndDate = event.getEndDate();
+//            LocalDateTime ldtEnd = LocalDateTime.ofInstant(eventEndDate.toInstant(), ZoneId.systemDefault());
+//            ldtEnd = ldtEnd.plusHours(8);
+//            event.setEndDate(Date.from(ldtEnd.atZone(ZoneId.systemDefault()).toInstant()));
+//        }
         return new ResponseEntity<>(events, HttpStatus.OK);
 
     }
