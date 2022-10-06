@@ -274,8 +274,8 @@ public class ClassRunServiceImpl implements ClassRunService {
     }
 
     private List<ClassRun> filterClassRunsByStatus(Long learnerId, EnrolmentStatusTrackerEnum enrolmentStatusTrackerEnum) {
-        System.out.println("Filtering by status: " + enrolmentStatusTrackerEnum.toString());
-        System.out.println("For learner: " + learnerId);
+//        System.out.println("Filtering by status: " + enrolmentStatusTrackerEnum.toString());
+//        System.out.println("For learner: " + learnerId);
         Learner l = learnerService.getLearnerById(learnerId);
         List<EnrolmentStatusTracker> enrolmentStatusTrackers = l.getEnrolmentStatusTrackers();
         List<ClassRun> classRuns = new ArrayList<>();
@@ -290,5 +290,22 @@ public class ClassRunServiceImpl implements ClassRunService {
         }
 
         return classRuns;
+    }
+
+    @Override
+    public List<ClassRun> retrieveListOfAvailableClassRun(Long courseId) {
+        List<ClassRun> classRuns = classRunRepository.findClassRunsFromCourseId(courseId);
+        List<ClassRun> availableClassRuns = new ArrayList<>();
+        for(ClassRun classRun: classRuns) {
+            int maxCapacity = classRun.getMaximumCapacity();
+            int minCapacity = classRun.getMinClassSize();
+            int reservations = classRun.getEnrolmentStatusTrackers().size();
+
+            if(reservations >= minCapacity && reservations < maxCapacity) {
+                availableClassRuns.add(classRun);
+            }
+        }
+
+        return availableClassRuns;
     }
 }
