@@ -110,4 +110,10 @@ public class ClassRunController {
         Event event = classRunService.addClassEvent(classRunId, eventRequest);
         return new ResponseEntity<>(event, HttpStatus.OK);
     }
+
+    @GetMapping("/getClassRunsFromInstructorId/{instructorId}")
+    public List<ClassRunDTO> findClassRunsFromInstructorId(@PathVariable Long instructorId) {
+        List<ClassRunDTO> classRuns = classRunService.findClassRunsFromInstructorId(instructorId);
+        return classRuns;
+    }
 }

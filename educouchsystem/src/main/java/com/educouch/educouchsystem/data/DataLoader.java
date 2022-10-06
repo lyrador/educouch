@@ -65,6 +65,9 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     private ClassRunRepository classRunRepository;
 
+    @Autowired
+    private LearnerService learnerService;
+
 
 
     public DataLoader(LmsAdminService lmsAdminService) {
@@ -86,8 +89,10 @@ public class DataLoader implements CommandLineRunner {
         // data for irene's part - course enrollment
         lmsAdminService.saveLmsAdmin(new LmsAdmin("manager", "manager@gmail.com", "password", "manager"));
 
-        learnerRepository.save(new Learner("Alex", "alex@gmail.com", "password",
-                "alex", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true));
+        Learner learner1 = new Learner("Alex", "alex@gmail.com", "password",
+                "alex", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true);
+
+        learnerRepository.save(learner1);
 
         System.out.println("Creating course...");
         Course cs1010 = new Course("CS1010", "CS1010 Introduction to Computer Science",
@@ -137,21 +142,6 @@ public class DataLoader implements CommandLineRunner {
         cs1010 =  courseService.saveCourse(cs1010);
         bio4000 =  courseService.saveCourse(bio4000);
 
-        try {
-            courseService.addClassRunToCourse(cs1010.getCourseId(), c1);
-            courseService.addClassRunToCourse(cs1010.getCourseId(), c2);
-
-            courseService.addClassRunToCourse(bio4000.getCourseId(), c3);
-            courseService.addClassRunToCourse(bio4000.getCourseId(), c4);
-        } catch(CourseNotFoundException ex) {
-            System.out.println("Course not found exception.");
-        }
-
-
-
-
-
-
 
         //create organisation
         Organisation org1 = new Organisation("FakeTuition");
@@ -165,6 +155,31 @@ public class DataLoader implements CommandLineRunner {
 
         organisationService.addInstructor("1", i1);
         organisationService.addInstructor("1", i2);
+
+        //adding learner to classrun and classrun to learner (alex join c1 for 1010 and c4 for 4000)
+        List<Learner> enrolledLearnersListForC1 = new ArrayList<>();
+        enrolledLearnersListForC1.add(learner1);
+        c1.setEnrolledLearners(enrolledLearnersListForC1);
+        List<ClassRun> classRunListForLearner1 = new ArrayList<>();
+        classRunListForLearner1.add(c1);
+        learner1.setClassRuns(classRunListForLearner1);
+
+        List<Learner> enrolledLearnersListForC4 = new ArrayList<>();
+        enrolledLearnersListForC4.add(learner1);
+        c4.setEnrolledLearners(enrolledLearnersListForC4);
+        learner1.getClassRuns().add(c4);
+
+        learnerService.updateLearner(learner1);
+
+        //adding i2 to c1 and to c4
+        c1.setInstructor(i2);
+        List<ClassRun> classRunListForI2 = new ArrayList<>();
+        classRunListForI2.add(c1);
+        i1.setClassRuns(classRunListForI2);
+
+        c4.setInstructor(i2);
+        i2.getClassRuns().add(c4);
+
 
         //linking a course to horlicks head instructor and org 1
         Course courseRequest = new Course();
@@ -195,6 +210,21 @@ public class DataLoader implements CommandLineRunner {
         courseRequest.getInstructors().add(i2);
 
         Course course = courseService.saveCourse(courseRequest);
+
+
+
+
+
+        try {
+            courseService.addClassRunToCourse(cs1010.getCourseId(), c1);
+            courseService.addClassRunToCourse(cs1010.getCourseId(), c2);
+
+            courseService.addClassRunToCourse(bio4000.getCourseId(), c3);
+            courseService.addClassRunToCourse(bio4000.getCourseId(), c4);
+        } catch(CourseNotFoundException ex) {
+            System.out.println("Course not found exception.");
+        }
+
 //
 //        //create FileSubmission Assessment
 //        FileSubmission newFileSubmission = new FileSubmission("Quiz A", "abcde", 20.0, new Date(), new Date(), FileSubmissionEnum.INDIVIDUAL);

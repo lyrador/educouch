@@ -1,8 +1,15 @@
 package com.educouch.educouchsystem.controller;
 
+import com.educouch.educouchsystem.model.ClassRun;
+import com.educouch.educouchsystem.model.Course;
 import com.educouch.educouchsystem.model.Event;
+import com.educouch.educouchsystem.model.Instructor;
+import com.educouch.educouchsystem.service.ClassRunService;
+import com.educouch.educouchsystem.service.CourseService;
+import com.educouch.educouchsystem.service.EducatorService;
 import com.educouch.educouchsystem.service.EventService;
 import com.educouch.educouchsystem.util.exception.EventNotFoundException;
+import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +27,27 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
-    @PostMapping("/events")
-    public ResponseEntity<Event> addEvent(@RequestBody Event eventRequest) {
+    @Autowired
+    private ClassRunService classRunService;
 
+    @Autowired
+    private EducatorService educatorService;
+
+    @Autowired
+    private CourseService courseService;
+
+    @PostMapping("/classRun/{classRunId}/events")
+    public ResponseEntity<Event> addEvent(@PathVariable(value="classRunId") Long classRunId, @RequestBody Event eventRequest) {
+
+        ClassRun classRun = classRunService.retrieveClassRunById(classRunId);
+        eventRequest.setClassRun(classRun);
+        if (classRun.getEvents() != null) {
+            classRun.getEvents().add(eventRequest);
+        } else {
+            List<Event> classRunEvents = new ArrayList<>();
+            classRunEvents.add(eventRequest);
+            classRun.setEvents(classRunEvents);
+        }
         Event event = eventService.saveEvent(eventRequest);
         return new ResponseEntity<>(event, HttpStatus.OK);
     }
@@ -50,8 +75,16 @@ public class EventController {
 
     @DeleteMapping("/events/{eventId}")
     public ResponseEntity<Event> deleteEvent(@PathVariable("eventId") Long eventId) {
-        eventService.deleteEvent(eventId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            Event existingEvent = eventService.getEventById(eventId);
+            ClassRun classRun = existingEvent.getClassRun();
+            classRun.getEvents().remove(existingEvent);
+            existingEvent.setClassRun(null);
+            eventService.deleteEvent(eventId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (EventNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/events/{eventId}")
@@ -59,9 +92,11 @@ public class EventController {
         try {
             Event existingEvent = eventService.getEventById(eventId);
             existingEvent.setTitle(event.getTitle());
-            existingEvent.setEventDescription(event.getEventDescription());
+            existingEvent.setNotes(event.getNotes());
             existingEvent.setStartDate(event.getStartDate());
-            existingEvent.setEventEndDate(event.getEndDate());
+            existingEvent.setEndDate(event.getEndDate());
+            existingEvent.setAllDay(event.getAllDay());
+            //existingEvent.setClassRun(event.getClassRun());
             eventService.saveEvent(existingEvent);
             return new ResponseEntity<Event>(existingEvent, HttpStatus.OK);
         } catch (EventNotFoundException e) {
@@ -69,6 +104,43 @@ public class EventController {
         } catch (NoSuchElementException ex) {
             return new ResponseEntity<Event>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/classRuns/{classRunId}/events")
+    public ResponseEntity<List<Event>> getAllEventsByClassRunId (@PathVariable(value="classRunId") Long classRunId) {
+        ClassRun classRun = classRunService.retrieveClassRunById(classRunId);
+        List<Event> events = new ArrayList<>();
+        events.addAll(classRun.getEvents());
+        return new ResponseEntity<>(events, HttpStatus.OK);
+
+    }
+
+    @GetMapping("/instructors/{instructorId}/events")
+    public ResponseEntity<List<Event>> getAllEventsByInstructorId (@PathVariable(value="instructorId") Long instructorId) {
+        try {
+            Instructor instructor = educatorService.findInstructorById(instructorId);
+            List<Event> events = new ArrayList<>();
+            List<ClassRun> classRunListInstructor = instructor.getClassRuns();
+            for (ClassRun classRun : classRunListInstructor) {
+                events.addAll(classRun.getEvents());
+            }
+            return new ResponseEntity<>(events, HttpStatus.OK);
+        } catch (InstructorNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (NoSuchElementException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/courses/{courseId}/events")
+    public ResponseEntity<List<Event>> getAllEventsByCourseId (@PathVariable(value="courseId") Long courseId) {
+        Course course = courseService.retrieveCourseById(courseId);
+        List<Event> events = new ArrayList<>();
+        List<ClassRun> classRunListCourse = course.getClassRuns();
+        for (ClassRun classRun : classRunListCourse) {
+            events.addAll(classRun.getEvents());
+        }
+        return new ResponseEntity<>(events, HttpStatus.OK);
     }
 
 
