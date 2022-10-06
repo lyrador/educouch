@@ -19,9 +19,13 @@ public class FileSubmission extends Assessment implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FileSubmissionAttempt> fileSubmissionAttempts;
 
+    @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    private List<Attachment> attachments;
+
     public FileSubmission() {
         super();
         this.fileSubmissionAttempts = new ArrayList<>();
+        this.attachments = new ArrayList<>();
     }
 
     public FileSubmission(String title, String description, Double maxScore, Date startDate, Date endDate, FileSubmissionEnum fileSubmissionEnum) {
@@ -44,5 +48,13 @@ public class FileSubmission extends Assessment implements Serializable {
 
     public void setFileSubmissionAttempts(List<FileSubmissionAttempt> fileSubmissionAttempts) {
         this.fileSubmissionAttempts = fileSubmissionAttempts;
+    }
+
+    public List<Attachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<Attachment> attachments) {
+        this.attachments = attachments;
     }
 }
