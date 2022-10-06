@@ -93,6 +93,17 @@ public class ClassRunController {
         }
     }
 
+    @GetMapping("/getClassEventsFromClassRunId/{classRunId}")
+    public ResponseEntity<List<Event>> getClassEventsFromClassRunId(@PathVariable("classRunId") Long classRunId) {
+        try {
+            ClassRun classRun = classRunService.retrieveClassRunById(classRunId);
+            List<Event> events = classRun.getEvents();
+            return new ResponseEntity<>(events, HttpStatus.OK);
+        } catch (NoSuchElementException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @DeleteMapping("/delete/{classRunId}")
     public ResponseEntity<HttpStatus> deleteClassRun(@PathVariable("classRunId") Long classRunId) {
         classRunService.deleteClassRun(classRunId);
