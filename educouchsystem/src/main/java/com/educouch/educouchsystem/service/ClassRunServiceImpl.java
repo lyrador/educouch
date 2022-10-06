@@ -5,6 +5,7 @@ import com.educouch.educouchsystem.dto.ForumDTO;
 import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.repository.ClassRunRepository;
 import com.educouch.educouchsystem.repository.CourseRepository;
+import com.educouch.educouchsystem.repository.LearnerRepository;
 import com.educouch.educouchsystem.util.enumeration.RecurringEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,7 @@ public class ClassRunServiceImpl implements ClassRunService {
     private LearnerService learnerService;
 
     private EventService eventService;
+
 
     public ClassRunServiceImpl(CourseService courseService, EducatorService educatorService, LearnerService learnerService, EventService eventService) {
         this.courseService = courseService;
@@ -159,6 +161,64 @@ public class ClassRunServiceImpl implements ClassRunService {
         }
         return classRunDTOs;
     }
+
+    @Override
+    public List<ClassRunDTO> findClassRunsFromInstructorId(Long instructorId) {
+        List<ClassRun> classRuns = classRunRepository.findClassRunsFromInstructorId(instructorId);
+
+        List<ClassRunDTO> classRunDTOs = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        for (ClassRun classRun : classRuns) {
+            ClassRunDTO classRunDTO = new ClassRunDTO(
+                    classRun.getClassRunId(),
+                    classRun.getClassRunStart().format(formatter),
+                    classRun.getClassRunEnd().format(formatter),
+                    classRun.getMinClassSize(),
+                    classRun.getMaximumCapacity(),
+                    classRun.getClassRunDaysOfTheWeek(),
+                    null,
+                    null,
+                    classRun.getInstructor().getUsername(),
+                    null,
+                    classRun.getClassRunName(),
+                    classRun.getClassRunDescription(),
+                    classRun.getClassRunStartTime().format(timeFormatter),
+                    classRun.getClassRunEndTime().format(timeFormatter));
+            classRunDTO.setClassEvents(classRun.getEvents());
+            classRunDTOs.add(classRunDTO);
+        }
+        return classRunDTOs;
+    }
+
+//    @Override
+//    public List<ClassRunDTO> findClassRunsFromLearnerId(Long learnerId) {
+//        List<ClassRun> classRuns = classRunRepository.findClassRunsFromLearnerId(learnerId);
+//
+//        List<ClassRunDTO> classRunDTOs = new ArrayList<>();
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+//        for (ClassRun classRun : classRuns) {
+//            ClassRunDTO classRunDTO = new ClassRunDTO(
+//                    classRun.getClassRunId(),
+//                    classRun.getClassRunStart().format(formatter),
+//                    classRun.getClassRunEnd().format(formatter),
+//                    classRun.getMinClassSize(),
+//                    classRun.getMaximumCapacity(),
+//                    classRun.getClassRunDaysOfTheWeek(),
+//                    null,
+//                    null,
+//                    classRun.getInstructor().getUsername(),
+//                    null,
+//                    classRun.getClassRunName(),
+//                    classRun.getClassRunDescription(),
+//                    classRun.getClassRunStartTime().format(timeFormatter),
+//                    classRun.getClassRunEndTime().format(timeFormatter));
+//            classRunDTO.setClassEvents(classRun.getEvents());
+//            classRunDTOs.add(classRunDTO);
+//        }
+//        return classRunDTOs;
+//    }
 
     @Override
     public List<Event> generateClassEventsFromClassRunId(Long classRunId) {
