@@ -4,5 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface DepositRefundRequestRepository extends JpaRepository<DepositRefundRequest, Long> {
+public interface
+DepositRefundRequestRepository extends JpaRepository<DepositRefundRequest, Long> {
 }

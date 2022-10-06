@@ -39,6 +39,9 @@ public class Learner {
     @Column(nullable = false)
     private Boolean isKid;
 
+    @Column(nullable = false)
+    private String paymentAcc;
+
     @ManyToMany
     @JoinTable(name = "Learner_ClassRun",
     joinColumns = {@JoinColumn(name = "learnerId")},
@@ -85,7 +88,7 @@ public class Learner {
 
 
 
-    public Learner(String name, String email, String password, String username, String profilePictureURL, Boolean isKid) {
+    public Learner(String name, String email, String password, String username, String profilePictureURL, Boolean isKid, String paymentAcc) {
         new Learner();
         this.name = name;
         this.email = email;
@@ -94,6 +97,7 @@ public class Learner {
         this.profilePictureURL = profilePictureURL;
         this.isActive = true;
         this.isKid = isKid;
+        this.paymentAcc = paymentAcc;
 //        createCustomer();
     }
 
@@ -190,6 +194,14 @@ public class Learner {
 
     public void setEnrolmentStatusTrackers(List<EnrolmentStatusTracker> enrolmentStatusTrackers) {
         this.enrolmentStatusTrackers = enrolmentStatusTrackers;
+    }
+
+    public String getPaymentAcc() {
+        return paymentAcc;
+    }
+
+    public void setPaymentAcc(String paymentAcc) {
+        this.paymentAcc = paymentAcc;
     }
 
     public String getStripeCustomerId() {

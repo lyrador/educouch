@@ -55,6 +55,10 @@ public class DataLoader implements CommandLineRunner {
     private EducatorService educatorService;
 
     @Autowired
+    private DepositRefundRequestRepository depositRefundRequestRepository;
+
+
+    @Autowired
     private OrganisationService organisationService;
 
     @Autowired
@@ -237,6 +241,7 @@ public class DataLoader implements CommandLineRunner {
         courseRequest.getInstructors().add(i2);
 
         Course course = courseService.saveCourse(courseRequest);
+        depositRefundRequestRepository.save(new DepositRefundRequest(1l, new BigDecimal(100)));
 //
 //        //create FileSubmission Assessment
 //        FileSubmission newFileSubmission = new FileSubmission("Quiz A", "abcde", 20.0, new Date(), new Date(), FileSubmissionEnum.INDIVIDUAL);
