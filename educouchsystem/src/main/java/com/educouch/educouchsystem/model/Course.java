@@ -8,6 +8,7 @@ import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +39,10 @@ public class Course {
 
     @Column(name="courseFee")
     private BigDecimal courseFee;
+
+    private LocalDate startDate;
+
+    private LocalDate endDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name="ageGroup", nullable = false)
@@ -118,6 +123,17 @@ public class Course {
         this.courseMaxScore = courseMaxScore;
         this.ageGroup = ageGroup;
     }
+
+    public Course(String courseCode, String courseTitle, AgeGroupEnum ageGroup, LocalDate startDate, LocalDate endDate) {
+        new Course();
+        this.courseCode = courseCode;
+        this.courseTitle = courseTitle;
+        this.ageGroup = ageGroup;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+
 
     public Long getCourseId() {
         return courseId;
@@ -257,5 +273,21 @@ public class Course {
 
     public void setCourseFee(BigDecimal courseFee) {
         this.courseFee = courseFee;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 }
