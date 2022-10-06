@@ -97,4 +97,10 @@ public class ClassRunController {
         List<ClassRunDTO> classRuns = classRunService.findClassRunsFromCourseId(courseId);
         return classRuns;
     }
+
+    @GetMapping("/getClassRunsFromInstructorId/{instructorId}")
+    public List<ClassRunDTO> findClassRunsFromInstructorId(@PathVariable Long instructorId) {
+        List<ClassRunDTO> classRuns = classRunService.findClassRunsFromInstructorId(instructorId);
+        return classRuns;
+    }
 }

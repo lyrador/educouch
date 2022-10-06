@@ -23,5 +23,9 @@ public interface ClassRunService {
 
     public List<ClassRunDTO> findClassRunsFromCourseId (Long courseId);
 
+    public List<ClassRunDTO> findClassRunsFromInstructorId (Long instructorId);
+
+//    public List<ClassRunDTO> findClassRunsFromLearnerId (Long learnerId);
+
     public List<Event> generateClassEventsFromClassRunId(Long classRunId);
 }
