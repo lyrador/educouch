@@ -9,6 +9,7 @@ import com.educouch.educouchsystem.service.CourseService;
 import com.educouch.educouchsystem.service.EducatorService;
 import com.educouch.educouchsystem.service.OrganisationService;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
+import com.educouch.educouchsystem.util.exception.EventNotFoundException;
 import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,6 +51,12 @@ public class ClassRunController {
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Folder not found", ex);
 //        }
 //    }
+
+    @DeleteMapping("/classEvents/delete/{eventId}")
+    public ResponseEntity<Event> deleteClassEvent(@PathVariable("eventId") Long eventId) throws EventNotFoundException {
+        classRunService.deleteClassEvent(eventId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
     @PostMapping("addToCourseId/{courseId}")
     public ResponseEntity<ClassRun> addClassRun(@PathVariable(value="courseId") Long courseId, @RequestBody ClassRunDTO classRunDTORequest) {
@@ -96,5 +103,11 @@ public class ClassRunController {
     public List<ClassRunDTO> findClassRunsFromCourseId(@PathVariable Long courseId) {
         List<ClassRunDTO> classRuns = classRunService.findClassRunsFromCourseId(courseId);
         return classRuns;
+    }
+
+    @PostMapping("/classEvents/add/{classRunId}")
+    public ResponseEntity<Event> addClassEvent(@PathVariable("classRunId") Long classRunId, @RequestBody Event eventRequest) throws EventNotFoundException {
+        Event event = classRunService.addClassEvent(classRunId, eventRequest);
+        return new ResponseEntity<>(event, HttpStatus.OK);
     }
 }
