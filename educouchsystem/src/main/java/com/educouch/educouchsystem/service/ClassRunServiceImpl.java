@@ -6,6 +6,7 @@ import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.repository.ClassRunRepository;
 import com.educouch.educouchsystem.repository.CourseRepository;
 import com.educouch.educouchsystem.util.enumeration.RecurringEnum;
+import com.educouch.educouchsystem.util.exception.EventNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -239,5 +240,27 @@ public class ClassRunServiceImpl implements ClassRunService {
             }
         }
         return newEvents;
+    }
+
+    @Override
+    public void deleteClassEvent(Long id) throws EventNotFoundException {
+        Event classEventToDelete = eventService.getEventById(id);
+        ClassRun classRun = classEventToDelete.getClassRun();
+        classRun.getEvents().remove(classEventToDelete);
+        classRunRepository.save(classRun);
+//        classEventToDelete.setClassRun(null);
+//        eventService.deleteEvent(id);
+    }
+
+    @Override
+    public Event addClassEvent(Long classRunId, Event eventRequest) throws EventNotFoundException {
+        ClassRun classRun = classRunRepository.findById(classRunId).get();
+        classRun.getEvents().add(eventRequest);
+        eventRequest.setClassRun(classRun);
+        eventService.saveEvent(eventRequest);
+        classRunRepository.save(classRun);
+        return eventRequest;
+//        classEventToDelete.setClassRun(null);
+//        eventService.deleteEvent(id);
     }
 }
