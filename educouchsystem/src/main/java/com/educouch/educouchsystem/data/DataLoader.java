@@ -96,16 +96,16 @@ public class DataLoader implements CommandLineRunner {
 
         // learner
         Learner learner_1  = learnerRepository.save(new Learner("Alex", "irenelie@u.nus.edu", "password",
-                "alex", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true));
+                "alex", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true, "23456"));
 
         Learner learner_2 = learnerRepository.save(new Learner("Beatrice", "irenelie1412@gmail.com", "password",
-                "beatrice", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true));
+                "beatrice", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true, "23456"));
 
         Learner learner_3 =  learnerRepository.save(new Learner("Diana", "irenelie@nushackers.org", "password",
-                "diana", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true));
+                "diana", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true, "23456"));
 
         Learner learner_4 =  learnerRepository.save(new Learner("Beatrice", "lielieirene@gmail.com", "password",
-                "david", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true));
+                "david", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true, "23456"));
 
         // courses
         Course cs1010 = new Course("CS1010", "Introduction to Computer Science",
