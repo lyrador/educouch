@@ -2,6 +2,7 @@ package com.educouch.educouchsystem.exceptionHandling;
 
 import com.educouch.educouchsystem.util.exception.InvalidLoginCredentialsException;
 import com.educouch.educouchsystem.util.exception.LmsAdminNotFoundException;
+import com.educouch.educouchsystem.util.exception.TransactionNotFoundException;
 import com.educouch.educouchsystem.util.exception.UsernameNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,4 +27,12 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleUsernameNotFoundException(UsernameNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(TransactionNotFoundException.class)
+    public ResponseEntity<Object> handleTransactionNotFoundException(TransactionNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+
+    }
+
+
 }

@@ -1,4 +1,5 @@
 package com.educouch.educouchsystem.model;
+import com.educouch.educouchsystem.util.enumeration.PaymentStatusEnum;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -34,9 +35,12 @@ public class Organisation {
     private String paymentAcc;
     private BigDecimal orgBalance;
 
+    private PaymentStatusEnum paymentStatus;
+
     public Organisation() {
         this.instructors = new ArrayList<>();
         this.orgBalance = new BigDecimal(0);
+        this.paymentStatus = PaymentStatusEnum.PAID;
     }
 
     public Organisation(String organisationName, String orgDescription, String paymentAcc) {
@@ -109,5 +113,13 @@ public class Organisation {
 
     public void setOrgBalance(BigDecimal orgBalance) {
         this.orgBalance = orgBalance;
+    }
+
+    public PaymentStatusEnum getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(PaymentStatusEnum paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 }
