@@ -36,4 +36,6 @@ public interface ClassRunService {
     public List<ClassRun> retrieveListOfAllClassRunsEnrolled(Long learnerId);
 
     public List<ClassRun> retrieveListOfAllClassRunsNeedPayment(Long learnerId);
+
+    public List<ClassRun> retrieveListOfAvailableClassRun(Long courseId);
 }

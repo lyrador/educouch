@@ -1,6 +1,7 @@
 package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.dto.CourseDTO;
+import com.educouch.educouchsystem.dto.CourseStatusTracker;
 import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.service.CourseService;
 import com.educouch.educouchsystem.service.EducatorService;
@@ -371,14 +372,23 @@ public class CourseController {
 
     @GetMapping("/enquiryCourseStatus")
     @ResponseBody
-    public String enquireCourseStatus(@RequestParam String learnerId, @RequestParam String courseId) {
+    public CourseStatusTracker enquireCourseStatus(@RequestParam String learnerId, @RequestParam String courseId) {
         try{
-            String status = enrolmentStatusTrackerService.retrieveLearnerStatusWithCourse(new Long(courseId), new Long(learnerId));
-            return status;
+            EnrolmentStatusTracker status = enrolmentStatusTrackerService.retrieveLearnerStatusWithCourse(new Long(courseId), new Long(learnerId));
+            ClassRun classRun = status.getClassRun();
+            processClassRun(classRun);
+            CourseStatusTracker  statusTracker = new CourseStatusTracker(status.getEnrolmentStatus().toString(), classRun);
+            return statusTracker;
         }catch(EnrolmentStatusTrackerNotFoundException ex) {
-            return "NOTENROLLED";
+            CourseStatusTracker statusTracker = new CourseStatusTracker("NOTENROLLED");
+            return statusTracker;
         }
 
+    }
+
+    private void processEnrolmentStatusTracker(EnrolmentStatusTracker e) {
+        e.setClassRun(null);
+        e.setLearner(null);
     }
 
 

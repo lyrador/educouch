@@ -157,7 +157,7 @@ public class ClassRun {
         this.calendar = calendar;
     }
 
-    @JsonIgnore
+
     public Course getCourse() {
         return course;
     }
