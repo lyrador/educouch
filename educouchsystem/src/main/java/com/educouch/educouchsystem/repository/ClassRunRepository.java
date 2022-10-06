@@ -16,7 +16,9 @@ public interface ClassRunRepository extends CrudRepository<ClassRun, Long> {
     @Query("SELECT c FROM ClassRun c, IN (c.enrolmentStatusTrackers) est WHERE est.learner.learnerId = :learnerId ")
     List<ClassRun> retrieveListOfAllClassRunsReserved(Long learnerId);
 
+    @Query("SELECT r FROM ClassRun r WHERE r.instructor.instructorId =:instructorId")
+    List<ClassRun> findClassRunsFromInstructorId(Long instructorId);
 
-
-
+//    @Query("SELECT r FROM ClassRun r WHERE r.learner.learnerId =:learnerId")
+//    List<ClassRun> findClassRunsFromLearnerId(Long learnerId);
 }
