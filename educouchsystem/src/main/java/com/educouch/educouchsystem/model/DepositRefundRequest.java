@@ -30,9 +30,11 @@ public class DepositRefundRequest {
     public DepositRefundRequest() {
         this.refundStatusEnum = RefundStatusEnum.REQUESTED;
         this.timeStamp = LocalDateTime.now();
+        this.dueTime = timeStamp.plusDays(5);
     }
 
     public DepositRefundRequest(Long learnerId, BigDecimal amount) {
+        this();
         this.learnerId = learnerId;
         this.amount = amount;
     }
