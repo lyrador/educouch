@@ -15,7 +15,8 @@ public interface EnrolmentStatusTrackerService {
     public List<EnrolmentStatusTracker> retrieveListOfEnrolmentStatusTrackersByCourse(Long classRunId)
             throws ClassRunNotFoundException;
 
-    public String retrieveLearnerStatusWithCourse(Long courseId, Long learnerId) throws EnrolmentStatusTrackerNotFoundException;
+    public EnrolmentStatusTracker retrieveLearnerStatusWithCourse(Long courseId, Long learnerId) throws
+            EnrolmentStatusTrackerNotFoundException;
 
     public EnrolmentStatusTracker retrieveEnrolmentByLearnerIdAndClassRunId(Long classRunId, Long learnerId) throws
             DuplicateEnrolmentTrackerException;

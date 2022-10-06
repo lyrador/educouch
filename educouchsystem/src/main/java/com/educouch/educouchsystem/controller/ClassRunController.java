@@ -100,6 +100,7 @@ public class ClassRunController {
 
     @GetMapping("/getDepositPaidClassRuns/{learnerId}")
     public List<ClassRun> findClassRunsWithPaidDeposits(@PathVariable Long learnerId) {
+        System.out.println("Reach C");
         List<ClassRun> classRuns = classRunService.retrieveListOfAllClassRunsDepositPaid(learnerId);
         for(ClassRun c: classRuns) {
             processClassRun(c);
@@ -109,6 +110,7 @@ public class ClassRunController {
 
     @GetMapping("/getNeedPaymentClassRuns/{learnerId}")
     public List<ClassRun> findClassRunsNeedsPayment(@PathVariable Long learnerId) {
+        System.out.println("Reach A");
         List<ClassRun> classRuns = classRunService.retrieveListOfAllClassRunsNeedPayment(learnerId);
         for(ClassRun c: classRuns) {
             processClassRun(c);
@@ -153,9 +155,13 @@ public class ClassRunController {
         c.setCalendar(null);
         c.setEvents(null);
         Instructor i = c.getInstructor();
-        i.setClassRuns(null);
-        i.setOrganisation(null);
-        i.setCourses(null);
+        if(i != null) {
+            i.setClassRuns(null);
+            i.setOrganisation(null);
+            i.setCourses(null);
+        }
+
+
 
         Course course = c.getCourse();
         course.setFolders(null);
