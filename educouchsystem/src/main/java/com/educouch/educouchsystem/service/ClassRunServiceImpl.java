@@ -110,6 +110,10 @@ public class ClassRunServiceImpl implements ClassRunService {
     @Override
     public ClassRun updateClassRun(Long classRunId, ClassRunDTO classRunDTORequest) throws ParseException {
         ClassRun classRunToUpdate = classRunRepository.findById(classRunDTORequest.getClassRunId()).get();
+        for (Event event : classRunToUpdate.getEvents()) {
+            event.setClassRun(null);
+        }
+        classRunToUpdate.getEvents().clear();
 
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -125,16 +129,19 @@ public class ClassRunServiceImpl implements ClassRunService {
         Instructor instructor = educatorService.findInstructorByUsername(classRunDTORequest.getInstructorUsername());
         classRunToUpdate.setInstructor(instructor);
         List<Learner> learners = new ArrayList<>();
-        for (String learnerUsername : classRunDTORequest.getEnrolledLearnersUsernames()) {
-            Learner learner = learnerService.findLearnerByUsername(learnerUsername);
-            learners.add(learner);
+        if (classRunDTORequest.getEnrolledLearnersUsernames() != null) {
+            for (String learnerUsername : classRunDTORequest.getEnrolledLearnersUsernames()) {
+                Learner learner = learnerService.findLearnerByUsername(learnerUsername);
+                learners.add(learner);
+            }
+            classRunToUpdate.setEnrolledLearners(learners);
         }
-        classRunToUpdate.setEnrolledLearners(learners);
         classRunToUpdate.setClassRunName(classRunDTORequest.getClassRunName());
         classRunToUpdate.setClassRunDescription(classRunDTORequest.getClassRunDescription());
         classRunToUpdate.setClassRunStartTime(LocalTime.parse(classRunDTORequest.getClassRunStartTime(), timeFormatter));
         classRunToUpdate.setClassRunEndTime(LocalTime.parse(classRunDTORequest.getClassRunEndTime(), timeFormatter));
         classRunRepository.save(classRunToUpdate);
+        generateClassEventsFromClassRunId(classRunToUpdate.getClassRunId());
         return classRunToUpdate;
     }
 
@@ -288,7 +295,7 @@ public class ClassRunServiceImpl implements ClassRunService {
                 if (daysCount != 0 && daysCount % 7 == 0) {
                     localDatePointer = localDatePointer.plusDays(7);
                 }
-                if (daysOfWeekSet.contains(localDatePointer.getDayOfWeek())) {
+                if (daysOfWeekSet.contains(localDatePointer.getDayOfWeek()) && localDatePointer.isBefore(classRun.getClassRunEnd())) {
                     Event newEvent = new Event();
                     newEvent.setClassRun(classRun);
                     newEvent.setTitle(classRun.getClassRunName() + " " + "Class Event");
