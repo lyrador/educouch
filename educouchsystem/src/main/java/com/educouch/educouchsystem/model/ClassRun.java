@@ -38,7 +38,7 @@ public class ClassRun {
     private Integer[] classRunDaysOfTheWeek;
 
     private RecurringEnum recurringEnum;
-
+    @Column(unique = true)
     private String classRunName;
 
     private String classRunDescription;
