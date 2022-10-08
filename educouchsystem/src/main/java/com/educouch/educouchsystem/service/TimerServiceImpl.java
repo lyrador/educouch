@@ -51,7 +51,7 @@ public class TimerServiceImpl implements TimerService{
                             int capacity = classRun.getMaximumCapacity();
                             int numOfEnrolment = 0;
                             int i = 0;
-                            while(numOfEnrolment < capacity) {
+                            while(numOfEnrolment < capacity && i < numberOfReservations) {
                                 EnrolmentStatusTracker statusTracker = statusTrackers.get(i);
                                 if(statusTracker.getEnrolmentStatus() == EnrolmentStatusTrackerEnum.DEPOSITPAID) {
                                     statusTracker.setEnrolmentStatus(EnrolmentStatusTrackerEnum.RESERVED);
