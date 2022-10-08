@@ -300,8 +300,10 @@ public class ClassRunServiceImpl implements ClassRunService {
             int maxCapacity = classRun.getMaximumCapacity();
             int minCapacity = classRun.getMinClassSize();
             int reservations = classRun.getEnrolmentStatusTrackers().size();
+            int enrolledStudents = classRun.getEnrolledLearners().size();
 
-            if(reservations >= minCapacity && reservations < maxCapacity) {
+            if(reservations + 1 >= minCapacity && reservations < maxCapacity &&
+                    enrolledStudents < maxCapacity) {
                 availableClassRuns.add(classRun);
             }
         }
