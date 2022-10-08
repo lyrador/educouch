@@ -105,20 +105,20 @@ public class DataLoader implements CommandLineRunner {
                 "beatrice", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true, "23456"));
 
         Learner learner_3 =  learnerRepository.save(new Learner("Diana", "irenelie@nushackers.org", "password",
-                "diana", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true, "23456"));
+                "diana", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", false, "23456"));
 
-        Learner learner_4 =  learnerRepository.save(new Learner("Beatrice", "lielieirene@gmail.com", "password",
-                "david", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true, "23456"));
+        Learner learner_4 =  learnerRepository.save(new Learner("David", "lielieirene@gmail.com", "password",
+                "david", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", false, "23456"));
 
         // courses
         Course cs1010 = new Course("CS1010", "Introduction to Computer Science",
-                "xxx", "xxx", 100.0, AgeGroupEnum.ADULTS);
+                "xxx", "xxx", 100.0, AgeGroupEnum.KIDS);
         cs1010.setCourseApprovalStatus(CourseApprovalStatusEnum.LIVE);
         cs1010.setCourseFee(new BigDecimal(1000));
         cs1010.setStartDate(LocalDate.now().plusDays(7));
 
         Course bio4000 = new Course("BIO4000", "Molecular Genetics", "xxx",
-                "xxx", 100.0, AgeGroupEnum.KIDS);
+                "xxx", 100.0, AgeGroupEnum.ADULTS);
         bio4000.setCourseApprovalStatus(CourseApprovalStatusEnum.LIVE);
         bio4000.setCourseFee(new BigDecimal(1000));
         bio4000.setStartDate(LocalDate.now().plusDays(10));
@@ -185,15 +185,11 @@ public class DataLoader implements CommandLineRunner {
 
 
         try {
-            // to test maximum class enrolment
             stripeService.payDeposit(c1.getClassRunId(), learner_1.getLearnerId(), new BigDecimal(100));
             stripeService.payDeposit(c1.getClassRunId(), learner_2.getLearnerId(), new BigDecimal(100));
-            stripeService.payDeposit(c1.getClassRunId(), learner_3.getLearnerId(), new BigDecimal(100));
-            stripeService.payDeposit(c1.getClassRunId(), learner_4.getLearnerId(), new BigDecimal(100));
 
-            // to test if nvr hit min capacity
-            stripeService.payDeposit(c4.getClassRunId(), learner_1.getLearnerId(), new BigDecimal(100));
-            stripeService.payDeposit(c4.getClassRunId(), learner_2.getLearnerId(), new BigDecimal(100));
+
+
             stripeService.payDeposit(c4.getClassRunId(), learner_3.getLearnerId(), new BigDecimal(100));
             stripeService.payDeposit(c4.getClassRunId(), learner_4.getLearnerId(), new BigDecimal(100));
         } catch(ClassRunNotFoundException | LearnerNotFoundException ex) {

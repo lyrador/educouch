@@ -188,10 +188,13 @@ public class ClassRunController {
 
     private void processClassRun(ClassRun c) {
         List<EnrolmentStatusTracker> enrolmentStatusTrackers = c.getEnrolmentStatusTrackers();
-        for(EnrolmentStatusTracker e: enrolmentStatusTrackers) {
-            e.setClassRun(null);
-            e.setLearner(null);
+        if(enrolmentStatusTrackers != null) {
+            for(EnrolmentStatusTracker e: enrolmentStatusTrackers) {
+                e.setClassRun(null);
+                e.setLearner(null);
+            }
         }
+
 
         c.setCalendar(null);
         c.setEvents(null);
