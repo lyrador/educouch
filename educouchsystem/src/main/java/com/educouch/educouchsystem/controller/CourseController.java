@@ -2,6 +2,7 @@ package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.dto.CourseDTO;
 import com.educouch.educouchsystem.dto.CourseStatusTracker;
+import com.educouch.educouchsystem.dto.IsEnrolled;
 import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.service.CourseService;
 import com.educouch.educouchsystem.service.EducatorService;
@@ -10,11 +11,8 @@ import com.educouch.educouchsystem.util.enumeration.AgeGroupEnum;
 import com.educouch.educouchsystem.util.enumeration.CourseApprovalStatusEnum;
 import com.educouch.educouchsystem.service.OrganisationService;
 import com.educouch.educouchsystem.util.enumeration.EnrolmentStatusTrackerEnum;
-import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
+import com.educouch.educouchsystem.util.exception.*;
 import com.educouch.educouchsystem.dto.CourseRejectionModel;
-import com.educouch.educouchsystem.util.exception.EnrolmentStatusTrackerNotFoundException;
-import com.educouch.educouchsystem.util.exception.FolderNotFoundException;
-import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -380,8 +378,22 @@ public class CourseController {
             CourseStatusTracker  statusTracker = new CourseStatusTracker(status.getEnrolmentStatus().toString(), classRun);
             return statusTracker;
         }catch(EnrolmentStatusTrackerNotFoundException ex) {
-            CourseStatusTracker statusTracker = new CourseStatusTracker("NOTENROLLED");
-            return statusTracker;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to retrieve information.", ex);
+        }
+
+    }
+
+    @GetMapping("/enquiryCourseEnrolment")
+    @ResponseBody
+    public IsEnrolled checkIfStudentIsEnrolled(@RequestParam String learnerId, @RequestParam String courseId) {
+        try{
+            boolean isEnrolled = courseService.checkIfStudentIsEnrolledInACourse(new Long(learnerId), new Long(courseId));
+            return new IsEnrolled(isEnrolled);
+
+
+        }catch(CourseNotFoundException | LearnerNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to retrieve information.", ex);
+
         }
 
     }
