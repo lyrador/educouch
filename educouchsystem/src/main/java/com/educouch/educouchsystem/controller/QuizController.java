@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,18 +34,23 @@ public class QuizController {
     @Autowired
     private QuestionService questionService;
 
+    @PostMapping("/CREATEQUIZ")
+    public String CREATEQUIZ(@RequestBody QuizDTO quizDTO, @RequestParam String courseId) {
+        return ("ok nice");
+    }
+
     @PostMapping("/createQuiz/{courseId}")
     public ResponseEntity<Quiz> createQuiz(@RequestBody QuizDTO quizDTO, @PathVariable(value="courseId") Long courseId) {
 
-        //Instantiate quiz
         try {
-            Quiz instantiatedQuiz = instantiateQuiz(quizDTO, courseId);
+            //Instantiate quiz
+            Quiz tempQuiz = instantiateQuiz(quizDTO, courseId);
             //Add questions
-            return new ResponseEntity<>(new Quiz(), HttpStatus.OK);
+            return new ResponseEntity<>(tempQuiz, HttpStatus.OK);
         } catch (CourseNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (ParseException ex) {
-            return new ResponseEntity<>(new Quiz(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -144,33 +150,33 @@ public class QuizController {
 
     public Quiz instantiateQuiz(QuizDTO quizDTO, Long courseId) throws CourseNotFoundException, ParseException{
 
-            Quiz newQuiz = new Quiz();
-            newQuiz.setTitle(quizDTO.getAssessmentTitle());
-            newQuiz.setDescription(quizDTO.getAssessmentDescription());
-            newQuiz.setMaxScore(quizDTO.getAssessmentMaxScore());
+        Quiz newQuiz = new Quiz();
+        newQuiz.setTitle(quizDTO.getAssessmentTitle());
+        newQuiz.setDescription(quizDTO.getAssessmentDescription());
+        newQuiz.setMaxScore(quizDTO.getAssessmentMaxScore());
+        newQuiz.setAssessmentStatus(AssessmentStatusEnum.PENDING);
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date startDate = (Date) formatter.parse(quizDTO.getAssessmentStartDate());
+        Date endDate = (Date) formatter.parse(quizDTO.getAssessmentEndDate());
+        newQuiz.setStartDate(startDate);
+        newQuiz.setEndDate(endDate);
+        newQuiz.setOpen(Boolean.FALSE);
 
-            newQuiz.setOpen(Boolean.FALSE);
-
-            if (quizDTO.getAssessmentHasTimeLimit().equals("true")) {
-                newQuiz.setHasTimeLimit(Boolean.TRUE);
-            } else if (quizDTO.getAssessmentHasTimeLimit().equals("false")) {
-                newQuiz.setHasTimeLimit(Boolean.FALSE);
-            }
-
-            if (quizDTO.getAssessmentIsAutoRelease().equals("true")) {
-                newQuiz.setAutoRelease(Boolean.TRUE);
-            } else if (quizDTO.getAssessmentIsAutoRelease().equals("false")) {
-                newQuiz.setAutoRelease(Boolean.FALSE);
-            }
-
-            newQuiz.setAssessmentStatus(AssessmentStatusEnum.PENDING);
-            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            Date startDate = (Date) formatter.parse(quizDTO.getAssessmentStartDate());
-            Date endDate = (Date) formatter.parse(quizDTO.getAssessmentEndDate());
-            newQuiz.setStartDate(startDate);
-            newQuiz.setEndDate(endDate);
-
-            quizService.saveQuiz(courseId, newQuiz);
-            return newQuiz;
+        if (quizDTO.getHasTimeLimit().equals("true")) {
+            newQuiz.setHasTimeLimit(Boolean.TRUE);
+        } else if (quizDTO.getHasTimeLimit().equals("false")) {
+            newQuiz.setHasTimeLimit(Boolean.FALSE);
         }
+
+        newQuiz.setTimeLimit(quizDTO.getTimeLimit());
+
+        if (quizDTO.getIsAutoRelease().equals("true")) {
+            newQuiz.setAutoRelease(Boolean.TRUE);
+        } else if (quizDTO.getIsAutoRelease().equals("false")) {
+            newQuiz.setAutoRelease(Boolean.FALSE);
+        }
+
+        quizService.saveQuiz(courseId, newQuiz);
+        return newQuiz;
     }
+}
