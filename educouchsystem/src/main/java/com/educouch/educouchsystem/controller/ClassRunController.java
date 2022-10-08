@@ -145,6 +145,16 @@ public class ClassRunController {
         return classRuns;
     }
 
+    @GetMapping("/getAvailableClassRuns/{courseId}")
+    public List<ClassRun> retrieveAvailableClassRuns(@PathVariable Long courseId) {
+        List<ClassRun> availableClassRuns = classRunService.retrieveListOfAvailableClassRun(courseId);
+        for(ClassRun classRun: availableClassRuns) {
+            processClassRun(classRun);
+        }
+
+        return availableClassRuns;
+    }
+
     private void processClassRun(ClassRun c) {
         List<EnrolmentStatusTracker> enrolmentStatusTrackers = c.getEnrolmentStatusTrackers();
         for(EnrolmentStatusTracker e: enrolmentStatusTrackers) {

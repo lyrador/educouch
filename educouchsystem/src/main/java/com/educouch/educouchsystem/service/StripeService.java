@@ -24,4 +24,8 @@ public interface StripeService {
     public void requestRefund(Long classRunId, Long learnerId,BigDecimal amount) throws
             ClassRunNotFoundException, LearnerNotFoundException,
             EnrolmentStatusTrackerNotFoundException;
+
+    public void changeClassRunAndPaidCourseFee(Long currClassRunId, Long newClassRunId, Long learnerId,
+                                               BigDecimal amount) throws ClassRunNotFoundException,
+            LearnerNotFoundException, EnrolmentStatusTrackerNotFoundException;
 }

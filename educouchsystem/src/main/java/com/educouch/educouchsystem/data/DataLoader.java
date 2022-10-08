@@ -142,7 +142,7 @@ public class DataLoader implements CommandLineRunner {
         ClassRun c2 = new ClassRun();
         c2.setClassRunStart(LocalDate.now().plusDays(10));
         c2.setClassRunEnd(LocalDate.now().plusMonths(3));
-        c2.setMinClassSize(10);
+        c2.setMinClassSize(1);
         c2.setMaximumCapacity(20);
         c2.setClassRunStartTime(LocalTime.MIDNIGHT);
         c2.setClassRunEndTime(LocalTime.NOON);
