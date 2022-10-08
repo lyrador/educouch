@@ -47,7 +47,7 @@ public class ClassRun {
     @JoinColumn(name = "calendar")
     private Calendar calendar;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Event> events;
 
     @ManyToOne
@@ -72,6 +72,7 @@ public class ClassRun {
         this.enrolmentStatusTrackers = new ArrayList<>();
         this.enrolledLearners = new ArrayList<>();
         this.learnerTransactions = new ArrayList<>();
+        this.events = new ArrayList<>();
     }
 
     public ClassRun(LocalDate classRunStart, LocalDate classRunEnd) {

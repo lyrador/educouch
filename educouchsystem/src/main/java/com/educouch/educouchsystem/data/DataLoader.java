@@ -73,6 +73,9 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     private StripeService stripeService;
 
+    @Autowired
+    private LearnerService learnerService;
+
 
 
     public DataLoader(LmsAdminService lmsAdminService) {
@@ -242,6 +245,21 @@ public class DataLoader implements CommandLineRunner {
 
         Course course = courseService.saveCourse(courseRequest);
         depositRefundRequestRepository.save(new DepositRefundRequest(1l, new BigDecimal(100)));
+
+
+
+
+
+        try {
+            courseService.addClassRunToCourse(cs1010.getCourseId(), c1);
+            courseService.addClassRunToCourse(cs1010.getCourseId(), c2);
+
+            courseService.addClassRunToCourse(bio4000.getCourseId(), c3);
+            courseService.addClassRunToCourse(bio4000.getCourseId(), c4);
+        } catch(CourseNotFoundException ex) {
+            System.out.println("Course not found exception.");
+        }
+
 //
 //        //create FileSubmission Assessment
 //        FileSubmission newFileSubmission = new FileSubmission("Quiz A", "abcde", 20.0, new Date(), new Date(), FileSubmissionEnum.INDIVIDUAL);
