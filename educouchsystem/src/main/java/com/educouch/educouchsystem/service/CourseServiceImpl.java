@@ -2,10 +2,13 @@ package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.model.ClassRun;
 import com.educouch.educouchsystem.model.Course;
+import com.educouch.educouchsystem.model.Learner;
 import com.educouch.educouchsystem.repository.ClassRunRepository;
+import com.educouch.educouchsystem.repository.LearnerRepository;
 import com.educouch.educouchsystem.util.enumeration.CourseApprovalStatusEnum;
 import com.educouch.educouchsystem.repository.CourseRepository;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
+import com.educouch.educouchsystem.util.exception.LearnerNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,9 @@ public class CourseServiceImpl implements CourseService{
 
     @Autowired
     private ClassRunRepository classRunRepository;
+
+    @Autowired
+    private LearnerService learnerService;
 
     //creating a course
     @Override
@@ -147,6 +153,31 @@ public class CourseServiceImpl implements CourseService{
             c.getClassRuns();
             c.getClassRuns().add(classRun);
             courseRepository.save(c);
+        } else {
+            throw new CourseNotFoundException("Course cannot be found.");
+        }
+    }
+
+    public boolean checkIfStudentIsEnrolledInACourse(Long studentId, Long courseId) throws CourseNotFoundException,
+            LearnerNotFoundException{
+        Course c = retrieveCourseById(courseId);
+        Learner l = learnerService.getLearnerById(studentId);
+        if (c != null) {
+            if(l != null) {
+                List<ClassRun> listOfClassRuns = c.getClassRuns();
+                for(ClassRun classRun: listOfClassRuns) {
+                    List<Learner> listOfLearners = classRun.getEnrolledLearners();
+                    if (listOfLearners.contains(l)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            } else {
+                throw new LearnerNotFoundException("Learner cannot be found.");
+            }
+
+
         } else {
             throw new CourseNotFoundException("Course cannot be found.");
         }

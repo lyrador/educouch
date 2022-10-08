@@ -1,6 +1,7 @@
 package com.educouch.educouchsystem.service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.repository.LearnerTransactionRepository;
@@ -180,6 +181,49 @@ public class StripeServiceImpl implements StripeService {
             throw new ClassRunNotFoundException("Unable to find class run. ");
         }
 
+    }
+
+    @Override
+    public void changeClassRunAndPaidCourseFee(Long currClassRunId, Long newClassRunId, Long learnerId,
+                                               BigDecimal amount) throws ClassRunNotFoundException,
+            LearnerNotFoundException, EnrolmentStatusTrackerNotFoundException {
+        ClassRun oldClassRun = classRunService.retrieveClassRunById(currClassRunId);
+        if (oldClassRun != null) {
+            Learner learner = learnerService.getLearnerById(learnerId);
+            if(learner != null) {
+                try {
+                    EnrolmentStatusTracker tracker = enrolmentStatusTrackerService.retrieveEnrolmentByLearnerIdAndClassRunId(currClassRunId, learnerId);
+                    tracker.setEnrolmentStatus(EnrolmentStatusTrackerEnum.ENROLLED);
+                    // change the tracker class run
+                    ClassRun newClassRun = classRunService.retrieveClassRunById(newClassRunId);
+                    tracker.setClassRun(newClassRun);
+                    enrolmentStatusTrackerService.saveEnrolmentStatusTracker(tracker);
+
+                    oldClassRun.getEnrolmentStatusTrackers().remove(tracker);
+                    classRunService.saveClassRun(oldClassRun);
+
+                    newClassRun.getEnrolmentStatusTrackers().add(tracker);
+                    classRunService.saveClassRun(newClassRun);
+
+                    newClassRun.getEnrolledLearners().add(learner);
+                    classRunService.saveClassRun(newClassRun);
+
+                    learner.getClassRuns().add(newClassRun);
+                    learnerService.saveLearner(learner);
+
+                    createNewLearnerTransaction(newClassRun.getClassRunId(), learner.getLearnerId(), LearnerPaymentEnum.REMAININGCOURSEFEE, amount);
+                } catch(DuplicateEnrolmentTrackerException ex) {
+                    throw new EnrolmentStatusTrackerNotFoundException("Unexpected administration error has occured." +
+                            " Please contact our LMS Admin to sort out your duplicate record. ");
+                }
+
+
+            }else {
+                throw new LearnerNotFoundException("Unable to find learner");
+            }
+        } else {
+            throw new ClassRunNotFoundException("Unable to find class run. ");
+        }
     }
 
 
