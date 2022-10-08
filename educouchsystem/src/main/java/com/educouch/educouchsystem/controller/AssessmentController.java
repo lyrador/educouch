@@ -1,5 +1,6 @@
 package com.educouch.educouchsystem.controller;
 
+import com.educouch.educouchsystem.dto.AssessmentDTO;
 import com.educouch.educouchsystem.dto.FileSubmissionDTO;
 import com.educouch.educouchsystem.dto.QuizDTO;
 import com.educouch.educouchsystem.model.*;
@@ -13,6 +14,8 @@ import com.educouch.educouchsystem.util.exception.AssessmentNotFoundException;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.util.exception.FileSubmissionNotFoundException;
 import com.educouch.educouchsystem.util.exception.QuizNotFoundException;
+import com.sun.mail.iap.Response;
+import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -91,6 +94,7 @@ public class AssessmentController {
             newFileSubmission.setEndDate(endDate);
 
             fileSubmissionService.saveFileSubmission(courseId, newFileSubmission);
+
             return new ResponseEntity<>(newFileSubmission, HttpStatus.OK);
         } catch (CourseNotFoundException | ParseException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -142,52 +146,20 @@ public class AssessmentController {
         }
     }
 
-    @PostMapping("/addNewQuiz/{courseId}")
-    public ResponseEntity<Quiz> addQuiz(@RequestBody QuizDTO quizDTO, @PathVariable(value="courseId") Long courseId) {
+    @GetMapping("/getAllAssessmentsByCourseId")
+    public ResponseEntity<List<AssessmentDTO>> getAllAssessmentsByCourseId(@RequestParam String courseId) {
+
         try {
-            Quiz newQuiz = new Quiz();
-            newQuiz.setTitle(quizDTO.getAssessmentTitle());
-            newQuiz.setDescription(quizDTO.getAssessmentDescription());
-            newQuiz.setMaxScore(quizDTO.getAssessmentMaxScore());
+            List<Assessment> assessments = new ArrayList<>();
+            assessments = assessmentService.getAllAssessmentsByCourseId(Long.parseLong(courseId));
+            List<AssessmentDTO> assessmentDTOS = setAssessmentDTOList(assessments);
 
-            if (quizDTO.getAssessmentIsOpen().equals("true")) {
-                newQuiz.setOpen(Boolean.TRUE);
-            } else if (quizDTO.getAssessmentIsOpen().equals("false")) {
-                newQuiz.setOpen(Boolean.FALSE);
-            }
-
-            if (quizDTO.getAssessmentHasTimeLimit().equals("true")) {
-                newQuiz.setHasTimeLimit(Boolean.TRUE);
-            } else if (quizDTO.getAssessmentHasTimeLimit().equals("false")) {
-                newQuiz.setHasTimeLimit(Boolean.FALSE);
-            }
-
-            if (quizDTO.getAssessmentIsAutoRelease().equals("true")) {
-                newQuiz.setAutoRelease(Boolean.TRUE);
-            } else if (quizDTO.getAssessmentIsAutoRelease().equals("false")) {
-                newQuiz.setAutoRelease(Boolean.FALSE);
-            }
-
-            if (quizDTO.getAssessmentStatusEnum().equals("PENDING")) {
-                newQuiz.setAssessmentStatus(AssessmentStatusEnum.PENDING);
-            } else if (quizDTO.getAssessmentStatusEnum().equals("INCOMPLETE")) {
-                newQuiz.setAssessmentStatus(AssessmentStatusEnum.INCOMPLETE);
-            } else if (quizDTO.getAssessmentStatusEnum().equals("COMPLETE")) {
-                newQuiz.setAssessmentStatus(AssessmentStatusEnum.COMPLETE);
-            }
-
-            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            Date startDate = (Date)formatter.parse(quizDTO.getAssessmentStartDate());
-            Date endDate = (Date)formatter.parse(quizDTO.getAssessmentEndDate());
-            newQuiz.setStartDate(startDate);
-            newQuiz.setEndDate(endDate);
-
-            quizService.saveQuiz(courseId, newQuiz);
-            return new ResponseEntity<>(newQuiz, HttpStatus.OK);
-        } catch (CourseNotFoundException | ParseException ex) {
+            return new ResponseEntity<List<AssessmentDTO>>(assessmentDTOS, HttpStatus.OK);
+        } catch (CourseNotFoundException exception) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
 
     @GetMapping("/getAllQuizzesByCourseId/{courseId}")
     public ResponseEntity<List<QuizDTO>> getAllQuizzesByCourseId(@PathVariable(value="courseId") Long courseId) {
@@ -378,5 +350,31 @@ public class AssessmentController {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    List<AssessmentDTO> setAssessmentDTOList (List<Assessment> assessments) {
+
+        List<AssessmentDTO> assessmentDTOS = new ArrayList<>();
+        for(Assessment a : assessments) {
+
+            AssessmentDTO dtoItem = new AssessmentDTO();
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+            dtoItem.setAssessmentId(a.getAssessmentId());
+            dtoItem.setTitle(a.getTitle());
+            dtoItem.setDescription(a.getDescription());
+            dtoItem.setMaxScore(a.getMaxScore());
+            dtoItem.setStartDate(formatter.format(a.getStartDate()));
+            dtoItem.setEndDate(formatter.format(a.getEndDate()));
+            dtoItem.setOpen(a.getOpen());
+            dtoItem.setAssessmentStatus(a.getAssessmentStatus());
+            String s = a.getClass().getName();
+            String[] assessmentTypeArray = s.split("\\.");
+            System.out.println(assessmentTypeArray[4]);
+            dtoItem.setAssessmentType(assessmentTypeArray[4]);
+            assessmentDTOS.add(dtoItem);
+        }
+
+        return assessmentDTOS;
     }
 }
