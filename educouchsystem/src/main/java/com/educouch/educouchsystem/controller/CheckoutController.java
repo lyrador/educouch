@@ -1,5 +1,6 @@
 package com.educouch.educouchsystem.controller;
 
+import com.educouch.educouchsystem.dto.ChangeScheduleCourseEnrolment;
 import com.educouch.educouchsystem.dto.ClientSecretHandler;
 import com.educouch.educouchsystem.dto.LearnerPaymentTracker;
 import com.educouch.educouchsystem.service.StripeService;
@@ -88,5 +89,23 @@ public class CheckoutController {
         }
 
     }
+
+    @PostMapping("/changeClassRunAndPayCourseFee")
+    public String trackRefundDepositRequest(@RequestBody ChangeScheduleCourseEnrolment model) {
+        Long oldClassRunId = new Long(model.getCurrClassRunId());
+        Long newClassRunId = new Long(model.getNewClassRunId());
+        Long learnerId = new Long(model.getLearnerId());
+        BigDecimal amount = new BigDecimal(model.getAmount());
+
+        try {
+            stripeService.changeClassRunAndPaidCourseFee(oldClassRunId, newClassRunId, learnerId, amount);
+            return "Successfully changed the class run and pay for course fee. ";
+        } catch(ClassRunNotFoundException | LearnerNotFoundException | EnrolmentStatusTrackerNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to find the correct record.", ex);
+        }
+
+    }
+
+
 
 }
