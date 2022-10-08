@@ -25,17 +25,17 @@ public class OptionServiceImpl implements OptionService {
         return optionRepository.save(option);
     }
 
-    @Override
-    public List<Option> getAllOptionsFromQuestion(Long questionId) throws QuestionNotFoundException {
-        Question question = questionRepository.findById(questionId).get();
-        if (question != null) {
-            return question.getOptions();
-        } else {
-            throw new QuestionNotFoundException("Question Id " + questionId + " does not exist!");
-        }
-    }
+//    @Override
+//    public List<Option> getAllOptionsFromQuestion(Long questionId) throws QuestionNotFoundException {
+//        Question question = questionRepository.findById(questionId).get();
+//        if (question != null) {
+//            return question.getOptions();
+//        } else {
+//            throw new QuestionNotFoundException("Question Id " + questionId + " does not exist!");
+//        }
+//    }
 
-    @Override
+//    @Override
     public Option retrieveOptionById(Long optionId) throws OptionNotFoundException {
         Option option = optionRepository.findById(optionId).get();
         if (option != null) {

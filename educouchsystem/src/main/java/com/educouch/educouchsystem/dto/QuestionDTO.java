@@ -1,61 +1,51 @@
 package com.educouch.educouchsystem.dto;
 
+import java.util.List;
+
 public class QuestionDTO {
 
-    private Long questionId;
-
-    private String questionContent;
-
-    private String questionHint;
-
-    private Double questionMaxScore;
-
+    private String questionId;
+    private String localid;
+    private String questionTitle;
     private String questionType;
-
-    private String createdDateTime;
-
+    private String questionContent;
+    private String questionMaxPoints;
+    private List<String> options;
 
     public QuestionDTO() {
     }
 
-    public QuestionDTO(String questionContent, String questionHint, Double questionMaxScore, String questionType, String createdDateTime, Long createdByUserId, String createdByUserName, String createdByUserType) {
-        this.questionContent = questionContent;
-        this.questionHint = questionHint;
-        this.questionMaxScore = questionMaxScore;
+    public QuestionDTO(String localid, String questionTitle, String questionType, String questionContent, String questionMaxPoints, List<String> options) {
+        this.localid = localid;
+        this.questionTitle = questionTitle;
         this.questionType = questionType;
-        this.createdDateTime = createdDateTime;
+        this.questionContent = questionContent;
+        this.questionMaxPoints = questionMaxPoints;
+        this.options = options;
     }
 
-    public Long getQuestionId() {
+    public String getQuestionId() {
         return questionId;
     }
 
-    public void setQuestionId(Long questionId) {
+    public void setQuestionId(String questionId) {
         this.questionId = questionId;
     }
 
-    public String getQuestionContent() {
-        return questionContent;
+    public String getLocalid() {
+        return localid;
     }
 
-    public void setQuestionContent(String questionContent) {
-        this.questionContent = questionContent;
+    public void setLocalid(String localid) {
+        this.localid = localid;
     }
 
-    public String getQuestionHint() {
-        return questionHint;
+    public String getQuestionTitle() {
+        return questionTitle;
     }
 
-    public void setQuestionHint(String questionHint) {
-        this.questionHint = questionHint;
-    }
-
-    public Double getQuestionMaxScore() {
-        return questionMaxScore;
-    }
-
-    public void setQuestionMaxScore(Double questionMaxScore) {
-        this.questionMaxScore = questionMaxScore;
+    public void setQuestionTitle(String questionTitle) {
+        this.questionTitle = questionTitle;
     }
 
     public String getQuestionType() {
@@ -66,12 +56,27 @@ public class QuestionDTO {
         this.questionType = questionType;
     }
 
-    public String getCreatedDateTime() {
-        return createdDateTime;
+    public String getQuestionContent() {
+        return questionContent;
     }
 
-    public void setCreatedDateTime(String createdDateTime) {
-        this.createdDateTime = createdDateTime;
+    public void setQuestionContent(String questionContent) {
+        this.questionContent = questionContent;
     }
 
+    public String getQuestionMaxPoints() {
+        return questionMaxPoints;
+    }
+
+    public void setQuestionMaxPoints(String questionMaxPoints) {
+        this.questionMaxPoints = questionMaxPoints;
+    }
+
+    public List<String> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<String> options) {
+        this.options = options;
+    }
 }
