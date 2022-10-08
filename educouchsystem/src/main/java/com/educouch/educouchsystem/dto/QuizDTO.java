@@ -3,52 +3,23 @@ package com.educouch.educouchsystem.dto;
 public class QuizDTO {
 
     private Long assessmentId;
-
     private String assessmentTitle;
-
     private String assessmentDescription;
-
     private Double assessmentMaxScore;
-
     private String assessmentStartDate;
-
     private String assessmentEndDate;
-
     private String assessmentIsOpen;
-
     private String assessmentStatusEnum;
-
-    private String assessmentHasTimeLimit;
-
-    private String assessmentIsAutoRelease;
-
+    private String hasTimeLimit;
+    private Integer timeLimit;
+    private String isAutoRelease;
     private String createdDateTime;
-
     private Long createdByUserId;
-
     private String createdByUserName;
-
     private String createdByUserType;
 
-    private Integer quizLength;
 
     public QuizDTO() {
-    }
-
-    public QuizDTO(String assessmentTitle, String assessmentDescription, Double assessmentMaxScore, Double assessmentActualScore, String assessmentStartDate, String assessmentEndDate, String assessmentIsOpen, String assessmentStatusEnum, String assessmentHasTimeLimit, String assessmentIsAutoRelease, String createdDateTime, Long createdByUserId, String createdByUserName, String createdByUserType) {
-        this.assessmentTitle = assessmentTitle;
-        this.assessmentDescription = assessmentDescription;
-        this.assessmentMaxScore = assessmentMaxScore;
-        this.assessmentStartDate = assessmentStartDate;
-        this.assessmentEndDate = assessmentEndDate;
-        this.assessmentIsOpen = assessmentIsOpen;
-        this.assessmentStatusEnum = assessmentStatusEnum;
-        this.assessmentHasTimeLimit = assessmentHasTimeLimit;
-        this.assessmentIsAutoRelease = assessmentIsAutoRelease;
-        this.createdDateTime = createdDateTime;
-        this.createdByUserId = createdByUserId;
-        this.createdByUserName = createdByUserName;
-        this.createdByUserType = createdByUserType;
     }
 
     public Long getAssessmentId() {
@@ -115,20 +86,28 @@ public class QuizDTO {
         this.assessmentStatusEnum = assessmentStatusEnum;
     }
 
-    public String getAssessmentHasTimeLimit() {
-        return assessmentHasTimeLimit;
+    public String getHasTimeLimit() {
+        return hasTimeLimit;
     }
 
-    public void setAssessmentHasTimeLimit(String assessmentHasTimeLimit) {
-        this.assessmentHasTimeLimit = assessmentHasTimeLimit;
+    public void setHasTimeLimit(String hasTimeLimit) {
+        this.hasTimeLimit = hasTimeLimit;
     }
 
-    public String getAssessmentIsAutoRelease() {
-        return assessmentIsAutoRelease;
+    public Integer getTimeLimit() {
+        return timeLimit;
     }
 
-    public void setAssessmentIsAutoRelease(String assessmentIsAutoRelease) {
-        this.assessmentIsAutoRelease = assessmentIsAutoRelease;
+    public void setTimeLimit(Integer timeLimit) {
+        this.timeLimit = timeLimit;
+    }
+
+    public String getIsAutoRelease() {
+        return isAutoRelease;
+    }
+
+    public void setIsAutoRelease(String isAutoRelease) {
+        this.isAutoRelease = isAutoRelease;
     }
 
     public String getCreatedDateTime() {
@@ -163,11 +142,5 @@ public class QuizDTO {
         this.createdByUserType = createdByUserType;
     }
 
-    public Integer getQuizLength() {
-        return quizLength;
-    }
 
-    public void setQuizLength(Integer quizLength) {
-        this.quizLength = quizLength;
-    }
 }
