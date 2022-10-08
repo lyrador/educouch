@@ -16,7 +16,7 @@ public interface QuestionService {
 
     public List<Question> getAllQuestions();
 
-    public List<Option> getAllOptionsInQuestion(Long questionId) throws QuestionNotFoundException;
+//    public List<String> getAllOptionsInQuestion(Long questionId) throws QuestionNotFoundException;
 
     public List<QuestionAttempt> getAllQuestionAttemptsInQuestion(Long questionId) throws QuestionNotFoundException;
 
@@ -26,8 +26,8 @@ public interface QuestionService {
 
     public Question updateQuestion (Question questionToUpdate, Question question) throws QuestionNotFoundException;
 
-    public void addOptionToQuestion(Long questionId, Option option) throws QuestionNotFoundException, EntityInstanceExistsInCollectionException;
+//    public void addOptionToQuestion(Long questionId, Option option) throws QuestionNotFoundException, EntityInstanceExistsInCollectionException;
 
-    public void deleteOptionFromQuestionId(Long optionId, Long questionId) throws QuestionNotFoundException;
+//    public void deleteOptionFromQuestionId(Long optionId, Long questionId) throws QuestionNotFoundException;
 
 }

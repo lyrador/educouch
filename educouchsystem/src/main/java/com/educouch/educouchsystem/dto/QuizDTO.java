@@ -1,5 +1,7 @@
 package com.educouch.educouchsystem.dto;
 
+import java.util.List;
+
 public class QuizDTO {
 
     private Long assessmentId;
@@ -17,6 +19,7 @@ public class QuizDTO {
     private Long createdByUserId;
     private String createdByUserName;
     private String createdByUserType;
+    private List<QuestionDTO> questions;
 
 
     public QuizDTO() {
@@ -108,6 +111,14 @@ public class QuizDTO {
 
     public void setIsAutoRelease(String isAutoRelease) {
         this.isAutoRelease = isAutoRelease;
+    }
+
+    public List<QuestionDTO> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<QuestionDTO> questions) {
+        this.questions = questions;
     }
 
     public String getCreatedDateTime() {

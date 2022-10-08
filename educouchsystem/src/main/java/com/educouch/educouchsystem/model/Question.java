@@ -16,19 +16,18 @@ public class Question implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long questionId;
-
     @NotNull
-    private String questionContent;
-
+    private String localid;
     @NotNull
-    private String questionHint;
-
-    @NotNull
-    private Double questionMaxScore;
-
+    private String questionTitle;
     @Enumerated(EnumType.STRING)
     @NotNull
     private QuestionTypeEnum questionType;
+    @NotNull
+    private String questionContent;
+    private String questionHint;
+    @NotNull
+    private Double questionMaxScore;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name="question_id")
@@ -44,6 +43,7 @@ public class Question implements Serializable {
     public Question() {
         this.options = new ArrayList<>();
         this.questionAttempts = new ArrayList<>();
+
     }
 
     public Question(String questionContent, String questionHint, Double questionMaxScore, QuestionTypeEnum questionType) {
@@ -102,6 +102,14 @@ public class Question implements Serializable {
         this.openEnded = openEnded;
     }
 
+//    public List<Option> getOptions() {
+//        return options;
+//    }
+//
+//    public void setOptions(List<Option> options) {
+//        this.options = options;
+//    }
+
     public List<Option> getOptions() {
         return options;
     }
@@ -116,6 +124,22 @@ public class Question implements Serializable {
 
     public void setQuestionAttempts(List<QuestionAttempt> questionAttempts) {
         this.questionAttempts = questionAttempts;
+    }
+
+    public String getLocalid() {
+        return localid;
+    }
+
+    public void setLocalid(String localid) {
+        this.localid = localid;
+    }
+
+    public String getQuestionTitle() {
+        return questionTitle;
+    }
+
+    public void setQuestionTitle(String questionTitle) {
+        this.questionTitle = questionTitle;
     }
 
     @Override

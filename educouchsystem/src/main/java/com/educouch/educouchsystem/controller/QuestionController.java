@@ -24,36 +24,36 @@ public class QuestionController {
     @Autowired
     private OptionService optionService;
 
-    @PostMapping("/addNewOption/{questionId}")
-    public ResponseEntity<Option> addOptionToQuestion(@RequestBody OptionDTO optionDTO, @PathVariable(value="questionId") Long questionId) {
-        try {
-            Question question = questionService.retrieveQuestionById(questionId);
-            Option newOption = new Option();
+//    @PostMapping("/addNewOption/{questionId}")
+//    public ResponseEntity<Option> addOptionToQuestion(@RequestBody OptionDTO optionDTO, @PathVariable(value="questionId") Long questionId) {
+//        try {
+//            Question question = questionService.retrieveQuestionById(questionId);
+//            Option newOption = new Option();
+//
+//            newOption.setOptionContent(optionDTO.getOptionContent());
+//
+//            if (optionDTO.getOptionIsCorrect().equals("true")) {
+//                newOption.setCorrect(Boolean.TRUE);
+//            } else if (optionDTO.getOptionIsCorrect().equals("false")) {
+//                newOption.setCorrect(Boolean.FALSE);
+//            }
+//
+//            questionService.addOptionToQuestion(questionId, newOption);
+//            return new ResponseEntity<>(newOption, HttpStatus.OK);
+//        } catch (QuestionNotFoundException | EntityInstanceExistsInCollectionException ex) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
 
-            newOption.setOptionContent(optionDTO.getOptionContent());
-
-            if (optionDTO.getOptionIsCorrect().equals("true")) {
-                newOption.setCorrect(Boolean.TRUE);
-            } else if (optionDTO.getOptionIsCorrect().equals("false")) {
-                newOption.setCorrect(Boolean.FALSE);
-            }
-
-            questionService.addOptionToQuestion(questionId, newOption);
-            return new ResponseEntity<>(newOption, HttpStatus.OK);
-        } catch (QuestionNotFoundException | EntityInstanceExistsInCollectionException ex) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @DeleteMapping("/deleteOptionByIdFromQuestionId/{optionId}/{questionId}")
-    public ResponseEntity<HttpStatus> deleteOptionByIdFromQuestionId(@PathVariable("questionId") Long optionId, @PathVariable("quizId") Long questionId) {
-        try {
-            questionService.deleteOptionFromQuestionId(optionId, questionId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (QuestionNotFoundException ex) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+//    @DeleteMapping("/deleteOptionByIdFromQuestionId/{optionId}/{questionId}")
+//    public ResponseEntity<HttpStatus> deleteOptionByIdFromQuestionId(@PathVariable("questionId") Long optionId, @PathVariable("quizId") Long questionId) {
+//        try {
+//            questionService.deleteOptionFromQuestionId(optionId, questionId);
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        } catch (QuestionNotFoundException ex) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
 
     @PutMapping("/updateOption/{optionId}")
     public ResponseEntity<Option> updateOption(@RequestBody OptionDTO optionDTO, @PathVariable("optionId") Long optionId) {

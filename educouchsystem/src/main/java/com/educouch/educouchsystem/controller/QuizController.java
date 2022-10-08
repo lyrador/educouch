@@ -1,7 +1,9 @@
 package com.educouch.educouchsystem.controller;
 
+import com.educouch.educouchsystem.dto.OptionDTO;
 import com.educouch.educouchsystem.dto.QuestionDTO;
 import com.educouch.educouchsystem.dto.QuizDTO;
+import com.educouch.educouchsystem.model.Option;
 import com.educouch.educouchsystem.model.Question;
 import com.educouch.educouchsystem.model.Quiz;
 import com.educouch.educouchsystem.service.QuestionService;
@@ -34,19 +36,16 @@ public class QuizController {
     @Autowired
     private QuestionService questionService;
 
-    @PostMapping("/CREATEQUIZ")
-    public String CREATEQUIZ(@RequestBody QuizDTO quizDTO, @RequestParam String courseId) {
-        return ("ok nice");
-    }
-
     @PostMapping("/createQuiz/{courseId}")
     public ResponseEntity<Quiz> createQuiz(@RequestBody QuizDTO quizDTO, @PathVariable(value="courseId") Long courseId) {
 
         try {
             //Instantiate quiz
-            Quiz tempQuiz = instantiateQuiz(quizDTO, courseId);
+            Quiz newQuiz = instantiateQuiz(quizDTO, courseId);
             //Add questions
-            return new ResponseEntity<>(tempQuiz, HttpStatus.OK);
+            newQuiz = addQuestions(newQuiz, quizDTO.getQuestions());
+            quizService.saveQuiz(courseId, newQuiz);
+            return new ResponseEntity<>(newQuiz, HttpStatus.OK);
         } catch (CourseNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (ParseException ex) {
@@ -61,8 +60,6 @@ public class QuizController {
             Question newQuestion = new Question();
 
             newQuestion.setQuestionContent(questionDTO.getQuestionContent());
-            newQuestion.setQuestionHint(questionDTO.getQuestionHint());
-            newQuestion.setQuestionMaxScore(questionDTO.getQuestionMaxScore());
 
             if (questionDTO.getQuestionType().equals("TRUE FALSE")) {
                 newQuestion.setQuestionType(QuestionTypeEnum.TRUE_FALSE);
@@ -98,10 +95,9 @@ public class QuizController {
             List<QuestionDTO> questionDTOs = new ArrayList<>();
             for (Question question : questions) {
                 QuestionDTO questionDTO = new QuestionDTO();
-                questionDTO.setQuestionId(question.getQuestionId());
+                questionDTO.setQuestionId(String.valueOf(question.getQuestionId()));
                 questionDTO.setQuestionContent(question.getQuestionContent());
-                questionDTO.setQuestionHint(question.getQuestionHint());
-                questionDTO.setQuestionMaxScore(question.getQuestionMaxScore());
+                questionDTO.setQuestionMaxPoints(String.valueOf(question.getQuestionMaxScore()));
 
                 if (question.getQuestionType() == QuestionTypeEnum.TRUE_FALSE) {
                     questionDTO.setQuestionType("TRUE FALSE");
@@ -128,8 +124,7 @@ public class QuizController {
             Question questionToUpdate = questionService.retrieveQuestionById(questionId);
 
             questionToUpdate.setQuestionContent(questionDTO.getQuestionContent());
-            questionToUpdate.setQuestionHint(questionDTO.getQuestionHint());
-            questionToUpdate.setQuestionMaxScore(questionDTO.getQuestionMaxScore());
+            questionToUpdate.setQuestionMaxScore(Double.parseDouble(questionDTO.getQuestionMaxPoints()));
 
             if (questionDTO.getQuestionType().equals("TRUE FALSE")) {
                 questionToUpdate.setQuestionType(QuestionTypeEnum.TRUE_FALSE);
@@ -176,7 +171,56 @@ public class QuizController {
             newQuiz.setAutoRelease(Boolean.FALSE);
         }
 
-        quizService.saveQuiz(courseId, newQuiz);
+        newQuiz.setQuizQuestions(new ArrayList<>());
+        newQuiz.setQuizAttempts(new ArrayList<>());
+
         return newQuiz;
+    }
+
+    public Quiz addQuestions(Quiz quiz, List<QuestionDTO> questionDTOs) {
+
+        List<Question> questions = quiz.getQuizQuestions();
+
+        for(QuestionDTO q : questionDTOs) {
+
+            //add question to quiz
+            Question question = new Question();
+            question.setLocalid(q.getLocalid());
+            question.setQuestionTitle(q.getQuestionTitle());
+            if(q.getQuestionType().equals("mcq")) {
+                question.setQuestionType(QuestionTypeEnum.MCQ);
+            } else if(q.getQuestionType().equals("shortAnswer")) {
+                question.setQuestionType(QuestionTypeEnum.OPEN_ENDED);
+            } else if(q.getQuestionType().equals("trueFalse")) {
+                question.setQuestionType(QuestionTypeEnum.TRUE_FALSE);
+            }
+            question.setQuestionContent(q.getQuestionContent());
+            try {
+                question.setQuestionMaxScore(Double.parseDouble(q.getQuestionMaxPoints()));
+            } catch (Exception e) {
+                question.setQuestionMaxScore(0.0);
+            }
+            //for each question, add options to question
+            question = addOptions(question, q.getOptions());
+            questions.add(question);
+        }
+
+        quiz.setQuizQuestions(questions);
+
+        return quiz;
+
+    }
+
+    public Question addOptions(Question question, List<String> optionDTOs) {
+
+        List<Option> options = new ArrayList<>();
+
+        for(String o : optionDTOs ) {
+            Option option = new Option(o);
+            options.add(option);
+        }
+
+        question.setOptions(options);
+        return question;
     }
 }
