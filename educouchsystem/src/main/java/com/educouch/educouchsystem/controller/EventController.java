@@ -57,6 +57,12 @@ public class EventController {
         List<Event> allEvents = new ArrayList<>();
         if (!eventService.getAllEvents().isEmpty()) {
             allEvents = eventService.getAllEvents();
+
+            //unmarshalling
+            for (Event event : allEvents) {
+                processClassRun(event.getClassRun());
+            }
+
             return new ResponseEntity<>(allEvents, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -67,6 +73,10 @@ public class EventController {
     public ResponseEntity<Event> getEventById(@PathVariable("eventId") Long eventId) {
         try {
             Event existingEvent = eventService.getEventById(eventId);
+
+            //unmarshalling
+            processClassRun(existingEvent.getClassRun());
+
             return new ResponseEntity<Event>(existingEvent, HttpStatus.OK);
         } catch (EventNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -98,6 +108,9 @@ public class EventController {
             existingEvent.setAllDay(event.getAllDay());
             //existingEvent.setClassRun(event.getClassRun());
             eventService.saveEvent(existingEvent);
+
+            processClassRun(existingEvent.getClassRun());
+
             return new ResponseEntity<Event>(existingEvent, HttpStatus.OK);
         } catch (EventNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -122,6 +135,16 @@ public class EventController {
 //            ldtEnd = ldtEnd.plusHours(8);
 //            event.setEndDate(Date.from(ldtEnd.atZone(ZoneId.systemDefault()).toInstant()));
 //        }
+
+        //unmarshalling
+        for (Event event : events) {
+            event.getClassRun().setEvents(null);
+            event.getClassRun().setEnrolledLearners(null);
+            event.getClassRun().setEnrolmentStatusTrackers(null);
+            event.getClassRun().setLearnerTransactions(null);
+            event.getClassRun().setCourse(null);
+        }
+
         return new ResponseEntity<>(events, HttpStatus.OK);
 
     }
@@ -135,6 +158,12 @@ public class EventController {
             for (ClassRun classRun : classRunListInstructor) {
                 events.addAll(classRun.getEvents());
             }
+
+            //unmarshalling
+            for (Event event : events) {
+                processClassRun(event.getClassRun());
+            }
+
             return new ResponseEntity<>(events, HttpStatus.OK);
         } catch (InstructorNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -152,6 +181,12 @@ public class EventController {
             for (ClassRun classRun : classRunListLearner) {
                 events.addAll(classRun.getEvents());
             }
+
+            //unmarshalling
+            for (Event event : events) {
+                processClassRun(event.getClassRun());
+            }
+
             return new ResponseEntity<>(events, HttpStatus.OK);
         } catch (NoSuchElementException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -166,7 +201,43 @@ public class EventController {
         for (ClassRun classRun : classRunListCourse) {
             events.addAll(classRun.getEvents());
         }
+
+        //unmarshalling
+        for (Event event : events) {
+            processClassRun(event.getClassRun());
+        }
+
         return new ResponseEntity<>(events, HttpStatus.OK);
+    }
+
+    private void processClassRun(ClassRun c) {
+//        List<EnrolmentStatusTracker> enrolmentStatusTrackers = c.getEnrolmentStatusTrackers();
+//        for(EnrolmentStatusTracker e: enrolmentStatusTrackers) {
+//            e.setClassRun(null);
+//            e.setLearner(null);
+//        }
+
+        c.setCalendar(null);
+        c.setEvents(null);
+//        Instructor i = c.getInstructor();
+//        if(i != null) {
+//            i.setClassRuns(null);
+//            i.setOrganisation(null);
+//            i.setCourses(null);
+//        }
+
+
+        Course course = c.getCourse();
+        course.setFolders(null);
+        course.setClassRuns(null);
+        course.setFolders(null);
+        course.setAssessments(null);
+//        course.setInstructors(null);
+        course.setOrganisation(null);
+
+        c.setEnrolledLearners(null);
+        c.setEnrolmentStatusTrackers(null);
+        c.setLearnerTransactions(null);
     }
 
 
