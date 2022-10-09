@@ -1,5 +1,6 @@
 package com.educouch.educouchsystem.service;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -35,6 +36,9 @@ public class StripeServiceImpl implements StripeService {
 
     @Autowired
     DepositRefundRequestService depositRefundRequestService;
+
+    @Autowired
+    OrgLmsRevenueMapService orgLmsRevenueMapService;
 
     String secretKey = "sk_test_51LnPrnBx7BYbBg97Zhhw2HorPZqL5srUqYdFgcYuldnNJlMMO4shzH979NrcJ4NDJGHAg0IQ2KuhR19vnEIaUiF800k3CzgsHu";
 
@@ -138,6 +142,12 @@ public class StripeServiceImpl implements StripeService {
                     learnerService.saveLearner(l);
 
                     createNewLearnerTransaction(c.getClassRunId(), l.getLearnerId(), LearnerPaymentEnum.REMAININGCOURSEFEE, amount);
+                    BigDecimal revenue = amount.divide(new BigDecimal(18),2, RoundingMode.CEILING);
+                    Organisation org = c.getInstructor().getOrganisation();
+                    orgLmsRevenueMapService.addRevenue(new OrgLmsRevenueMap(org.getOrganisationName(),revenue));
+                    org.setOrgBalance(org.getOrgBalance().add(revenue.multiply(new BigDecimal(19))));
+
+
                 } catch(DuplicateEnrolmentTrackerException ex) {
                     throw new EnrolmentStatusTrackerNotFoundException("Unexpected administration error has occured. Please contact our LMS Admin to sort out your duplicate record. ");
                 }

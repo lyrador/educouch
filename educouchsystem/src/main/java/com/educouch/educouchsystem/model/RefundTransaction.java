@@ -14,6 +14,9 @@ public class RefundTransaction {
     private Long learnerId;
 
     @Column(nullable = false)
+    private Long refundRequestId;
+
+    @Column(nullable = false)
     private String learnerAccNumber;
 
     @Column(nullable = false)
@@ -24,11 +27,20 @@ public class RefundTransaction {
     public RefundTransaction() {
     }
 
-    public RefundTransaction(Long learnerId, String learnerAccNumber, BigDecimal amountPaid) {
+    public RefundTransaction(Long learnerId, String learnerAccNumber, BigDecimal amountPaid, Long refundRequestId) {
         this.learnerId = learnerId;
         this.learnerAccNumber = learnerAccNumber;
         this.amountPaid = amountPaid;
         this.paymentTime = LocalDateTime.now();
+        this.refundRequestId = refundRequestId;
+    }
+
+    public Long getRefundRequestId() {
+        return refundRequestId;
+    }
+
+    public void setRefundRequestId(Long refundRequestId) {
+        this.refundRequestId = refundRequestId;
     }
 
     public Long getRefundTransactionId() {
