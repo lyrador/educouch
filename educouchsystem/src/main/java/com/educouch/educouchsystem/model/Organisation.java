@@ -37,10 +37,16 @@ public class Organisation {
 
     private PaymentStatusEnum paymentStatus;
 
+    private Double rewardPointsConversionNumber;
+
+    private Double currencyConversionNumber;
+
     public Organisation() {
         this.instructors = new ArrayList<>();
         this.orgBalance = new BigDecimal(0);
         this.paymentStatus = PaymentStatusEnum.PAID;
+        setRewardPointsConversionNumber(1.00);
+        setCurrencyConversionNumber(0.01);
     }
 
     public Organisation(String organisationName, String orgDescription, String paymentAcc) {
@@ -121,5 +127,21 @@ public class Organisation {
 
     public void setPaymentStatus(PaymentStatusEnum paymentStatus) {
         this.paymentStatus = paymentStatus;
+    }
+
+    public Double getRewardPointsConversionNumber() {
+        return rewardPointsConversionNumber;
+    }
+
+    public void setRewardPointsConversionNumber(Double rewardPointsConversionNumber) {
+        this.rewardPointsConversionNumber = rewardPointsConversionNumber;
+    }
+
+    public Double getCurrencyConversionNumber() {
+        return currencyConversionNumber;
+    }
+
+    public void setCurrencyConversionNumber(Double currencyConversionNumber) {
+        this.currencyConversionNumber = currencyConversionNumber;
     }
 }
