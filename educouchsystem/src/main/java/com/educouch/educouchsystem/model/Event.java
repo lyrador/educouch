@@ -27,6 +27,10 @@ public class Event {
     @Column(name="allDay", nullable = false)
     private Boolean allDay;
 
+//    @Column(name="allDay", nullable = false)
+//    private String rRule;
+    private Long classRunMainId;
+
     @ManyToOne
     @JoinColumn(name="classRun_id")
     private ClassRun classRun;
@@ -97,5 +101,22 @@ public class Event {
 
     public void setClassRun(ClassRun classRun) {
         this.classRun = classRun;
+    }
+
+//    public String getRRule() {
+//        return rRule;
+//    }
+//
+//    public void setRRule(String rRule) {
+//        this.rRule = rRule;
+//    }
+
+
+    public Long getClassRunMainId() {
+        return classRunMainId;
+    }
+
+    public void setClassRunMainId(Long classRunMainId) {
+        this.classRunMainId = classRunMainId;
     }
 }

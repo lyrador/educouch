@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ClassRunDTO {
 
-    private Long classRunId;
+    private Long id;
 
     private String classRunStart;
 
@@ -34,11 +34,15 @@ public class ClassRunDTO {
 
     private List<Event> classEvents;
 
+    private String text;
+
+    private String color;
+
     public ClassRunDTO() {
     }
 
-    public ClassRunDTO(Long classRunId, String classRunStart, String classRunEnd, Integer minClassSize, Integer maximumCapacity, Integer[] classRunDaysOfTheWeek, String recurringEnumString, Long calendarId, String instructorUsername, List<String> enrolledLearnersUsernames, String classRunName, String classRunDescription, String classRunStartTime, String classRunEndTime) {
-        this.classRunId = classRunId;
+    public ClassRunDTO(Long id, String classRunStart, String classRunEnd, Integer minClassSize, Integer maximumCapacity, Integer[] classRunDaysOfTheWeek, String recurringEnumString, Long calendarId, String instructorUsername, List<String> enrolledLearnersUsernames, String classRunName, String classRunDescription, String classRunStartTime, String classRunEndTime) {
+        this.id = id;
         this.classRunStart = classRunStart;
         this.classRunEnd = classRunEnd;
         this.minClassSize = minClassSize;
@@ -54,12 +58,12 @@ public class ClassRunDTO {
         this.classRunEndTime = classRunEndTime;
     }
 
-    public Long getClassRunId() {
-        return classRunId;
+    public Long getId() {
+        return id;
     }
 
-    public void setClassRunId(Long classRunId) {
-        this.classRunId = classRunId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getClassRunStart() {
@@ -172,5 +176,21 @@ public class ClassRunDTO {
 
     public void setClassEvents(List<Event> classEvents) {
         this.classEvents = classEvents;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }
