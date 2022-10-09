@@ -49,7 +49,7 @@ public class QuizServiceImpl implements QuizService{
 
             course.getAssessments().add(quiz);
             courseService.saveCourse(course);
-//            quizRepository.save(quiz);
+            quizRepository.save(quiz);
             return quiz;
 
         } else {
