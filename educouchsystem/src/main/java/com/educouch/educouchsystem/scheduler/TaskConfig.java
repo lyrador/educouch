@@ -1,6 +1,7 @@
 package com.educouch.educouchsystem.scheduler;
 
-import com.educouch.educouchsystem.model.OrgLmsRevenueMap;
+
+import com.educouch.educouchsystem.service.DepositRefundRequestService;
 import com.educouch.educouchsystem.service.LmsRevenueReportService;
 import com.educouch.educouchsystem.service.OrgLmsRevenueMapService;
 import com.educouch.educouchsystem.service.OrganisationService;
@@ -23,6 +24,9 @@ public class TaskConfig {
     @Autowired
     OrgLmsRevenueMapService orgLmsRevenueMapService;
 
+    @Autowired
+    DepositRefundRequestService depositRefundRequestService;
+
     @Scheduled(cron = "0 0 0 1 * *")
     public void startOfMonthJob() {
 
@@ -39,6 +43,12 @@ public class TaskConfig {
 
 
     }
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void everyDayJob() {
+        depositRefundRequestService.checkRefundDueDate(); 
+    }
+
 
 
     @Scheduled(cron = "0 0 0 8 * *")
