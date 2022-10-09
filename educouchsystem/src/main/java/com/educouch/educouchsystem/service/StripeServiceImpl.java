@@ -32,6 +32,9 @@ public class StripeServiceImpl implements StripeService {
     LearnerService learnerService;
 
     @Autowired
+    OrganisationService organisationService;
+
+    @Autowired
     EnrolmentStatusTrackerService enrolmentStatusTrackerService;
 
     @Autowired
@@ -146,8 +149,7 @@ public class StripeServiceImpl implements StripeService {
                     Organisation org = c.getInstructor().getOrganisation();
                     orgLmsRevenueMapService.addRevenue(new OrgLmsRevenueMap(org.getOrganisationName(),revenue));
                     org.setOrgBalance(org.getOrgBalance().add(revenue.multiply(new BigDecimal(19))));
-
-
+                    organisationService.saveOrganisation(org);
                 } catch(DuplicateEnrolmentTrackerException ex) {
                     throw new EnrolmentStatusTrackerNotFoundException("Unexpected administration error has occured. Please contact our LMS Admin to sort out your duplicate record. ");
                 }
