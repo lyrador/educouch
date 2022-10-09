@@ -49,7 +49,7 @@ public class OptionServiceImpl implements OptionService {
     public void deleteOptionById(Long optionId) throws OptionNotFoundException {
         Option option = optionRepository.findById(optionId).get();
         if (option != null) {
-            questionRepository.deleteById(optionId);
+            optionRepository.deleteById(optionId);
         } else {
             throw new OptionNotFoundException("Option Id " + optionId + " does not exist!");
         }
