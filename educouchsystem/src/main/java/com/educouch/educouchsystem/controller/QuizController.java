@@ -256,7 +256,7 @@ public class QuizController {
         newQuiz.setTimeLimit(quizDTO.getTimeLimit());
 
         newQuiz.setQuestionCounter(quizDTO.getQuestionCounter());
-
+        newQuiz.setOpen(false);
         if (quizDTO.getIsAutoRelease().equals("true")) {
             newQuiz.setAutoRelease(Boolean.TRUE);
         } else if (quizDTO.getIsAutoRelease().equals("false")) {
