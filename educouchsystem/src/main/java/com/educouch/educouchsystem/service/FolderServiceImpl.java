@@ -89,6 +89,13 @@ public class FolderServiceImpl implements FolderService{
         try {
             Course course = courseService.getCourseById(courseId);
             Folder parentFolder = getFolder(parentFolderId);
+            List<Folder> listOfSubFolders = parentFolder.getChildFolders();
+            String newFolderName = folder.getFolderName();
+            for(Folder f: listOfSubFolders) {
+                if(f.getFolderName().equals(newFolderName)) {
+                    throw new FolderUnableToSaveException("Duplicate name detected within the same directory.");
+                }
+            }
 
             // out direction
             folder.setParentFolder(parentFolder);
@@ -118,6 +125,14 @@ public class FolderServiceImpl implements FolderService{
     public Folder saveFolder(Long courseId, Folder folder) throws FolderUnableToSaveException {
         try {
             Course course = courseService.getCourseById(courseId);
+
+            List<Folder> listOfParentFolders = course.getFolders();
+            String newFolderName = folder.getFolderName();
+            for(Folder f: listOfParentFolders) {
+                if(f.getFolderName().equals(newFolderName)) {
+                    throw new FolderUnableToSaveException("Duplicate name detected within the same directory.");
+                }
+            }
             // out direction
             folder.setCourse(course);
             // persist folder
@@ -160,8 +175,15 @@ public class FolderServiceImpl implements FolderService{
 
     }
 
-    public void renameFolderByFolderId(String folderName, Long folderId) throws FolderNotFoundException {
+    public void renameFolderByFolderId(String folderName, Long folderId) throws FolderNotFoundException,FolderUnableToSaveException {
         Folder f = folderRepository.getReferenceById(folderId);
+        Folder parentFolder = folderRepository.getReferenceById(f.getParentFolder().getFolderId());
+        List<Folder> listOfChildFolders = parentFolder.getChildFolders();
+        for(Folder childFolder: listOfChildFolders) {
+            if(childFolder.getFolderId().equals(folderName)) {
+                throw new FolderUnableToSaveException("Duplicate name detected. ");
+            }
+        }
         if(f != null) {
             f.setFolderName(folderName);
             folderRepository.save(f);
