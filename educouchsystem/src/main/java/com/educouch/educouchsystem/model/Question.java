@@ -33,6 +33,8 @@ public class Question implements Serializable {
     @JoinColumn(name="question_id")
     private List<Option> options;
 
+    private Option correctOption;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name="question_id")
     private List<QuestionAttempt> questionAttempts;
@@ -124,6 +126,14 @@ public class Question implements Serializable {
 
     public void setQuestionAttempts(List<QuestionAttempt> questionAttempts) {
         this.questionAttempts = questionAttempts;
+    }
+
+    public Option getCorrectOption() {
+        return correctOption;
+    }
+
+    public void setCorrectOption(Option correctOption) {
+        this.correctOption = correctOption;
     }
 
     public String getLocalid() {
