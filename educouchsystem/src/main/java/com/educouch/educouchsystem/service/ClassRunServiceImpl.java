@@ -1,20 +1,14 @@
 package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.dto.ClassRunDTO;
-import com.educouch.educouchsystem.dto.ForumDTO;
 import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.repository.ClassRunRepository;
 import com.educouch.educouchsystem.repository.CourseRepository;
-import com.educouch.educouchsystem.repository.LearnerRepository;
 import com.educouch.educouchsystem.util.enumeration.RecurringEnum;
 import com.educouch.educouchsystem.util.enumeration.EnrolmentStatusTrackerEnum;
-import com.educouch.educouchsystem.util.exception.EnrolmentStatusTrackerNotFoundException;
 import com.educouch.educouchsystem.util.exception.EventNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -100,6 +94,7 @@ public class ClassRunServiceImpl implements ClassRunService {
         classRun.setClassRunDescription(classRunDTORequest.getClassRunDescription());
         classRun.setClassRunStartTime(LocalTime.parse(classRunDTORequest.getClassRunStartTime(), timeFormatter));
         classRun.setClassRunEndTime(LocalTime.parse(classRunDTORequest.getClassRunEndTime(), timeFormatter));
+        classRun.setColor(classRunDTORequest.getColor());
         classRunRepository.save(classRun);
         course.getClassRuns().add(classRun);
         courseRepository.save(course);
@@ -109,7 +104,11 @@ public class ClassRunServiceImpl implements ClassRunService {
 
     @Override
     public ClassRun updateClassRun(Long classRunId, ClassRunDTO classRunDTORequest) throws ParseException {
-        ClassRun classRunToUpdate = classRunRepository.findById(classRunDTORequest.getClassRunId()).get();
+        ClassRun classRunToUpdate = classRunRepository.findById(classRunDTORequest.getId()).get();
+        for (Event event : classRunToUpdate.getEvents()) {
+            event.setClassRun(null);
+        }
+        classRunToUpdate.getEvents().clear();
 
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -125,16 +124,20 @@ public class ClassRunServiceImpl implements ClassRunService {
         Instructor instructor = educatorService.findInstructorByUsername(classRunDTORequest.getInstructorUsername());
         classRunToUpdate.setInstructor(instructor);
         List<Learner> learners = new ArrayList<>();
-        for (String learnerUsername : classRunDTORequest.getEnrolledLearnersUsernames()) {
-            Learner learner = learnerService.findLearnerByUsername(learnerUsername);
-            learners.add(learner);
+        if (classRunDTORequest.getEnrolledLearnersUsernames() != null) {
+            for (String learnerUsername : classRunDTORequest.getEnrolledLearnersUsernames()) {
+                Learner learner = learnerService.findLearnerByUsername(learnerUsername);
+                learners.add(learner);
+            }
+            classRunToUpdate.setEnrolledLearners(learners);
         }
-        classRunToUpdate.setEnrolledLearners(learners);
         classRunToUpdate.setClassRunName(classRunDTORequest.getClassRunName());
         classRunToUpdate.setClassRunDescription(classRunDTORequest.getClassRunDescription());
         classRunToUpdate.setClassRunStartTime(LocalTime.parse(classRunDTORequest.getClassRunStartTime(), timeFormatter));
         classRunToUpdate.setClassRunEndTime(LocalTime.parse(classRunDTORequest.getClassRunEndTime(), timeFormatter));
+        classRunToUpdate.setColor(classRunDTORequest.getColor());
         classRunRepository.save(classRunToUpdate);
+        generateClassEventsFromClassRunId(classRunToUpdate.getClassRunId());
         return classRunToUpdate;
     }
 
@@ -160,6 +163,8 @@ public class ClassRunServiceImpl implements ClassRunService {
                     classRun.getClassRunDescription(),
                     classRun.getClassRunStartTime().format(timeFormatter),
                     classRun.getClassRunEndTime().format(timeFormatter));
+            classRunDTO.setText(classRunDTO.getClassRunName());
+            classRunDTO.setColor(classRun.getColor());
             classRunDTO.setClassEvents(classRun.getEvents());
             classRunDTOs.add(classRunDTO);
         }
@@ -189,6 +194,8 @@ public class ClassRunServiceImpl implements ClassRunService {
                     classRun.getClassRunDescription(),
                     classRun.getClassRunStartTime().format(timeFormatter),
                     classRun.getClassRunEndTime().format(timeFormatter));
+            classRunDTO.setText(classRunDTO.getClassRunName());
+            classRunDTO.setColor(classRun.getColor());
             classRunDTO.setClassEvents(classRun.getEvents());
             classRunDTOs.add(classRunDTO);
         }
@@ -288,7 +295,7 @@ public class ClassRunServiceImpl implements ClassRunService {
                 if (daysCount != 0 && daysCount % 7 == 0) {
                     localDatePointer = localDatePointer.plusDays(7);
                 }
-                if (daysOfWeekSet.contains(localDatePointer.getDayOfWeek())) {
+                if (daysOfWeekSet.contains(localDatePointer.getDayOfWeek()) && localDatePointer.isBefore(classRun.getClassRunEnd())) {
                     Event newEvent = new Event();
                     newEvent.setClassRun(classRun);
                     newEvent.setTitle(classRun.getClassRunName() + " " + "Class Event");
