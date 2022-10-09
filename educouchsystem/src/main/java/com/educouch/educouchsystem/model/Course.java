@@ -63,8 +63,10 @@ public class Course {
     @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
     private List<Folder> folders;
 
-    @OneToMany
-    @JoinColumn(name = "id")
+    @ManyToMany
+    @JoinTable(name = "Course_categoryTags",
+            joinColumns = {@JoinColumn(name = "courseId")},
+            inverseJoinColumns = {@JoinColumn(name = "categoryTagId")})
     private List<CategoryTag> categoryTags;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
