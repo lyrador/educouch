@@ -90,6 +90,21 @@ public class QuizController {
                 updatedQuiz.setEndDate((Date) formatter.parse(updatedQuizDTO.getAssessmentEndDate()));
             }
 
+            if (updatedQuizDTO.getHasTimeLimit().equals("true")) {
+                updatedQuiz.setHasTimeLimit(Boolean.TRUE);
+            } else if (updatedQuizDTO.getHasTimeLimit().equals("false")) {
+                updatedQuiz.setHasTimeLimit(Boolean.FALSE);
+            }
+
+            updatedQuiz.setTimeLimit(updatedQuizDTO.getTimeLimit());
+            updatedQuiz.setQuestionCounter(updatedQuizDTO.getQuestionCounter());
+            if (updatedQuizDTO.getIsAutoRelease().equals("true")) {
+                updatedQuiz.setAutoRelease(Boolean.TRUE);
+            } else if (updatedQuizDTO.getIsAutoRelease().equals("false")) {
+                updatedQuiz.setAutoRelease(Boolean.FALSE);
+            }
+
+
             //doesnt update isOpen
             updatedQuiz = updateQuizQuestions(updatedQuiz, updatedQuizDTO.getQuestions());
             quizService.saveQuiz(updatedQuiz);
@@ -240,6 +255,8 @@ public class QuizController {
 
         newQuiz.setTimeLimit(quizDTO.getTimeLimit());
 
+        newQuiz.setQuestionCounter(quizDTO.getQuestionCounter());
+
         if (quizDTO.getIsAutoRelease().equals("true")) {
             newQuiz.setAutoRelease(Boolean.TRUE);
         } else if (quizDTO.getIsAutoRelease().equals("false")) {
@@ -321,6 +338,8 @@ public class QuizController {
         }
 
         quizDTO.setTimeLimit(quiz.getTimeLimit());
+
+        quizDTO.setQuestionCounter(quiz.getQuestionCounter());
 
         if(quiz.getAutoRelease()) {
             quizDTO.setIsAutoRelease("true");

@@ -13,6 +13,7 @@ public class QuizDTO {
     private String assessmentIsOpen;
     private String assessmentStatusEnum;
     private String hasTimeLimit;
+    private Integer questionCounter;
     private Integer timeLimit;
     private String isAutoRelease;
     private String createdDateTime;
@@ -119,6 +120,14 @@ public class QuizDTO {
 
     public void setQuestions(List<QuestionDTO> questions) {
         this.questions = questions;
+    }
+
+    public Integer getQuestionCounter() {
+        return questionCounter;
+    }
+
+    public void setQuestionCounter(Integer questionCounter) {
+        this.questionCounter = questionCounter;
     }
 
     public String getCreatedDateTime() {
