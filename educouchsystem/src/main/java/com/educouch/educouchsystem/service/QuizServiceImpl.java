@@ -85,12 +85,12 @@ public class QuizServiceImpl implements QuizService{
     }
 
     @Override
-    public Quiz retrieveQuizById(Long quizId) throws QuizNotFoundException {
-        Quiz quiz = quizRepository.findById(quizId).get();
+    public Quiz retrieveQuizById(Long assessmentId) throws QuizNotFoundException {
+        Quiz quiz = quizRepository.findById(assessmentId).get();
         if (quiz != null) {
             return quiz;
         } else {
-            throw new QuizNotFoundException("Quiz Id " + quizId + " does not exist!");
+            throw new QuizNotFoundException("Quiz Id " + assessmentId + " does not exist!");
         }
     }
 

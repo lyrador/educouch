@@ -374,7 +374,7 @@ public class AssessmentController {
             dtoItem.setAssessmentStatus(a.getAssessmentStatus());
             String s = a.getClass().getName();
             String[] assessmentTypeArray = s.split("\\.");
-            System.out.println(assessmentTypeArray[4]);
+//            System.out.println(assessmentTypeArray[4]);
             dtoItem.setAssessmentType(assessmentTypeArray[4]);
             assessmentDTOS.add(dtoItem);
         }
