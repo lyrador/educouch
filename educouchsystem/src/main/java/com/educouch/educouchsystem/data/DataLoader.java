@@ -184,17 +184,17 @@ public class DataLoader implements CommandLineRunner {
         }
 
 
-        try {
-            stripeService.payDeposit(c1.getClassRunId(), learner_1.getLearnerId(), new BigDecimal(100));
-            stripeService.payDeposit(c1.getClassRunId(), learner_2.getLearnerId(), new BigDecimal(100));
-
-
-
-            stripeService.payDeposit(c4.getClassRunId(), learner_3.getLearnerId(), new BigDecimal(100));
-            stripeService.payDeposit(c4.getClassRunId(), learner_4.getLearnerId(), new BigDecimal(100));
-        } catch(ClassRunNotFoundException | LearnerNotFoundException ex) {
-            System.out.println("Could not add deposit record data");
-        }
+//        try {
+//            stripeService.payDeposit(c1.getClassRunId(), learner_1.getLearnerId(), new BigDecimal(100));
+//            stripeService.payDeposit(c1.getClassRunId(), learner_2.getLearnerId(), new BigDecimal(100));
+//
+//
+//
+//            stripeService.payDeposit(c4.getClassRunId(), learner_3.getLearnerId(), new BigDecimal(100));
+//            stripeService.payDeposit(c4.getClassRunId(), learner_4.getLearnerId(), new BigDecimal(100));
+//        } catch(ClassRunNotFoundException | LearnerNotFoundException ex) {
+//            System.out.println("Could not add deposit record data");
+//        }
 
 
 
