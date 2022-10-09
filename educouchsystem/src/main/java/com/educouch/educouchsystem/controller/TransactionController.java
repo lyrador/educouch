@@ -6,6 +6,7 @@ import com.educouch.educouchsystem.model.Transaction;
 import com.educouch.educouchsystem.service.DepositRefundRequestService;
 import com.educouch.educouchsystem.service.RefundTransactionService;
 import com.educouch.educouchsystem.service.TransactionService;
+import com.educouch.educouchsystem.util.enumeration.RefundStatusEnum;
 import com.educouch.educouchsystem.util.exception.TransactionNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -67,7 +68,11 @@ public class TransactionController {
     @PostMapping("/createRefundTransaction")
     public ResponseEntity<RefundTransaction> refundTransaction(@RequestBody RefundTransaction transaction) {
 
-        RefundTransaction transaction1 = refundTransactionService.createTransaction(new RefundTransaction(transaction.getLearnerId(), transaction.getLearnerAccNumber(), transaction.getAmountPaid()));
+        RefundTransaction transaction1 = refundTransactionService.createTransaction(new RefundTransaction(transaction.getLearnerId(), transaction.getLearnerAccNumber(), transaction.getAmountPaid(),transaction.getRefundRequestId()));
+        DepositRefundRequest refundRequest = depositRefundRequestService.getDepositRefundRequestById(transaction.getRefundRequestId());
+        refundRequest.setRefundStatusEnum(RefundStatusEnum.REFUNDED);
+        depositRefundRequestService.saveRefundRequest(refundRequest);
+
         return ResponseEntity.status(HttpStatus.OK).body(transaction1);
     }
 

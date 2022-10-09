@@ -59,7 +59,7 @@ public class ClassRunController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("addToCourseId/{courseId}")
+    @PostMapping("/addToCourseId/{courseId}")
     public ResponseEntity<ClassRun> addClassRun(@PathVariable(value="courseId") Long courseId, @RequestBody ClassRunDTO classRunDTORequest) {
         try {
             Course course = courseService.retrieveCourseById(courseId);
