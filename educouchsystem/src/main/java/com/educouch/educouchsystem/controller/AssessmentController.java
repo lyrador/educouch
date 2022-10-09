@@ -184,15 +184,17 @@ public class AssessmentController {
                 }
 
                 if (quiz.getHasTimeLimit()) {
-                    quizDTO.setAssessmentHasTimeLimit("true");
+                    quizDTO.setHasTimeLimit("true");
                 } else if (quiz.getHasTimeLimit() == false) {
-                    quizDTO.setAssessmentHasTimeLimit("false");
+                    quizDTO.setHasTimeLimit("false");
                 }
 
+                quizDTO.setTimeLimit(quiz.getTimeLimit());
+
                 if (quiz.getAutoRelease()) {
-                    quizDTO.setAssessmentIsAutoRelease("true");
+                    quizDTO.setIsAutoRelease("true");
                 } else if (quiz.getAutoRelease() == false) {
-                    quizDTO.setAssessmentIsAutoRelease("false");
+                    quizDTO.setIsAutoRelease("false");
                 }
 
                 if (quiz.getAssessmentStatus() == AssessmentStatusEnum.PENDING) {
@@ -317,15 +319,17 @@ public class AssessmentController {
                 quizToUpdate.setOpen(Boolean.FALSE);
             }
 
-            if (quizDTO.getAssessmentHasTimeLimit().equals("true")) {
+            if (quizDTO.getHasTimeLimit().equals("true")) {
                 quizToUpdate.setHasTimeLimit(Boolean.TRUE);
-            } else if (quizDTO.getAssessmentHasTimeLimit().equals("false")) {
+            } else if (quizDTO.getHasTimeLimit().equals("false")) {
                 quizToUpdate.setHasTimeLimit(Boolean.FALSE);
             }
 
-            if (quizDTO.getAssessmentIsAutoRelease().equals("true")) {
+            quizToUpdate.setTimeLimit(quizDTO.getTimeLimit());
+
+            if (quizDTO.getIsAutoRelease().equals("true")) {
                 quizToUpdate.setAutoRelease(Boolean.TRUE);
-            } else if (quizDTO.getAssessmentIsAutoRelease().equals("false")) {
+            } else if (quizDTO.getIsAutoRelease().equals("false")) {
                 quizToUpdate.setAutoRelease(Boolean.FALSE);
             }
 
