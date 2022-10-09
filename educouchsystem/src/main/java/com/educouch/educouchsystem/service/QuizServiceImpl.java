@@ -1,6 +1,7 @@
 package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.model.*;
+import com.educouch.educouchsystem.repository.OptionRepository;
 import com.educouch.educouchsystem.repository.QuestionRepository;
 import com.educouch.educouchsystem.repository.QuizRepository;
 import com.educouch.educouchsystem.util.exception.*;
@@ -21,20 +22,36 @@ public class QuizServiceImpl implements QuizService{
     @Autowired
     private CourseService courseService;
 
+    @Autowired
+    private OptionRepository optionRepository;
+
     @Override
     public Quiz saveQuiz(Quiz quiz) {
         return quizRepository.save(quiz);
     }
 
+    //creates quiz
     @Override
     public Quiz saveQuiz(Long courseId, Quiz quiz) throws CourseNotFoundException {
+
         Course course = courseService.getCourseById(courseId);
         if (course != null) {
-//            quiz.setAssessmentCourse(course);
+            List<Question> questions = quiz.getQuizQuestions();
+            for(Question q : questions) {
+                List<Option> options = q.getOptions();
+                if(options.size()>0) {
+                    for(Option o : options) {
+                        optionRepository.save(o);
+                    }
+                }
+                questionRepository.save(q);
+            }
+
             course.getAssessments().add(quiz);
             courseService.saveCourse(course);
-            quizRepository.save(quiz);
+//            quizRepository.save(quiz);
             return quiz;
+
         } else {
             throw new CourseNotFoundException("Course Id " + courseId + " does not exist!");
         }

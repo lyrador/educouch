@@ -9,7 +9,7 @@ import java.util.List;
 public interface OptionService {
     public Option saveOption(Option option);
 
-    public List<Option> getAllOptionsFromQuestion(Long questionId) throws QuestionNotFoundException;
+//    public List<Option> getAllOptionsFromQuestion(Long questionId) throws QuestionNotFoundException;
 
     public Option retrieveOptionById(Long optionId) throws OptionNotFoundException;
 
