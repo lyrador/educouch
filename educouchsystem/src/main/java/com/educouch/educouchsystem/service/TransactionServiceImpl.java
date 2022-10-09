@@ -1,7 +1,9 @@
 package com.educouch.educouchsystem.service;
 
+import com.educouch.educouchsystem.model.Organisation;
 import com.educouch.educouchsystem.model.Transaction;
 import com.educouch.educouchsystem.repository.TransactionRepository;
+import com.educouch.educouchsystem.util.enumeration.PaymentStatusEnum;
 import com.educouch.educouchsystem.util.enumeration.PaymentTypeEnum;
 import com.educouch.educouchsystem.util.exception.TransactionNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +17,16 @@ public class TransactionServiceImpl implements TransactionService{
     @Autowired
     private TransactionRepository transactionRepository;
 
+    @Autowired
+    private OrganisationService organisationService;
+
     @Override
     public Transaction createTransaction(Transaction transaction) {
+        Organisation org = organisationService.findOrganisationByOrganisationName(transaction.getOrgName());
+        org.setPaymentStatus(PaymentStatusEnum.PAID);
+        org.setOrgBalance(org.getOrgBalance().subtract(transaction.getAmountPaid()));
+        organisationService.saveOrganisation(org);
+
         return transactionRepository.save(transaction);
     }
 
