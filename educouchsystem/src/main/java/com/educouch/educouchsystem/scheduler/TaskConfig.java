@@ -43,6 +43,6 @@ public class TaskConfig {
 
     @Scheduled(cron = "0 0 0 8 * *")
     public void endOfFirstWeekJob() {
-        organisationService.dayOneOrgScheduling();
+        organisationService.daySevenOrgScheduling();
     }
 }

@@ -50,7 +50,7 @@ public class LmsRevenueReportServiceImpl implements LmsRevenueReportService{
         String fileName = monthYear.getMonth().toString() + "_"+ monthYear.getYear();
         String[] strArr = storageService.uploadFile(arr,fileName);
 
-        LmsRevenueReport newReport = new LmsRevenueReport(strArr[1],strArr[0],monthYear);
+        LmsRevenueReport newReport = new LmsRevenueReport(strArr[1],strArr[0],fileName);
         return lmsRevenueReportRepository.save(newReport);
     }
 

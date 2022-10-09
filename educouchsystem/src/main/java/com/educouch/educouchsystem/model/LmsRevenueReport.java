@@ -16,12 +16,12 @@ public class LmsRevenueReport {
     private String fileStorageName;
 
     @Column(nullable = false, unique = true)
-    private LocalDate monthYear;
+    private String monthYear;
 
     public LmsRevenueReport() {
     }
 
-    public LmsRevenueReport(String reportUrl, String fileStorageName, LocalDate monthYear) {
+    public LmsRevenueReport(String reportUrl, String fileStorageName, String monthYear) {
         this.reportUrl = reportUrl;
         this.monthYear = monthYear;
         this.fileStorageName = fileStorageName;
@@ -51,11 +51,11 @@ public class LmsRevenueReport {
         this.reportUrl = reportUrl;
     }
 
-    public LocalDate getMonthYear() {
+    public String getMonthYear() {
         return monthYear;
     }
 
-    public void setMonthYear(LocalDate monthYear) {
+    public void setMonthYear(String monthYear) {
         this.monthYear = monthYear;
     }
 }
