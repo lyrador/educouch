@@ -160,6 +160,18 @@ public class AssessmentController {
         }
     }
 
+    @GetMapping("/releaseAssessment/{assessmentId}")
+    public ResponseEntity<Assessment> releaseAssessment(@PathVariable(value="assessmentId") Long assessmentId) {
+        try {
+            Assessment a = assessmentService.retrieveAssessmentById(assessmentId);
+            a.setOpen(true);
+            assessmentService.saveAssessment(a);
+            return new ResponseEntity<>(a,HttpStatus.OK);
+        } catch (AssessmentNotFoundException exception) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     @GetMapping("/getAllQuizzesByCourseId/{courseId}")
     public ResponseEntity<List<QuizDTO>> getAllQuizzesByCourseId(@PathVariable(value="courseId") Long courseId) {
@@ -370,7 +382,11 @@ public class AssessmentController {
             dtoItem.setMaxScore(a.getMaxScore());
             dtoItem.setStartDate(formatter.format(a.getStartDate()));
             dtoItem.setEndDate(formatter.format(a.getEndDate()));
-            dtoItem.setOpen(a.getOpen());
+            if(a.getOpen()) {
+                dtoItem.setOpen("true");
+            } else {
+                dtoItem.setOpen("false");
+            }
             dtoItem.setAssessmentStatus(a.getAssessmentStatus());
             String s = a.getClass().getName();
             String[] assessmentTypeArray = s.split("\\.");
