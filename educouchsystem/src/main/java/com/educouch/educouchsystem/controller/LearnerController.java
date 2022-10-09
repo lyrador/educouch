@@ -67,7 +67,17 @@ public class LearnerController {
 
     @GetMapping("/getById")
     public ResponseEntity<Learner> getLearnerById(@RequestParam Long learnerId) {
-        return ResponseEntity.status(HttpStatus.OK).body(learnerService.getLearnerById(learnerId));
+        Learner l = learnerService.getLearnerById(learnerId);
+        List<ClassRun> listOfClassRuns = l.getClassRuns();
+        for(ClassRun cr: listOfClassRuns) {
+            processClassRun(cr);
+        }
+        List<EnrolmentStatusTracker> enrolmentStatusTrackers = l.getEnrolmentStatusTrackers();
+        for(EnrolmentStatusTracker est: enrolmentStatusTrackers) {
+            processEnrolmentStatusTracker(est);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(l);
 
 
     }
