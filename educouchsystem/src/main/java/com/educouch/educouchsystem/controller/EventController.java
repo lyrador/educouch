@@ -1,13 +1,7 @@
 package com.educouch.educouchsystem.controller;
 
-import com.educouch.educouchsystem.model.ClassRun;
-import com.educouch.educouchsystem.model.Course;
-import com.educouch.educouchsystem.model.Event;
-import com.educouch.educouchsystem.model.Instructor;
-import com.educouch.educouchsystem.service.ClassRunService;
-import com.educouch.educouchsystem.service.CourseService;
-import com.educouch.educouchsystem.service.EducatorService;
-import com.educouch.educouchsystem.service.EventService;
+import com.educouch.educouchsystem.model.*;
+import com.educouch.educouchsystem.service.*;
 import com.educouch.educouchsystem.util.exception.EventNotFoundException;
 import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +32,9 @@ public class EventController {
 
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private LearnerService learnerService;
 
     @PostMapping("/classRun/{classRunId}/events")
     public ResponseEntity<Event> addEvent(@PathVariable(value="classRunId") Long classRunId, @RequestBody Event eventRequest) {
@@ -141,6 +138,21 @@ public class EventController {
             return new ResponseEntity<>(events, HttpStatus.OK);
         } catch (InstructorNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (NoSuchElementException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/learner/{learnerId}/events")
+    public ResponseEntity<List<Event>> getAllEventsByLearnerId (@PathVariable(value="learnerId") Long learnerId) {
+        try {
+            Learner learner = learnerService.getLearnerById(learnerId);
+            List<Event> events = new ArrayList<>();
+            List<ClassRun> classRunListLearner= learner.getClassRuns();
+            for (ClassRun classRun : classRunListLearner) {
+                events.addAll(classRun.getEvents());
+            }
+            return new ResponseEntity<>(events, HttpStatus.OK);
         } catch (NoSuchElementException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
