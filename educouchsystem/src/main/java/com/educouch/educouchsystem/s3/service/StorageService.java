@@ -47,6 +47,17 @@ public class StorageService {
         return fileStorageNameAndURLArray;
     }
 
+    public String[] uploadFile(byte[] file, String filename) {
+        String[] fileStorageNameAndURLArray = new String[2];
+        File fileObj = convertByteArrToFile(file, filename);
+        String fileStorageName = System.currentTimeMillis() + "_" + filename;
+        s3Client.putObject(new PutObjectRequest(bucketName, fileStorageName, fileObj));
+        fileObj.delete();
+        fileStorageNameAndURLArray[0] = fileStorageName;
+        fileStorageNameAndURLArray[1] = String.valueOf(s3Client.getUrl(bucketName, fileStorageName));
+        return fileStorageNameAndURLArray;
+    }
+
     public byte[] downloadFile(String fileStorageName) {
         S3Object s3Object = s3Client.getObject(bucketName, fileStorageName);
         S3ObjectInputStream inputStream = s3Object.getObjectContent();
@@ -82,6 +93,17 @@ public class StorageService {
         s3Client.deleteObject(bucketName, fileStorageName);
         return fileStorageName + " removed ...";
     }
+
+    private File convertByteArrToFile(byte[] file, String filename) {
+        File convertedFile = new File(filename);
+        try (FileOutputStream fos = new FileOutputStream(convertedFile)) {
+            fos.write(file);
+        } catch (IOException e) {
+            logger.error("Error converting multipartFile to file", e);
+        }
+        return convertedFile;
+    }
+
 
     private File convertMultiPartFileToFile(MultipartFile file) {
         File convertedFile = new File(file.getOriginalFilename());
