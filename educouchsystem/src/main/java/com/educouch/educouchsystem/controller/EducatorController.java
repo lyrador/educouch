@@ -147,13 +147,83 @@ public class EducatorController {
 
     @GetMapping("/findAllOrganisation")
         public ResponseEntity<List<Organisation>> getAllOrganisation() {
-        return new ResponseEntity<List<Organisation>>(organisationService.findAllOrganisation(), HttpStatus.OK);
+        List<Organisation> listOfOrganizations = organisationService.findAllOrganisation();
+        for(Organisation o: listOfOrganizations) {
+            List<Course> listOfCourses = o.getCourses();
+            for(Course c: listOfCourses) {
+                processCourse(c);
+            }
+        }
+        return new ResponseEntity<List<Organisation>>(listOfOrganizations, HttpStatus.OK);
 
         }
 
     @GetMapping("/findAllDueOrganisation")
     public ResponseEntity<List<Organisation>> getAllDueOrganisation() {
-        return new ResponseEntity<List<Organisation>>(organisationService.findAllDue(), HttpStatus.OK);
+        List<Organisation> listOfOrganizations = organisationService.findAllDue();
+        for(Organisation o: listOfOrganizations) {
+            List<Course> listOfCourses = o.getCourses();
+            for(Course c: listOfCourses) {
+                processCourse(c);
+            }
+        }
+        return new ResponseEntity<List<Organisation>>(listOfOrganizations , HttpStatus.OK);
+
+    }
+
+    private Course processCourse(Course c) {
+        List<Forum> forums = c.getForums();
+        for(Forum f: forums) {
+            f.setCreatedByLearner(null);
+            f.setCreatedByInstructor(null);
+            f.setCreatedByOrganisationAdmin(null);
+            f.setForumDiscussions(null);
+            f.setCourse(null);
+//            f.setLearners(null);
+//            f.setEducators(null);
+        }
+
+        List<Folder> childFolders = c.getFolders();
+        for(Folder f: childFolders) {
+            processFolder(f);
+        }
+        List<ClassRun> listOfClassRuns = c.getClassRuns();
+        for(ClassRun r: listOfClassRuns) {
+            processClassRun(r);
+        }
+
+        return c;
+    }
+
+    private void processClassRun(ClassRun c) {
+        List<EnrolmentStatusTracker> enrolmentStatusTrackers = c.getEnrolmentStatusTrackers();
+        for(EnrolmentStatusTracker e: enrolmentStatusTrackers) {
+            e.setClassRun(null);
+            e.setLearner(null);
+        }
+
+        c.setCalendar(null);
+        c.setEvents(null);
+        Instructor i = c.getInstructor();
+        if(i != null) {
+            i.setClassRuns(null);
+            i.setOrganisation(null);
+            i.setCourses(null);
+        }
+
+
+        Course course = c.getCourse();
+        course.setFolders(null);
+        course.setClassRuns(null);
+        course.setFolders(null);
+        course.setAssessments(null);
+        course.setInstructors(null);
+        course.setOrganisation(null);
+
+        c.setEnrolledLearners(null);
+        c.setEnrolmentStatusTrackers(null);
+        c.setLearnerTransactions(null);
+
 
     }
 
@@ -186,29 +256,6 @@ public class EducatorController {
         return o;
     }
 
-    private Course processCourse(Course c) {
-        List<Forum> forums = c.getForums();
-        for(Forum f: forums) {
-            f.setForumDiscussions(null);
-            f.setCourse(null);
-//            f.setLearners(null);
-//            f.setEducators(null);
-        }
-
-        List<Folder> childFolders = c.getFolders();
-        for(Folder f: childFolders) {
-            processFolder(f);
-        }
-        List<ClassRun> listOfClassRuns = c.getClassRuns();
-        for(ClassRun r: listOfClassRuns) {
-            r.setCourse(null);
-            r.setCalendar(null);
-            r.setInstructor(null);
-            r.setEnrolledLearners(null);
-        }
-
-        return c;
-    }
 
     private Folder processFolder(Folder folder) {
         List<Folder> subFolders = folder.getChildFolders();
