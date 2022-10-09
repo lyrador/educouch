@@ -8,7 +8,6 @@ import com.educouch.educouchsystem.model.Quiz;
 import com.educouch.educouchsystem.repository.OptionRepository;
 import com.educouch.educouchsystem.repository.QuestionRepository;
 import com.educouch.educouchsystem.util.exception.EntityInstanceExistsInCollectionException;
-import com.educouch.educouchsystem.util.exception.OptionNotFoundException;
 import com.educouch.educouchsystem.util.exception.QuestionNotFoundException;
 import com.educouch.educouchsystem.util.exception.QuizNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,16 +49,16 @@ public class QuestionServiceImpl implements QuestionService {
         return questionRepository.findAll();
     }
 
-    @Override
-    public List<Option> getAllOptionsInQuestion(Long questionId) throws QuestionNotFoundException {
-        Question question = questionRepository.findById(questionId).get();
-        if (question != null) {
-            List<Option> options = question.getOptions();
-            return options;
-        } else {
-            throw new QuestionNotFoundException("Question Id " + questionId + " does not exist!");
-        }
-    }
+//    @Override
+//    public List<String> getAllOptionsInQuestion(Long questionId) throws QuestionNotFoundException {
+//        Question question = questionRepository.findById(questionId).get();
+//        if (question != null) {
+//            List<String> options = question.getOptions();
+//            return options;
+//        } else {
+//            throw new QuestionNotFoundException("Question Id " + questionId + " does not exist!");
+//        }
+//    }
 
     @Override
     public List<QuestionAttempt> getAllQuestionAttemptsInQuestion(Long questionId) throws QuestionNotFoundException {
@@ -106,27 +105,27 @@ public class QuestionServiceImpl implements QuestionService {
         }
     }
 
-    @Override
-    public void addOptionToQuestion(Long questionId, Option option) throws QuestionNotFoundException, EntityInstanceExistsInCollectionException {
-        Question questionToEdit = retrieveQuestionById(questionId);
-        List<Option> questionOptions = questionToEdit.getOptions();
-        if (!questionOptions.contains(option)) {
-            questionOptions.add(option);
-            saveQuestion(questionToEdit);
-            optionRepository.save(option);
-        } else {
-            throw new EntityInstanceExistsInCollectionException("Option already exists in question!");
-        }
-    }
+//    @Override
+//    public void addOptionToQuestion(Long questionId, Option option) throws QuestionNotFoundException, EntityInstanceExistsInCollectionException {
+//        Question questionToEdit = retrieveQuestionById(questionId);
+//        List<Option> questionOptions = questionToEdit.getOptions();
+//        if (!questionOptions.contains(option)) {
+//            questionOptions.add(option);
+//            saveQuestion(questionToEdit);
+//            optionRepository.save(option);
+//        } else {
+//            throw new EntityInstanceExistsInCollectionException("Option already exists in question!");
+//        }
+//    }
 
-    @Override
-    public void deleteOptionFromQuestionId(Long optionId, Long questionId) throws QuestionNotFoundException {
-        Option option = optionRepository.findById(optionId).get();
-        retrieveQuestionById(questionId).getOptions().remove(option);
-        if (option != null) {
-            optionRepository.deleteById(optionId);
-        } else {
-            throw new QuestionNotFoundException("Question Id " + questionId + " does not exist!");
-        }
-    }
+//    @Override
+//    public void deleteOptionFromQuestionId(Long optionId, Long questionId) throws QuestionNotFoundException {
+//        Option option = optionRepository.findById(optionId).get();
+//        retrieveQuestionById(questionId).getOptions().remove(option);
+//        if (option != null) {
+//            optionRepository.deleteById(optionId);
+//        } else {
+//            throw new QuestionNotFoundException("Question Id " + questionId + " does not exist!");
+//        }
+//    }
 }

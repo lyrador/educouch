@@ -13,6 +13,8 @@ public class Quiz extends Assessment implements Serializable {
     @NotNull
     private Boolean hasTimeLimit;
 
+    private Integer timeLimit;
+
     @NotNull
     private Boolean isAutoRelease;
 
@@ -30,7 +32,7 @@ public class Quiz extends Assessment implements Serializable {
         this.quizAttempts = new ArrayList<>();
     }
 
-    public Quiz(String title, String description, Double maxScore, Date startDate, Date endDate, Boolean hasTimeLimit, Boolean isAutoRelease) {
+    public Quiz(String title, String description, Double maxScore, Date startDate, Date endDate, Boolean hasTimeLimit, Integer timeLimit, Boolean isAutoRelease) {
         super(title, description, maxScore, startDate, endDate);
         this.hasTimeLimit = hasTimeLimit;
         this.isAutoRelease = isAutoRelease;
@@ -70,4 +72,11 @@ public class Quiz extends Assessment implements Serializable {
         this.quizAttempts = quizAttempts;
     }
 
+    public Integer getTimeLimit() {
+        return timeLimit;
+    }
+
+    public void setTimeLimit(Integer timeLimit) {
+        this.timeLimit = timeLimit;
+    }
 }
