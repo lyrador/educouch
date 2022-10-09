@@ -38,10 +38,12 @@ public class ClassRun {
     private Integer[] classRunDaysOfTheWeek;
 
     private RecurringEnum recurringEnum;
-    @Column(unique = true)
+//    @Column(unique = true)
     private String classRunName;
 
     private String classRunDescription;
+
+    private String color;
 
     @OneToOne
     @JoinColumn(name = "calendar")
@@ -253,5 +255,13 @@ public class ClassRun {
 
     public void setLearnerTransactions(List<LearnerTransaction> learnerTransactions) {
         this.learnerTransactions = learnerTransactions;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }
