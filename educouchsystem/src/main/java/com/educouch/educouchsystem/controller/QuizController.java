@@ -53,70 +53,82 @@ public class QuizController {
         }
     }
 
-    @PostMapping("/addNewQuestion/{quizId}")
-    public ResponseEntity<Question> addQuestionToQuiz(@RequestBody QuestionDTO questionDTO, @PathVariable(value="quizId") Long quizId) {
+    @GetMapping("/getQuizById/{quizId}")
+    public ResponseEntity<QuizDTO> getQuizById(@PathVariable(value="quizId") Long quizId) {
         try {
             Quiz quiz = quizService.retrieveQuizById(quizId);
-            Question newQuestion = new Question();
-
-            newQuestion.setQuestionContent(questionDTO.getQuestionContent());
-
-            if (questionDTO.getQuestionType().equals("TRUE FALSE")) {
-                newQuestion.setQuestionType(QuestionTypeEnum.TRUE_FALSE);
-            } else if (questionDTO.getQuestionType().equals("OPEN ENDED")) {
-                newQuestion.setQuestionType(QuestionTypeEnum.OPEN_ENDED);
-            } else if (questionDTO.getQuestionType().equals("MCQ")) {
-                newQuestion.setQuestionType(QuestionTypeEnum.MCQ);
-            } else if (questionDTO.getQuestionType().equals("MRQ")) {
-                newQuestion.setQuestionType(QuestionTypeEnum.MRQ);
-            }
-
-            quizService.addQuestionToQuiz(quizId, newQuestion);
-            return new ResponseEntity<>(newQuestion, HttpStatus.OK);
-        } catch (QuizNotFoundException | EntityInstanceExistsInCollectionException ex) {
+            QuizDTO quizDto = convertQuizToDTO(quiz);
+            return new ResponseEntity<>(quizDto, HttpStatus.OK);
+        } catch (QuizNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @DeleteMapping("/deleteQuestionByIdFromQuizId/{questionId}/{quizId}")
-    public ResponseEntity<HttpStatus> deleteQuestionByIdFromQuizId(@PathVariable("questionId") Long questionId, @PathVariable("quizId") Long quizId) {
-        try {
-            quizService.deleteQuestionFromQuizId(questionId, quizId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (QuizNotFoundException | QuestionNotFoundException ex) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
 
-    @GetMapping("/getAllQuestionsByQuizId/{quizId}")
-    public ResponseEntity<List<QuestionDTO>> getAllQuestionsByQuizId(@PathVariable(value="quizId") Long quizId) {
-        try {
-            List<Question> questions = quizService.getAllQuestionsInQuiz(quizId);
-            List<QuestionDTO> questionDTOs = new ArrayList<>();
-            for (Question question : questions) {
-                QuestionDTO questionDTO = new QuestionDTO();
-                questionDTO.setQuestionId(String.valueOf(question.getQuestionId()));
-                questionDTO.setQuestionContent(question.getQuestionContent());
-                questionDTO.setQuestionMaxPoints(String.valueOf(question.getQuestionMaxScore()));
+//    @PostMapping("/addNewQuestion/{quizId}")
+//    public ResponseEntity<Question> addQuestionToQuiz(@RequestBody QuestionDTO questionDTO, @PathVariable(value="quizId") Long quizId) {
+//        try {
+//            Quiz quiz = quizService.retrieveQuizById(quizId);
+//            Question newQuestion = new Question();
+//
+//            newQuestion.setQuestionContent(questionDTO.getQuestionContent());
+//
+//            if (questionDTO.getQuestionType().equals("TRUE FALSE")) {
+//                newQuestion.setQuestionType(QuestionTypeEnum.TRUE_FALSE);
+//            } else if (questionDTO.getQuestionType().equals("OPEN ENDED")) {
+//                newQuestion.setQuestionType(QuestionTypeEnum.OPEN_ENDED);
+//            } else if (questionDTO.getQuestionType().equals("MCQ")) {
+//                newQuestion.setQuestionType(QuestionTypeEnum.MCQ);
+//            } else if (questionDTO.getQuestionType().equals("MRQ")) {
+//                newQuestion.setQuestionType(QuestionTypeEnum.MRQ);
+//            }
+//
+//            quizService.addQuestionToQuiz(quizId, newQuestion);
+//            return new ResponseEntity<>(newQuestion, HttpStatus.OK);
+//        } catch (QuizNotFoundException | EntityInstanceExistsInCollectionException ex) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
 
-                if (question.getQuestionType() == QuestionTypeEnum.TRUE_FALSE) {
-                    questionDTO.setQuestionType("TRUE FALSE");
-                } else if (question.getQuestionType() == QuestionTypeEnum.OPEN_ENDED) {
-                    questionDTO.setQuestionType("OPEN ENDED");
-                } else if (question.getQuestionType() == QuestionTypeEnum.MCQ) {
-                    questionDTO.setQuestionType("MCQ");
-                } else if (question.getQuestionType() == QuestionTypeEnum.MRQ) {
-                    questionDTO.setQuestionType("MRQ");
-                }
+//    @DeleteMapping("/deleteQuestionByIdFromQuizId/{questionId}/{quizId}")
+//    public ResponseEntity<HttpStatus> deleteQuestionByIdFromQuizId(@PathVariable("questionId") Long questionId, @PathVariable("quizId") Long quizId) {
+//        try {
+//            quizService.deleteQuestionFromQuizId(questionId, quizId);
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        } catch (QuizNotFoundException | QuestionNotFoundException ex) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
 
-                questionDTOs.add(questionDTO);
-            }
-            return new ResponseEntity<>(questionDTOs, HttpStatus.OK);
-
-        } catch (QuizNotFoundException ex) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+//    @GetMapping("/getAllQuestionsByQuizId/{quizId}")
+//    public ResponseEntity<List<QuestionDTO>> getAllQuestionsByQuizId(@PathVariable(value="quizId") Long quizId) {
+//        try {
+//            List<Question> questions = quizService.getAllQuestionsInQuiz(quizId);
+//            List<QuestionDTO> questionDTOs = new ArrayList<>();
+//            for (Question question : questions) {
+//                QuestionDTO questionDTO = new QuestionDTO();
+//                questionDTO.setQuestionId(String.valueOf(question.getQuestionId()));
+//                questionDTO.setQuestionContent(question.getQuestionContent());
+//                questionDTO.setQuestionMaxPoints(String.valueOf(question.getQuestionMaxScore()));
+//
+//                if (question.getQuestionType() == QuestionTypeEnum.TRUE_FALSE) {
+//                    questionDTO.setQuestionType("TRUE FALSE");
+//                } else if (question.getQuestionType() == QuestionTypeEnum.OPEN_ENDED) {
+//                    questionDTO.setQuestionType("OPEN ENDED");
+//                } else if (question.getQuestionType() == QuestionTypeEnum.MCQ) {
+//                    questionDTO.setQuestionType("MCQ");
+//                } else if (question.getQuestionType() == QuestionTypeEnum.MRQ) {
+//                    questionDTO.setQuestionType("MRQ");
+//                }
+//
+//                questionDTOs.add(questionDTO);
+//            }
+//            return new ResponseEntity<>(questionDTOs, HttpStatus.OK);
+//
+//        } catch (QuizNotFoundException ex) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
 
     @PutMapping("/updateQuestion/{questionId}")
     public ResponseEntity<Question> updateQuestion(@RequestBody QuestionDTO questionDTO, @PathVariable("questionId") Long questionId) {
@@ -222,5 +234,76 @@ public class QuizController {
 
         question.setOptions(options);
         return question;
+    }
+
+    public QuizDTO convertQuizToDTO(Quiz quiz) {
+
+        QuizDTO quizDTO = new QuizDTO();
+
+        quizDTO.setAssessmentId(quiz.getAssessmentId());
+        quizDTO.setAssessmentTitle(quiz.getTitle());
+        quizDTO.setAssessmentDescription(quiz.getDescription());
+        quizDTO.setAssessmentMaxScore(quiz.getMaxScore());
+        quizDTO.setAssessmentStatusEnum(quiz.getAssessmentStatus().toString());
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+        quizDTO.setAssessmentStartDate(quiz.getStartDate().toString());
+        quizDTO.setAssessmentEndDate(quiz.getEndDate().toString());
+        quizDTO.setAssessmentIsOpen(quiz.getOpen().toString());
+
+        if(quiz.getHasTimeLimit()) {
+            quizDTO.setHasTimeLimit("true");
+        } else {
+            quizDTO.setHasTimeLimit("false");
+        }
+
+        quizDTO.setTimeLimit(quiz.getTimeLimit());
+
+        if(quiz.getAutoRelease()) {
+            quizDTO.setIsAutoRelease("true");
+        } else {
+            quizDTO.setIsAutoRelease("false");
+        }
+
+        List<QuestionDTO> questionDTOs = convertQuestionsToQuestionDTOs(quiz.getQuizQuestions());
+        quizDTO.setQuestions(questionDTOs);
+
+        //need to set attempts for next SR
+
+        return quizDTO;
+    }
+
+    public List<QuestionDTO> convertQuestionsToQuestionDTOs(List<Question> questions) {
+
+        List<QuestionDTO> questionDTOs = new ArrayList<>();
+        for(Question q : questions) {
+            QuestionDTO questionDTO = new QuestionDTO();
+            questionDTO.setLocalid(q.getLocalid());
+            questionDTO.setQuestionTitle(q.getQuestionTitle());
+            String questionType = q.getQuestionType().toString();
+            if(questionType.equals("MCQ")) {
+                questionDTO.setQuestionType("mcq");
+            } else if(questionType.equals("TRUE_FALSE")) {
+                questionDTO.setQuestionType("trueFalse");
+            } else if(questionType.equals("OPEN_ENDED")) {
+                questionDTO.setQuestionType("shortAnswer");
+            }
+            questionDTO.setQuestionContent(q.getQuestionContent());
+            questionDTO.setQuestionMaxPoints(q.getQuestionMaxScore().toString());
+
+            //link options
+            questionDTO.setOptions(convertOptionsToOptionDTOs(q.getOptions()));
+            questionDTOs.add(questionDTO);
+        }
+        return questionDTOs;
+    }
+
+    public List<String> convertOptionsToOptionDTOs(List<Option> options) {
+
+        List<String> optionStrings = new ArrayList<>();
+        for(Option o : options) {
+            optionStrings.add(o.getOptionContent());
+        }
+        return optionStrings;
     }
 }
