@@ -38,7 +38,8 @@ public class FolderController {
             folderService.saveFolder(courseId, newFolder);
             return "New parent folder has been created. ";
         } catch(FolderUnableToSaveException ex) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to save folder", ex);
+            System.out.println("Unable to save due to duplicate name.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
         }
     }
 
@@ -51,7 +52,7 @@ public class FolderController {
             folderService.saveFolder(courseId, parentId, newFolder);
             return "New child folder has been created. ";
         } catch(FolderUnableToSaveException ex) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to save folder", ex);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
         }
     }
 
@@ -149,8 +150,8 @@ public class FolderController {
         try{
             folderService.renameFolderByFolderId(folderName, new Long(folderId));
             return "Successfully renamed the folder.";
-        }catch(FolderNotFoundException ex) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Folder cannot be found.", ex);
+        }catch(FolderNotFoundException | FolderUnableToSaveException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
         }
 
     }
