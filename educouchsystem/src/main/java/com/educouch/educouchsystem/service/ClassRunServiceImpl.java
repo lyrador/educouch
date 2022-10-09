@@ -104,7 +104,7 @@ public class ClassRunServiceImpl implements ClassRunService {
 
     @Override
     public ClassRun updateClassRun(Long classRunId, ClassRunDTO classRunDTORequest) throws ParseException {
-        ClassRun classRunToUpdate = classRunRepository.findById(classRunDTORequest.getId()).get();
+        ClassRun classRunToUpdate = classRunRepository.findById(classRunId).get();
         for (Event event : classRunToUpdate.getEvents()) {
             event.setClassRun(null);
         }
