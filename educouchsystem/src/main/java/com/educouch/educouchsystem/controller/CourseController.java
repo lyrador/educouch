@@ -378,7 +378,8 @@ public class CourseController {
             CourseStatusTracker  statusTracker = new CourseStatusTracker(status.getEnrolmentStatus().toString(), classRun);
             return statusTracker;
         }catch(EnrolmentStatusTrackerNotFoundException ex) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to retrieve information.", ex);
+            CourseStatusTracker  statusTracker = new CourseStatusTracker("NOTENROLLED");
+            return statusTracker;
         }
 
     }
