@@ -17,6 +17,12 @@ public class EventServiceImpl implements EventService{
 
     @Override
     public Event saveEvent(Event event) {
+//        if (event.getRRule() != null) {
+//            String rRule = event.getRRule();
+//            String[] rRuleArray = rRule.split(";");
+//            String interval = rRuleArray[0].split("=")[1];
+//        }
+        event.setClassRunMainId(event.getClassRun().getClassRunId());
         return eventRepository.save(event);
     }
 
