@@ -11,6 +11,7 @@ public class QuestionDTO {
     private String questionContent;
     private String questionMaxPoints;
     private List<String> options;
+    private String correctOption;
 
     public QuestionDTO() {
     }
@@ -78,5 +79,13 @@ public class QuestionDTO {
 
     public void setOptions(List<String> options) {
         this.options = options;
+    }
+
+    public String getCorrectOption() {
+        return correctOption;
+    }
+
+    public void setCorrectOption(String correctOption) {
+        this.correctOption = correctOption;
     }
 }

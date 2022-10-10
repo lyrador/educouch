@@ -6,6 +6,7 @@ import com.educouch.educouchsystem.dto.QuizDTO;
 import com.educouch.educouchsystem.model.Option;
 import com.educouch.educouchsystem.model.Question;
 import com.educouch.educouchsystem.model.Quiz;
+import com.educouch.educouchsystem.service.OptionService;
 import com.educouch.educouchsystem.service.QuestionService;
 import com.educouch.educouchsystem.service.QuizService;
 import com.educouch.educouchsystem.util.enumeration.AssessmentStatusEnum;
@@ -36,6 +37,9 @@ public class QuizController {
     @Autowired
     private QuestionService questionService;
 
+    @Autowired
+    private OptionService optionService;
+
     @PostMapping("/createQuiz/{courseId}")
     public ResponseEntity<Quiz> createQuiz(@RequestBody QuizDTO quizDTO, @PathVariable(value="courseId") Long courseId) {
 
@@ -62,6 +66,80 @@ public class QuizController {
         } catch (QuizNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PutMapping("/updateQuizById/{quizId}")
+    public ResponseEntity<Quiz> updateQuizById(@RequestBody QuizDTO updatedQuizDTO, @PathVariable(value="quizId") Long quizId) {
+        try {
+            Quiz updatedQuiz = quizService.retrieveQuizById(quizId);
+            if(!(updatedQuiz.getTitle().equals(updatedQuizDTO.getAssessmentTitle()))) {
+                updatedQuiz.setTitle(updatedQuizDTO.getAssessmentTitle());
+            }
+            if(!(updatedQuiz.getDescription().equals(updatedQuizDTO.getAssessmentDescription()))) {
+                updatedQuiz.setDescription(updatedQuizDTO.getAssessmentDescription());
+            }
+            if(!(updatedQuiz.getMaxScore().equals(updatedQuizDTO.getAssessmentMaxScore()))) {
+                updatedQuiz.setMaxScore(updatedQuizDTO.getAssessmentMaxScore());
+            }
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+            if(!(updatedQuiz.getStartDate().toString().equals(updatedQuizDTO.getAssessmentStartDate()))) {
+                updatedQuiz.setStartDate((Date) formatter.parse(updatedQuizDTO.getAssessmentStartDate()));
+            }
+            if(!(updatedQuiz.getEndDate().toString().equals(updatedQuizDTO.getAssessmentEndDate()))) {
+                updatedQuiz.setEndDate((Date) formatter.parse(updatedQuizDTO.getAssessmentEndDate()));
+            }
+
+            if (updatedQuizDTO.getHasTimeLimit().equals("true")) {
+                updatedQuiz.setHasTimeLimit(Boolean.TRUE);
+            } else if (updatedQuizDTO.getHasTimeLimit().equals("false")) {
+                updatedQuiz.setHasTimeLimit(Boolean.FALSE);
+            }
+
+            updatedQuiz.setTimeLimit(updatedQuizDTO.getTimeLimit());
+            updatedQuiz.setQuestionCounter(updatedQuizDTO.getQuestionCounter());
+            if (updatedQuizDTO.getIsAutoRelease().equals("true")) {
+                updatedQuiz.setAutoRelease(Boolean.TRUE);
+            } else if (updatedQuizDTO.getIsAutoRelease().equals("false")) {
+                updatedQuiz.setAutoRelease(Boolean.FALSE);
+            }
+
+
+            //doesnt update isOpen
+            updatedQuiz = updateQuizQuestions(updatedQuiz, updatedQuizDTO.getQuestions());
+            quizService.saveQuiz(updatedQuiz);
+            return new ResponseEntity<>(updatedQuiz, HttpStatus.OK);
+        } catch (QuizNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (ParseException e) {
+            return new ResponseEntity<>(HttpStatus.valueOf("Date Parsing failed"));
+        } catch (QuestionNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.valueOf("Something went wrong updating questions"));
+        } catch (OptionNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.valueOf("Something went wrong updating options"));
+
+        }
+    }
+
+    public Quiz updateQuizQuestions(Quiz oldQuiz, List<QuestionDTO> questionDTOs) throws QuestionNotFoundException, OptionNotFoundException{
+
+        List<Question> questions = oldQuiz.getQuizQuestions();
+        for (int j=0; j<questions.size(); j++) {
+            List<Option> options = questions.get(j).getOptions();
+            if(options.size()>0) {
+                for(int i=0; i<options.size(); i++) {
+                    optionService.deleteOptionById(options.get(i).getOptionId());
+                    options.remove(options.size()-1);
+                }
+            }
+            questionService.deleteQuestion(questions.get(j).getQuestionId());
+        }
+        while(questions.size()>0) {
+            questions.remove(0);
+        }
+
+        Quiz updatedQuiz = addQuestions(oldQuiz, questionDTOs);
+        return updatedQuiz;
     }
 
 
@@ -130,30 +208,30 @@ public class QuizController {
 //        }
 //    }
 
-    @PutMapping("/updateQuestion/{questionId}")
-    public ResponseEntity<Question> updateQuestion(@RequestBody QuestionDTO questionDTO, @PathVariable("questionId") Long questionId) {
-        try {
-            Question questionToUpdate = questionService.retrieveQuestionById(questionId);
-
-            questionToUpdate.setQuestionContent(questionDTO.getQuestionContent());
-            questionToUpdate.setQuestionMaxScore(Double.parseDouble(questionDTO.getQuestionMaxPoints()));
-
-            if (questionDTO.getQuestionType().equals("TRUE FALSE")) {
-                questionToUpdate.setQuestionType(QuestionTypeEnum.TRUE_FALSE);
-            } else if (questionDTO.getQuestionType().equals("OPEN ENDED")) {
-                questionToUpdate.setQuestionType(QuestionTypeEnum.OPEN_ENDED);
-            } else if (questionDTO.getQuestionType().equals("MCQ")) {
-                questionToUpdate.setQuestionType(QuestionTypeEnum.MCQ);
-            } else if (questionDTO.getQuestionType().equals("MRQ")) {
-                questionToUpdate.setQuestionType(QuestionTypeEnum.MRQ);
-            }
-
-            questionService.updateQuestion(questionToUpdate, questionToUpdate);
-            return new ResponseEntity<Question>(questionService.saveQuestion(questionToUpdate), HttpStatus.OK);
-        } catch (QuestionNotFoundException ex) {
-            return new ResponseEntity<Question>(HttpStatus.NOT_FOUND);
-        }
-    }
+//    @PutMapping("/updateQuestion/{questionId}")
+//    public ResponseEntity<Question> updateQuestion(@RequestBody QuestionDTO questionDTO, @PathVariable("questionId") Long questionId) {
+//        try {
+//            Question questionToUpdate = questionService.retrieveQuestionById(questionId);
+//
+//            questionToUpdate.setQuestionContent(questionDTO.getQuestionContent());
+//            questionToUpdate.setQuestionMaxScore(Double.parseDouble(questionDTO.getQuestionMaxPoints()));
+//
+//            if (questionDTO.getQuestionType().equals("TRUE FALSE")) {
+//                questionToUpdate.setQuestionType(QuestionTypeEnum.TRUE_FALSE);
+//            } else if (questionDTO.getQuestionType().equals("OPEN ENDED")) {
+//                questionToUpdate.setQuestionType(QuestionTypeEnum.OPEN_ENDED);
+//            } else if (questionDTO.getQuestionType().equals("MCQ")) {
+//                questionToUpdate.setQuestionType(QuestionTypeEnum.MCQ);
+//            } else if (questionDTO.getQuestionType().equals("MRQ")) {
+//                questionToUpdate.setQuestionType(QuestionTypeEnum.MRQ);
+//            }
+//
+//            questionService.updateQuestion(questionToUpdate, questionToUpdate);
+//            return new ResponseEntity<Question>(questionService.saveQuestion(questionToUpdate), HttpStatus.OK);
+//        } catch (QuestionNotFoundException ex) {
+//            return new ResponseEntity<Question>(HttpStatus.NOT_FOUND);
+//        }
+//    }
 
     public Quiz instantiateQuiz(QuizDTO quizDTO, Long courseId) throws CourseNotFoundException, ParseException{
 
@@ -177,6 +255,8 @@ public class QuizController {
 
         newQuiz.setTimeLimit(quizDTO.getTimeLimit());
 
+        newQuiz.setQuestionCounter(quizDTO.getQuestionCounter());
+        newQuiz.setOpen(false);
         if (quizDTO.getIsAutoRelease().equals("true")) {
             newQuiz.setAutoRelease(Boolean.TRUE);
         } else if (quizDTO.getIsAutoRelease().equals("false")) {
@@ -214,6 +294,7 @@ public class QuizController {
             }
             //for each question, add options to question
             question = addOptions(question, q.getOptions());
+            question.setCorrectOption(new Option(q.getCorrectOption()));
             questions.add(question);
         }
 
@@ -225,7 +306,7 @@ public class QuizController {
 
     public Question addOptions(Question question, List<String> optionDTOs) {
 
-        List<Option> options = new ArrayList<>();
+        List<Option> options = question.getOptions();
 
         for(String o : optionDTOs ) {
             Option option = new Option(o);
@@ -245,7 +326,6 @@ public class QuizController {
         quizDTO.setAssessmentDescription(quiz.getDescription());
         quizDTO.setAssessmentMaxScore(quiz.getMaxScore());
         quizDTO.setAssessmentStatusEnum(quiz.getAssessmentStatus().toString());
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
         quizDTO.setAssessmentStartDate(quiz.getStartDate().toString());
         quizDTO.setAssessmentEndDate(quiz.getEndDate().toString());
@@ -258,6 +338,8 @@ public class QuizController {
         }
 
         quizDTO.setTimeLimit(quiz.getTimeLimit());
+
+        quizDTO.setQuestionCounter(quiz.getQuestionCounter());
 
         if(quiz.getAutoRelease()) {
             quizDTO.setIsAutoRelease("true");
@@ -294,6 +376,8 @@ public class QuizController {
             //link options
             questionDTO.setOptions(convertOptionsToOptionDTOs(q.getOptions()));
             questionDTOs.add(questionDTO);
+
+            questionDTO.setCorrectOption(q.getCorrectOption().getOptionContent());
         }
         return questionDTOs;
     }
