@@ -1,7 +1,11 @@
 package com.educouch.educouchsystem.model;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -41,10 +45,20 @@ public class Comment {
     @JoinColumn(name="organisationAdmin_id")
     private OrganisationAdmin createdByOrganisationAdmin;
 
+    @OneToMany(cascade = {CascadeType.REMOVE}, mappedBy="parentComment")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Comment> comments;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn
+    private Comment parentComment;
+
     public Comment() {
+        this.comments = new ArrayList<>();
     }
 
     public Comment(String commentTitle, String content, LocalDateTime timestamp) {
+        this();
         this.commentTitle = commentTitle;
         this.content = content;
         this.timestamp = timestamp;
@@ -112,5 +126,21 @@ public class Comment {
 
     public void setCreatedByOrganisationAdmin(OrganisationAdmin createdByOrganisationAdmin) {
         this.createdByOrganisationAdmin = createdByOrganisationAdmin;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public Comment getParentComment() {
+        return parentComment;
+    }
+
+    public void setParentComment(Comment parentComment) {
+        this.parentComment = parentComment;
     }
 }
