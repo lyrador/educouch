@@ -240,7 +240,7 @@ public class DataLoader implements CommandLineRunner {
         courseRequest.getInstructors().add(i2);
 
         Course course = courseService.saveCourse(courseRequest);
-        depositRefundRequestRepository.save(new DepositRefundRequest(1l, new BigDecimal(100)));
+//        depositRefundRequestRepository.save(new DepositRefundRequest(1l, new BigDecimal(100)));
 
 
 
