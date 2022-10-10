@@ -206,6 +206,7 @@ public class CommentController {
                     childCommentDTOs.add(childCommentDTO);
                 }
                 commentDTO.setChildCommentDTOs(childCommentDTOs);
+                commentDTO.setChildComments(null);
             }
 
             return new ResponseEntity<>(commentDTOs, HttpStatus.OK);
