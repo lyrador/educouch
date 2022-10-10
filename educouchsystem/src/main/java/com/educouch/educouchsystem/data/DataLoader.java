@@ -102,13 +102,13 @@ public class DataLoader implements CommandLineRunner {
                 "alex", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true, "23456"));
 
         Learner learner_2 = learnerRepository.save(new Learner("Beatrice", "irenelie1412@gmail.com", "password",
-                "beatrice", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true, "23456"));
+                "beatrice", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1665376248092_2938982-middle.png", true, "23456"));
 
-        Learner learner_3 =  learnerRepository.save(new Learner("Diana", "irenelie@nushackers.org", "password",
-                "diana", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", false, "23456"));
+        Learner learner_3 =  learnerRepository.save(new Learner("Carol", "irenelie@nushackers.org", "password",
+                "carol", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1665376289662_imgbin-computer-icons-woman-avatar-avatar-girl-TBWeJMyXNwtNQA661FQ0rZSv2.jpg", true, "23456"));
 
         Learner learner_4 =  learnerRepository.save(new Learner("David", "lielieirene@gmail.com", "password",
-                "david", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", false, "23456"));
+                "david", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1665376079555_png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png", true, "23456"));
 
         // courses
         Course cs1010 = new Course("CS1010", "Introduction to Computer Science",
