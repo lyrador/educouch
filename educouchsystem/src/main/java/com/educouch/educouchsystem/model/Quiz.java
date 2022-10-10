@@ -16,6 +16,9 @@ public class Quiz extends Assessment implements Serializable {
     private Integer timeLimit;
 
     @NotNull
+    private Integer questionCounter;
+
+    @NotNull
     private Boolean isAutoRelease;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
@@ -78,5 +81,13 @@ public class Quiz extends Assessment implements Serializable {
 
     public void setTimeLimit(Integer timeLimit) {
         this.timeLimit = timeLimit;
+    }
+
+    public Integer getQuestionCounter() {
+        return questionCounter;
+    }
+
+    public void setQuestionCounter(Integer questionCounter) {
+        this.questionCounter = questionCounter;
     }
 }
