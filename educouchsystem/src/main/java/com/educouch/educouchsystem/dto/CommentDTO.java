@@ -1,5 +1,10 @@
 package com.educouch.educouchsystem.dto;
 
+import com.educouch.educouchsystem.model.Comment;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class CommentDTO {
 
     private Long commentId;
@@ -18,10 +23,18 @@ public class CommentDTO {
 
     private String createdByUserProfilePictureURL;
 
+    private List<CommentDTO> childCommentDTOs;
+
+    private List<Comment> childComments;
+
+
     public CommentDTO() {
+        this.childCommentDTOs = new ArrayList<>();
+        this.childComments = new ArrayList<>();
     }
 
     public CommentDTO(Long commentId, String commentTitle, String content, String createdDateTime, Long createdByUserId, String createdByUserName, String createdByUserType, String createdByUserProfilePictureURL) {
+        this();
         this.commentId = commentId;
         this.commentTitle = commentTitle;
         this.content = content;
@@ -94,5 +107,21 @@ public class CommentDTO {
 
     public void setCreatedByUserProfilePictureURL(String createdByUserProfilePictureURL) {
         this.createdByUserProfilePictureURL = createdByUserProfilePictureURL;
+    }
+
+    public List<CommentDTO> getChildCommentDTOs() {
+        return childCommentDTOs;
+    }
+
+    public void setChildCommentDTOs(List<CommentDTO> childCommentDTOs) {
+        this.childCommentDTOs = childCommentDTOs;
+    }
+
+    public List<Comment> getChildComments() {
+        return childComments;
+    }
+
+    public void setChildComments(List<Comment> childComments) {
+        this.childComments = childComments;
     }
 }
