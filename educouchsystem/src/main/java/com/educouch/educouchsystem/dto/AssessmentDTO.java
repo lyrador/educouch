@@ -15,14 +15,14 @@ public class AssessmentDTO {
     private Double maxScore;
     private String startDate;
     private String endDate;
-    private Boolean isOpen = Boolean.FALSE;
+    private String isOpen;
     private AssessmentStatusEnum assessmentStatus = AssessmentStatusEnum.PENDING;
     private String assessmentType;
 
     public AssessmentDTO() {
     }
 
-    public AssessmentDTO(Long assessmentId, String title, String description, Double maxScore, String startDate, String endDate, Boolean isOpen, AssessmentStatusEnum assessmentStatus, String assessmentType) {
+    public AssessmentDTO(Long assessmentId, String title, String description, Double maxScore, String startDate, String endDate, String isOpen, AssessmentStatusEnum assessmentStatus, String assessmentType) {
         this.assessmentId = assessmentId;
         this.title = title;
         this.description = description;
@@ -82,11 +82,11 @@ public class AssessmentDTO {
         this.endDate = endDate;
     }
 
-    public Boolean getOpen() {
+    public String getOpen() {
         return isOpen;
     }
 
-    public void setOpen(Boolean open) {
+    public void setOpen(String open) {
         isOpen = open;
     }
 
