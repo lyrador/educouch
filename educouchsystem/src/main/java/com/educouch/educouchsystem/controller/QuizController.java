@@ -96,6 +96,7 @@ public class QuizController {
                 updatedQuiz.setHasTimeLimit(Boolean.FALSE);
             }
 
+            updatedQuiz.setQuestionCounter(updatedQuiz.getQuestionCounter());
             updatedQuiz.setTimeLimit(updatedQuizDTO.getTimeLimit());
             updatedQuiz.setQuestionCounter(updatedQuizDTO.getQuestionCounter());
             if (updatedQuizDTO.getIsAutoRelease().equals("true")) {
@@ -126,12 +127,12 @@ public class QuizController {
         List<Question> questions = oldQuiz.getQuizQuestions();
         for (int j=0; j<questions.size(); j++) {
             List<Option> options = questions.get(j).getOptions();
-            if(options.size()>0) {
-                for(int i=0; i<options.size(); i++) {
-                    optionService.deleteOptionById(options.get(i).getOptionId());
-                    options.remove(options.size()-1);
-                }
-            }
+//            if(options.size()>0) {
+//                for(int i=0; i<options.size(); i++) {
+//                    optionService.deleteOptionById(options.get(i).getOptionId());
+//                    options.remove(options.size()-1);
+//                }
+//            }
             questionService.deleteQuestion(questions.get(j).getQuestionId());
         }
         while(questions.size()>0) {
