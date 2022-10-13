@@ -288,6 +288,7 @@ public class QuizController {
                 question.setQuestionType(QuestionTypeEnum.TRUE_FALSE);
             }
             question.setQuestionContent(q.getQuestionContent());
+            question.setQuestionHint(q.getQuestionHint());
             try {
                 question.setQuestionMaxScore(Double.parseDouble(q.getQuestionMaxPoints()));
             } catch (Exception e) {
@@ -372,6 +373,7 @@ public class QuizController {
                 questionDTO.setQuestionType("shortAnswer");
             }
             questionDTO.setQuestionContent(q.getQuestionContent());
+            questionDTO.setQuestionHint(q.getQuestionHint());
             questionDTO.setQuestionMaxPoints(q.getQuestionMaxScore().toString());
 
             //link options
