@@ -5,6 +5,7 @@ import com.educouch.educouchsystem.repository.*;
 import com.educouch.educouchsystem.service.*;
 import com.educouch.educouchsystem.util.enumeration.*;
 import com.educouch.educouchsystem.util.exception.*;
+import com.stripe.model.Price;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.http.HttpStatus;
@@ -154,5 +155,24 @@ public class DataLoader implements CommandLineRunner {
         cs2102 = courseService.saveCourse(cs2102);
 
         //from here can create classruns and enrol learners in the course cs2102 to test functionality
+        Integer[] daysOfWeek = new Integer[2];
+        daysOfWeek[0] = 1;
+        daysOfWeek[1] = 2;
+        ClassRun classRunOne = new ClassRun(LocalDate.now().plusDays(7), LocalDate.now().plusDays(90), LocalTime.MIDNIGHT, LocalTime.NOON, 1, 10, daysOfWeek, RecurringEnum.ALTERNATE);
+        try {
+            courseService.addClassRunToCourse(cs2102.getCourseId(), classRunOne);
+            cs2102 = courseService.getCourseById(cs2102.getCourseId());
+            int size = cs2102.getClassRuns().size();
+            List<ClassRun> listOfClassRuns = cs2102.getClassRuns();
+            classRunOne = listOfClassRuns.get(0);
+            try {
+                stripeService.payDeposit(classRunOne.getClassRunId(), learner_1.getLearnerId(), new BigDecimal(100));
+//                stripeService.payCourseFee(classRunOne.getClassRunId(), learner_1.getLearnerId(), new BigDecimal(900));
+            } catch(ClassRunNotFoundException | LearnerNotFoundException ex) {
+                System.out.println("Error in enrolment.");
+            }
+        } catch(CourseNotFoundException ex) {
+            System.out.println("Error in generating class run. ");
+        }
     }
 }
