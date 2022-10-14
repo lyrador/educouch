@@ -1,5 +1,11 @@
 package com.educouch.educouchsystem.data.model;
 
+import com.educouch.educouchsystem.model.Educator;
+import com.educouch.educouchsystem.model.Instructor;
+import com.educouch.educouchsystem.model.Learner;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,17 +22,20 @@ public class Room {
     private String address;
     private String password;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(joinColumns=@JoinColumn(name="roomId"))
+    @Fetch(value = FetchMode.SUBSELECT)
     private List<Learner> participants;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(joinColumns=@JoinColumn(name="roomId"))
+    @Fetch(value = FetchMode.SUBSELECT)
     private List<Instructor> organizers;
 
 
 
-    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "roomId")
     private List<Drawing> drawings;
 

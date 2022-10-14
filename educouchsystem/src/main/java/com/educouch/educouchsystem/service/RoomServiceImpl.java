@@ -1,14 +1,21 @@
 package com.educouch.educouchsystem.service;
 
-import com.educouch.educouchsystem.data.model.Instructor;
-import com.educouch.educouchsystem.data.model.Learner;
+
+import com.educouch.educouchsystem.data.model.Drawing;
+import com.educouch.educouchsystem.model.Educator;
+import com.educouch.educouchsystem.model.Learner;
 import com.educouch.educouchsystem.data.model.Room;
+import com.educouch.educouchsystem.model.Instructor;
+import com.educouch.educouchsystem.model.Learner;
+import com.educouch.educouchsystem.repository.DrawingRepository;
 import com.educouch.educouchsystem.repository.LearnerRepository;
 import com.educouch.educouchsystem.repository.LearnerTransactionRepository;
 import com.educouch.educouchsystem.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service("roomService")
@@ -20,6 +27,9 @@ public class RoomServiceImpl implements RoomService {
 
     @Autowired
     EducatorService educatorService;
+
+    @Autowired
+    DrawingRepository drawingRepository;
 
     @Override
     public Room saveRoom(Room room) {
@@ -73,6 +83,38 @@ public class RoomServiceImpl implements RoomService {
             deleteRoom(room.getRoomId());
         }
 
+
+    }
+
+    public List<String> retrieveListOfUsers(Long roomId) {
+        Room room = getRoomByRoomId(roomId);
+        List<String> usernames = new ArrayList<>();
+        List<Instructor> instructors = room.getOrganizers();
+        List<Learner> participants = room.getParticipants();
+
+        for(Instructor instructor: instructors) {
+            usernames.add(instructor.getUsername());
+
+        }
+
+        for(Learner learner: participants) {
+            usernames.add(learner.getUsername());
+        }
+
+        return usernames;
+    }
+
+    public void saveDrawing(Long roomId, Drawing drawing) {
+        Room room = getRoomByRoomId(roomId);
+        drawing = drawingRepository.save(drawing);
+
+        room.getDrawings().add(drawing);
+        roomRepository.save(room);
+
+    }
+    public List<Drawing> retrieveDrawingByRoomId(Long roomId) {
+        Room room = getRoomByRoomId(roomId);
+        return room.getDrawings();
 
     }
 
