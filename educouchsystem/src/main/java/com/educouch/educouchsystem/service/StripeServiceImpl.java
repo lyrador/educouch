@@ -11,6 +11,7 @@ import com.educouch.educouchsystem.util.enumeration.LearnerPaymentEnum;
 import com.educouch.educouchsystem.util.exception.*;
 import com.stripe.exception.*;
 import com.stripe.param.PaymentIntentCreateParams;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -138,6 +139,8 @@ public class StripeServiceImpl implements StripeService {
                     e.setEnrolmentStatus(EnrolmentStatusTrackerEnum.ENROLLED);
 
                     enrolmentStatusTrackerService.saveEnrolmentStatusTracker(e);
+                    Hibernate.initialize(c.getEnrolledLearners());
+                    c.getEnrolledLearners().size();
                     c.getEnrolledLearners().add(l);
                     classRunService.saveClassRun(c);
 
@@ -162,6 +165,15 @@ public class StripeServiceImpl implements StripeService {
             throw new ClassRunNotFoundException("Unable to find class run. ");
         }
 
+    }
+
+    public void dataloaderEnrolment(Long learnerId, Long classRunId, BigDecimal courseFee) {
+        try {
+            this.payDeposit(classRunId, learnerId, courseFee.multiply(new BigDecimal(0.10)));
+            this.payCourseFee(classRunId, learnerId, courseFee.multiply(new BigDecimal(0.90)));
+        } catch(Exception ex) {
+            System.out.println("Data loader failed.");
+        }
     }
 
 

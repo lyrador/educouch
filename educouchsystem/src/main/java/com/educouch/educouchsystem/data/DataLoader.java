@@ -3,11 +3,9 @@ package com.educouch.educouchsystem.data;
 import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.repository.*;
 import com.educouch.educouchsystem.service.*;
-import com.educouch.educouchsystem.util.enumeration.AgeGroupEnum;
-import com.educouch.educouchsystem.util.enumeration.CourseApprovalStatusEnum;
-import com.educouch.educouchsystem.util.enumeration.FileSubmissionEnum;
-import com.educouch.educouchsystem.util.enumeration.InstructorAccessRight;
+import com.educouch.educouchsystem.util.enumeration.*;
 import com.educouch.educouchsystem.util.exception.*;
+import com.stripe.model.Price;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.http.HttpStatus;
@@ -76,7 +74,8 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     private LearnerService learnerService;
 
-
+    @Autowired
+    private ClassRunService classRunService;
 
     public DataLoader(LmsAdminService lmsAdminService) {
         this.lmsAdminService = lmsAdminService;
@@ -93,115 +92,25 @@ public class DataLoader implements CommandLineRunner {
 
     public void loadData() {
 
-
-        // lms admin
+        // create lms admin
         lmsAdminService.saveLmsAdmin(new LmsAdmin("manager", "manager@gmail.com", "password", "manager"));
 
-        // learner
+        // create learners
         Learner learner_1  = learnerRepository.save(new Learner("Alex", "irenelie@u.nus.edu", "password",
-                "alex", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", true, "23456"));
+                "alex", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", false, "23456"));
 
         Learner learner_2 = learnerRepository.save(new Learner("Beatrice", "irenelie1412@gmail.com", "password",
-                "beatrice", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1665376248092_2938982-middle.png", true, "23456"));
+                "beatrice", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1665376248092_2938982-middle.png", false, "23456"));
 
         Learner learner_3 =  learnerRepository.save(new Learner("Carol", "irenelie@nushackers.org", "password",
-                "carol", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1665376289662_imgbin-computer-icons-woman-avatar-avatar-girl-TBWeJMyXNwtNQA661FQ0rZSv2.jpg", true, "23456"));
+                "carol", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1665376289662_imgbin-computer-icons-woman-avatar-avatar-girl-TBWeJMyXNwtNQA661FQ0rZSv2.jpg", false, "23456"));
 
         Learner learner_4 =  learnerRepository.save(new Learner("David", "lielieirene@gmail.com", "password",
-                "david", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1665376079555_png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png", true, "23456"));
+                "david", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1665376079555_png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png", false, "23456"));
 
-        // courses
-        Course cs1010 = new Course("CS1010", "Introduction to Computer Science",
-                "xxx", "xxx", 100.0, AgeGroupEnum.KIDS);
-        cs1010.setCourseApprovalStatus(CourseApprovalStatusEnum.LIVE);
-        cs1010.setCourseFee(new BigDecimal(1000));
-        cs1010.setStartDate(LocalDate.now().plusDays(7));
-
-        Course bio4000 = new Course("BIO4000", "Molecular Genetics", "xxx",
-                "xxx", 100.0, AgeGroupEnum.ADULTS);
-        bio4000.setCourseApprovalStatus(CourseApprovalStatusEnum.LIVE);
-        bio4000.setCourseFee(new BigDecimal(1000));
-        bio4000.setStartDate(LocalDate.now().plusDays(10));
-
-        // class run
-        Integer[] test1 = new Integer[2];
-        test1[0] = 2;
-        test1[1] = 5;
-
-        Integer[] test2 = new Integer[2];
-        test2[0] = 1;
-        test2[1] = 3;
-
-        ClassRun c1 = new ClassRun();
-        c1.setClassRunStart(LocalDate.now().plusDays(7));
-        c1.setClassRunEnd(LocalDate.now().plusMonths(3));
-        c1.setMinClassSize(1);
-        c1.setMaximumCapacity(3);
-        c1.setClassRunStartTime(LocalTime.MIDNIGHT);
-        c1.setClassRunEndTime(LocalTime.NOON);
-
-        c1.setClassRunDaysOfTheWeek(test1);
-
-        ClassRun c2 = new ClassRun();
-        c2.setClassRunStart(LocalDate.now().plusDays(10));
-        c2.setClassRunEnd(LocalDate.now().plusMonths(3));
-        c2.setMinClassSize(1);
-        c2.setMaximumCapacity(20);
-        c2.setClassRunStartTime(LocalTime.MIDNIGHT);
-        c2.setClassRunEndTime(LocalTime.NOON);
-        c2.setClassRunDaysOfTheWeek(test2);
-
-        ClassRun c3 = new ClassRun();
-        c3.setClassRunStart(LocalDate.now().plusDays(7));
-        c3.setClassRunEnd(LocalDate.now().plusMonths(3));
-        c3.setMinClassSize(1);
-        c3.setMaximumCapacity(3);
-        c3.setClassRunStartTime(LocalTime.MIDNIGHT);
-        c3.setClassRunEndTime(LocalTime.NOON);
-        c3.setClassRunDaysOfTheWeek(test1);
-
-        ClassRun c4 = new ClassRun();
-        c4.setClassRunStart(LocalDate.now().plusDays(7));
-        c4.setClassRunEnd(LocalDate.now().plusMonths(3));
-        c4.setMinClassSize(10);
-        c4.setMaximumCapacity(20);
-        c4.setClassRunStartTime(LocalTime.MIDNIGHT);
-        c4.setClassRunEndTime(LocalTime.NOON);
-        c4.setClassRunDaysOfTheWeek(test2);
-
-
-        cs1010 =  courseService.saveCourse(cs1010);
-        bio4000 =  courseService.saveCourse(bio4000);
-
-        try {
-            courseService.addClassRunToCourse(cs1010.getCourseId(), c1);
-            courseService.addClassRunToCourse(cs1010.getCourseId(), c2);
-
-            courseService.addClassRunToCourse(bio4000.getCourseId(), c3);
-            courseService.addClassRunToCourse(bio4000.getCourseId(), c4);
-        } catch(CourseNotFoundException ex) {
-            System.out.println("Course not found exception.");
-        }
-
-
-//        try {
-//            stripeService.payDeposit(c1.getClassRunId(), learner_1.getLearnerId(), new BigDecimal(100));
-//            stripeService.payDeposit(c1.getClassRunId(), learner_2.getLearnerId(), new BigDecimal(100));
-//
-//
-//
-//            stripeService.payDeposit(c4.getClassRunId(), learner_3.getLearnerId(), new BigDecimal(100));
-//            stripeService.payDeposit(c4.getClassRunId(), learner_4.getLearnerId(), new BigDecimal(100));
-//        } catch(ClassRunNotFoundException | LearnerNotFoundException ex) {
-//            System.out.println("Could not add deposit record data");
-//        }
-
-
-
-        //create organisation
+        //create organisation and organisation admin
         Organisation org1 = new Organisation("FakeTuition", "issa fake tuition", "23423423234234");
         OrganisationAdmin orgAdmin = new OrganisationAdmin("grinivas", "grini@gmail.com", "password", "grinivas");
-
         organisationService.instantiateOrganisation(orgAdmin, org1);
 
         //create instructors
@@ -211,58 +120,59 @@ public class DataLoader implements CommandLineRunner {
         organisationService.addInstructor("1", i1);
         organisationService.addInstructor("1", i2);
 
-        //linking a course to horlicks head instructor and org 1
-        Course courseRequest = new Course();
-        courseRequest.setCourseCode("TEST123");
-        courseRequest.setCourseTitle("TESTING 123");
-        courseRequest.setCourseDescription("TESTING 123");
-        courseRequest.setCourseTimeline("TILL END 2022");
-        courseRequest.setCourseMaxScore(100.00);
-        courseRequest.setAgeGroup(AgeGroupEnum.ADULTS);
+        //create a course and link it to head instructor horlicks of organisation org 1
+        Course cs2102 = new Course();
+        cs2102.setCourseCode("CS2102");
+        cs2102.setCourseTitle("Database Systems");
+        cs2102.setCourseDescription("This is a new CS2102 course!");
+        cs2102.setCourseTimeline("TILL END 2022");
+        cs2102.setCourseMaxScore(100.00);
+        cs2102.setAgeGroup(AgeGroupEnum.ADULTS);
+        cs2102.setCourseFee(new BigDecimal(1000));
+        cs2102.setStartDate(LocalDate.now().plusDays(7));
+        //set it to live status to test enrollment functionality (in normal situations classruns should be created first before making the course live)
+        cs2102.setCourseApprovalStatus(CourseApprovalStatusEnum.LIVE);
 
         if (i2.getCourses() == null) {
             List<Course> courseList = new ArrayList<>();
             i2.setCourses(courseList);
         }
-        i2.getCourses().add(courseRequest);
+        i2.getCourses().add(cs2102);
 
         if (org1.getCourses() == null) {
             List<Course> courseList = new ArrayList<>();
             org1.setCourses(courseList);
         }
-        org1.getCourses().add(courseRequest);
-        courseRequest.setOrganisation(org1);
+        org1.getCourses().add(cs2102);
+        cs2102.setOrganisation(org1);
 
-        if (courseRequest.getInstructors() == null) {
+        if (cs2102.getInstructors() == null) {
             List<Instructor> instructorList = new ArrayList<>();
-            courseRequest.setInstructors(instructorList);
+            cs2102.setInstructors(instructorList);
         }
-        courseRequest.getInstructors().add(i2);
+        cs2102.getInstructors().add(i2);
 
-        Course course = courseService.saveCourse(courseRequest);
-        depositRefundRequestRepository.save(new DepositRefundRequest(1l, new BigDecimal(100)));
+        cs2102 = courseService.saveCourse(cs2102);
 
-
-
-
-
+        //from here can create classruns and enrol learners in the course cs2102 to test functionality
+        Integer[] daysOfWeek = new Integer[2];
+        daysOfWeek[0] = 1;
+        daysOfWeek[1] = 2;
+        ClassRun classRunOne = new ClassRun(LocalDate.now().plusDays(7), LocalDate.now().plusDays(90), LocalTime.MIDNIGHT, LocalTime.NOON, 1, 10, daysOfWeek, RecurringEnum.ALTERNATE);
         try {
-            courseService.addClassRunToCourse(cs1010.getCourseId(), c1);
-            courseService.addClassRunToCourse(cs1010.getCourseId(), c2);
-
-            courseService.addClassRunToCourse(bio4000.getCourseId(), c3);
-            courseService.addClassRunToCourse(bio4000.getCourseId(), c4);
+            courseService.addClassRunToCourse(cs2102.getCourseId(), classRunOne);
+            cs2102 = courseService.getCourseById(cs2102.getCourseId());
+            int size = cs2102.getClassRuns().size();
+            List<ClassRun> listOfClassRuns = cs2102.getClassRuns();
+            classRunOne = listOfClassRuns.get(0);
+            try {
+                stripeService.payDeposit(classRunOne.getClassRunId(), learner_1.getLearnerId(), new BigDecimal(100));
+//                stripeService.payCourseFee(classRunOne.getClassRunId(), learner_1.getLearnerId(), new BigDecimal(900));
+            } catch(ClassRunNotFoundException | LearnerNotFoundException ex) {
+                System.out.println("Error in enrolment.");
+            }
         } catch(CourseNotFoundException ex) {
-            System.out.println("Course not found exception.");
+            System.out.println("Error in generating class run. ");
         }
-
-//
-//        //create FileSubmission Assessment
-//        FileSubmission newFileSubmission = new FileSubmission("Quiz A", "abcde", 20.0, new Date(), new Date(), FileSubmissionEnum.INDIVIDUAL);
-//        fileSubmissionRepository.save(newFileSubmission);
-    }
-
-    private void testDataForTimer() {
-
     }
 }
