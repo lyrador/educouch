@@ -9,6 +9,7 @@ public class QuestionDTO {
     private String questionTitle;
     private String questionType;
     private String questionContent;
+    private String questionHint;
     private String questionMaxPoints;
     private List<String> options;
     private String correctOption;
@@ -16,13 +17,14 @@ public class QuestionDTO {
     public QuestionDTO() {
     }
 
-    public QuestionDTO(String localid, String questionTitle, String questionType, String questionContent, String questionMaxPoints, List<String> options) {
+    public QuestionDTO(String localid, String questionTitle, String questionType, String questionContent, String questionMaxPoints, List<String> options, String questionHint) {
         this.localid = localid;
         this.questionTitle = questionTitle;
         this.questionType = questionType;
         this.questionContent = questionContent;
         this.questionMaxPoints = questionMaxPoints;
         this.options = options;
+        this.questionHint = questionHint;
     }
 
     public String getQuestionId() {
@@ -87,5 +89,13 @@ public class QuestionDTO {
 
     public void setCorrectOption(String correctOption) {
         this.correctOption = correctOption;
+    }
+
+    public String getQuestionHint() {
+        return questionHint;
+    }
+
+    public void setQuestionHint(String questionHint) {
+        this.questionHint = questionHint;
     }
 }
