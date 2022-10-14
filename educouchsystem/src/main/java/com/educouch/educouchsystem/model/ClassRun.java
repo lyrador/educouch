@@ -77,6 +77,17 @@ public class ClassRun {
         this.events = new ArrayList<>();
     }
 
+    public ClassRun(LocalDate classRunStart, LocalDate classRunEnd, LocalTime classRunStartTime, LocalTime classRunEndTime, int minClassSize, int maximumCapacity, Integer[] daysOfWeek, RecurringEnum recurringEnum) {
+        new ClassRun();
+        this.classRunStart = classRunStart;
+        this.classRunEnd = classRunEnd;
+        this.classRunStartTime = classRunStartTime;
+        this.classRunEndTime = classRunEndTime;
+        this.minClassSize = minClassSize;
+        this.maximumCapacity = maximumCapacity;
+        this.classRunDaysOfTheWeek = daysOfWeek;
+        this.recurringEnum = recurringEnum;
+    }
     public ClassRun(LocalDate classRunStart, LocalDate classRunEnd) {
         new ClassRun();
         this.classRunStart = classRunStart;
@@ -84,6 +95,7 @@ public class ClassRun {
     }
 
     public ClassRun(LocalDate classRunStart, LocalDate classRunEnd, Integer minClassSize, Integer maximumCapacity) {
+        new ClassRun();
         this.classRunStart = classRunStart;
         this.classRunEnd = classRunEnd;
         this.minClassSize = minClassSize;
