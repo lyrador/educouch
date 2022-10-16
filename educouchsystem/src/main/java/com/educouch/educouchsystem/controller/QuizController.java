@@ -98,7 +98,7 @@ public class QuizController {
 
             if(updatedQuizDTO.getHasMaxAttempts().equals("true")) {
                 updatedQuiz.setHasMaxAttempts(Boolean.TRUE);
-                updatedQuiz.setMaxAttempts(updatedQuiz.getMaxAttempts());
+                updatedQuiz.setMaxAttempts(updatedQuizDTO.getMaxAttempts());
             } else {
                 updatedQuiz.setHasMaxAttempts(Boolean.FALSE);
                 updatedQuiz.setMaxAttempts(0);
