@@ -134,12 +134,12 @@ public class QuizController {
         List<Question> questions = oldQuiz.getQuizQuestions();
         for (int j=0; j<questions.size(); j++) {
             List<Option> options = questions.get(j).getOptions();
-            if(options.size()>0) {
-                for(int i=0; i<options.size(); i++) {
-                    optionService.deleteOptionById(options.get(i).getOptionId());
-                    options.remove(options.size()-1);
-                }
-            }
+//            if(options.size()>0) {
+//                for(int i=0; i<options.size(); i++) {
+//                    optionService.deleteOptionById(options.get(i).getOptionId());
+//                    options.remove(options.size()-1);
+//                }
+//            }
             questionService.deleteQuestion(questions.get(j).getQuestionId());
         }
         while(questions.size()>0) {
@@ -302,6 +302,7 @@ public class QuizController {
                 question.setQuestionType(QuestionTypeEnum.TRUE_FALSE);
             }
             question.setQuestionContent(q.getQuestionContent());
+            question.setQuestionHint(q.getQuestionHint());
             try {
                 question.setQuestionMaxScore(Double.parseDouble(q.getQuestionMaxPoints()));
             } catch (Exception e) {
@@ -394,6 +395,7 @@ public class QuizController {
                 questionDTO.setQuestionType("shortAnswer");
             }
             questionDTO.setQuestionContent(q.getQuestionContent());
+            questionDTO.setQuestionHint(q.getQuestionHint());
             questionDTO.setQuestionMaxPoints(q.getQuestionMaxScore().toString());
 
             //link options
