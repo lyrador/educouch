@@ -96,6 +96,14 @@ public class QuizController {
                 updatedQuiz.setHasTimeLimit(Boolean.FALSE);
             }
 
+            if(updatedQuizDTO.getHasMaxAttempts().equals("true")) {
+                updatedQuiz.setHasMaxAttempts(Boolean.TRUE);
+                updatedQuiz.setMaxAttempts(updatedQuiz.getMaxAttempts());
+            } else {
+                updatedQuiz.setHasMaxAttempts(Boolean.FALSE);
+                updatedQuiz.setMaxAttempts(0);
+            }
+
             updatedQuiz.setTimeLimit(updatedQuizDTO.getTimeLimit());
             updatedQuiz.setQuestionCounter(updatedQuizDTO.getQuestionCounter());
             if (updatedQuizDTO.getIsAutoRelease().equals("true")) {
@@ -246,6 +254,13 @@ public class QuizController {
         newQuiz.setStartDate(startDate);
         newQuiz.setEndDate(endDate);
         newQuiz.setOpen(Boolean.FALSE);
+        if(quizDTO.getHasMaxAttempts().equals("true")) {
+            newQuiz.setHasMaxAttempts(Boolean.TRUE);
+            newQuiz.setMaxAttempts(quizDTO.getMaxAttempts());
+        } else {
+            newQuiz.setHasMaxAttempts(Boolean.FALSE);
+            newQuiz.setMaxAttempts(0);
+        }
 
         if (quizDTO.getHasTimeLimit().equals("true")) {
             newQuiz.setHasTimeLimit(Boolean.TRUE);
@@ -335,6 +350,14 @@ public class QuizController {
             quizDTO.setHasTimeLimit("true");
         } else {
             quizDTO.setHasTimeLimit("false");
+        }
+
+        if(quiz.getHasMaxAttempts()) {
+            quizDTO.setHasMaxAttempts("true");
+            quizDTO.setMaxAttempts(quiz.getMaxAttempts());
+        } else {
+            quizDTO.setHasMaxAttempts("false");
+            quizDTO.setMaxAttempts(0);
         }
 
         quizDTO.setTimeLimit(quiz.getTimeLimit());
