@@ -1,9 +1,6 @@
 package com.educouch.educouchsystem.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 @Entity
@@ -20,6 +17,10 @@ public class Attachment {
     private String fileType;
     @NotBlank(message = "File url is mandatory")
     private String fileURL;
+
+    @ManyToOne
+    @JoinColumn(name="interactivePage_id")
+    private InteractivePage interactivePage;
 
     public Attachment() {
     }
@@ -64,4 +65,12 @@ public class Attachment {
     }
 
     public void setFileURL(String fileURL) { this.fileURL = fileURL; }
+
+    public InteractivePage getInteractivePage() {
+        return interactivePage;
+    }
+
+    public void setInteractivePage(InteractivePage interactivePage) {
+        this.interactivePage = interactivePage;
+    }
 }
