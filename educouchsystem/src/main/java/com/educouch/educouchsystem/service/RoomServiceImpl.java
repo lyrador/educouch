@@ -11,6 +11,8 @@ import com.educouch.educouchsystem.repository.DrawingRepository;
 import com.educouch.educouchsystem.repository.LearnerRepository;
 import com.educouch.educouchsystem.repository.LearnerTransactionRepository;
 import com.educouch.educouchsystem.repository.RoomRepository;
+import com.educouch.educouchsystem.util.exception.LearnerNotFoundException;
+import com.educouch.educouchsystem.util.exception.UsernameNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.stereotype.Service;
@@ -50,16 +52,13 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public void addParticipantsToRoom(String username, Long roomId) {
         Room room = getRoomByRoomId(roomId);
-        Learner learner = learnerService.findLearnerByUsername(username);
-        if(learner != null) {
+        try {
+            Learner learner = learnerService.findLearnerByUsername(username);
             room.getParticipants().add(learner);
-        } else {
+        } catch(UsernameNotFoundException ex) {
             Instructor instructor = educatorService.findInstructorByUsername(username);
             room.getOrganizers().add(instructor);
-
         }
-
-
         this.saveRoom(room);
     }
 
@@ -67,13 +66,14 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public void removeParticipantsFromRoom(String username, Long roomId) {
         Room room = getRoomByRoomId(roomId);
-        Learner learner = learnerService.findLearnerByUsername(username);
 
-        if(learner != null) {
+        try {
+            Learner learner = learnerService.findLearnerByUsername(username);
             room.getParticipants().remove(learner);
-        } else {
+        } catch(UsernameNotFoundException ex) {
             Instructor instructor = educatorService.findInstructorByUsername(username);
             room.getOrganizers().remove(instructor);
+
         }
 
         room = saveRoom(room);
