@@ -1,12 +1,12 @@
 package com.educouch.educouchsystem.model;
 
+import com.sun.istack.Nullable;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
-/*To do relationship with OpenEnded*/
 
 @Entity
 public class QuestionAttempt implements Serializable {
@@ -17,28 +17,36 @@ public class QuestionAttempt implements Serializable {
     private Long questionAttemptId;
 
     @NotNull
-    private Double questionAttemptScore = 0.0;
+    private Double questionAttemptScore;
+    private String shortAnswerResponse;
 
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
     private Question questionAttempted;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = false)
-    private QuizAttempt quizAttempt;
+    @NotNull
+    @OneToOne
+    private Option optionSelected;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "questionAttempt_id")
-    private List<Option> learnerOptions;
+//    @ManyToOne(optional = false)
+//    @JoinColumn(nullable = false)
+//    private QuizAttempt quizAttempt;
+
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+//    @JoinColumn(name = "questionAttempt_id")
+//    private List<Option> options;
 
 
     public QuestionAttempt() {
+        this.questionAttemptScore = 0.0;
+        this.shortAnswerResponse = "";
+//        this.optionSelected = new Option("");
     }
 
     public QuestionAttempt(Question questionAttempted, QuizAttempt quizAttempt) {
         this();
         this.questionAttempted = questionAttempted;
-        this.quizAttempt = quizAttempt;
+//        this.quizAttempt = quizAttempt;
     }
 
     public Long getQuestionAttemptId() {
@@ -57,13 +65,28 @@ public class QuestionAttempt implements Serializable {
         this.questionAttemptScore = questionAttemptScore;
     }
 
-    public List<Option> getLearnerOptions() {
-        return learnerOptions;
+    public Option getOptionSelected() {
+        return optionSelected;
     }
 
-    public void setLearnerOptions(List<Option> learnerOptions) {
-        this.learnerOptions = learnerOptions;
+    public void setOptionSelected(Option optionSelected) {
+        this.optionSelected = optionSelected;
     }
+
+    public String getShortAnswerResponse() {
+        return shortAnswerResponse;
+    }
+
+    public void setShortAnswerResponse(String shortAnswerResponse) {
+        this.shortAnswerResponse = shortAnswerResponse;
+    }
+    //    public List<Option> getOptions() {
+//        return options;
+//    }
+//
+//    public void setOptions(List<Option> options) {
+//        this.options = options;
+//    }
 
     public Question getQuestionAttempted() {
         return questionAttempted;
@@ -73,13 +96,13 @@ public class QuestionAttempt implements Serializable {
         this.questionAttempted = questionAttempted;
     }
 
-    public QuizAttempt getQuizAttempt() {
-        return quizAttempt;
-    }
-
-    public void setQuizAttempt(QuizAttempt quizAttempt) {
-        this.quizAttempt = quizAttempt;
-    }
+//    public QuizAttempt getQuizAttempt() {
+//        return quizAttempt;
+//    }
+//
+//    public void setQuizAttempt(QuizAttempt quizAttempt) {
+//        this.quizAttempt = quizAttempt;
+//    }
 
     @Override
     public int hashCode() {
@@ -106,3 +129,4 @@ public class QuestionAttempt implements Serializable {
     }
 
 }
+

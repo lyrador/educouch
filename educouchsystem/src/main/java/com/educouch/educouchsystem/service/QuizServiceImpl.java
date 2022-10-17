@@ -22,8 +22,8 @@ public class QuizServiceImpl implements QuizService{
     @Autowired
     private CourseService courseService;
 
-    @Autowired
-    private OptionRepository optionRepository;
+        @Autowired
+        private OptionRepository optionRepository;
 
     @Override
     public Quiz saveQuiz(Quiz quiz) {
@@ -60,28 +60,6 @@ public class QuizServiceImpl implements QuizService{
     @Override
     public List<Quiz> getAllQuizzes() {
         return quizRepository.findAll();
-    }
-
-    @Override
-    public List<Question> getAllQuestionsInQuiz(Long quizId) throws QuizNotFoundException {
-        Quiz quiz = quizRepository.findById(quizId).get();
-        if (quiz != null) {
-            List<Question> questions = quiz.getQuizQuestions();
-            return questions;
-        } else {
-            throw new QuizNotFoundException("Quiz Id " + quizId + " does not exist!");
-        }
-    }
-
-    @Override
-    public List<QuizAttempt> getAllQuizAttemptsInQuiz(Long quizId) throws QuizNotFoundException {
-        Quiz quiz = quizRepository.findById(quizId).get();
-        if (quiz != null) {
-            List<QuizAttempt> quizAttempts = quiz.getQuizAttempts();
-            return quizAttempts;
-        } else {
-            throw new QuizNotFoundException("Quiz Id " + quizId + " does not exist!");
-        }
     }
 
     @Override
@@ -141,27 +119,48 @@ public class QuizServiceImpl implements QuizService{
         }
     }
 
-    @Override
-    public void addQuestionToQuiz(Long quizId, Question question) throws QuizNotFoundException, EntityInstanceExistsInCollectionException {
-        Quiz quizToEdit = retrieveQuizById(quizId);
-        List<Question> quizQuestions = quizToEdit.getQuizQuestions();
-        if (!quizQuestions.contains(question)) {
-            quizQuestions.add(question);
-            saveQuiz(quizToEdit);
-            quizRepository.save(quizToEdit);
-        } else {
-            throw new EntityInstanceExistsInCollectionException("Question already exists in quiz!");
-        }
-    }
+//    @Override
+//    public void addQuestionToQuiz(Long quizId, Question question) throws QuizNotFoundException, EntityInstanceExistsInCollectionException {
+//        Quiz quizToEdit = retrieveQuizById(quizId);
+//        List<Question> quizQuestions = quizToEdit.getQuizQuestions();
+//        if (!quizQuestions.contains(question)) {
+//            quizQuestions.add(question);
+//            saveQuiz(quizToEdit);
+//            quizRepository.save(quizToEdit);
+//        } else {
+//            throw new EntityInstanceExistsInCollectionException("Question already exists in quiz!");
+//        }
+//    }
 
-    @Override
-    public void deleteQuestionFromQuizId(Long questionId, Long quizId) throws QuizNotFoundException, QuestionNotFoundException {
-        Question question = questionRepository.findById(questionId).get();
-        retrieveQuizById(quizId).getQuizQuestions().remove(question);
-        if (question != null) {
-            questionRepository.deleteById(questionId);
-        } else {
-            throw new QuestionNotFoundException("Question Id " + questionId + " does not exist!");
-        }
-    }
+//    @Override
+//    public void deleteQuestionFromQuizId(Long questionId, Long quizId) throws QuizNotFoundException, QuestionNotFoundException {
+//        Question question = questionRepository.findById(questionId).get();
+//        retrieveQuizById(quizId).getQuizQuestions().remove(question);
+//        if (question != null) {
+//            questionRepository.deleteById(questionId);
+//        } else {
+//            throw new QuestionNotFoundException("Question Id " + questionId + " does not exist!");
+//        }
+//    }
+    //    @Override
+//    public List<Question> getAllQuestionsInQuiz(Long quizId) throws QuizNotFoundException {
+//        Quiz quiz = quizRepository.findById(quizId).get();
+//        if (quiz != null) {
+//            List<Question> questions = quiz.getQuizQuestions();
+//            return questions;
+//        } else {
+//            throw new QuizNotFoundException("Quiz Id " + quizId + " does not exist!");
+//        }
+//    }
+
+//    @Override
+//    public List<QuizAttempt> getAllQuizAttemptsInQuiz(Long quizId) throws QuizNotFoundException {
+//        Quiz quiz = quizRepository.findById(quizId).get();
+//        if (quiz != null) {
+//            List<QuizAttempt> quizAttempts = quiz.getQuizAttempts();
+//            return quizAttempts;
+//        } else {
+//            throw new QuizNotFoundException("Quiz Id " + quizId + " does not exist!");
+//        }
+//    }
 }

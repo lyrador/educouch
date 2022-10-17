@@ -9,6 +9,7 @@ public class OptionDTO {
     private String optionIsCorrect;
 
     public OptionDTO() {
+        this.optionContent = "";
     }
 
     public OptionDTO(String optionContent, String optionIsCorrect, String createdDateTime, Long createdByUserId, String createdByUserName, String createdByUserType) {
