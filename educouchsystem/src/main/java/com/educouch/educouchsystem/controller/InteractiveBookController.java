@@ -22,8 +22,8 @@ public class InteractiveBookController {
     @Autowired
     private InteractiveBookService interactiveBookService;
 
-    @Autowired
-    private InteractiveChapterService interactiveChapterService;
+    //@Autowired
+    //private InteractiveChapterService interactiveChapterService;
 
     @Autowired
     private CourseService courseService;
@@ -73,10 +73,12 @@ public class InteractiveBookController {
             course.getInteractiveBooks().remove(existingInteractiveBook);
             existingInteractiveBook.setCourse(null);
 
-            List<InteractiveChapter> interactiveChapterList = existingInteractiveBook.getInteractiveChapters();
-            for (InteractiveChapter interactiveChapter : interactiveChapterList) {
-                interactiveChapter.setInteractiveBook(null);
-                //interactiveChapterService.deleteInteractiveChapter(interactiveChapter.getInteractiveChapterId());
+            if (!existingInteractiveBook.getInteractiveChapters().isEmpty()) {
+                List<InteractiveChapter> interactiveChapterList = existingInteractiveBook.getInteractiveChapters();
+                for (InteractiveChapter interactiveChapter : interactiveChapterList) {
+                    interactiveChapter.setInteractiveBook(null);
+                    //interactiveChapterService.deleteInteractiveChapter(interactiveChapter.getInteractiveChapterId());
+                }
             }
             existingInteractiveBook.setInteractiveChapters(null);
             interactiveBookService.deleteInteractiveBook(interactiveBookId);
@@ -110,7 +112,7 @@ public class InteractiveBookController {
         List<InteractiveBook> interactiveBookList = new ArrayList<>();
         interactiveBookList.addAll(course.getInteractiveBooks());
 
-        return new ResponseEntity<>(interactiveBookList, HttpStatus.OK)
+        return new ResponseEntity<>(interactiveBookList, HttpStatus.OK);
     }
 
 }
