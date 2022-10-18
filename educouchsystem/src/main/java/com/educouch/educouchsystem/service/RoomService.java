@@ -30,4 +30,8 @@ public interface RoomService {
 
     public Boolean checkRoomInvitation(Long roomId, String password);
 
+    public List<String> retrieveAllLearnerNotInCall(Long roomId);
+
+    public void sendInvitation(List<String> invited, Long roomId);
+
 }
