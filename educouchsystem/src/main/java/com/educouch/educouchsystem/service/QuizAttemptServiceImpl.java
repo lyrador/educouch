@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class QuizAttemptServiceImpl implements QuizAttemptService {
@@ -67,8 +68,7 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
     public List<QuizAttempt> getParticularQuizAttemptsByLearnerId(Long learnerId, Long assessmentId) throws NoQuizAttemptsFoundException {
         List<QuizAttempt> allQuizAttempts = getQuizAttemptsByLearnerId(learnerId);
         if(allQuizAttempts.size()!=0) {
-            allQuizAttempts.stream().filter(quizAttempt -> quizAttempt.getAttemptedQuiz().getAssessmentId().equals(assessmentId));
-            return allQuizAttempts;
+            return allQuizAttempts.stream().filter(quizAttempt -> quizAttempt.getAttemptedQuiz().getAssessmentId().equals(assessmentId)).collect(Collectors.toList());
         } else {
             throw new NoQuizAttemptsFoundException();
         }
