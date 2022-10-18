@@ -4,13 +4,17 @@ package com.educouch.educouchsystem.controller;
 import com.educouch.educouchsystem.model.Coordinates;
 import com.educouch.educouchsystem.dto.ActionResponseDTO;
 import com.educouch.educouchsystem.dto.RoomActionsDTO;
+import com.educouch.educouchsystem.service.LearnerService;
 import com.educouch.educouchsystem.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -25,6 +29,8 @@ public class WebSocketTextController {
 
     @Autowired
     SimpMessagingTemplate template;
+
+
 
 
     @MessageMapping("/send/{roomId}")
@@ -56,6 +62,13 @@ public class WebSocketTextController {
         }
 
 
+    }
+
+    @MessageMapping("send/{roomId}/get-learner-not-participants")
+    @SendTo("/topic/{roomId}/get-learner-not-participants")
+    public ResponseEntity<List<String>> getLearnerNotParticipants(@PathVariable String roomId) {
+        List<String> learnersNotParticipants = roomService.retrieveAllLearnerNotInCall(new Long(roomId));
+        return ResponseEntity.ok(learnersNotParticipants);
     }
 
 }
