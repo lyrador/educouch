@@ -1,8 +1,5 @@
-package com.educouch.educouchsystem.data.model;
+package com.educouch.educouchsystem.model;
 
-import com.educouch.educouchsystem.model.Educator;
-import com.educouch.educouchsystem.model.Instructor;
-import com.educouch.educouchsystem.model.Learner;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -49,7 +46,10 @@ public class Room {
     }
 
     public Room(String name, String description) {
-        new Room();
+        this.participants = new ArrayList<>();
+        this.drawings = new ArrayList<>();
+        this.organizers = new ArrayList<>();
+        this.password = generateRandomPassword();
         this.name = name;
         this.description = description;
     }
@@ -133,5 +133,13 @@ public class Room {
 
     public void setOrganizers(List<Instructor> organizers) {
         this.organizers = organizers;
+    }
+
+    public void addOrganizer(Instructor instructor) {
+        this.getOrganizers().add(instructor);
+    }
+
+    public void addParticipants(Learner learner) {
+        this.getParticipants().add(learner);
     }
 }

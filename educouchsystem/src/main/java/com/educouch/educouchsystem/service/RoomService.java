@@ -1,7 +1,8 @@
 package com.educouch.educouchsystem.service;
 
-import com.educouch.educouchsystem.data.model.Drawing;
-import com.educouch.educouchsystem.data.model.Room;
+import com.educouch.educouchsystem.dto.RoomDTO;
+import com.educouch.educouchsystem.model.Drawing;
+import com.educouch.educouchsystem.model.Room;
 
 import java.util.List;
 
@@ -24,5 +25,9 @@ public interface RoomService {
     public void saveDrawing(Long roomId, Drawing drawing);
 
     public List<Drawing> retrieveDrawingByRoomId(Long roomId);
+
+    public Room initiateRoom(RoomDTO roomDto);
+
+    public Boolean checkRoomInvitation(Long roomId, String password);
 
 }

@@ -1,7 +1,7 @@
 package com.educouch.educouchsystem.controller;
 
 
-import com.educouch.educouchsystem.data.model.Coordinates;
+import com.educouch.educouchsystem.model.Coordinates;
 import com.educouch.educouchsystem.dto.ActionResponseDTO;
 import com.educouch.educouchsystem.dto.RoomActionsDTO;
 import com.educouch.educouchsystem.service.RoomService;
@@ -11,7 +11,6 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;

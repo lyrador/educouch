@@ -1,20 +1,15 @@
 package com.educouch.educouchsystem.service;
 
 
-import com.educouch.educouchsystem.data.model.Drawing;
-import com.educouch.educouchsystem.model.Educator;
+import com.educouch.educouchsystem.dto.RoomDTO;
+import com.educouch.educouchsystem.model.Drawing;
 import com.educouch.educouchsystem.model.Learner;
-import com.educouch.educouchsystem.data.model.Room;
+import com.educouch.educouchsystem.model.Room;
 import com.educouch.educouchsystem.model.Instructor;
-import com.educouch.educouchsystem.model.Learner;
 import com.educouch.educouchsystem.repository.DrawingRepository;
-import com.educouch.educouchsystem.repository.LearnerRepository;
-import com.educouch.educouchsystem.repository.LearnerTransactionRepository;
 import com.educouch.educouchsystem.repository.RoomRepository;
-import com.educouch.educouchsystem.util.exception.LearnerNotFoundException;
 import com.educouch.educouchsystem.util.exception.UsernameNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -36,6 +31,15 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Room saveRoom(Room room) {
         return roomRepository.save(room);
+    }
+
+    @Override
+    public Room initiateRoom(RoomDTO roomDto) {
+        Room newRoom = new Room(roomDto.getRoomName(), "");
+        Instructor instructor = educatorService.findInstructorByUsername(roomDto.getCreatorUsername());
+        // when first start, the room will have no participants
+        newRoom.addOrganizer(instructor);
+        return roomRepository.save(newRoom);
     }
     @Override
     public List<Room> getAllRooms() {
@@ -116,6 +120,16 @@ public class RoomServiceImpl implements RoomService {
         Room room = getRoomByRoomId(roomId);
         return room.getDrawings();
 
+    }
+
+    @Override
+    public Boolean checkRoomInvitation(Long roomId, String password) {
+        Room room = getRoomByRoomId(roomId);
+        if(room.getPassword().equals(password)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
