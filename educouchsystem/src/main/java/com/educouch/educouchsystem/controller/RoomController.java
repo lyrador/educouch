@@ -1,8 +1,9 @@
 package com.educouch.educouchsystem.controller;
 
 
-import com.educouch.educouchsystem.data.model.Drawing;
-import com.educouch.educouchsystem.data.model.Room;
+import com.educouch.educouchsystem.dto.RoomDTO;
+import com.educouch.educouchsystem.model.Drawing;
+import com.educouch.educouchsystem.model.Room;
 import com.educouch.educouchsystem.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,8 +23,8 @@ public class RoomController {
     private RoomService roomsService;
 
     @PostMapping
-    public ResponseEntity<Room> createRoom(@RequestBody Room room) {
-        roomsService.saveRoom(room);
+    public ResponseEntity<Room> createRoom(@RequestBody RoomDTO roomDto) {
+        Room room = roomsService.initiateRoom(roomDto);
         return ResponseEntity.ok(room);
     }
 
@@ -44,6 +45,16 @@ public class RoomController {
         Room room = roomsService.getRoomByRoomId(new Long(id));
         if (room != null) {
             return new ResponseEntity<>(room, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/{id}/{password}")
+    public ResponseEntity<Boolean> checkRoomInvitation(@PathVariable String id, @PathVariable String password) {
+        Boolean invitationResult = roomsService.checkRoomInvitation(new Long(id), password);
+        if(invitationResult) {
+            return new ResponseEntity<>(true, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
