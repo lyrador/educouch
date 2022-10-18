@@ -28,6 +28,9 @@ public class RoomServiceImpl implements RoomService {
     @Autowired
     DrawingRepository drawingRepository;
 
+    @Autowired
+    EmailSenderService emailSenderService;
+
     @Override
     public Room saveRoom(Room room) {
         return roomRepository.save(room);
@@ -130,6 +133,40 @@ public class RoomServiceImpl implements RoomService {
         } else {
             return false;
         }
+    }
+
+    public List<String> retrieveAllLearnerNotInCall(Long roomId) {
+        Room room = getRoomByRoomId(roomId);
+        List<Learner> listOfParticipants = room.getParticipants();
+        List<Learner> listOfLearners = learnerService.getAllLearners();
+
+        List<String> notParticipantYet = new ArrayList<>();
+        for(Learner l: listOfLearners) {
+            if(!listOfParticipants.contains(l)) {
+                notParticipantYet.add(l.getUsername());
+            }
+        }
+
+        return notParticipantYet;
+    }
+
+    public void sendInvitation(List<String> invited, Long roomId) {
+        Room room = getRoomByRoomId(roomId);
+        String password = room.getPassword();
+
+        String message = "You are invited to join a meeting. Details are as follow:\nRoom ID: " + roomId.toString() +"\n" + "Passcode: " + password;
+
+        for(String username: invited) {
+            Learner learner = learnerService.findLearnerByUsername(username);
+            String email = learner.getEmail();
+            String personalJoinLink = "http://localhost:3000/room/13?username=" + username;
+            if(email!= null) {
+                emailSenderService.sendEmail(email, "Invitation to join a whiteboard session", message + "\nWhiteboard session link: " + personalJoinLink);
+
+            }
+        }
+
+
     }
 
 }
