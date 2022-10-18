@@ -1,8 +1,7 @@
 package com.educouch.educouchsystem.repository;
 
 
-import com.educouch.educouchsystem.data.model.Drawing;
-import com.educouch.educouchsystem.data.model.Room;
+import com.educouch.educouchsystem.model.Drawing;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,6 +1,6 @@
-package com.educouch.educouchsystem.data.model;
+package com.educouch.educouchsystem.model;
 
-import com.educouch.educouchsystem.data.model.Coordinates;
+import com.educouch.educouchsystem.model.Coordinates;
 
 import javax.persistence.*;
 import java.util.ArrayList;
