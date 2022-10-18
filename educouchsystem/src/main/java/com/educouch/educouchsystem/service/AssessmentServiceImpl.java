@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AssessmentServiceImpl implements AssessmentService {
@@ -34,6 +35,15 @@ public class AssessmentServiceImpl implements AssessmentService {
             Course course = courseService.getCourseById(courseId);
             List<Assessment> assessments = course.getAssessments();
             return assessments;
+    }
+
+    @Override
+    public List<Assessment> getAllReleasedAssessmentsByCourseId(Long courseId) throws CourseNotFoundException{
+        List<Assessment> assessments = getAllAssessmentsByCourseId(courseId);
+        for(Assessment a : assessments) {
+            System.out.println(a.toString());
+        }
+         return assessments.stream().filter((assessment) -> assessment.getOpen().equals(Boolean.TRUE)).collect(Collectors.toList());
     }
 
 
