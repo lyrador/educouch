@@ -159,7 +159,7 @@ public class RoomServiceImpl implements RoomService {
         for(String username: invited) {
             Learner learner = learnerService.findLearnerByUsername(username);
             String email = learner.getEmail();
-            String personalJoinLink = "http://localhost:3000/room/13?username=" + username;
+            String personalJoinLink = "http://localhost:3000/room/" + roomId.toString() + "?username=" + username;
             if(email!= null) {
                 emailSenderService.sendEmail(email, "Invitation to join a whiteboard session", message + "\nWhiteboard session link: " + personalJoinLink);
 

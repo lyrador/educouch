@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -30,13 +31,16 @@ public class WebSocketTextController {
     @Autowired
     SimpMessagingTemplate template;
 
-
-
-
     @MessageMapping("/send/{roomId}")
     @SendTo("/topic/{roomId}")
     public Coordinates sendMessage(@Payload Coordinates coordinates) {
         return coordinates;
+    }
+
+    @MessageMapping("/send/audio/{roomId}")
+    @SendTo("/topic/audio/{roomId}")
+    public String sendAudioMessage(@Payload String base64Audio) throws Exception{
+        return base64Audio;
     }
 
     @MessageMapping("/send/{roomId}/user")
