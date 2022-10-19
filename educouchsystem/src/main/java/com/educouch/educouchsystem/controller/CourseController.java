@@ -159,6 +159,8 @@ public class CourseController {
 
         existingCourse.getOrganisation().getCourses().remove(existingCourse);
 
+        existingCourse.getInteractiveBooks().clear();
+
         courseService.deleteCourse(courseId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
