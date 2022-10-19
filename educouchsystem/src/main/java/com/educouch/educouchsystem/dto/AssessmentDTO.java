@@ -18,6 +18,7 @@ public class AssessmentDTO {
     private String isOpen;
     private AssessmentStatusEnum assessmentStatus = AssessmentStatusEnum.PENDING;
     private String assessmentType;
+    private String isExpired;
 
     public AssessmentDTO() {
     }
@@ -104,5 +105,21 @@ public class AssessmentDTO {
 
     public void setAssessmentType(String assessmentType) {
         this.assessmentType = assessmentType;
+    }
+
+    public String getIsOpen() {
+        return isOpen;
+    }
+
+    public void setIsOpen(String isOpen) {
+        this.isOpen = isOpen;
+    }
+
+    public String getIsExpired() {
+        return isExpired;
+    }
+
+    public void setIsExpired(String isExpired) {
+        this.isExpired = isExpired;
     }
 }
