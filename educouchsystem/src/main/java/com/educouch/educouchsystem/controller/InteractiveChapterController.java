@@ -97,8 +97,8 @@ public class InteractiveChapterController {
             existingInteractiveChapter.setChapterTitle(interactiveChapter.getChapterTitle());
             existingInteractiveChapter.setChapterDescription(interactiveChapter.getChapterDescription());
             existingInteractiveChapter.setCreationDate(interactiveChapter.getCreationDate());
-            existingInteractiveChapter.setInteractiveBook(interactiveChapter.getInteractiveBook());
-            existingInteractiveChapter.setInteractivePages(interactiveChapter.getInteractivePages());
+            //existingInteractiveChapter.setInteractiveBook(interactiveChapter.getInteractiveBook());
+            //existingInteractiveChapter.setInteractivePages(interactiveChapter.getInteractivePages());
 
             interactiveChapterService.saveInteractiveChapter(existingInteractiveChapter);
             return new ResponseEntity<>(existingInteractiveChapter, HttpStatus.OK);
@@ -109,7 +109,7 @@ public class InteractiveChapterController {
         }
     }
 
-    @GetMapping("/{interactiveChapter}/interactiveChapters")
+    @GetMapping("/interactiveBook/{interactiveBookId}/interactiveChapters")
     public ResponseEntity<List<InteractiveChapter>> getAllInteractiveChaptersByInteractiveBookId(@PathVariable("interactiveBookId") Long interactiveBookId) {
         try {
             InteractiveBook interactiveBook = interactiveBookService.getInteractiveBookById(interactiveBookId);
