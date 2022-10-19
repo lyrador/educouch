@@ -386,7 +386,7 @@ public class AssessmentController {
 
             AssessmentDTO dtoItem = new AssessmentDTO();
             DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
+            Date today = new Date();
             dtoItem.setAssessmentId(a.getAssessmentId());
             dtoItem.setTitle(a.getTitle());
             dtoItem.setDescription(a.getDescription());
@@ -399,6 +399,11 @@ public class AssessmentController {
                 dtoItem.setOpen("false");
             }
             dtoItem.setAssessmentStatus(a.getAssessmentStatus());
+            if(today.after(a.getEndDate())) {
+                dtoItem.setIsExpired("true");
+            } else {
+                dtoItem.setIsExpired("false");
+            }
             String s = a.getClass().getName();
             String[] assessmentTypeArray = s.split("\\.");
 //            System.out.println(assessmentTypeArray[4]);
