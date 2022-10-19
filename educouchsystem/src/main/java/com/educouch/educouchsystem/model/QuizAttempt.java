@@ -1,9 +1,12 @@
 package com.educouch.educouchsystem.model;
 
+import com.educouch.educouchsystem.util.enumeration.AssessmentAttemptStatusEnum;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -16,21 +19,40 @@ public class QuizAttempt implements Serializable {
     private Long quizAttemptId;
 
     @NotNull
-    private String quizAttemptDescription;
+    private Integer attemptCounter;
 
     @NotNull
-    private Double obtainedScore = 0.0;
+    private Double obtainedScore;
 
-    @OneToMany(mappedBy = "quizAttempt", cascade = CascadeType.ALL, orphanRemoval = true)
+    @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastAttemptTime;
+
+    @NotNull
+    private Integer timeLimitRemaining;
+
+    @NotNull
+    private AssessmentAttemptStatusEnum assessmentAttemptStatusEnum;  //INCOMPLETE, SUBMITTED, GRADED
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuestionAttempt> questionAttempts;
 
-    public QuizAttempt() {
+    @ManyToOne
+    private Learner learner;
 
+    @ManyToOne
+    private Quiz attemptedQuiz;
+
+    public QuizAttempt() {
+        this.attemptCounter = 1;
+        this.obtainedScore = 0.0;
+        this.lastAttemptTime = new Date();
+        this.assessmentAttemptStatusEnum = AssessmentAttemptStatusEnum.INCOMPLETE;
+        this.questionAttempts = new ArrayList<>();
     }
 
     public QuizAttempt(String quizAttemptDescription) {
         this();
-        this.quizAttemptDescription = quizAttemptDescription;
     }
 
     public Long getQuizAttemptId() {
@@ -49,20 +71,60 @@ public class QuizAttempt implements Serializable {
         this.obtainedScore = obtainedScore;
     }
 
-    public String getQuizAttemptDescription() {
-        return quizAttemptDescription;
-    }
-
-    public void setQuizAttemptDescription(String quizAttemptDescription) {
-        this.quizAttemptDescription = quizAttemptDescription;
-    }
-
     public List<QuestionAttempt> getQuestionAttempts() {
         return questionAttempts;
     }
 
     public void setQuestionAttempts(List<QuestionAttempt> questionAttempts) {
         this.questionAttempts = questionAttempts;
+    }
+
+    public Integer getAttemptCounter() {
+        return attemptCounter;
+    }
+
+    public void setAttemptCounter(Integer attemptCounter) {
+        this.attemptCounter = attemptCounter;
+    }
+
+    public Date getLastAttemptTime() {
+        return lastAttemptTime;
+    }
+
+    public void setLastAttemptTime(Date lastAttemptTime) {
+        this.lastAttemptTime = lastAttemptTime;
+    }
+
+    public AssessmentAttemptStatusEnum getAssessmentAttemptStatusEnum() {
+        return assessmentAttemptStatusEnum;
+    }
+
+    public void setAssessmentAttemptStatusEnum(AssessmentAttemptStatusEnum assessmentAttemptStatusEnum) {
+        this.assessmentAttemptStatusEnum = assessmentAttemptStatusEnum;
+    }
+
+    public Integer getTimeLimitRemaining() {
+        return timeLimitRemaining;
+    }
+
+    public void setTimeLimitRemaining(Integer timeLimitRemaining) {
+        this.timeLimitRemaining = timeLimitRemaining;
+    }
+
+    public Learner getLearner() {
+        return learner;
+    }
+
+    public void setLearner(Learner learner) {
+        this.learner = learner;
+    }
+
+    public Quiz getAttemptedQuiz() {
+        return attemptedQuiz;
+    }
+
+    public void setAttemptedQuiz(Quiz attemptedQuiz) {
+        this.attemptedQuiz = attemptedQuiz;
     }
 
     @Override

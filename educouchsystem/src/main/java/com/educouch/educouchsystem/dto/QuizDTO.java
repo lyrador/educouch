@@ -16,6 +16,8 @@ public class QuizDTO {
     private Integer questionCounter;
     private Integer timeLimit;
     private String isAutoRelease;
+    private String hasMaxAttempts;
+    private Integer maxAttempts;
     private String createdDateTime;
     private Long createdByUserId;
     private String createdByUserName;
@@ -128,6 +130,22 @@ public class QuizDTO {
 
     public void setQuestionCounter(Integer questionCounter) {
         this.questionCounter = questionCounter;
+    }
+
+    public Integer getMaxAttempts() {
+        return maxAttempts;
+    }
+
+    public void setMaxAttempts(Integer maxAttempts) {
+        this.maxAttempts = maxAttempts;
+    }
+
+    public String getHasMaxAttempts() {
+        return hasMaxAttempts;
+    }
+
+    public void setHasMaxAttempts(String hasMaxAttempts) {
+        this.hasMaxAttempts = hasMaxAttempts;
     }
 
     public String getCreatedDateTime() {

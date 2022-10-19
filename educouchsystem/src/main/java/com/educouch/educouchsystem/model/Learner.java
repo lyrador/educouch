@@ -212,7 +212,7 @@ public class Learner {
         this.stripeCustomerId = stripeCustomerId;
     }
 
-//    private String createCustomer() {
+    //    private String createCustomer() {
 //
 //        Map<String, Object> customerParams = new HashMap<String, Object>();
 //        customerParams.put("description",
