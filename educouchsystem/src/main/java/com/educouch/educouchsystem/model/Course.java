@@ -79,7 +79,8 @@ public class Course {
     @JoinColumn(name = "organisation_id")
     private Organisation organisation;
 
-
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<InteractiveBook> interactiveBooks;
 
     public Course() {
         this.categoryTags = new ArrayList<>();
@@ -291,5 +292,13 @@ public class Course {
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    public List<InteractiveBook> getInteractiveBooks() {
+        return interactiveBooks;
+    }
+
+    public void setInteractiveBooks(List<InteractiveBook> interactiveBooks) {
+        this.interactiveBooks = interactiveBooks;
     }
 }
