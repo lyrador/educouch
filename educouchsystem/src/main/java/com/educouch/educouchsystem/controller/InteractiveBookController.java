@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -31,16 +32,21 @@ public class InteractiveBookController {
     @PostMapping("/{courseId}/interactiveBooks")
     public ResponseEntity<InteractiveBook> addInteractiveBook(@PathVariable(value="courseId") Long courseId, @RequestBody InteractiveBook interactiveBookRequest) {
         Course course  = courseService.retrieveCourseById(courseId);
-        interactiveBookRequest.setCourse(course);
+        InteractiveBook newInteractiveBook = new InteractiveBook();
+        newInteractiveBook.setCourse(course);
+        newInteractiveBook.setBookTitle(interactiveBookRequest.getBookTitle());
+        newInteractiveBook.setBookMaxScore(interactiveBookRequest.getBookMaxScore());
+        newInteractiveBook.setCreationDate(new Date());
+        newInteractiveBook.setBookActualScore(0.0);
         if (course.getInteractiveBooks() != null) {
-            course.getInteractiveBooks().add(interactiveBookRequest);
+            course.getInteractiveBooks().add(newInteractiveBook);
         } else {
             List<InteractiveBook> interactiveBookList = new ArrayList<>();
-            interactiveBookList.add(interactiveBookRequest);
+            interactiveBookList.add(newInteractiveBook);
             course.setInteractiveBooks(interactiveBookList);
         }
 
-        InteractiveBook interactiveBook = interactiveBookService.saveInteractiveBook(interactiveBookRequest);
+        InteractiveBook interactiveBook = interactiveBookService.saveInteractiveBook(newInteractiveBook);
         return new ResponseEntity<>(interactiveBook, HttpStatus.OK);
     }
 
@@ -109,8 +115,8 @@ public class InteractiveBookController {
             InteractiveBook existingInteractiveBook = interactiveBookService.getInteractiveBookById(interactiveBookId);
             existingInteractiveBook.setBookTitle(interactiveBook.getBookTitle());
             existingInteractiveBook.setBookMaxScore(interactiveBook.getBookMaxScore());
-            existingInteractiveBook.setBookActualScore(interactiveBook.getBookActualScore());
-            existingInteractiveBook.setCreationDate(interactiveBook.getCreationDate());
+           // existingInteractiveBook.setBookActualScore(interactiveBook.getBookActualScore());
+           // existingInteractiveBook.setCreationDate(interactiveBook.getCreationDate());
 
             interactiveBookService.saveInteractiveBook(existingInteractiveBook);
             return new ResponseEntity<>(existingInteractiveBook, HttpStatus.OK);
