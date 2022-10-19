@@ -42,6 +42,10 @@ public class Question implements Serializable {
     @OneToOne
     private OpenEnded openEnded;
 
+    @ManyToOne
+    @JoinColumn(name="interactivePage_id")
+    private InteractivePage interactivePage;
+
     public Question() {
         this.options = new ArrayList<>();
         this.questionAttempts = new ArrayList<>();
@@ -150,6 +154,14 @@ public class Question implements Serializable {
 
     public void setQuestionTitle(String questionTitle) {
         this.questionTitle = questionTitle;
+    }
+
+    public InteractivePage getInteractivePage() {
+        return interactivePage;
+    }
+
+    public void setInteractivePage(InteractivePage interactivePage) {
+        this.interactivePage = interactivePage;
     }
 
     @Override
