@@ -16,6 +16,8 @@ public interface AssessmentService {
 
     public List<Assessment> getAllAssessmentsByCourseId(Long courseId) throws CourseNotFoundException;
 
+    List<Assessment> getAllReleasedAssessmentsByCourseId(Long courseId) throws CourseNotFoundException;
+
     public void deleteAssessment(Long assessmentId) throws AssessmentNotFoundException;
 
     public void deleteAssessmentFromCourseId(Long assessmentId, Long courseId) throws AssessmentNotFoundException, CourseNotFoundException;
