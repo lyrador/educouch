@@ -55,6 +55,9 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     private DepositRefundRequestRepository depositRefundRequestRepository;
 
+    @Autowired
+    private GradeBookEntryService gradeBookEntryService;
+
 
     @Autowired
     private OrganisationService organisationService;
@@ -174,5 +177,10 @@ public class DataLoader implements CommandLineRunner {
         } catch(CourseNotFoundException ex) {
             System.out.println("Error in generating class run. ");
         }
+
+        gradeBookEntryService.createGradeBookEntry(new GradeBookEntry(1l,1l,"lmao", 40.0));
+        gradeBookEntryService.createGradeBookEntry(new GradeBookEntry(1l,1l,"hehe", 30.0));
+        gradeBookEntryService.createGradeBookEntry(new GradeBookEntry(1l,1l,"why", 20.0));
+        gradeBookEntryService.createGradeBookEntry(new GradeBookEntry(1l,1l,"yolo", 10.0));
     }
 }
