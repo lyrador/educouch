@@ -26,7 +26,7 @@ public class InteractivePageController {
     @Autowired
     private InteractiveChapterService interactiveChapterService;
 
-    @PostMapping("/{interactivePageId}/interactivePages")
+    @PostMapping("/{interactiveChapterId}/interactivePages")
     public ResponseEntity<InteractivePage> addInteractivePage(@PathVariable(value="interactiveChapterId") Long interactiveChapterId, @RequestBody InteractivePage interactivePageRequest) {
         try {
             InteractiveChapter interactiveChapter = interactiveChapterService.getInteractiveChapterById(interactiveChapterId);
@@ -92,8 +92,8 @@ public class InteractivePageController {
             InteractivePage existingInteractivePage = interactivePageService.getInteractivePageById(interactivePageId);
             existingInteractivePage.setPageDescription(interactivePage.getPageDescription());
             existingInteractivePage.setPageNumber(interactivePage.getPageNumber());
-            existingInteractivePage.setPageQuestions(interactivePage.getPageQuestions());
-            existingInteractivePage.setAttachments(interactivePage.getAttachments());
+           // existingInteractivePage.setPageQuestions(interactivePage.getPageQuestions());
+           // existingInteractivePage.setAttachments(interactivePage.getAttachments());
 
             interactivePageService.saveInteractivePage(existingInteractivePage);
             return new ResponseEntity<>(existingInteractivePage, HttpStatus.OK);
@@ -104,7 +104,7 @@ public class InteractivePageController {
         }
     }
 
-    @GetMapping("/{interactivePage}/interactivePages")
+    @GetMapping("/interactiveChapter/{interactiveChapterId}/interactivePages")
     public ResponseEntity<List<InteractivePage>> getAllInteractivePagesByInteractiveChapterId(@PathVariable("interactiveChapterId") Long interactiveChapterId) {
         try {
             InteractiveChapter interactiveChapter = interactiveChapterService.getInteractiveChapterById(interactiveChapterId);

@@ -49,6 +49,15 @@ public class InteractiveBookController {
         List<InteractiveBook> allInteractiveBooks = new ArrayList<>();
         if (!interactiveBookService.getAllInteractiveBooks().isEmpty()) {
             allInteractiveBooks = interactiveBookService.getAllInteractiveBooks();
+
+            for (InteractiveBook interactiveBook : allInteractiveBooks) {
+                interactiveBook.getCourse().setFolders(null);
+                interactiveBook.getCourse().setClassRuns(null);
+                interactiveBook.getCourse().setAssessments(null);
+                interactiveBook.getCourse().setOrganisation(null);
+
+            }
+
             return new ResponseEntity<>(allInteractiveBooks, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -59,6 +68,12 @@ public class InteractiveBookController {
     public ResponseEntity<InteractiveBook> getInteractiveBookById(@PathVariable("interactiveBookId") Long interactiveBookId) {
         try {
             InteractiveBook interactiveBook = interactiveBookService.getInteractiveBookById(interactiveBookId);
+
+            interactiveBook.getCourse().setFolders(null);
+            interactiveBook.getCourse().setClassRuns(null);
+            interactiveBook.getCourse().setAssessments(null);
+            interactiveBook.getCourse().setOrganisation(null);
+
             return new ResponseEntity<InteractiveBook>(interactiveBook, HttpStatus.OK);
         } catch (InteractiveBookNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -106,11 +121,18 @@ public class InteractiveBookController {
         }
     }
 
-    @GetMapping("/{courseId}/interactiveBooks")
+    @GetMapping("course/{courseId}/interactiveBooks")
     public ResponseEntity<List<InteractiveBook>> getAllInteractiveBooksByCourseId(@PathVariable("courseId") Long courseId) {
         Course course  = courseService.retrieveCourseById(courseId);
         List<InteractiveBook> interactiveBookList = new ArrayList<>();
         interactiveBookList.addAll(course.getInteractiveBooks());
+
+        for (InteractiveBook interactiveBook : interactiveBookList) {
+            interactiveBook.getCourse().setFolders(null);
+            interactiveBook.getCourse().setClassRuns(null);
+            interactiveBook.getCourse().setAssessments(null);
+            interactiveBook.getCourse().setOrganisation(null);
+        }
 
         return new ResponseEntity<>(interactiveBookList, HttpStatus.OK);
     }

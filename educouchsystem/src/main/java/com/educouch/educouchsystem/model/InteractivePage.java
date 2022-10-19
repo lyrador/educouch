@@ -1,5 +1,7 @@
 package com.educouch.educouchsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -58,6 +60,7 @@ public class InteractivePage {
         this.pageDescription = pageDescription;
     }
 
+    @JsonIgnore
     public InteractiveChapter getInteractiveChapter() {
         return interactiveChapter;
     }
