@@ -2,15 +2,13 @@ package com.educouch.educouchsystem.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
-import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
+import org.springframework.web.socket.config.annotation.*;
+import org.springframework.web.socket.WebSocketHandler;
 
-import java.util.List;
 
 @Configuration
 @EnableWebSocketMessageBroker
+@EnableWebSocket
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 
@@ -25,6 +23,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         // without sockjs
         //registry.addEndpoint("/ws-message").setAllowedOriginPatterns("*");
     }
+
+
 
 
 //
