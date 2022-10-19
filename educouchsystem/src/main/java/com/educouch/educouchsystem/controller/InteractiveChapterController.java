@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -32,6 +33,7 @@ public class InteractiveChapterController {
         try {
             InteractiveBook interactiveBook = interactiveBookService.getInteractiveBookById(interactiveBookId);
             interactiveChapterRequest.setInteractiveBook(interactiveBook);
+            interactiveChapterRequest.setCreationDate(new Date());
             if(interactiveBook.getInteractiveChapters() != null) {
                 interactiveBook.getInteractiveChapters().add(interactiveChapterRequest);
             } else {
