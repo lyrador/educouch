@@ -18,9 +18,8 @@ public class Attachment {
     @NotBlank(message = "File url is mandatory")
     private String fileURL;
 
-    @ManyToOne
-    @JoinColumn(name="interactivePage_id")
-    private InteractivePage interactivePage;
+    @OneToOne(mappedBy = "attachment")
+    private PageItem pageItem;
 
     public Attachment() {
     }
@@ -66,11 +65,11 @@ public class Attachment {
 
     public void setFileURL(String fileURL) { this.fileURL = fileURL; }
 
-    public InteractivePage getInteractivePage() {
-        return interactivePage;
+    public PageItem getPageItem() {
+        return pageItem;
     }
 
-    public void setInteractivePage(InteractivePage interactivePage) {
-        this.interactivePage = interactivePage;
+    public void setPageItem(PageItem pageItem) {
+        this.pageItem = pageItem;
     }
 }
