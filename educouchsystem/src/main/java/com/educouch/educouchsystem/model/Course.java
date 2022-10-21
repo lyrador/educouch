@@ -82,12 +82,17 @@ public class Course {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<InteractiveBook> interactiveBooks;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name="course_id")
+    private List<Announcement> announcements;
+
     public Course() {
         this.categoryTags = new ArrayList<>();
         this.folders = new ArrayList<>();
         this.forums = new ArrayList<>();
         this.assessments = new ArrayList<>();
         this.classRuns = new ArrayList<>();
+        this.announcements = new ArrayList<>();
         this.courseApprovalStatus = CourseApprovalStatusEnum.UNDERCONSTRUCTION;
     }
 
@@ -300,5 +305,13 @@ public class Course {
 
     public void setInteractiveBooks(List<InteractiveBook> interactiveBooks) {
         this.interactiveBooks = interactiveBooks;
+    }
+
+    public List<Announcement> getAnnouncements() {
+        return announcements;
+    }
+
+    public void setAnnouncements(List<Announcement> announcements) {
+        this.announcements = announcements;
     }
 }
