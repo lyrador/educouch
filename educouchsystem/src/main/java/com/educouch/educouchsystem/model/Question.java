@@ -42,9 +42,9 @@ public class Question implements Serializable {
     @OneToOne
     private OpenEnded openEnded;
 
-    @OneToOne(mappedBy = "question")
-    private PageItem pageItem;
-
+    @ManyToOne
+    @JoinColumn(name="interactivePage_id")
+    private InteractivePage interactivePage;
 
     public Question() {
         this.options = new ArrayList<>();
@@ -156,12 +156,12 @@ public class Question implements Serializable {
         this.questionTitle = questionTitle;
     }
 
-    public PageItem getPageItem() {
-        return pageItem;
+    public InteractivePage getInteractivePage() {
+        return interactivePage;
     }
 
-    public void setPageItem(PageItem pageItem) {
-        this.pageItem = pageItem;
+    public void setInteractivePage(InteractivePage interactivePage) {
+        this.interactivePage = interactivePage;
     }
 
     @Override

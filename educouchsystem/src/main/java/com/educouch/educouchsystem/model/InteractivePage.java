@@ -23,7 +23,10 @@ public class InteractivePage {
     private InteractiveChapter interactiveChapter;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<PageItem> pageItems;
+    private List<Question> pageQuestions;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Attachment> attachments;
 
     public InteractivePage(Integer pageNumber, String pageDescription) {
         this.pageNumber = pageNumber;
@@ -66,11 +69,19 @@ public class InteractivePage {
         this.interactiveChapter = interactiveChapter;
     }
 
-    public List<PageItem> getPageItems() {
-        return pageItems;
+    public List<Question> getPageQuestions() {
+        return pageQuestions;
     }
 
-    public void setPageItems(List<PageItem> pageItems) {
-        this.pageItems = pageItems;
+    public void setPageQuestions(List<Question> pageQuestions) {
+        this.pageQuestions = pageQuestions;
+    }
+
+    public List<Attachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<Attachment> attachments) {
+        this.attachments = attachments;
     }
 }

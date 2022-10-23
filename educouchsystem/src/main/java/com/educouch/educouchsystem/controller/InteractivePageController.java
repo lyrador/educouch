@@ -64,14 +64,21 @@ public class InteractivePageController {
             interactiveChapter.getInteractivePages().remove(existingInteractivePage);
             existingInteractivePage.setInteractiveChapter(null);
 
-            if (!existingInteractivePage.getPageItems().isEmpty()) {
-                List<PageItem> pageItemList = existingInteractivePage.getPageItems();
-                for (PageItem pageItem : pageItemList) {
-                    pageItem.setInteractivePage(null);
+            if (!existingInteractivePage.getPageQuestions().isEmpty()) {
+                List<Question> questionList = existingInteractivePage.getPageQuestions();
+                for (Question pageQuestion : questionList) {
+                    pageQuestion.setInteractivePage(null);
                 }
             }
-            existingInteractivePage.setPageItems(null);
+            existingInteractivePage.setPageQuestions(null);
 
+            if (!existingInteractivePage.getAttachments().isEmpty()) {
+                List<Attachment> attachmentList = existingInteractivePage.getAttachments();
+                for (Attachment pageAttachment : attachmentList) {
+                    pageAttachment.setInteractivePage(null);
+                }
+            }
+            existingInteractivePage.setAttachments(null);
             interactivePageService.deleteInteractivePage(interactivePageId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (InteractivePageNotFoundException ex) {
