@@ -22,11 +22,13 @@ public class InteractivePage {
     @JoinColumn(name="interactiveChapter_id")
     private InteractiveChapter interactiveChapter;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Question> pageQuestions;
+    @OneToOne
+    @JoinColumn(name = "questionId")
+    private Question pageQuestion;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Attachment> attachments;
+    @OneToOne
+    @JoinColumn(name = "attachmentId")
+    private Attachment attachment;
 
     public InteractivePage(Integer pageNumber, String pageDescription) {
         this.pageNumber = pageNumber;
@@ -69,19 +71,19 @@ public class InteractivePage {
         this.interactiveChapter = interactiveChapter;
     }
 
-    public List<Question> getPageQuestions() {
-        return pageQuestions;
+    public Question getPageQuestion() {
+        return pageQuestion;
     }
 
-    public void setPageQuestions(List<Question> pageQuestions) {
-        this.pageQuestions = pageQuestions;
+    public void setPageQuestion(Question pageQuestion) {
+        this.pageQuestion = pageQuestion;
     }
 
-    public List<Attachment> getAttachments() {
-        return attachments;
+    public Attachment getAttachment() {
+        return attachment;
     }
 
-    public void setAttachments(List<Attachment> attachments) {
-        this.attachments = attachments;
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
     }
 }
