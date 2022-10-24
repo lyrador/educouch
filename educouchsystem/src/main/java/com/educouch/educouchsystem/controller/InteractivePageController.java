@@ -45,6 +45,25 @@ public class InteractivePageController {
         }
     }
 
+//    @PostMapping("/{interactiveChapterId}/interactivePages")
+//    public ResponseEntity<InteractivePage> addInteractivePage(@PathVariable(value="interactiveChapterId") Long interactiveChapterId, @RequestBody InteractivePage interactivePageRequest) {
+//        try {
+//            InteractiveChapter interactiveChapter = interactiveChapterService.getInteractiveChapterById(interactiveChapterId);
+//            interactivePageRequest.setInteractiveChapter(interactiveChapter);
+//            if(interactiveChapter.getInteractivePages() != null) {
+//                interactiveChapter.getInteractivePages().add(interactivePageRequest);
+//            } else {
+//                List<InteractivePage> interactivePageList = new ArrayList<>();
+//                interactivePageList.add(interactivePageRequest);
+//                interactiveChapter.setInteractivePages(interactivePageList);
+//            }
+//            InteractivePage interactivePage = interactivePageService.saveInteractivePage(interactivePageRequest);
+//            return new ResponseEntity<>(interactivePage, HttpStatus.OK);
+//        } catch (InteractiveChapterNotFoundException ex) {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//    }
+
     @GetMapping("/interactivePages")
     public ResponseEntity<List<InteractivePage>> getAllInteractiveChapters() {
         List<InteractivePage> allInteractivePages = new ArrayList<>();
@@ -105,5 +124,22 @@ public class InteractivePageController {
         }
     }
 
+    @GetMapping("/getPageByChapterIdAndPageNumber/{chapterIdPageNumString}")
+    public ResponseEntity<InteractivePage> getInteractivePageByInteractiveChapterIdAndPageNumber(@PathVariable("chapterIdPageNumString") String chapterIdPageNumString) {
+        try {
+            String[] arr = chapterIdPageNumString.split("&");
+            InteractiveChapter interactiveChapter = interactiveChapterService.getInteractiveChapterById(Long.parseLong(arr[0]));
+            InteractivePage queriedInteractivePage = new InteractivePage();
+            for (InteractivePage interactivePage : interactiveChapter.getInteractivePages()) {
+                if (interactivePage.getPageNumber() == Integer.parseInt(arr[1])) {
+                    queriedInteractivePage = interactivePage;
+                }
+            }
+            return new ResponseEntity<>(queriedInteractivePage, HttpStatus.OK);
+        } catch (InteractiveChapterNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
- }
+
+}
