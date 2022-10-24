@@ -1,6 +1,8 @@
 package com.educouch.educouchsystem.controller;
 
+import com.educouch.educouchsystem.dto.FileItemDTO;
 import com.educouch.educouchsystem.model.*;
+import com.educouch.educouchsystem.service.AttachmentService;
 import com.educouch.educouchsystem.service.InteractiveChapterService;
 import com.educouch.educouchsystem.service.InteractivePageService;
 import com.educouch.educouchsystem.util.exception.InteractiveBookNotFoundException;
@@ -11,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -25,6 +28,9 @@ public class InteractivePageController {
 
     @Autowired
     private InteractiveChapterService interactiveChapterService;
+
+    @Autowired
+    private AttachmentService attachmentService;
 
     @PostMapping("/{interactiveChapterId}/interactivePages")
     public ResponseEntity<InteractivePage> addInteractivePage(@PathVariable(value="interactiveChapterId") Long interactiveChapterId, @RequestBody InteractivePage interactivePageRequest) {
@@ -109,6 +115,20 @@ public class InteractivePageController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (NoSuchElementException ex) {
             return new ResponseEntity<InteractivePage>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/{interactivePageId}/addFileItem")
+    public ResponseEntity<InteractivePage> addFileItem(@PathVariable(value="interactivePageId") Long interactivePageId, @RequestBody FileItemDTO fileItemDTORequest) {
+        try {
+            InteractivePage interactivePage = interactivePageService.getInteractivePageById(interactivePageId);
+            interactivePage.setAttachment(attachmentService.getAttachment(fileItemDTORequest.getAttachmentId()));
+            interactivePageService.saveInteractivePage(interactivePage);
+            return new ResponseEntity<>(interactivePage, HttpStatus.OK);
+        } catch (InteractivePageNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
