@@ -15,7 +15,7 @@ public class InteractivePage {
     @Column(name="pageNumber", nullable = false)
     private Integer pageNumber;
 
-    @Column(name="pageDescription", nullable = false, columnDefinition = "TEXT")
+    @Column(name="pageDescription")
     private String pageDescription;
 
     @ManyToOne
