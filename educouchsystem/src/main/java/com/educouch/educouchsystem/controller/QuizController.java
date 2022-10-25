@@ -301,6 +301,7 @@ public class QuizController {
 
     public QuestionDTO convertQuestionToQuestionDTO(Question q) {
         QuestionDTO questionDTO = new QuestionDTO();
+        questionDTO.setQuestionId(q.getQuestionId().toString());
         questionDTO.setLocalid(q.getLocalid());
         questionDTO.setQuestionTitle(q.getQuestionTitle());
         String questionType = q.getQuestionType().toString();
