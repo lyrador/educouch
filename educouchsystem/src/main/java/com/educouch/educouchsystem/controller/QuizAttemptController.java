@@ -34,7 +34,7 @@ public class QuizAttemptController {
     private LearnerService learnerService;
 
     @PostMapping("/createQuizAttempt/{assessmentId}/{learnerId}")
-    public ResponseEntity<QuizAttempt> initialiseQuizAttempt(@PathVariable(value = "assessmentId") Long assessmentId,
+    public ResponseEntity<QuizAttemptDTO> createQuizAttempt(@PathVariable(value = "assessmentId") Long assessmentId,
                                                              @PathVariable(value = "learnerId") Long learnerId) {
         try {
             //getQuiz, run through all questions and create quizAttempt with empty questionAttempts
@@ -43,7 +43,8 @@ public class QuizAttemptController {
             QuizAttempt quizAttempt = initializeQuizAttempt(quiz);
             //save quizAttempt
             quizAttemptService.saveQuizAttempt(quiz, quizAttempt, learner);
-            return new ResponseEntity<>(quizAttempt, HttpStatus.OK);
+            QuizAttemptDTO quizAttemptDTO = convertQuizAttemptToQuizAttemptDTO(quizAttempt);
+            return new ResponseEntity<QuizAttemptDTO>(quizAttemptDTO, HttpStatus.OK);
         } catch (QuizNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -125,6 +126,7 @@ public class QuizAttemptController {
             QuestionAttempt questionAttempt = new QuestionAttempt();
             questionAttempt.setQuestionAttempted(q);
             questionAttempt.setOptionSelected(new Option(""));
+            questionAttempt.setShortAnswerResponse("");
             questionAttempts.add(questionAttempt);
         }
         quizAttempt.setQuestionAttempts(questionAttempts);
@@ -169,6 +171,9 @@ public class QuizAttemptController {
         } else {
             quizAttemptDTO.setAssessmentAttemptStatusEnum("GRADED");
         }
+        quizAttemptDTO.setAttemptedQuiz(quizController.convertQuizToDTO(q.getAttemptedQuiz()));
+        List<QuestionAttemptDTO> questionAttemptDTOS = convertQuestionAttemptsToQuestionAttemptDTOs(q.getQuestionAttempts());
+        quizAttemptDTO.setQuestionAttempts(questionAttemptDTOS);
 
         return quizAttemptDTO;
     }
@@ -177,11 +182,6 @@ public class QuizAttemptController {
 
         List<QuestionAttemptDTO> questionAttemptDTOS = new ArrayList<>();
         for (QuestionAttempt q : questionAttempts) {
-//            private Long questionAttemptId;
-//            private Double questionAttemptScore;
-//            private String shortAnswerResponse;
-//            private QuestionDTO questionAttempted;
-//            private OptionDTO optionSelected;
             questionAttemptDTOS.add(convertQuestionAttemptToQuestionAttemptDTO(q));
         }
         return questionAttemptDTOS;
@@ -194,8 +194,8 @@ public class QuizAttemptController {
         questionAttemptDTO.setQuestionAttemptScore(q.getQuestionAttemptScore());
         questionAttemptDTO.setShortAnswerResponse(q.getShortAnswerResponse());
         questionAttemptDTO.setQuestionAttempted(quizController.convertQuestionToQuestionDTO(q.getQuestionAttempted()));
+        questionAttemptDTO.setQuestionAttemptedQuestionId(q.getQuestionAttempted().getQuestionId().toString());
         questionAttemptDTO.setOptionSelected(q.getOptionSelected().getOptionContent());
-
         return questionAttemptDTO;
     }
 }
