@@ -38,9 +38,11 @@ public class QuizAttempt implements Serializable {
     private List<QuestionAttempt> questionAttempts;
 
     @ManyToOne
+    @JoinColumn
     private Learner learner;
 
     @ManyToOne
+    @JoinColumn
     private Quiz attemptedQuiz;
 
     public QuizAttempt() {

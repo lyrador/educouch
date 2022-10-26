@@ -39,9 +39,6 @@ public class Question implements Serializable {
     @JoinColumn(name="question_id")
     private List<QuestionAttempt> questionAttempts;
 
-    @OneToOne
-    private OpenEnded openEnded;
-
     public Question() {
         this.options = new ArrayList<>();
         this.questionAttempts = new ArrayList<>();
@@ -95,14 +92,7 @@ public class Question implements Serializable {
     public void setQuestionType(QuestionTypeEnum questionType) {
         this.questionType = questionType;
     }
-
-    public OpenEnded getOpenEnded() {
-        return openEnded;
-    }
-
-    public void setOpenEnded(OpenEnded openEnded) {
-        this.openEnded = openEnded;
-    }
+    
 
 //    public List<Option> getOptions() {
 //        return options;
