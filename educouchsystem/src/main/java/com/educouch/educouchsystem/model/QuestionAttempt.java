@@ -18,6 +18,7 @@ public class QuestionAttempt implements Serializable {
 
     @NotNull
     private Double questionAttemptScore;
+
     private String shortAnswerResponse;
 
     @ManyToOne(optional = false)

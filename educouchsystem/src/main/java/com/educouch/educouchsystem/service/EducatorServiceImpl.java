@@ -1,7 +1,6 @@
 package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.model.*;
-import com.educouch.educouchsystem.repository.EducatorRepository;
 import com.educouch.educouchsystem.repository.InstructorRepository;
 import com.educouch.educouchsystem.repository.OrganisationAdminRepository;
 import com.educouch.educouchsystem.repository.OrganisationRepository;
@@ -22,8 +21,6 @@ import java.util.List;
 @Service
 public class EducatorServiceImpl implements EducatorService{
 
-    @Autowired
-    private EducatorRepository educatorRepository;
     @Autowired
     private OrganisationRepository organisationRepository;
     @Autowired
