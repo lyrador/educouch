@@ -77,14 +77,14 @@ public class InteractiveChapterController {
             interactiveBook.getInteractiveChapters().remove(existingInteractiveChapter);
             existingInteractiveChapter.setInteractiveBook(null);
 
-            if (!existingInteractiveChapter.getInteractivePages().isEmpty()) {
-                List<InteractivePage> interactivePageList = existingInteractiveChapter.getInteractivePages();
-                for (InteractivePage interactivePage : interactivePageList) {
-                    interactivePage.setInteractiveChapter(null);
-                    //interactiveChapterService.deleteInteractiveChapter(interactiveChapter.getInteractiveChapterId());
-                }
-            }
-            existingInteractiveChapter.setInteractivePages(null);
+//            if (!existingInteractiveChapter.getInteractivePages().isEmpty()) {
+//                List<InteractivePage> interactivePageList = existingInteractiveChapter.getInteractivePages();
+//                for (InteractivePage interactivePage : interactivePageList) {
+//                    interactivePage.setInteractiveChapter(null);
+//                    //interactiveChapterService.deleteInteractiveChapter(interactiveChapter.getInteractiveChapterId());
+//                }
+//            }
+//            existingInteractiveChapter.setInteractivePages(null);
             interactiveChapterService.deleteInteractiveChapter(interactiveChapterId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (InteractiveChapterNotFoundException ex) {
