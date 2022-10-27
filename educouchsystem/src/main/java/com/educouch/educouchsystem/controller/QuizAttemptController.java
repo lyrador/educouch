@@ -7,13 +7,18 @@ import com.educouch.educouchsystem.service.QuizAttemptService;
 import com.educouch.educouchsystem.service.QuizService;
 import com.educouch.educouchsystem.util.enumeration.AssessmentAttemptStatusEnum;
 import com.educouch.educouchsystem.util.exception.NoQuizAttemptsFoundException;
+import com.educouch.educouchsystem.util.exception.QuizAttemptNotFoundException;
 import com.educouch.educouchsystem.util.exception.QuizNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -35,7 +40,7 @@ public class QuizAttemptController {
 
     @PostMapping("/createQuizAttempt/{assessmentId}/{learnerId}")
     public ResponseEntity<QuizAttemptDTO> createQuizAttempt(@PathVariable(value = "assessmentId") Long assessmentId,
-                                                             @PathVariable(value = "learnerId") Long learnerId) {
+                                                            @PathVariable(value = "learnerId") Long learnerId) {
         try {
             //getQuiz, run through all questions and create quizAttempt with empty questionAttempts
             Quiz quiz = quizService.retrieveQuizById(assessmentId);
@@ -74,9 +79,9 @@ public class QuizAttemptController {
         }
     }
 
-    @GetMapping("/getMostRecentQuizAttemptByLearnerId/{assessmentId}/{learnerId}")
+    @PutMapping("/getMostRecentQuizAttemptByLearnerId/{assessmentId}/{learnerId}")
     public ResponseEntity<QuizAttemptDTO> getMostRecentQuizAttemptByLearnerId(@PathVariable(value = "assessmentId") Long assessmentId,
-                                                                          @PathVariable(value = "learnerId") Long learnerId) {
+                                                                              @PathVariable(value = "learnerId") Long learnerId) {
 
         try {
             QuizAttempt mostRecentQuizAttempt = quizAttemptService.getMostRecentQuizAttemptByLearnerId(learnerId, assessmentId);
@@ -92,13 +97,27 @@ public class QuizAttemptController {
     //
     //
     //
-    //stopped here
-    @PutMapping("/updateQuizAttempt")
-    public ResponseEntity<QuizAttemptDTO> updateQuizAttempt(@RequestBody QuizAttemptDTO updatedQuizAttemptDTO) {
+    //stopped here, need to testttttt
+    //
+    //
+    //
+    //
+    @PutMapping("/updateQuizAttemptById/{quizId}")
+    public ResponseEntity<QuizAttemptDTO> updateQuizAttemptById(@RequestBody QuizAttemptDTO updatedQuizAttemptDTO,
+                                                                @PathVariable(value="quizId") Long quizAttemptId) {
         //try find existing quizAttempt
-
-        //update quizAttempt
-        return new ResponseEntity<>(new QuizAttemptDTO(), HttpStatus.OK);
+        try {
+            QuizAttempt quizAttempt = quizAttemptService.getQuizAttemptById(quizAttemptId);
+            QuizAttempt updatedQuizAttempt = quizAttemptService.updateQuizAttempt(convertQuizAttemptDTOToQuizAttempt(updatedQuizAttemptDTO));
+            //update quizAttempt
+            updatedQuizAttempt.setAttemptCounter(quizAttempt.getAttemptCounter()+1);
+            return new ResponseEntity<>(new QuizAttemptDTO(), HttpStatus.OK);
+        }
+        catch (ParseException e) {
+            return new ResponseEntity<>(HttpStatus.valueOf("Date Parsing failed"));
+        } catch (QuizAttemptNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PutMapping("/submitQuizAttempt/")
@@ -137,13 +156,6 @@ public class QuizAttemptController {
 
         List<QuizAttemptDTO> quizAttemptDTOS = new ArrayList<>();
         for (QuizAttempt q : quizAttempts) {
-//            private Long quizAttemptId;
-//            private Integer attemptCounter;
-//            private Double obtainedScore;
-//            private List<QuestionAttemptDTO> questionAttempts;
-//            private String lastAttemptTime;
-//            private Integer timeLimitRemaining;
-//            private String assessmentAttemptStatusEnum; //INCOMPLETE, SUBMITTED, GRADED
 
             //convert quizAttempt to quizAttemptDTO
             QuizAttemptDTO quizAttemptDTO = convertQuizAttemptToQuizAttemptDTO(q);
@@ -178,6 +190,24 @@ public class QuizAttemptController {
         return quizAttemptDTO;
     }
 
+    public QuizAttempt convertQuizAttemptDTOToQuizAttempt(QuizAttemptDTO q) throws ParseException{
+        QuizAttempt quizAttempt = new QuizAttempt();
+        quizAttempt.setAttemptCounter(q.getAttemptCounter());
+        quizAttempt.setObtainedScore(q.getObtainedScore());
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        quizAttempt.setLastAttemptTime((Date) formatter.parse((q.getLastAttemptTime())));
+        quizAttempt.setTimeLimitRemaining(q.getTimeLimitRemaining());
+        if (q.getAssessmentAttemptStatusEnum().equals("INCOMPLETE")) {
+            quizAttempt.setAssessmentAttemptStatusEnum(AssessmentAttemptStatusEnum.INCOMPLETE);
+        } else if (q.getAssessmentAttemptStatusEnum().equals("SUBMITTED")) {
+            quizAttempt.setAssessmentAttemptStatusEnum(AssessmentAttemptStatusEnum.SUBMITTED);
+        } else {
+            quizAttempt.setAssessmentAttemptStatusEnum(AssessmentAttemptStatusEnum.GRADED);
+        }
+        //convert questionAttemptDTOToquestionAttempt
+        return quizAttempt;
+    }
+
     public List<QuestionAttemptDTO> convertQuestionAttemptsToQuestionAttemptDTOs(List<QuestionAttempt> questionAttempts) {
 
         List<QuestionAttemptDTO> questionAttemptDTOS = new ArrayList<>();
@@ -185,6 +215,25 @@ public class QuizAttemptController {
             questionAttemptDTOS.add(convertQuestionAttemptToQuestionAttemptDTO(q));
         }
         return questionAttemptDTOS;
+    }
+
+    public List<QuestionAttempt> convertQuestionAttemptDTOsToQuestionAttempt(List<QuestionAttemptDTO> questionAttemptDTOS) {
+        List<QuestionAttempt> questionAttempts = new ArrayList<>();
+        for (QuestionAttemptDTO q : questionAttemptDTOS) {
+            questionAttempts.add(convertQuestionAttemptDTOToQuestionAttempt(q));
+        }
+        return questionAttempts;
+    }
+
+    public QuestionAttempt convertQuestionAttemptDTOToQuestionAttempt(QuestionAttemptDTO q) {
+
+        QuestionAttempt questionAttempt = new QuestionAttempt();
+        questionAttempt.setQuestionAttemptId(q.getQuestionAttemptId());
+        questionAttempt.setQuestionAttemptScore(q.getQuestionAttemptScore());
+        questionAttempt.setShortAnswerResponse(q.getShortAnswerResponse());
+        questionAttempt.setQuestionAttempted(quizController.convertQuestionDTOToQuestion(q.getQuestionAttempted()));
+        questionAttempt.setOptionSelected(new Option(q.getOptionSelected()));
+        return questionAttempt;
     }
 
     public QuestionAttemptDTO convertQuestionAttemptToQuestionAttemptDTO(QuestionAttempt q) {

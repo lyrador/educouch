@@ -18,7 +18,7 @@ public interface QuestionService {
 
 //    public List<String> getAllOptionsInQuestion(Long questionId) throws QuestionNotFoundException;
 
-    public List<QuestionAttempt> getAllQuestionAttemptsInQuestion(Long questionId) throws QuestionNotFoundException;
+//    public List<QuestionAttempt> getAllQuestionAttemptsInQuestion(Long questionId) throws QuestionNotFoundException;
 
     public Question retrieveQuestionById(Long questionId) throws QuestionNotFoundException;
 

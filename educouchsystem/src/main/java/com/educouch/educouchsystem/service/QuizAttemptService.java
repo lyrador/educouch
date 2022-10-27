@@ -18,6 +18,8 @@ public interface QuizAttemptService {
     public List<QuizAttempt> getParticularQuizAttemptsByLearnerId(Long learnerId, Long assessmentId) throws NoQuizAttemptsFoundException;
     public List<QuizAttempt> getQuizAttemptsByLearnerId(Long learnerId) throws NoQuizAttemptsFoundException ;
     public QuizAttempt getMostRecentQuizAttemptByLearnerId(Long learnerId, Long assessmentId) throws NoQuizAttemptsFoundException;
+    public QuizAttempt getQuizAttemptById(Long quizAttemptID) throws QuizAttemptNotFoundException;
+    public QuizAttempt updateQuizAttempt(QuizAttempt quizAttemptToUpdate) throws QuizAttemptNotFoundException;
 //    public List<QuizAttempt> getAllQuizAttempts();
 
 //    public List<QuestionAttempt> getSubmittedQuestionAttempts(Long quizAttemptId) throws QuizAttemptNotFoundException;
