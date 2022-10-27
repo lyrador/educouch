@@ -74,9 +74,22 @@ public class InteractiveChapterController {
         try {
             InteractiveChapter existingInteractiveChapter = interactiveChapterService.getInteractiveChapterById(interactiveChapterId);
             InteractiveBook interactiveBook = existingInteractiveChapter.getInteractiveBook();
+
+            //if the chapter being deleted is not the last chapter of the book, the chapters coming after their chapter indexes have to be decreased by 1
+            List<InteractiveChapter> interactiveChapterList = interactiveBook.getInteractiveChapters();
+            if (interactiveChapterList.size() != existingInteractiveChapter.getChapterIndex()) {
+                for (int i = existingInteractiveChapter.getChapterIndex(); i < interactiveChapterList.size(); i++) {
+                    InteractiveChapter chapterToUpdate = interactiveChapterList.get(i);
+                    System.out.println ("chapter to update has the id " + chapterToUpdate.getInteractiveChapterId());
+                    Integer updatedChapterIndex = chapterToUpdate.getChapterIndex() - 1;
+                    System.out.println ("updated chapter index is " + updatedChapterIndex);
+                    chapterToUpdate.setChapterIndex(updatedChapterIndex);
+                    interactiveChapterService.saveInteractiveChapter(chapterToUpdate);
+                }
+            }
+
             interactiveBook.getInteractiveChapters().remove(existingInteractiveChapter);
             existingInteractiveChapter.setInteractiveBook(null);
-
 //            if (!existingInteractiveChapter.getInteractivePages().isEmpty()) {
 //                List<InteractivePage> interactivePageList = existingInteractiveChapter.getInteractivePages();
 //                for (InteractivePage interactivePage : interactivePageList) {
