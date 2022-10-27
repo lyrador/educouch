@@ -300,7 +300,9 @@ public class QuizController {
         for(Question q : questions) {
             QuestionDTO questionDTO = convertQuestionToQuestionDTO(q);
             questionDTOs.add(questionDTO);
-            questionDTO.setCorrectOption(q.getCorrectOption().getOptionContent());
+            if(!(q.getCorrectOption()==null)) {
+                questionDTO.setCorrectOption(q.getCorrectOption().getOptionContent());
+            }
         }
         return questionDTOs;
     }
