@@ -135,12 +135,6 @@ public class QuizController {
         List<Question> questions = oldQuiz.getQuizQuestions();
         for (int j=0; j<questions.size(); j++) {
             List<Option> options = questions.get(j).getOptions();
-//            if(options.size()>0) {
-//                for(int i=0; i<options.size(); i++) {
-//                    optionService.deleteOptionById(options.get(i).getOptionId());
-//                    options.remove(options.size()-1);
-//                }
-//            }
             questionService.deleteQuestion(questions.get(j).getQuestionId());
         }
         while(questions.size()>0) {
@@ -198,34 +192,42 @@ public class QuizController {
         List<Question> questions = quiz.getQuizQuestions();
 
         for(QuestionDTO q : questionDTOs) {
-
             //add question to quiz
-            Question question = new Question();
-            question.setLocalid(q.getLocalid());
-            question.setQuestionTitle(q.getQuestionTitle());
-            if(q.getQuestionType().equals("mcq")) {
-                question.setQuestionType(QuestionTypeEnum.MCQ);
-            } else if(q.getQuestionType().equals("shortAnswer")) {
-                question.setQuestionType(QuestionTypeEnum.OPEN_ENDED);
-            } else if(q.getQuestionType().equals("trueFalse")) {
-                question.setQuestionType(QuestionTypeEnum.TRUE_FALSE);
-            }
-            question.setQuestionContent(q.getQuestionContent());
-            question.setQuestionHint(q.getQuestionHint());
-            try {
-                question.setQuestionMaxScore(Double.parseDouble(q.getQuestionMaxPoints()));
-            } catch (Exception e) {
-                question.setQuestionMaxScore(0.0);
-            }
-            //for each question, add options to question
-            question = addOptions(question, q.getOptions());
-            question.setCorrectOption(new Option(q.getCorrectOption()));
+            Question question = convertQuestionDTOToQuestion(q);
             questions.add(question);
+
         }
 
         quiz.setQuizQuestions(questions);
-
         return quiz;
+    }
+
+    public Question convertQuestionDTOToQuestion (QuestionDTO q) {
+        Question question = new Question();
+        question.setLocalid(q.getLocalid());
+        question.setQuestionTitle(q.getQuestionTitle());
+        if(q.getQuestionType().equals("mcq")) {
+            question.setQuestionType(QuestionTypeEnum.MCQ);
+        } else if(q.getQuestionType().equals("shortAnswer")) {
+            question.setQuestionType(QuestionTypeEnum.OPEN_ENDED);
+        } else if(q.getQuestionType().equals("trueFalse")) {
+            question.setQuestionType(QuestionTypeEnum.TRUE_FALSE);
+        }
+        question.setQuestionContent(q.getQuestionContent());
+        question.setQuestionHint(q.getQuestionHint());
+        try {
+            question.setQuestionMaxScore(Double.parseDouble(q.getQuestionMaxPoints()));
+        } catch (Exception e) {
+            question.setQuestionMaxScore(0.0);
+        }
+
+        //for each question, add options to question
+        question = addOptions(question, q.getOptions());
+        if(!q.getCorrectOption().equals("")) {
+            question.setCorrectOption(new Option(q.getCorrectOption()));
+        }
+
+        return question;
 
     }
 
@@ -255,6 +257,12 @@ public class QuizController {
         quizDTO.setAssessmentStartDate(quiz.getStartDate().toString());
         quizDTO.setAssessmentEndDate(quiz.getEndDate().toString());
         quizDTO.setAssessmentIsOpen(quiz.getOpen().toString());
+        Date today = new Date();
+        if(today.after(quiz.getEndDate())) {
+            quizDTO.setIsExpired("true");
+        } else {
+            quizDTO.setIsExpired("false");
+        }
 
         if(quiz.getHasTimeLimit()) {
             quizDTO.setHasTimeLimit("true");
@@ -282,8 +290,6 @@ public class QuizController {
 
         List<QuestionDTO> questionDTOs = convertQuestionsToQuestionDTOs(quiz.getQuizQuestions());
         quizDTO.setQuestions(questionDTOs);
-
-        //need to set attempts for next SR
 
         return quizDTO;
     }

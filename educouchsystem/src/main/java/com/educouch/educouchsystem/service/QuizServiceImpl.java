@@ -44,6 +44,9 @@ public class QuizServiceImpl implements QuizService{
                         optionRepository.save(o);
                     }
                 }
+                if(!(q.getCorrectOption() == null)) {
+                    optionRepository.save(q.getCorrectOption());
+                }
                 questionRepository.save(q);
             }
 
