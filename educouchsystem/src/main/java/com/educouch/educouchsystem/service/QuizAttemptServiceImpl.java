@@ -104,6 +104,9 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
             q.setShortAnswerResponse(updatedQuestionAttempts.get(i).getShortAnswerResponse());
             q.setOptionSelected(updatedQuestionAttempts.get(i).getOptionSelected());
         }
+        quizAttemptToUpdate.setAttemptCounter(quizAttemptToUpdate.getAttemptCounter()+1);
+        quizAttemptRepository.save(quizAttemptToUpdate);
+
         return quizAttemptToUpdate;
     }
 

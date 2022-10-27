@@ -22,11 +22,25 @@ public class QuizServiceImpl implements QuizService{
     @Autowired
     private CourseService courseService;
 
-        @Autowired
-        private OptionRepository optionRepository;
+    @Autowired
+    private OptionRepository optionRepository;
 
     @Override
+    //for updating quiz
     public Quiz saveQuiz(Quiz quiz) {
+        List<Question> questions = quiz.getQuizQuestions();
+        for(Question q : questions) {
+            List<Option> options = q.getOptions();
+            if(options.size()>0) {
+                for(Option o : options) {
+                    optionRepository.save(o);
+                }
+            }
+            if(!(q.getCorrectOption() == null)) {
+                optionRepository.save(q.getCorrectOption());
+            }
+            questionRepository.save(q);
+        }
         return quizRepository.save(quiz);
     }
 
