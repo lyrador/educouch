@@ -79,7 +79,7 @@ public class QuizAttemptController {
         }
     }
 
-    @PutMapping("/getMostRecentQuizAttemptByLearnerId/{assessmentId}/{learnerId}")
+    @GetMapping("/getMostRecentQuizAttemptByLearnerId/{assessmentId}/{learnerId}")
     public ResponseEntity<QuizAttemptDTO> getMostRecentQuizAttemptByLearnerId(@PathVariable(value = "assessmentId") Long assessmentId,
                                                                               @PathVariable(value = "learnerId") Long learnerId) {
 
@@ -93,15 +93,6 @@ public class QuizAttemptController {
 
     }
 
-
-    //
-    //
-    //
-    //stopped here, need to testttttt
-    //
-    //
-    //
-    //
     @PutMapping("/updateQuizAttemptById/{quizId}")
     public ResponseEntity<QuizAttemptDTO> updateQuizAttemptById(@RequestBody QuizAttemptDTO updatedQuizAttemptDTO,
                                                                 @PathVariable(value="quizId") Long quizAttemptId) {
@@ -110,8 +101,7 @@ public class QuizAttemptController {
             QuizAttempt quizAttempt = quizAttemptService.getQuizAttemptById(quizAttemptId);
             QuizAttempt updatedQuizAttempt = quizAttemptService.updateQuizAttempt(convertQuizAttemptDTOToQuizAttempt(updatedQuizAttemptDTO));
             //update quizAttempt
-            updatedQuizAttempt.setAttemptCounter(quizAttempt.getAttemptCounter()+1);
-            return new ResponseEntity<>(new QuizAttemptDTO(), HttpStatus.OK);
+            return new ResponseEntity<>(updatedQuizAttemptDTO, HttpStatus.OK);
         }
         catch (ParseException e) {
             return new ResponseEntity<>(HttpStatus.valueOf("Date Parsing failed"));
@@ -192,6 +182,7 @@ public class QuizAttemptController {
 
     public QuizAttempt convertQuizAttemptDTOToQuizAttempt(QuizAttemptDTO q) throws ParseException{
         QuizAttempt quizAttempt = new QuizAttempt();
+        quizAttempt.setQuizAttemptId(q.getQuizAttemptId());
         quizAttempt.setAttemptCounter(q.getAttemptCounter());
         quizAttempt.setObtainedScore(q.getObtainedScore());
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -205,6 +196,7 @@ public class QuizAttemptController {
             quizAttempt.setAssessmentAttemptStatusEnum(AssessmentAttemptStatusEnum.GRADED);
         }
         //convert questionAttemptDTOToquestionAttempt
+        quizAttempt.setQuestionAttempts(convertQuestionAttemptDTOsToQuestionAttempt(q.getQuestionAttempts()));
         return quizAttempt;
     }
 
