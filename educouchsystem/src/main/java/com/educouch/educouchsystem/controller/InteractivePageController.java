@@ -86,11 +86,21 @@ public class InteractivePageController {
         try {
             InteractivePage existingInteractivePage = interactivePageService.getInteractivePageById(interactivePageId);
             InteractiveChapter interactiveChapter = existingInteractivePage.getInteractiveChapter();
+
+            //if the page being deleted is not the last page of the chapter, the pages coming after their page numbers have to be decreased by 1
+            List<InteractivePage> interactivePageList = interactiveChapter.getInteractivePages();
+            if (interactivePageList.size() != existingInteractivePage.getPageNumber()) {
+                for (int i = existingInteractivePage.getPageNumber(); i < interactivePageList.size(); i++ ) {
+                    InteractivePage pageToUpdate = interactivePageList.get(i);
+                    Integer updatedPageNumber = pageToUpdate.getPageNumber() - 1;
+                    pageToUpdate.setPageNumber(updatedPageNumber);
+                    interactivePageService.saveInteractivePage(pageToUpdate);
+                }
+            }
+
             interactiveChapter.getInteractivePages().remove(existingInteractivePage);
             existingInteractivePage.setInteractiveChapter(null);
-
             existingInteractivePage.setPageQuestion(null);
-
             existingInteractivePage.setAttachment(null);
 
             interactivePageService.deleteInteractivePage(interactivePageId);
