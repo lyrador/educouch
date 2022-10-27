@@ -1,10 +1,7 @@
 package com.educouch.educouchsystem.service;
 
 
-import com.educouch.educouchsystem.model.Learner;
-import com.educouch.educouchsystem.model.QuestionAttempt;
-import com.educouch.educouchsystem.model.Quiz;
-import com.educouch.educouchsystem.model.QuizAttempt;
+import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.repository.OptionRepository;
 import com.educouch.educouchsystem.repository.QuestionAttemptRepository;
 import com.educouch.educouchsystem.repository.QuizAttemptRepository;
@@ -47,7 +44,7 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
             quizAttempt.setLearner(learnerToUpdate);
             quizAttempt.setAttemptedQuiz(quiz);
             quizAttemptRepository.save(quizAttempt);
-            quizService.saveQuiz(quizToUpdate);
+//            quizService.saveQuiz(quizToUpdate);
             return quizAttempt;
         } else {
             throw new QuizNotFoundException();
@@ -85,6 +82,29 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
             }
         }
         return mostRecentAttempt;
+    }
+
+    @Override
+    public QuizAttempt getQuizAttemptById(Long quizAttemptID) throws QuizAttemptNotFoundException {
+        QuizAttempt q = quizAttemptRepository.findById(quizAttemptID).get();
+        if(q!=null) {
+            return q;
+        } else {
+            throw new QuizAttemptNotFoundException();
+        }
+    }
+
+    @Override
+    public QuizAttempt updateQuizAttempt(QuizAttempt updatedQuizAttempt) throws QuizAttemptNotFoundException{
+        QuizAttempt quizAttemptToUpdate = getQuizAttemptById(updatedQuizAttempt.getQuizAttemptId());
+        List<QuestionAttempt> questionAttemptsToUpdate = quizAttemptToUpdate.getQuestionAttempts();
+        List<QuestionAttempt> updatedQuestionAttempts = updatedQuizAttempt.getQuestionAttempts();
+        for(int i=0; i<questionAttemptsToUpdate.size(); i++) {
+            QuestionAttempt q = questionAttemptsToUpdate.get(i);
+            q.setShortAnswerResponse(updatedQuestionAttempts.get(i).getShortAnswerResponse());
+            q.setOptionSelected(updatedQuestionAttempts.get(i).getOptionSelected());
+        }
+        return quizAttemptToUpdate;
     }
 
 
