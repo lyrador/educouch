@@ -3,6 +3,7 @@ package com.educouch.educouchsystem.dto;
 public class QuestionAttemptDTO {
 
     private Long questionAttemptId;
+    private String questionAttemptedQuestionId;
     private Double questionAttemptScore;
     private String shortAnswerResponse;
     private QuestionDTO questionAttempted;
@@ -54,4 +55,14 @@ public class QuestionAttemptDTO {
     public void setOptionSelected(String optionSelected) {
         this.optionSelected = optionSelected;
     }
+
+    public String getQuestionAttemptedQuestionId() {
+        return questionAttemptedQuestionId;
+    }
+
+    public void setQuestionAttemptedQuestionId(String questionAttemptedQuestionId) {
+        this.questionAttemptedQuestionId = questionAttemptedQuestionId;
+    }
+
+
 }

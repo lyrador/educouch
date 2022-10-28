@@ -15,6 +15,7 @@ public class QuestionDTO {
     private String correctOption;
 
     public QuestionDTO() {
+        this.correctOption = "";
     }
 
     public QuestionDTO(String localid, String questionTitle, String questionType, String questionContent, String questionMaxPoints, List<String> options, String questionHint) {
