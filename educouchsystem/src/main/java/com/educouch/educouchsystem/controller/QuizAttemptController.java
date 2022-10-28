@@ -103,6 +103,9 @@ public class QuizAttemptController {
         //try find existing quizAttempt
         try {
             QuizAttempt quizAttempt = quizAttemptService.getQuizAttemptById(quizAttemptId);
+            Date updatedAttemptTime = new Date();
+            DateFormat formatter = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
+            updatedQuizAttemptDTO.setLastAttemptTime(formatter.format(updatedAttemptTime));
             QuizAttempt updatedQuizAttempt = quizAttemptService.updateQuizAttempt(convertQuizAttemptDTOToQuizAttempt(updatedQuizAttemptDTO));
             //update quizAttempt
             return new ResponseEntity<>(updatedQuizAttemptDTO, HttpStatus.OK);
@@ -125,6 +128,7 @@ public class QuizAttemptController {
         try {
             QuizAttempt quizAttempt = quizAttemptService.getQuizAttemptById(quizAttemptId);
             //update quizAttempt
+            Date updatedAttemptTime = new Date();
             QuizAttempt updatedQuizAttempt = quizAttemptService.updateQuizAttempt(convertQuizAttemptDTOToQuizAttempt(updatedQuizAttemptDTO));
             //update state of quizAttempt to be "submitted"
             updatedQuizAttempt = quizAttemptService.submitQuizAttempt(updatedQuizAttempt);
@@ -204,7 +208,7 @@ public class QuizAttemptController {
         quizAttempt.setQuizAttemptId(q.getQuizAttemptId());
         quizAttempt.setAttemptCounter(q.getAttemptCounter());
         quizAttempt.setObtainedScore(q.getObtainedScore());
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy MM dd HH:mm:ss:S");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
         quizAttempt.setLastAttemptTime(formatter.parse(q.getLastAttemptTime()));
         quizAttempt.setTimeLimitRemaining(q.getTimeLimitRemaining());
         if (q.getAssessmentAttemptStatusEnum().equals("INCOMPLETE")) {
