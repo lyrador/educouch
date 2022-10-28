@@ -10,6 +10,7 @@ import com.educouch.educouchsystem.util.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -102,8 +103,12 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
         List<QuestionAttempt> updatedQuestionAttempts = updatedQuizAttempt.getQuestionAttempts();
         for(int i=0; i<questionAttemptsToUpdate.size(); i++) {
             QuestionAttempt q = questionAttemptsToUpdate.get(i);
+//            if(q.getOptionSelected()!=null) {
+//                optionRepository.deleteById(q.getOptionSelected().getOptionId()); //delete old option selected
+//            }
             q.setShortAnswerResponse(updatedQuestionAttempts.get(i).getShortAnswerResponse());
             q.setOptionSelected(updatedQuestionAttempts.get(i).getOptionSelected());
+            optionRepository.save(updatedQuestionAttempts.get(i).getOptionSelected()); //set new option selected
         }
         quizAttemptToUpdate.setAttemptCounter(quizAttemptToUpdate.getAttemptCounter()+1);
         quizAttemptRepository.save(quizAttemptToUpdate);

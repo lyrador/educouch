@@ -27,6 +27,7 @@ public class QuizAttempt implements Serializable {
     private Double obtainedScore;
 
     @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
     private Date lastAttemptTime;
 
     @NotNull
