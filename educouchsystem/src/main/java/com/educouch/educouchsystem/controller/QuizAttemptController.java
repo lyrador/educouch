@@ -93,6 +93,10 @@ public class QuizAttemptController {
 
     }
 
+    ///
+    ///
+    ///
+    /// problem with parsing date
     @PutMapping("/updateQuizAttemptById/{quizId}")
     public ResponseEntity<QuizAttemptDTO> updateQuizAttemptById(@RequestBody QuizAttemptDTO updatedQuizAttemptDTO,
                                                                 @PathVariable(value="quizId") Long quizAttemptId) {
@@ -110,12 +114,27 @@ public class QuizAttemptController {
         }
     }
 
+    ///
+    ///
+    /// problem with parsing date
     @PutMapping("/submitQuizAttempt/")
-    public ResponseEntity<QuizAttemptDTO> submitQuizAttempt(@RequestBody QuizAttemptDTO quizAttemptDTO) {
+    public ResponseEntity<QuizAttemptDTO> submitQuizAttempt(@RequestBody QuizAttemptDTO updatedQuizAttemptDTO,
+                                                            @PathVariable(value="quizId") Long quizAttemptId) {
 
-        //update state of quizAttempt to be "submitted"
-        return new ResponseEntity<>(new QuizAttemptDTO(), HttpStatus.OK);
-
+        //try find existing quizAttempt
+        try {
+            QuizAttempt quizAttempt = quizAttemptService.getQuizAttemptById(quizAttemptId);
+            //update quizAttempt
+            QuizAttempt updatedQuizAttempt = quizAttemptService.updateQuizAttempt(convertQuizAttemptDTOToQuizAttempt(updatedQuizAttemptDTO));
+            //update state of quizAttempt to be "submitted"
+            updatedQuizAttempt = quizAttemptService.submitQuizAttempt(updatedQuizAttempt);
+            return new ResponseEntity<>(updatedQuizAttemptDTO, HttpStatus.OK);
+        }
+        catch (ParseException e) {
+            return new ResponseEntity<>(HttpStatus.valueOf("Date Parsing failed"));
+        } catch (QuizAttemptNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     public QuizAttempt initializeQuizAttempt(Quiz quiz) {
@@ -185,8 +204,8 @@ public class QuizAttemptController {
         quizAttempt.setQuizAttemptId(q.getQuizAttemptId());
         quizAttempt.setAttemptCounter(q.getAttemptCounter());
         quizAttempt.setObtainedScore(q.getObtainedScore());
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        quizAttempt.setLastAttemptTime((Date) formatter.parse((q.getLastAttemptTime())));
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy MM dd HH:mm:ss:S");
+        quizAttempt.setLastAttemptTime(formatter.parse(q.getLastAttemptTime()));
         quizAttempt.setTimeLimitRemaining(q.getTimeLimitRemaining());
         if (q.getAssessmentAttemptStatusEnum().equals("INCOMPLETE")) {
             quizAttempt.setAssessmentAttemptStatusEnum(AssessmentAttemptStatusEnum.INCOMPLETE);
