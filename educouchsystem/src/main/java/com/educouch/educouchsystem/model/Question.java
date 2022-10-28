@@ -33,14 +33,13 @@ public class Question implements Serializable {
     @JoinColumn(name="question_id")
     private List<Option> options;
 
+    @OneToOne
+    @JoinColumn
     private Option correctOption;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name="question_id")
-    private List<QuestionAttempt> questionAttempts;
-
-    @OneToOne
-    private OpenEnded openEnded;
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+//    @JoinColumn(name="question_id")
+//    private List<QuestionAttempt> questionAttempts;
 
     @ManyToOne
     @JoinColumn(name="interactivePage_id")
@@ -48,7 +47,7 @@ public class Question implements Serializable {
 
     public Question() {
         this.options = new ArrayList<>();
-        this.questionAttempts = new ArrayList<>();
+//        this.questionAttempts = new ArrayList<>();
 
     }
 
@@ -100,13 +99,6 @@ public class Question implements Serializable {
         this.questionType = questionType;
     }
 
-    public OpenEnded getOpenEnded() {
-        return openEnded;
-    }
-
-    public void setOpenEnded(OpenEnded openEnded) {
-        this.openEnded = openEnded;
-    }
 
 //    public List<Option> getOptions() {
 //        return options;
@@ -124,13 +116,13 @@ public class Question implements Serializable {
         this.options = options;
     }
 
-    public List<QuestionAttempt> getQuestionAttempts() {
-        return questionAttempts;
-    }
-
-    public void setQuestionAttempts(List<QuestionAttempt> questionAttempts) {
-        this.questionAttempts = questionAttempts;
-    }
+//    public List<QuestionAttempt> getQuestionAttempts() {
+//        return questionAttempts;
+//    }
+//
+//    public void setQuestionAttempts(List<QuestionAttempt> questionAttempts) {
+//        this.questionAttempts = questionAttempts;
+//    }
 
     public Option getCorrectOption() {
         return correctOption;

@@ -22,6 +22,7 @@ public class QuizDTO {
     private Long createdByUserId;
     private String createdByUserName;
     private String createdByUserType;
+    private String isExpired;
     private List<QuestionDTO> questions;
 
 
@@ -181,4 +182,11 @@ public class QuizDTO {
     }
 
 
+    public String getIsExpired() {
+        return isExpired;
+    }
+
+    public void setIsExpired(String isExpired) {
+        this.isExpired = isExpired;
+    }
 }

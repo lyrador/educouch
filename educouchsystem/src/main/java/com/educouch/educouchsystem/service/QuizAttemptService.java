@@ -9,6 +9,7 @@ import com.educouch.educouchsystem.util.exception.QuestionAttemptNotFoundExcepti
 import com.educouch.educouchsystem.util.exception.QuizAttemptNotFoundException;
 import com.educouch.educouchsystem.util.exception.QuizNotFoundException;
 
+import java.util.Date;
 import java.util.List;
 
 public interface QuizAttemptService {
@@ -18,6 +19,10 @@ public interface QuizAttemptService {
     public List<QuizAttempt> getParticularQuizAttemptsByLearnerId(Long learnerId, Long assessmentId) throws NoQuizAttemptsFoundException;
     public List<QuizAttempt> getQuizAttemptsByLearnerId(Long learnerId) throws NoQuizAttemptsFoundException ;
     public QuizAttempt getMostRecentQuizAttemptByLearnerId(Long learnerId, Long assessmentId) throws NoQuizAttemptsFoundException;
+    public QuizAttempt getQuizAttemptById(Long quizAttemptID) throws QuizAttemptNotFoundException;
+    public QuizAttempt updateQuizAttempt(QuizAttempt quizAttemptToUpdate) throws QuizAttemptNotFoundException;
+    public QuizAttempt submitQuizAttempt(QuizAttempt updatedQuizAttempt) throws QuizAttemptNotFoundException;
+
 //    public List<QuizAttempt> getAllQuizAttempts();
 
 //    public List<QuestionAttempt> getSubmittedQuestionAttempts(Long quizAttemptId) throws QuizAttemptNotFoundException;
