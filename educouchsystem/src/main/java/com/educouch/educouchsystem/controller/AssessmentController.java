@@ -44,20 +44,6 @@ public class AssessmentController {
     @Autowired
     private QuizService quizService;
 
-//    @Autowired
-//    private QuizService quizService;
-//
-//    @PostMapping("/addNewQuiz/{courseId}")
-//    public ResponseEntity<Quiz> addQuiz(@RequestBody Quiz quiz, @PathVariable(value="courseId") Long courseId) {
-//        try {
-//            Course course = courseService.retrieveCourseById(courseId);
-//            quizService.saveQuiz(courseId, quiz);
-//            return new ResponseEntity<>(quiz, HttpStatus.OK);
-//        } catch (CourseNotFoundException ex) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
-
     @PostMapping("/addNewFileSubmission/{courseId}")
     public ResponseEntity<FileSubmission> addFileSubmission(@RequestBody FileSubmissionDTO fileSubmissionDTO, @PathVariable(value="courseId") Long courseId) {
         try {
@@ -386,7 +372,7 @@ public class AssessmentController {
 
             AssessmentDTO dtoItem = new AssessmentDTO();
             DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
+            Date today = new Date();
             dtoItem.setAssessmentId(a.getAssessmentId());
             dtoItem.setTitle(a.getTitle());
             dtoItem.setDescription(a.getDescription());
@@ -399,6 +385,11 @@ public class AssessmentController {
                 dtoItem.setOpen("false");
             }
             dtoItem.setAssessmentStatus(a.getAssessmentStatus());
+            if(today.after(a.getEndDate())) {
+                dtoItem.setIsExpired("true");
+            } else {
+                dtoItem.setIsExpired("false");
+            }
             String s = a.getClass().getName();
             String[] assessmentTypeArray = s.split("\\.");
 //            System.out.println(assessmentTypeArray[4]);
