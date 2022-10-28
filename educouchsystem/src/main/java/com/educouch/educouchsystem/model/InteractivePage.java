@@ -18,6 +18,9 @@ public class InteractivePage {
     @Column(name="pageDescription")
     private String pageDescription;
 
+    @Column(name="pageTitle")
+    private String pageTitle;
+
     @ManyToOne
     @JoinColumn(name="interactiveChapter_id")
     private InteractiveChapter interactiveChapter;
@@ -33,6 +36,12 @@ public class InteractivePage {
     public InteractivePage(Integer pageNumber, String pageDescription) {
         this.pageNumber = pageNumber;
         this.pageDescription = pageDescription;
+    }
+
+    public InteractivePage(Integer pageNumber, String pageDescription, String pageTitle) {
+        this.pageNumber = pageNumber;
+        this.pageDescription = pageDescription;
+        this.pageTitle = pageTitle;
     }
 
     public InteractivePage() {
@@ -85,5 +94,13 @@ public class InteractivePage {
 
     public void setAttachment(Attachment attachment) {
         this.attachment = attachment;
+    }
+
+    public String getPageTitle() {
+        return pageTitle;
+    }
+
+    public void setPageTitle(String pageTitle) {
+        this.pageTitle = pageTitle;
     }
 }
