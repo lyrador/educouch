@@ -9,6 +9,7 @@ import com.educouch.educouchsystem.util.exception.QuestionAttemptNotFoundExcepti
 import com.educouch.educouchsystem.util.exception.QuizAttemptNotFoundException;
 import com.educouch.educouchsystem.util.exception.QuizNotFoundException;
 
+import java.util.Date;
 import java.util.List;
 
 public interface QuizAttemptService {

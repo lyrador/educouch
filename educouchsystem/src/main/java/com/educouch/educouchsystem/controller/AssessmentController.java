@@ -44,20 +44,6 @@ public class AssessmentController {
     @Autowired
     private QuizService quizService;
 
-//    @Autowired
-//    private QuizService quizService;
-//
-//    @PostMapping("/addNewQuiz/{courseId}")
-//    public ResponseEntity<Quiz> addQuiz(@RequestBody Quiz quiz, @PathVariable(value="courseId") Long courseId) {
-//        try {
-//            Course course = courseService.retrieveCourseById(courseId);
-//            quizService.saveQuiz(courseId, quiz);
-//            return new ResponseEntity<>(quiz, HttpStatus.OK);
-//        } catch (CourseNotFoundException ex) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
-
     @PostMapping("/addNewFileSubmission/{courseId}")
     public ResponseEntity<FileSubmission> addFileSubmission(@RequestBody FileSubmissionDTO fileSubmissionDTO, @PathVariable(value="courseId") Long courseId) {
         try {
