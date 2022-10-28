@@ -145,7 +145,6 @@ public class QuizController {
         return updatedQuiz;
     }
 
-
     public Quiz instantiateQuiz(QuizDTO quizDTO, Long courseId) throws CourseNotFoundException, ParseException{
 
         Quiz newQuiz = new Quiz();

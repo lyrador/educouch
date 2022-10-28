@@ -1,10 +1,12 @@
 package com.educouch.educouchsystem.model;
 
 import com.educouch.educouchsystem.util.enumeration.AssessmentAttemptStatusEnum;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +27,6 @@ public class QuizAttempt implements Serializable {
     private Double obtainedScore;
 
     @NotNull
-    @Temporal(TemporalType.TIMESTAMP)
     private Date lastAttemptTime;
 
     @NotNull
