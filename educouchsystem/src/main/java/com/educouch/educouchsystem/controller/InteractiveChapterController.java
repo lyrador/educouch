@@ -1,10 +1,12 @@
 package com.educouch.educouchsystem.controller;
 
+import com.educouch.educouchsystem.dto.ChapterToReorderDTO;
 import com.educouch.educouchsystem.model.InteractiveBook;
 import com.educouch.educouchsystem.model.InteractiveChapter;
 import com.educouch.educouchsystem.model.InteractivePage;
 import com.educouch.educouchsystem.service.InteractiveBookService;
 import com.educouch.educouchsystem.service.InteractiveChapterService;
+import com.educouch.educouchsystem.util.comparator.ChapterComparator;
 import com.educouch.educouchsystem.util.exception.InteractiveBookNotFoundException;
 import com.educouch.educouchsystem.util.exception.InteractiveChapterNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @RestController
 @RequestMapping("/interactiveChapter")
@@ -110,6 +109,18 @@ public class InteractiveChapterController {
         }
     }
 
+    @DeleteMapping("/interactiveChapters/{interactiveBookId}/deleteAll")
+    public ResponseEntity<InteractiveChapter> deleteAllInteractiveChapters(@PathVariable("interactiveBookId") Long interactiveBookId) {
+        try {
+            InteractiveBook existingInteractiveBook = interactiveBookService.getInteractiveBookById(interactiveBookId);
+            existingInteractiveBook.getInteractiveChapters().clear();
+            interactiveBookService.saveInteractiveBook(existingInteractiveBook);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (InteractiveBookNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @PutMapping("/interactiveChapters/{interactiveChapterId}")
     public ResponseEntity<InteractiveChapter> updateInteractiveChapter (@RequestBody InteractiveChapter interactiveChapter, @PathVariable("interactiveChapterId") Long interactiveChapterId) {
         try {
@@ -135,9 +146,29 @@ public class InteractiveChapterController {
             InteractiveBook interactiveBook = interactiveBookService.getInteractiveBookById(interactiveBookId);
             List<InteractiveChapter> interactiveChapterList = new ArrayList<>();
             interactiveChapterList.addAll(interactiveBook.getInteractiveChapters());
+            Collections.sort(interactiveChapterList, new ChapterComparator());
             return new ResponseEntity<>(interactiveChapterList, HttpStatus.OK);
         } catch (InteractiveBookNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/{interactiveBookId}/interactiveChapters/reorderInteractiveChapters")
+    public ResponseEntity<List<InteractiveChapter>> reorderInteractiveChapters(@PathVariable(value="interactiveBookId") Long interactiveBookId, @RequestBody List<ChapterToReorderDTO> chapterToReorderDTOList) {
+        try {
+            InteractiveBook interactiveBook = interactiveBookService.getInteractiveBookById(interactiveBookId);
+            for (ChapterToReorderDTO chapterToReorderDTO : chapterToReorderDTOList) {
+                InteractiveChapter interactiveChapter = interactiveChapterService.getInteractiveChapterById(chapterToReorderDTO.getChapterId());
+                interactiveChapter.setChapterIndex(Integer.valueOf(chapterToReorderDTO.getChapterIndex()));
+                interactiveChapter = interactiveChapterService.saveInteractiveChapter(interactiveChapter);
+            }
+            List<InteractiveChapter> interactiveChapterList = new ArrayList<>();
+            interactiveChapterList.addAll(interactiveBook.getInteractiveChapters());
+            return new ResponseEntity<>(interactiveChapterList, HttpStatus.OK);
+        } catch (InteractiveBookNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (InteractiveChapterNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 }
