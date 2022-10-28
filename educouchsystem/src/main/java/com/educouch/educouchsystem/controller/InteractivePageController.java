@@ -117,7 +117,7 @@ public class InteractivePageController {
             existingInteractivePage.setPageDescription(interactivePage.getPageDescription());
             existingInteractivePage.setPageNumber(interactivePage.getPageNumber());
             existingInteractivePage.setPageTitle(interactivePage.getPageTitle());
-           // existingInteractivePage.setPageQuestions(interactivePage.getPageQuestions());
+           // existingInteractivePage.setPageQuestions(interactivePage.getPageQuestions());    const [newTextItemWords, setNewTextItemWords] = useState("");
            // existingInteractivePage.setAttachments(interactivePage.getAttachments());
 
             interactivePageService.saveInteractivePage(existingInteractivePage);
@@ -133,7 +133,30 @@ public class InteractivePageController {
     public ResponseEntity<InteractivePage> addFileItem(@PathVariable(value="interactivePageId") Long interactivePageId, @RequestBody FileItemDTO fileItemDTORequest) {
         try {
             InteractivePage interactivePage = interactivePageService.getInteractivePageById(interactivePageId);
+            if (interactivePage.getAttachment() != null) {
+                Long attachmentIdToDelete = interactivePage.getAttachment().getAttachmentId();
+                interactivePage.setAttachment(null);
+                attachmentService.deleteAttachment(attachmentIdToDelete);
+            }
             interactivePage.setAttachment(attachmentService.getAttachment(fileItemDTORequest.getAttachmentId()));
+            interactivePageService.saveInteractivePage(interactivePage);
+            return new ResponseEntity<>(interactivePage, HttpStatus.OK);
+        } catch (InteractivePageNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PutMapping("/{interactivePageId}/removeFileItem")
+    public ResponseEntity<InteractivePage> removeFileItem(@PathVariable(value="interactivePageId") Long interactivePageId) {
+        try {
+            InteractivePage interactivePage = interactivePageService.getInteractivePageById(interactivePageId);
+            if (interactivePage.getAttachment() != null) {
+                Long attachmentIdToDelete = interactivePage.getAttachment().getAttachmentId();
+                interactivePage.setAttachment(null);
+                attachmentService.deleteAttachment(attachmentIdToDelete);
+            }
             interactivePageService.saveInteractivePage(interactivePage);
             return new ResponseEntity<>(interactivePage, HttpStatus.OK);
         } catch (InteractivePageNotFoundException ex) {
