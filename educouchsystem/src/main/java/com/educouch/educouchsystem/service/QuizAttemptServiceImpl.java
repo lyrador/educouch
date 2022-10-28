@@ -5,6 +5,7 @@ import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.repository.OptionRepository;
 import com.educouch.educouchsystem.repository.QuestionAttemptRepository;
 import com.educouch.educouchsystem.repository.QuizAttemptRepository;
+import com.educouch.educouchsystem.util.enumeration.AssessmentAttemptStatusEnum;
 import com.educouch.educouchsystem.util.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -107,6 +108,13 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
         quizAttemptToUpdate.setAttemptCounter(quizAttemptToUpdate.getAttemptCounter()+1);
         quizAttemptRepository.save(quizAttemptToUpdate);
 
+        return quizAttemptToUpdate;
+    }
+
+    @Override
+    public QuizAttempt submitQuizAttempt(QuizAttempt updatedQuizAttempt) throws QuizAttemptNotFoundException {
+        QuizAttempt quizAttemptToUpdate = getQuizAttemptById(updatedQuizAttempt.getQuizAttemptId());
+        quizAttemptToUpdate.setAssessmentAttemptStatusEnum(AssessmentAttemptStatusEnum.SUBMITTED);
         return quizAttemptToUpdate;
     }
 
