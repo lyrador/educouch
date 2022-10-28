@@ -41,6 +41,11 @@ public class InteractiveChapterController {
                 interactiveChapterList.add(interactiveChapterRequest);
                 interactiveBook.setInteractiveChapters(interactiveChapterList);
             }
+            if (interactiveChapterRequest.getInteractiveBook() != null) {
+                if (interactiveChapterRequest.getInteractiveBook().getInteractiveChapters() != null) {
+                    interactiveChapterRequest.setChapterIndex(interactiveChapterRequest.getInteractiveBook().getInteractiveChapters().size());
+                }
+            }
             InteractiveChapter interactiveChapter = interactiveChapterService.saveInteractiveChapter(interactiveChapterRequest);
             return new ResponseEntity<>(interactiveChapter, HttpStatus.OK);
         } catch (InteractiveBookNotFoundException ex) {

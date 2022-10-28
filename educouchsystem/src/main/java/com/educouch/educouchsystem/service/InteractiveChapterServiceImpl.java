@@ -19,11 +19,6 @@ public class InteractiveChapterServiceImpl implements InteractiveChapterService{
 
     @Override
     public InteractiveChapter saveInteractiveChapter(InteractiveChapter interactiveChapter) {
-        if (interactiveChapter.getInteractiveBook() != null) {
-            if (interactiveChapter.getInteractiveBook().getInteractiveChapters() != null) {
-                interactiveChapter.setChapterIndex(interactiveChapter.getInteractiveBook().getInteractiveChapters().size());
-           }
-        }
         return interactiveChapterRepository.save(interactiveChapter);
     }
 
