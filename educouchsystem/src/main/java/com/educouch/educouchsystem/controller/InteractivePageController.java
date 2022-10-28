@@ -116,6 +116,7 @@ public class InteractivePageController {
             InteractivePage existingInteractivePage = interactivePageService.getInteractivePageById(interactivePageId);
             existingInteractivePage.setPageDescription(interactivePage.getPageDescription());
             existingInteractivePage.setPageNumber(interactivePage.getPageNumber());
+            existingInteractivePage.setPageTitle(interactivePage.getPageTitle());
            // existingInteractivePage.setPageQuestions(interactivePage.getPageQuestions());
            // existingInteractivePage.setAttachments(interactivePage.getAttachments());
 
