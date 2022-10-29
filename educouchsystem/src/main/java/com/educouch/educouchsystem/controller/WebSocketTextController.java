@@ -1,6 +1,7 @@
 package com.educouch.educouchsystem.controller;
 
 
+import com.educouch.educouchsystem.dto.TextMessageDTO;
 import com.educouch.educouchsystem.model.Coordinates;
 import com.educouch.educouchsystem.dto.ActionResponseDTO;
 import com.educouch.educouchsystem.dto.RoomActionsDTO;
@@ -66,6 +67,11 @@ public class WebSocketTextController {
         }
 
 
+    }
+    @MessageMapping("/send/{roomId}/chat")
+    @SendTo("/topic/{roomId}/chat")
+    public TextMessageDTO sendChat(@Payload TextMessageDTO textMessage) {
+        return textMessage;
     }
 
     @MessageMapping("send/{roomId}/get-learner-not-participants")
