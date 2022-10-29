@@ -58,7 +58,6 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     private GradeBookEntryService gradeBookEntryService;
 
-
     @Autowired
     private OrganisationService organisationService;
 
@@ -99,31 +98,38 @@ public class DataLoader implements CommandLineRunner {
         lmsAdminService.saveLmsAdmin(new LmsAdmin("manager", "manager@gmail.com", "password", "manager"));
 
         // create learners
-        Learner learner_1  = learnerRepository.save(new Learner("Alex", "irenelie@u.nus.edu", "password",
-                "alex", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", false, "23456"));
+        Learner learner_1 = learnerRepository.save(new Learner("Alex", "irenelie@u.nus.edu", "password",
+                "alex", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", false,
+                "23456"));
 
         Learner learner_2 = learnerRepository.save(new Learner("Beatrice", "irenelie1412@gmail.com", "password",
-                "beatrice", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1665376248092_2938982-middle.png", false, "23456"));
+                "beatrice", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1665376248092_2938982-middle.png",
+                false, "23456"));
 
-        Learner learner_3 =  learnerRepository.save(new Learner("Carol", "irenelie@nushackers.org", "password",
-                "carol", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1665376289662_imgbin-computer-icons-woman-avatar-avatar-girl-TBWeJMyXNwtNQA661FQ0rZSv2.jpg", false, "23456"));
+        Learner learner_3 = learnerRepository.save(new Learner("Carol", "irenelie@nushackers.org", "password",
+                "carol",
+                "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1665376289662_imgbin-computer-icons-woman-avatar-avatar-girl-TBWeJMyXNwtNQA661FQ0rZSv2.jpg",
+                false, "23456"));
 
-        Learner learner_4 =  learnerRepository.save(new Learner("David", "lielieirene@gmail.com", "password",
-                "david", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1665376079555_png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png", false, "23456"));
+        Learner learner_4 = learnerRepository.save(new Learner("David", "lielieirene@gmail.com", "password",
+                "david",
+                "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1665376079555_png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png",
+                false, "23456"));
 
-        //create organisation and organisation admin
+        // create organisation and organisation admin
         Organisation org1 = new Organisation("FakeTuition", "issa fake tuition", "23423423234234");
         OrganisationAdmin orgAdmin = new OrganisationAdmin("grinivas", "grini@gmail.com", "password", "grinivas");
         organisationService.instantiateOrganisation(orgAdmin, org1);
 
-        //create instructors
+        // create instructors
         Instructor i1 = new Instructor("milo", "milo@gmail.com", "milo", "password", InstructorAccessRight.INSTRUCTOR);
-        Instructor i2 = new Instructor("horlicks", "horlicks@gmail.com", "horlicks", "password", InstructorAccessRight.HEADINSTRUCTOR);
+        Instructor i2 = new Instructor("horlicks", "horlicks@gmail.com", "horlicks", "password",
+                InstructorAccessRight.HEADINSTRUCTOR);
 
         organisationService.addInstructor("1", i1);
         organisationService.addInstructor("1", i2);
 
-        //create a course and link it to head instructor horlicks of organisation org 1
+        // create a course and link it to head instructor horlicks of organisation org 1
         Course cs2102 = new Course();
         cs2102.setCourseCode("CS2102");
         cs2102.setCourseTitle("Database Systems");
@@ -133,7 +139,8 @@ public class DataLoader implements CommandLineRunner {
         cs2102.setAgeGroup(AgeGroupEnum.ADULTS);
         cs2102.setCourseFee(new BigDecimal(1000));
         cs2102.setStartDate(LocalDate.now().plusDays(7));
-        //set it to live status to test enrollment functionality (in normal situations classruns should be created first before making the course live)
+        // set it to live status to test enrollment functionality (in normal situations
+        // classruns should be created first before making the course live)
         cs2102.setCourseApprovalStatus(CourseApprovalStatusEnum.LIVE);
 
         if (i2.getCourses() == null) {
@@ -157,12 +164,14 @@ public class DataLoader implements CommandLineRunner {
 
         cs2102 = courseService.saveCourse(cs2102);
 
-        //from here can create classruns and enrol learners in the course cs2102 to test functionality
+        // from here can create classruns and enrol learners in the course cs2102 to
+        // test functionality
         Integer[] daysOfWeek = new Integer[2];
         daysOfWeek[0] = 1;
         daysOfWeek[1] = 2;
-        ClassRun classRunOne = new ClassRun(LocalDate.now().plusDays(7), LocalDate.now().plusDays(90), LocalTime.MIDNIGHT, LocalTime.NOON, 1, 10, daysOfWeek, RecurringEnum.ALTERNATE);
-        classRunOne.setInstructor(i1);
+        ClassRun classRunOne = new ClassRun(LocalDate.now().plusDays(7), LocalDate.now().plusDays(90),
+                LocalTime.MIDNIGHT, LocalTime.NOON, 1, 10, daysOfWeek, RecurringEnum.ALTERNATE);
+        classRunOne.setInstructor(i2);
         try {
             courseService.addClassRunToCourse(cs2102.getCourseId(), classRunOne);
             cs2102 = courseService.getCourseById(cs2102.getCourseId());
@@ -171,17 +180,14 @@ public class DataLoader implements CommandLineRunner {
             classRunOne = listOfClassRuns.get(0);
             try {
                 stripeService.payDeposit(classRunOne.getClassRunId(), learner_1.getLearnerId(), new BigDecimal(100));
-//                stripeService.payCourseFee(classRunOne.getClassRunId(), learner_1.getLearnerId(), new BigDecimal(900));
-            } catch(ClassRunNotFoundException | LearnerNotFoundException ex) {
+                // stripeService.payCourseFee(classRunOne.getClassRunId(),
+                // learner_1.getLearnerId(), new BigDecimal(900));
+            } catch (ClassRunNotFoundException | LearnerNotFoundException ex) {
                 System.out.println("Error in enrolment.");
             }
-        } catch(CourseNotFoundException ex) {
+        } catch (CourseNotFoundException ex) {
             System.out.println("Error in generating class run. ");
         }
 
-        gradeBookEntryService.createGradeBookEntry(new GradeBookEntry(1l,1l,"lmao", 40.0));
-        gradeBookEntryService.createGradeBookEntry(new GradeBookEntry(1l,1l,"hehe", 30.0));
-        gradeBookEntryService.createGradeBookEntry(new GradeBookEntry(1l,1l,"why", 20.0));
-        gradeBookEntryService.createGradeBookEntry(new GradeBookEntry(1l,1l,"yolo", 10.0));
     }
 }

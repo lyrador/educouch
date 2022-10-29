@@ -11,4 +11,7 @@ public interface GradeBookEntryRepository extends CrudRepository<GradeBookEntry,
 
     @Query("SELECT g FROM GradeBookEntry g WHERE g.learnerId=:learnerId AND g.courseId=:courseId")
     public List<GradeBookEntry> findByLearnerIDAndCourseId(Long learnerId,Long courseId);
+
+    @Query("SELECT g FROM GradeBookEntry g WHERE g.assessmentId=:assessmentId")
+    public List<GradeBookEntry> findByAssessmentId(Long assessmentId);
 }

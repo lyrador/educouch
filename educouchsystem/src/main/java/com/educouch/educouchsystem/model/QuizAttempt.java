@@ -1,10 +1,12 @@
 package com.educouch.educouchsystem.model;
 
 import com.educouch.educouchsystem.util.enumeration.AssessmentAttemptStatusEnum;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +24,8 @@ public class QuizAttempt implements Serializable {
     private Integer attemptCounter;
 
     @NotNull
+    private Double learnerMcqScore;
+    @NotNull
     private Double obtainedScore;
 
     @NotNull
@@ -32,15 +36,19 @@ public class QuizAttempt implements Serializable {
     private Integer timeLimitRemaining;
 
     @NotNull
+    private boolean hasOpenEnded;
+    @NotNull
     private AssessmentAttemptStatusEnum assessmentAttemptStatusEnum;  //INCOMPLETE, SUBMITTED, GRADED
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuestionAttempt> questionAttempts;
 
     @ManyToOne
+    @JoinColumn
     private Learner learner;
 
     @ManyToOne
+    @JoinColumn
     private Quiz attemptedQuiz;
 
     public QuizAttempt() {
@@ -49,6 +57,24 @@ public class QuizAttempt implements Serializable {
         this.lastAttemptTime = new Date();
         this.assessmentAttemptStatusEnum = AssessmentAttemptStatusEnum.INCOMPLETE;
         this.questionAttempts = new ArrayList<>();
+        this.hasOpenEnded = false;
+        this.learnerMcqScore = 0.0;
+    }
+
+    public Double getLearnerMcqScore() {
+        return learnerMcqScore;
+    }
+
+    public void setLearnerMcqScore(Double learnerMcqScore) {
+        this.learnerMcqScore = learnerMcqScore;
+    }
+
+    public boolean isHasOpenEnded() {
+        return hasOpenEnded;
+    }
+
+    public void setHasOpenEnded(boolean hasOpenEnded) {
+        this.hasOpenEnded = hasOpenEnded;
     }
 
     public QuizAttempt(String quizAttemptDescription) {
@@ -150,4 +176,6 @@ public class QuizAttempt implements Serializable {
     public String toString() {
         return "entity.QuizAttempt[ id=" + quizAttemptId + " ]";
     }
+
+
 }

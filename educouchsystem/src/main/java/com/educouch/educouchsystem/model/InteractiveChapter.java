@@ -15,6 +15,9 @@ public class InteractiveChapter {
     private long interactiveChapterId;
     @Column(name="chapterTitle", nullable = false)
     private String chapterTitle;
+
+    @Column(name="chapterIndex", nullable = false)
+    private Integer chapterIndex;
     @Column(name="chapterDescription", nullable = false, columnDefinition = "TEXT")
     private String chapterDescription;
     @Column(name="creationDate", nullable = false)
@@ -83,5 +86,13 @@ public class InteractiveChapter {
 
     public void setInteractivePages(List<InteractivePage> interactivePages) {
         this.interactivePages = interactivePages;
+    }
+
+    public Integer getChapterIndex() {
+        return chapterIndex;
+    }
+
+    public void setChapterIndex(Integer chapterIndex) {
+        this.chapterIndex = chapterIndex;
     }
 }
