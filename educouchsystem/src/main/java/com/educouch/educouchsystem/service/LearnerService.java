@@ -17,4 +17,6 @@ public interface LearnerService {
     public void deleteLearner(Long id);
 
     public Learner updateLearner(Learner learner) throws InvalidLoginCredentialsException;
+
+    public Learner findLearnerByUsernameNonException(String username);
 }

@@ -15,22 +15,33 @@ public class InteractivePage {
     @Column(name="pageNumber", nullable = false)
     private Integer pageNumber;
 
-    @Column(name="pageDescription", nullable = false, columnDefinition = "TEXT")
+    @Column(name="pageDescription", length = 15000)
     private String pageDescription;
+
+    @Column(name="pageTitle")
+    private String pageTitle;
 
     @ManyToOne
     @JoinColumn(name="interactiveChapter_id")
     private InteractiveChapter interactiveChapter;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Question> pageQuestions;
+    @OneToOne
+    @JoinColumn(name = "questionId")
+    private Question pageQuestion;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Attachment> attachments;
+    @OneToOne
+    @JoinColumn(name = "attachmentId")
+    private Attachment attachment;
 
     public InteractivePage(Integer pageNumber, String pageDescription) {
         this.pageNumber = pageNumber;
         this.pageDescription = pageDescription;
+    }
+
+    public InteractivePage(Integer pageNumber, String pageDescription, String pageTitle) {
+        this.pageNumber = pageNumber;
+        this.pageDescription = pageDescription;
+        this.pageTitle = pageTitle;
     }
 
     public InteractivePage() {
@@ -69,19 +80,27 @@ public class InteractivePage {
         this.interactiveChapter = interactiveChapter;
     }
 
-    public List<Question> getPageQuestions() {
-        return pageQuestions;
+    public Question getPageQuestion() {
+        return pageQuestion;
     }
 
-    public void setPageQuestions(List<Question> pageQuestions) {
-        this.pageQuestions = pageQuestions;
+    public void setPageQuestion(Question pageQuestion) {
+        this.pageQuestion = pageQuestion;
     }
 
-    public List<Attachment> getAttachments() {
-        return attachments;
+    public Attachment getAttachment() {
+        return attachment;
     }
 
-    public void setAttachments(List<Attachment> attachments) {
-        this.attachments = attachments;
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
+    }
+
+    public String getPageTitle() {
+        return pageTitle;
+    }
+
+    public void setPageTitle(String pageTitle) {
+        this.pageTitle = pageTitle;
     }
 }
