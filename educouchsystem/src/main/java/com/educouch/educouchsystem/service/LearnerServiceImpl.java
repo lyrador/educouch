@@ -44,6 +44,12 @@ public class LearnerServiceImpl implements LearnerService {
     }
 
     @Override
+    public Learner findLearnerByUsernameNonException(String username) throws UsernameNotFoundException {
+        Learner learner = learnerRepository.findByUsername(username);
+        return learner;
+    }
+
+    @Override
     public void deleteLearner(Long id) {
         learnerRepository.deleteById(id);
     }

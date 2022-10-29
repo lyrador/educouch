@@ -33,7 +33,6 @@ public class EducatorServiceImpl implements EducatorService{
 
 
     public OrganisationAdmin saveOrganisationAdmin(OrganisationAdmin orgAdmin) {
-
         return organisationAdminRepository.save(orgAdmin);
     }
 
@@ -145,6 +144,12 @@ public class EducatorServiceImpl implements EducatorService{
             return organisationAdmin;
         }
         throw new UsernameNotFoundException("Username not found");
+    }
+
+    @Override
+    public OrganisationAdmin findOrganisationAdminByUsernameNonException(String username) {
+        OrganisationAdmin organisationAdmin = organisationAdminRepository.findByUsername(username);
+        return organisationAdmin;
     }
 
     @Override

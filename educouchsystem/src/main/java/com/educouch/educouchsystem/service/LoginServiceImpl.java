@@ -27,9 +27,20 @@ public class LoginServiceImpl implements LoginService {
         this.educatorService = educatorService;
     }
 
+//    @Override
+//    public LoggedInUserDTO login(LoggedInUserRequestDTO loggedInUserRequestDTO) {
+//        LoggedInUserDTO retrievedUser = findUserByUsernameAndEntityType(loggedInUserRequestDTO.getUsername(), loggedInUserRequestDTO.getUserType());
+//        if (retrievedUser.getPassword().equals(loggedInUserRequestDTO.getPassword())) {
+//            return retrievedUser;
+//        }
+//        else {
+//            throw new InvalidLoginCredentialsException("Invalid Username or Password!");
+//        }
+//    }
+
     @Override
     public LoggedInUserDTO login(LoggedInUserRequestDTO loggedInUserRequestDTO) {
-        LoggedInUserDTO retrievedUser = findUserByUsernameAndEntityType(loggedInUserRequestDTO.getUsername(), loggedInUserRequestDTO.getUserType());
+        LoggedInUserDTO retrievedUser = findUserByUsername(loggedInUserRequestDTO.getUsername());
         if (retrievedUser.getPassword().equals(loggedInUserRequestDTO.getPassword())) {
             return retrievedUser;
         }
@@ -38,10 +49,78 @@ public class LoginServiceImpl implements LoginService {
         }
     }
 
+//    @Override
+//    public LoggedInUserDTO findUserByUsernameAndEntityType(String username, String entityType) {
+//        LoggedInUserDTO retrievedUser = new LoggedInUserDTO();
+//        if (entityType.equals("LEARNER")) {
+//            Learner retrievedLearner = learnerService.findLearnerByUsername(username);
+//            String learnerUserEnum = "";
+//            if (retrievedLearner.getIsKid()) {
+//                learnerUserEnum = "KID";
+//            } else {
+//                learnerUserEnum = "ADULT";
+//            }
+//            retrievedUser = new LoggedInUserDTO(
+//                    retrievedLearner.getLearnerId(),
+//                    retrievedLearner.getName(),
+//                    null,
+//                    retrievedLearner.getEmail(),
+//                    retrievedLearner.getPassword(),
+//                    retrievedLearner.getUsername(),
+//                    retrievedLearner.getProfilePictureURL(),
+//                    "LEARNER",
+//                    learnerUserEnum);
+//            if (retrievedLearner.getActive() == false) {
+//                retrievedUser.setIsActive("false");
+//            } else {
+//                retrievedUser.setIsActive("true");
+//            }
+//        } else if (entityType.equals("INSTRUCTOR")) {
+//            Instructor retrievedInstructor = educatorService.findInstructorByUsername(username);
+//            String instructorUserEnum = "";
+//            if (retrievedInstructor.getInstructorAccessRight() == InstructorAccessRight.INSTRUCTOR) {
+//                instructorUserEnum = "INSTRUCTOR";
+//            } else {
+//                instructorUserEnum = "HEAD_INSTRUCTOR";
+//            }
+//            retrievedUser = new LoggedInUserDTO(
+//                    retrievedInstructor.getInstructorId(),
+//                    retrievedInstructor.getName(),
+//                    null,
+//                    retrievedInstructor.getEmail(),
+//                    retrievedInstructor.getPassword(),
+//                    retrievedInstructor.getUsername(),
+//                    retrievedInstructor.getProfilePictureURL(),
+//                    "INSTRUCTOR",
+//                    instructorUserEnum);
+//            retrievedUser.setIsActive("true");
+//            retrievedUser.setOrganisationId(retrievedInstructor.getOrganisation().getOrganisationId());
+//        } else if (entityType.equals("ORG_ADMIN")) {
+//            OrganisationAdmin retrievedOrganisationAdmin = educatorService.findOrganisationAdminByUsername(username);
+//            retrievedUser = new LoggedInUserDTO(
+//                    retrievedOrganisationAdmin.getOrganisationAdminId(),
+//                    retrievedOrganisationAdmin.getName(),
+//                    null,
+//                    retrievedOrganisationAdmin.getEmail(),
+//                    retrievedOrganisationAdmin.getPassword(),
+//                    retrievedOrganisationAdmin.getUsername(),
+//                    retrievedOrganisationAdmin.getProfilePictureURL(),
+//                    "ORG_ADMIN",
+//                    null);
+//            retrievedUser.setOrganisationId(retrievedOrganisationAdmin.getOrganisation().getOrganisationId());
+//            if (retrievedOrganisationAdmin.getActive() == false) {
+//                retrievedUser.setIsActive("false");
+//            } else {
+//                retrievedUser.setIsActive("true");
+//            }
+//        }
+//        return retrievedUser;
+//    }
+
     @Override
-    public LoggedInUserDTO findUserByUsernameAndEntityType(String username, String entityType) {
+    public LoggedInUserDTO findUserByUsername(String username) {
         LoggedInUserDTO retrievedUser = new LoggedInUserDTO();
-        if (entityType.equals("LEARNER")) {
+        if (learnerService.findLearnerByUsernameNonException(username) != null) {
             Learner retrievedLearner = learnerService.findLearnerByUsername(username);
             String learnerUserEnum = "";
             if (retrievedLearner.getIsKid()) {
@@ -64,7 +143,7 @@ public class LoginServiceImpl implements LoginService {
             } else {
                 retrievedUser.setIsActive("true");
             }
-        } else if (entityType.equals("INSTRUCTOR")) {
+        } else if (educatorService.findInstructorByUsername(username) != null) {
             Instructor retrievedInstructor = educatorService.findInstructorByUsername(username);
             String instructorUserEnum = "";
             if (retrievedInstructor.getInstructorAccessRight() == InstructorAccessRight.INSTRUCTOR) {
@@ -84,7 +163,7 @@ public class LoginServiceImpl implements LoginService {
                     instructorUserEnum);
             retrievedUser.setIsActive("true");
             retrievedUser.setOrganisationId(retrievedInstructor.getOrganisation().getOrganisationId());
-        } else if (entityType.equals("ORG_ADMIN")) {
+        } else if ( educatorService.findOrganisationAdminByUsernameNonException(username) != null) {
             OrganisationAdmin retrievedOrganisationAdmin = educatorService.findOrganisationAdminByUsername(username);
             retrievedUser = new LoggedInUserDTO(
                     retrievedOrganisationAdmin.getOrganisationAdminId(),
