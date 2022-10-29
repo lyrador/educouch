@@ -2,6 +2,7 @@ package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.model.Announcement;
 import com.educouch.educouchsystem.repository.AnnouncementRepository;
+import com.educouch.educouchsystem.util.exception.AnnouncementNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     private AnnouncementRepository announcementRepository;
 
     @Override
-    public Announcement saveAnnouncement(Announcement announcement) {
+    public Announcement saveAnnouncement(Announcement announcement) throws AnnouncementNotFoundException {
         return announcementRepository.save(announcement);
     }
 
