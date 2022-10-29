@@ -3,11 +3,14 @@ package com.educouch.educouchsystem.controller;
 import com.educouch.educouchsystem.dto.AnnouncementDTO;
 import com.educouch.educouchsystem.dto.ForumDTO;
 import com.educouch.educouchsystem.model.Announcement;
+import com.educouch.educouchsystem.model.Assessment;
 import com.educouch.educouchsystem.model.Course;
 import com.educouch.educouchsystem.model.Forum;
 import com.educouch.educouchsystem.service.AnnouncementService;
 import com.educouch.educouchsystem.service.CourseService;
 import com.educouch.educouchsystem.service.EducatorService;
+import com.educouch.educouchsystem.util.exception.AnnouncementNotFoundException;
+import com.educouch.educouchsystem.util.exception.AssessmentNotFoundException;
 import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,6 +46,12 @@ public class AnnouncementController {
             newAnnouncement.setAnnouncementTitle(announcementDTO.getAnnouncementTitle());
             newAnnouncement.setAnnouncementBody(announcementDTO.getAnnouncementBody());
             newAnnouncement.setTimestamp(LocalDateTime.now());
+
+            if (announcementDTO.getIsRead().equals("UNREAD")) {
+                newAnnouncement.setIsRead("UNREAD");
+            } else if (announcementDTO.getIsRead().equals("READ")) {
+                newAnnouncement.setIsRead("READ");
+            }
             //Ensure that announcement can only be created by Instructors
             if (announcementDTO.getCreatedByUserType().equals("INSTRUCTOR")) {
                 newAnnouncement.setCreatedByInstructor(educatorService.findInstructorById(announcementDTO.getCreatedByUserId()));
@@ -54,7 +63,7 @@ public class AnnouncementController {
             return new ResponseEntity<>(announcement, HttpStatus.OK);
         } catch (NoSuchElementException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (InstructorNotFoundException ex) {
+        } catch (InstructorNotFoundException | AnnouncementNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -80,10 +89,39 @@ public class AnnouncementController {
                     announcementDTO.setCreatedByUserName(announcement.getCreatedByInstructor().getName());
                     announcementDTO.setCreatedByUserType("INSTRUCTOR");
                 }
+                if (announcement.getIsRead().equals("READ")) {
+                    announcementDTO.setIsRead("READ");
+                } else if (announcement.getIsRead().equals("UNREAD")) {
+                    announcementDTO.setIsRead("UNREAD");
+                }
                 announcementDTOs.add(announcementDTO);
             }
             return new ResponseEntity<>(announcementDTOs, HttpStatus.OK);
         } catch (NoSuchElementException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/markAnnouncementAsRead/{announcementId}")
+    public ResponseEntity<Announcement> markAnnouncementAsRead(@PathVariable(value="announcementId") Long announcementId) {
+        try {
+            Announcement announcement = announcementService.retrieveAnnouncementById(announcementId);
+            announcement.setIsRead("READ");
+            announcementService.saveAnnouncement(announcement);
+            return new ResponseEntity<>(announcement,HttpStatus.OK);
+        } catch (AnnouncementNotFoundException exception) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/markAnnouncementAsUnread/{announcementId}")
+    public ResponseEntity<Announcement> markAnnouncementAsUnread(@PathVariable(value="announcementId") Long announcementId) {
+        try {
+            Announcement announcement = announcementService.retrieveAnnouncementById(announcementId);
+            announcement.setIsRead("UNREAD");
+            announcementService.saveAnnouncement(announcement);
+            return new ResponseEntity<>(announcement,HttpStatus.OK);
+        } catch (AnnouncementNotFoundException exception) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -104,8 +142,9 @@ public class AnnouncementController {
             Announcement existingAnnouncement = announcementService.retrieveAnnouncementById(announcementId);
             existingAnnouncement.setAnnouncementTitle(announcementDTO.getAnnouncementTitle());
             existingAnnouncement.setAnnouncementBody(announcementDTO.getAnnouncementBody());
+            existingAnnouncement.setTimestamp(LocalDateTime.now());
             return new ResponseEntity<Announcement>(announcementService.saveAnnouncement(existingAnnouncement), HttpStatus.OK);
-        } catch (NoSuchElementException ex) {
+        } catch (NoSuchElementException | AnnouncementNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

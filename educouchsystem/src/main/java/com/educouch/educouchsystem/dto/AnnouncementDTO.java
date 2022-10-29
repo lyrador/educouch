@@ -8,6 +8,8 @@ public class AnnouncementDTO {
 
     private String announcementBody;
 
+    private String isRead;
+
     private String createdDateTime;
 
     private Long createdByUserId;
@@ -19,10 +21,11 @@ public class AnnouncementDTO {
     public AnnouncementDTO() {
     }
 
-    public AnnouncementDTO(Long announcementId, String announcementTitle, String announcementBody, String createdDateTime, Long createdByUserId, String createdByUserName, String createdByUserType) {
+    public AnnouncementDTO(Long announcementId, String announcementTitle, String announcementBody, String isRead, String createdDateTime, Long createdByUserId, String createdByUserName, String createdByUserType) {
         this.announcementId = announcementId;
         this.announcementTitle = announcementTitle;
         this.announcementBody = announcementBody;
+        this.isRead = isRead;
         this.createdDateTime = createdDateTime;
         this.createdByUserId = createdByUserId;
         this.createdByUserName = createdByUserName;
@@ -51,6 +54,14 @@ public class AnnouncementDTO {
 
     public void setAnnouncementBody(String announcementBody) {
         this.announcementBody = announcementBody;
+    }
+
+    public String getIsRead() {
+        return isRead;
+    }
+
+    public void setIsRead(String isRead) {
+        this.isRead = isRead;
     }
 
     public String getCreatedDateTime() {
