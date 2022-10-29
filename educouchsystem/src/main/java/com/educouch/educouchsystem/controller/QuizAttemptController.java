@@ -88,15 +88,11 @@ public class QuizAttemptController {
             QuizAttemptDTO quizAttemptDTO = convertQuizAttemptToQuizAttemptDTO(mostRecentQuizAttempt);
             return new ResponseEntity<>(quizAttemptDTO, HttpStatus.OK);
         } catch (NoQuizAttemptsFoundException exception) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new QuizAttemptDTO(), HttpStatus.NOT_FOUND);
         }
 
     }
 
-    ///
-    ///
-    ///
-    /// problem with parsing date
     @PutMapping("/updateQuizAttemptById/{quizId}")
     public ResponseEntity<QuizAttemptDTO> updateQuizAttemptById(@RequestBody QuizAttemptDTO updatedQuizAttemptDTO,
                                                                 @PathVariable(value="quizId") Long quizAttemptId) {
@@ -106,6 +102,7 @@ public class QuizAttemptController {
             Date updatedAttemptTime = new Date();
             DateFormat formatter = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
             updatedQuizAttemptDTO.setLastAttemptTime(formatter.format(updatedAttemptTime));
+            //not updating status
             QuizAttempt updatedQuizAttempt = quizAttemptService.updateQuizAttempt(convertQuizAttemptDTOToQuizAttempt(updatedQuizAttemptDTO));
             //update quizAttempt
             return new ResponseEntity<>(updatedQuizAttemptDTO, HttpStatus.OK);
@@ -117,10 +114,7 @@ public class QuizAttemptController {
         }
     }
 
-    ///
-    ///
-    /// problem with parsing date
-    @PutMapping("/submitQuizAttempt/")
+    @PutMapping("/submitQuizAttempt/{quizId}")
     public ResponseEntity<QuizAttemptDTO> submitQuizAttempt(@RequestBody QuizAttemptDTO updatedQuizAttemptDTO,
                                                             @PathVariable(value="quizId") Long quizAttemptId) {
 
@@ -129,6 +123,8 @@ public class QuizAttemptController {
             QuizAttempt quizAttempt = quizAttemptService.getQuizAttemptById(quizAttemptId);
             //update quizAttempt
             Date updatedAttemptTime = new Date();
+            DateFormat formatter = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
+            updatedQuizAttemptDTO.setLastAttemptTime(formatter.format(updatedAttemptTime));
             QuizAttempt updatedQuizAttempt = quizAttemptService.updateQuizAttempt(convertQuizAttemptDTOToQuizAttempt(updatedQuizAttemptDTO));
             //update state of quizAttempt to be "submitted"
             updatedQuizAttempt = quizAttemptService.submitQuizAttempt(updatedQuizAttempt);
