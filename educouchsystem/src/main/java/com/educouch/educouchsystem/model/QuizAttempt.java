@@ -24,6 +24,8 @@ public class QuizAttempt implements Serializable {
     private Integer attemptCounter;
 
     @NotNull
+    private Double learnerMcqScore;
+    @NotNull
     private Double obtainedScore;
 
     @NotNull
@@ -33,6 +35,8 @@ public class QuizAttempt implements Serializable {
     @NotNull
     private Integer timeLimitRemaining;
 
+    @NotNull
+    private boolean hasOpenEnded;
     @NotNull
     private AssessmentAttemptStatusEnum assessmentAttemptStatusEnum;  //INCOMPLETE, SUBMITTED, GRADED
 
@@ -53,6 +57,24 @@ public class QuizAttempt implements Serializable {
         this.lastAttemptTime = new Date();
         this.assessmentAttemptStatusEnum = AssessmentAttemptStatusEnum.INCOMPLETE;
         this.questionAttempts = new ArrayList<>();
+        this.hasOpenEnded = false;
+        this.learnerMcqScore = 0.0;
+    }
+
+    public Double getLearnerMcqScore() {
+        return learnerMcqScore;
+    }
+
+    public void setLearnerMcqScore(Double learnerMcqScore) {
+        this.learnerMcqScore = learnerMcqScore;
+    }
+
+    public boolean isHasOpenEnded() {
+        return hasOpenEnded;
+    }
+
+    public void setHasOpenEnded(boolean hasOpenEnded) {
+        this.hasOpenEnded = hasOpenEnded;
     }
 
     public QuizAttempt(String quizAttemptDescription) {
@@ -154,4 +176,6 @@ public class QuizAttempt implements Serializable {
     public String toString() {
         return "entity.QuizAttempt[ id=" + quizAttemptId + " ]";
     }
+
+
 }
