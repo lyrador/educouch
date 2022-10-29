@@ -114,18 +114,6 @@ public class AnnouncementController {
         }
     }
 
-    @GetMapping("/markAnnouncementAsUnread/{announcementId}")
-    public ResponseEntity<Announcement> markAnnouncementAsUnread(@PathVariable(value="announcementId") Long announcementId) {
-        try {
-            Announcement announcement = announcementService.retrieveAnnouncementById(announcementId);
-            announcement.setIsRead("UNREAD");
-            announcementService.saveAnnouncement(announcement);
-            return new ResponseEntity<>(announcement,HttpStatus.OK);
-        } catch (AnnouncementNotFoundException exception) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
     @GetMapping("/getAnnouncementById/{announcementId}")
     public ResponseEntity<Announcement> getAnnouncementById(@PathVariable(value = "announcementId") Long announcementId) {
         try {
