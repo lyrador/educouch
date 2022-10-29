@@ -19,6 +19,9 @@ public class Announcement {
     @NotNull
     private String announcementBody;
 
+    @NotNull
+    private String isRead = "UNREAD";
+
     private LocalDateTime timestamp;
 
     @OneToOne
@@ -68,6 +71,14 @@ public class Announcement {
 
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getIsRead() {
+        return isRead;
+    }
+
+    public void setIsRead(String isRead) {
+        this.isRead = isRead;
     }
 
     public Instructor getCreatedByInstructor() {
