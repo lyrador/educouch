@@ -111,6 +111,7 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
             optionRepository.save(updatedQuestionAttempts.get(i).getOptionSelected()); //set new option selected
         }
         quizAttemptToUpdate.setAttemptCounter(quizAttemptToUpdate.getAttemptCounter()+1);
+        quizAttemptToUpdate.setAssessmentAttemptStatusEnum(updatedQuizAttempt.getAssessmentAttemptStatusEnum());
         quizAttemptRepository.save(quizAttemptToUpdate);
 
         return quizAttemptToUpdate;
