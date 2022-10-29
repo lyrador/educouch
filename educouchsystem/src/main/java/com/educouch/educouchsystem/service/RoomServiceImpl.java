@@ -41,7 +41,7 @@ public class RoomServiceImpl implements RoomService {
         Room newRoom = new Room(roomDto.getRoomName(), "");
         Instructor instructor = educatorService.findInstructorByUsername(roomDto.getCreatorUsername());
         // when first start, the room will have no participants
-        newRoom.addOrganizer(instructor);
+//        newRoom.addOrganizer(instructor);
         return roomRepository.save(newRoom);
     }
     @Override
