@@ -39,10 +39,16 @@ public class StripeServiceImpl implements StripeService {
     EnrolmentStatusTrackerService enrolmentStatusTrackerService;
 
     @Autowired
+    GradeBookEntryService gradeBookEntryService;
+
+    @Autowired
     DepositRefundRequestService depositRefundRequestService;
 
     @Autowired
     OrgLmsRevenueMapService orgLmsRevenueMapService;
+
+    @Autowired
+    AssessmentService assessmentService;
 
     String secretKey = "sk_test_51LnPrnBx7BYbBg97Zhhw2HorPZqL5srUqYdFgcYuldnNJlMMO4shzH979NrcJ4NDJGHAg0IQ2KuhR19vnEIaUiF800k3CzgsHu";
 
@@ -148,13 +154,22 @@ public class StripeServiceImpl implements StripeService {
                     learnerService.saveLearner(l);
 
                     createNewLearnerTransaction(c.getClassRunId(), l.getLearnerId(), LearnerPaymentEnum.REMAININGCOURSEFEE, amount);
-                    BigDecimal revenue = amount.divide(new BigDecimal(18),2, RoundingMode.CEILING);
+                    BigDecimal revenue = amount.divide(new BigDecimal(18), 2, RoundingMode.CEILING);
                     Organisation org = c.getInstructor().getOrganisation();
-                    orgLmsRevenueMapService.addRevenue(new OrgLmsRevenueMap(org.getOrganisationName(),revenue));
+                    orgLmsRevenueMapService.addRevenue(new OrgLmsRevenueMap(org.getOrganisationName(), revenue));
                     org.setOrgBalance(org.getOrgBalance().add(revenue.multiply(new BigDecimal(19))));
                     organisationService.saveOrganisation(org);
+
+                    List<Assessment> list = assessmentService.getAllAssessmentsByCourseId(c.getCourse().getCourseId());
+
+                    for(Assessment a : list) {
+                        GradeBookEntry g = new GradeBookEntry(c.getCourse().getCourseId(),learnerId,a.getAssessmentId(),a.getTitle(),a.getMaxScore());
+                        gradeBookEntryService.createGradeBookEntry(g);
+                    }
                 } catch(DuplicateEnrolmentTrackerException ex) {
                     throw new EnrolmentStatusTrackerNotFoundException("Unexpected administration error has occured. Please contact our LMS Admin to sort out your duplicate record. ");
+                } catch (CourseNotFoundException e) {
+                    throw new RuntimeException(e);
                 }
 
 

@@ -2,11 +2,10 @@ package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.service.EducatorService;
+import com.educouch.educouchsystem.service.LearnerService;
 import com.educouch.educouchsystem.service.OrganisationService;
+import com.educouch.educouchsystem.util.exception.*;
 import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
-import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
-import com.educouch.educouchsystem.util.exception.InvalidInstructorAccessRight;
-import com.educouch.educouchsystem.util.exception.OngoingClassRunException;
 import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,6 +28,9 @@ public class EducatorController {
     private EducatorService educatorService;
     @Autowired
     private OrganisationService organisationService;
+
+    @Autowired
+    private LearnerService learnerService;
 
     @GetMapping("/getAllOrgAdmin")
     public ResponseEntity<List<OrganisationAdmin>> getAllOrgAdmin() {
@@ -93,7 +95,13 @@ public class EducatorController {
 
     @PutMapping("/addInstructor")
     public String addInstructor(@RequestParam String organisationId, @RequestBody Instructor instructor) {
-        organisationService.addInstructor(organisationId, instructor);
+        if (educatorService.findInstructorByUsername(instructor.getUsername()) != null
+                || educatorService.findOrganisationAdminByUsernameNonException(instructor.getUsername()) != null
+                || learnerService.findLearnerByUsernameNonException(instructor.getUsername()) != null) {
+            throw new UsernameExistException("Username is taken!");
+        } else {
+            organisationService.addInstructor(organisationId, instructor);
+        }
         return instructor.getUsername() + " user successfully added";
     }
 
