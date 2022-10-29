@@ -15,7 +15,7 @@ public class InteractivePage {
     @Column(name="pageNumber", nullable = false)
     private Integer pageNumber;
 
-    @Column(name="pageDescription")
+    @Column(name="pageDescription", length = 15000)
     private String pageDescription;
 
     @Column(name="pageTitle")
