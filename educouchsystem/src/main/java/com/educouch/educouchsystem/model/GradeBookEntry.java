@@ -16,29 +16,59 @@ public class GradeBookEntry {
     private Long learnerId;
 
     @Column(nullable = false)
+    private Long assessmentId;
+
+    @Column(nullable = false)
     private String assessmentName;
 
     @Column(nullable = false)
     private Double assessmentMax;
-
+@Column(nullable = false)
     private Double learnerScore;
 
+    @Column(nullable = false)
+    private boolean isPublished;
+
     public GradeBookEntry() {
+        isPublished = false;
+        learnerScore = 0.0;
     }
 
-    public GradeBookEntry(Long courseId, Long learnerId, String assessmentName, Double assessmentMax) {
+    public GradeBookEntry(Long courseId, Long learnerId,Long assessmentId, String assessmentName, Double assessmentMax) {
+        this();
+        this.assessmentId = assessmentId;
         this.courseId = courseId;
         this.learnerId = learnerId;
         this.assessmentName = assessmentName;
         this.assessmentMax = assessmentMax;
+
     }
 
-    public GradeBookEntry(Long courseId,Long learnerId, String assessmentName, Double assessmentMax, Double learnerScore) {
+    public GradeBookEntry(Long courseId,Long learnerId, Long assessmentId, String assessmentName, Double assessmentMax, Double learnerScore) {
+        this();
         this.courseId = courseId;
         this.learnerId = learnerId;
+        this.assessmentId = assessmentId;
+
         this.assessmentName = assessmentName;
         this.assessmentMax = assessmentMax;
         this.learnerScore = learnerScore;
+    }
+
+    public Long getAssessmentId() {
+        return assessmentId;
+    }
+
+    public void setAssessmentId(Long assessmentId) {
+        this.assessmentId = assessmentId;
+    }
+
+    public boolean isPublished() {
+        return isPublished;
+    }
+
+    public void setPublished(boolean published) {
+        isPublished = published;
     }
 
     public Long getLearnerId() {

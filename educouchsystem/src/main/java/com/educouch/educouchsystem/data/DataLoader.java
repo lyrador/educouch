@@ -162,6 +162,7 @@ public class DataLoader implements CommandLineRunner {
         daysOfWeek[0] = 1;
         daysOfWeek[1] = 2;
         ClassRun classRunOne = new ClassRun(LocalDate.now().plusDays(7), LocalDate.now().plusDays(90), LocalTime.MIDNIGHT, LocalTime.NOON, 1, 10, daysOfWeek, RecurringEnum.ALTERNATE);
+        classRunOne.setInstructor(i2);
         try {
             courseService.addClassRunToCourse(cs2102.getCourseId(), classRunOne);
             cs2102 = courseService.getCourseById(cs2102.getCourseId());
@@ -178,9 +179,5 @@ public class DataLoader implements CommandLineRunner {
             System.out.println("Error in generating class run. ");
         }
 
-        gradeBookEntryService.createGradeBookEntry(new GradeBookEntry(1l,1l,"lmao", 40.0));
-        gradeBookEntryService.createGradeBookEntry(new GradeBookEntry(1l,1l,"hehe", 30.0));
-        gradeBookEntryService.createGradeBookEntry(new GradeBookEntry(1l,1l,"why", 20.0));
-        gradeBookEntryService.createGradeBookEntry(new GradeBookEntry(1l,1l,"yolo", 10.0));
     }
 }
