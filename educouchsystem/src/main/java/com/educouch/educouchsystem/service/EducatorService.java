@@ -27,4 +27,6 @@ public interface EducatorService {
     public void deleteOrganisationAdmin(Long id);
 
     public Long deleteInstructor(String instructorId) throws InstructorNotFoundException, OngoingClassRunException;
+
+    public OrganisationAdmin findOrganisationAdminByUsernameNonException(String username);
 }
