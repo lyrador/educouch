@@ -2,8 +2,11 @@ package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.dto.LearnerDTO;
 import com.educouch.educouchsystem.model.*;
+import com.educouch.educouchsystem.service.EducatorService;
 import com.educouch.educouchsystem.service.LearnerService;
 import com.educouch.educouchsystem.util.exception.FolderNotFoundException;
+import com.educouch.educouchsystem.util.exception.UsernameExistException;
+import com.educouch.educouchsystem.util.exception.UsernameNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +23,10 @@ import java.util.List;
 @CrossOrigin
 public class LearnerController {
     @Autowired
-    //inject learnerService here
     private LearnerService learnerService;
+
+    @Autowired
+    private EducatorService educatorService;
 
     //giving path here
     @PostMapping("/add")
@@ -30,9 +35,15 @@ public class LearnerController {
         if (learnerDTO.getIsKid().equals("false")) {
             isKid = false;
         }
-        learnerService.saveLearner(
-                new Learner(learnerDTO.getName(), learnerDTO.getEmail(), learnerDTO.getPassword(), learnerDTO.getUsername(), learnerDTO.getProfilePictureURL(), isKid, "123123312")
-        );
+        if (educatorService.findInstructorByUsername(learnerDTO.getUsername()) != null
+                || educatorService.findOrganisationAdminByUsernameNonException(learnerDTO.getUsername()) != null
+                || learnerService.findLearnerByUsernameNonException(learnerDTO.getUsername()) != null) {
+            throw new UsernameExistException("Username is taken!");
+        } else {
+            learnerService.saveLearner(
+                    new Learner(learnerDTO.getName(), learnerDTO.getEmail(), learnerDTO.getPassword(), learnerDTO.getUsername(), learnerDTO.getProfilePictureURL(), isKid, "123123312")
+            );
+        }
         return "New learner is added";
     }
 
