@@ -1,10 +1,14 @@
 package com.educouch.educouchsystem.controller;
 
+import com.educouch.educouchsystem.dto.ChapterToReorderDTO;
 import com.educouch.educouchsystem.dto.FileItemDTO;
+import com.educouch.educouchsystem.dto.PageToReorderDTO;
 import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.service.AttachmentService;
 import com.educouch.educouchsystem.service.InteractiveChapterService;
 import com.educouch.educouchsystem.service.InteractivePageService;
+import com.educouch.educouchsystem.util.comparator.ChapterComparator;
+import com.educouch.educouchsystem.util.comparator.PageComparator;
 import com.educouch.educouchsystem.util.exception.InteractiveBookNotFoundException;
 import com.educouch.educouchsystem.util.exception.InteractiveChapterNotFoundException;
 import com.educouch.educouchsystem.util.exception.InteractivePageNotFoundException;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -172,6 +177,7 @@ public class InteractivePageController {
             InteractiveChapter interactiveChapter = interactiveChapterService.getInteractiveChapterById(interactiveChapterId);
             List<InteractivePage> interactivePageList = new ArrayList<>();
             interactivePageList.addAll(interactiveChapter.getInteractivePages());
+            Collections.sort(interactivePageList, new PageComparator());
             return new ResponseEntity<>(interactivePageList, HttpStatus.OK);
         } catch (InteractiveChapterNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -195,5 +201,23 @@ public class InteractivePageController {
         }
     }
 
+    @PutMapping("/{interactiveChapterId}/interactivePages/reorderInteractivePages")
+    public ResponseEntity<List<InteractivePage>> reorderInteractivePages(@PathVariable(value="interactiveChapterId") Long interactiveChapterId, @RequestBody List<PageToReorderDTO> pageToReorderDTOList) {
+        try {
+            InteractiveChapter interactiveChapter = interactiveChapterService.getInteractiveChapterById(interactiveChapterId);
+            for (PageToReorderDTO pageToReorderDTO : pageToReorderDTOList) {
+                InteractivePage interactivePage = interactivePageService.getInteractivePageById(pageToReorderDTO.getPageId());
+                interactivePage.setPageNumber(Integer.valueOf(pageToReorderDTO.getPageNumber()));
+                interactivePage = interactivePageService.saveInteractivePage(interactivePage);
+            }
+            List<InteractivePage> interactivePageList = new ArrayList<>();
+            interactivePageList.addAll(interactiveChapter.getInteractivePages());
+            return new ResponseEntity<>(interactivePageList, HttpStatus.OK);
+        } catch (InteractiveChapterNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (InteractivePageNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }
