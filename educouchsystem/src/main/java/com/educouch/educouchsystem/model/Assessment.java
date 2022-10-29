@@ -42,6 +42,9 @@ public abstract class Assessment implements Serializable {
     @NotNull
     private AssessmentStatusEnum assessmentStatus = AssessmentStatusEnum.PENDING;
 
+    @NotNull
+    private boolean isPublished;
+
 
 //
 //    @ManyToOne(optional = false)
@@ -51,6 +54,7 @@ public abstract class Assessment implements Serializable {
 //
 
     public Assessment() {
+        isPublished=false;
     }
 
     public Assessment(String title, String description, Double maxScore, Date startDate, Date endDate) {
@@ -60,6 +64,14 @@ public abstract class Assessment implements Serializable {
         this.maxScore = maxScore;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public boolean isPublished() {
+        return isPublished;
+    }
+
+    public void setPublished(boolean published) {
+        isPublished = published;
     }
 
     public Long getAssessmentId() {

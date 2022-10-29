@@ -6,6 +6,7 @@ import com.educouch.educouchsystem.repository.OptionRepository;
 import com.educouch.educouchsystem.repository.QuestionAttemptRepository;
 import com.educouch.educouchsystem.repository.QuizAttemptRepository;
 import com.educouch.educouchsystem.util.enumeration.AssessmentAttemptStatusEnum;
+import com.educouch.educouchsystem.util.enumeration.QuestionTypeEnum;
 import com.educouch.educouchsystem.util.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
     @Autowired
     private QuizServiceImpl quizService;
 
+    @Autowired
+    private QuestionAttemptService questionAttemptService;
     @Autowired
     private LearnerServiceImpl learnerService;
 
@@ -54,6 +57,11 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
     }
 
     @Override
+    public QuizAttempt saveQuizAttemptEz(QuizAttempt quizAttempt) {
+        return quizAttemptRepository.save(quizAttempt);
+    }
+
+    @Override
     public List<QuizAttempt> getQuizAttemptsByLearnerId(Long learnerId) throws NoQuizAttemptsFoundException {
         List<QuizAttempt> quizAttempts = quizAttemptRepository.findQuizAttemptsByLearnerId(learnerId);
         if(quizAttempts.size()!=0) {
@@ -66,8 +74,15 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
     @Override
     public List<QuizAttempt> getParticularQuizAttemptsByLearnerId(Long learnerId, Long assessmentId) throws NoQuizAttemptsFoundException {
         List<QuizAttempt> allQuizAttempts = getQuizAttemptsByLearnerId(learnerId);
+        System.out.println(allQuizAttempts.size());
         if(allQuizAttempts.size()!=0) {
-            return allQuizAttempts.stream().filter(quizAttempt -> quizAttempt.getAttemptedQuiz().getAssessmentId().equals(assessmentId)).collect(Collectors.toList());
+            List<QuizAttempt> newList = allQuizAttempts.stream().filter(quizAttempt -> quizAttempt.getAttemptedQuiz().getAssessmentId().equals(assessmentId)).collect(Collectors.toList());
+            if(newList.size()!=0) {
+                return newList;
+            } else {
+                throw new NoQuizAttemptsFoundException();
+
+            }
         } else {
             throw new NoQuizAttemptsFoundException();
         }
@@ -120,7 +135,22 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
     @Override
     public QuizAttempt submitQuizAttempt(QuizAttempt updatedQuizAttempt) throws QuizAttemptNotFoundException {
         QuizAttempt quizAttemptToUpdate = getQuizAttemptById(updatedQuizAttempt.getQuizAttemptId());
+        List<QuestionAttempt> qns = quizAttemptToUpdate.getQuestionAttempts();
+        for(QuestionAttempt learnerAns : qns) {
+            Question question = learnerAns.getQuestionAttempted();
+            if(question.getQuestionType().equals(QuestionTypeEnum.OPEN_ENDED)) {
+                quizAttemptToUpdate.setHasOpenEnded(true);
+            } else {
+                if (learnerAns.getOptionSelected().getOptionContent().equals(question.getCorrectOption().getOptionContent())) {
+                    learnerAns.setQuestionAttemptScore(question.getQuestionMaxScore());
+                    questionAttemptService.saveQuestionAttempt(learnerAns);
+                    quizAttemptToUpdate.setLearnerMcqScore(quizAttemptToUpdate.getLearnerMcqScore() + question.getQuestionMaxScore());
+
+                }
+            }
+        }
         quizAttemptToUpdate.setAssessmentAttemptStatusEnum(AssessmentAttemptStatusEnum.SUBMITTED);
+        quizAttemptRepository.save(quizAttemptToUpdate);
         return quizAttemptToUpdate;
     }
 

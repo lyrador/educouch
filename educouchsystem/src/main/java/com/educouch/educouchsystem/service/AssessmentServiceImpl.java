@@ -2,9 +2,12 @@ package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.model.Assessment;
 import com.educouch.educouchsystem.model.Course;
+import com.educouch.educouchsystem.model.GradeBookEntry;
+import com.educouch.educouchsystem.model.QuizAttempt;
 import com.educouch.educouchsystem.repository.AssessmentRepository;
 import com.educouch.educouchsystem.util.exception.AssessmentNotFoundException;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
+import com.educouch.educouchsystem.util.exception.NoQuizAttemptsFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,12 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private GradeBookEntryService gradeBookEntryService;
+
+    @Autowired
+    private QuizAttemptService quizAttemptService;
 
     @Override
     public Assessment saveAssessment (Assessment assessment) {
@@ -66,6 +75,29 @@ public class AssessmentServiceImpl implements AssessmentService {
             throw new AssessmentNotFoundException("Assessment Id " + assessmentId + " does not exist!");
         }
     }
+
+    @Override
+    public void togglePublish(Long assessmentId) throws AssessmentNotFoundException {
+        Assessment a = retrieveAssessmentById(assessmentId);
+        a.setPublished(!a.isPublished());
+        saveAssessment(a);
+
+        List<GradeBookEntry> list = gradeBookEntryService.findAllGradeBookEntriesByAssessmentId(assessmentId);
+        for(GradeBookEntry g : list) {
+            g.setPublished(a.isPublished());
+            try {
+                QuizAttempt attempt = quizAttemptService.getMostRecentQuizAttemptByLearnerId(g.getLearnerId(), assessmentId);
+                g.setLearnerScore(attempt.getObtainedScore());
+                gradeBookEntryService.createGradeBookEntry(g);
+            } catch (NoQuizAttemptsFoundException e) {
+                g.setLearnerScore(0.0);
+                gradeBookEntryService.createGradeBookEntry(g);
+            }
+
+
+        }
+    }
+
 
     @Override
     public void deleteAssessmentFromCourseId(Long assessmentId, Long courseId) throws AssessmentNotFoundException, CourseNotFoundException {

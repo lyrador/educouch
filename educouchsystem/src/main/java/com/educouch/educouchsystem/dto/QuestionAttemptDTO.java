@@ -9,11 +9,22 @@ public class QuestionAttemptDTO {
     private QuestionDTO questionAttempted;
     private String optionSelected;
 
+    private String feedback;
+
 
     public QuestionAttemptDTO() {
         questionAttemptScore = 0.0;
         shortAnswerResponse = "";
+        feedback = "";
         optionSelected = new String();
+    }
+
+    public String getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
     }
 
     public Long getQuestionAttemptId() {

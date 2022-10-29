@@ -16,6 +16,8 @@ public interface QuizAttemptService {
 
 
     public QuizAttempt saveQuizAttempt(Quiz quiz, QuizAttempt quizAttempt, Learner learner) throws QuizNotFoundException;
+
+    public QuizAttempt saveQuizAttemptEz(QuizAttempt quizAttempt);
     public List<QuizAttempt> getParticularQuizAttemptsByLearnerId(Long learnerId, Long assessmentId) throws NoQuizAttemptsFoundException;
     public List<QuizAttempt> getQuizAttemptsByLearnerId(Long learnerId) throws NoQuizAttemptsFoundException ;
     public QuizAttempt getMostRecentQuizAttemptByLearnerId(Long learnerId, Long assessmentId) throws NoQuizAttemptsFoundException;
