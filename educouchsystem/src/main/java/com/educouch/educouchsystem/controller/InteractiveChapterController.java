@@ -7,6 +7,7 @@ import com.educouch.educouchsystem.model.InteractivePage;
 import com.educouch.educouchsystem.service.InteractiveBookService;
 import com.educouch.educouchsystem.service.InteractiveChapterService;
 import com.educouch.educouchsystem.util.comparator.ChapterComparator;
+import com.educouch.educouchsystem.util.comparator.PageComparator;
 import com.educouch.educouchsystem.util.exception.InteractiveBookNotFoundException;
 import com.educouch.educouchsystem.util.exception.InteractiveChapterNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,11 @@ public class InteractiveChapterController {
     public ResponseEntity<InteractiveChapter> getInteractiveChapterById(@PathVariable("interactiveChapterId") Long interactiveChapterId) {
         try {
             InteractiveChapter interactiveChapter = interactiveChapterService.getInteractiveChapterById(interactiveChapterId);
+            List<InteractivePage> interactivePageList = new ArrayList<>();
+            interactivePageList.addAll(interactiveChapter.getInteractivePages());
+            Collections.sort(interactivePageList, new PageComparator());
+            interactiveChapter.getInteractivePages().clear();
+            interactiveChapter.setInteractivePages(interactivePageList);
             return new ResponseEntity<InteractiveChapter>(interactiveChapter, HttpStatus.OK);
         } catch (InteractiveChapterNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -127,7 +133,7 @@ public class InteractiveChapterController {
             InteractiveChapter existingInteractiveChapter = interactiveChapterService.getInteractiveChapterById(interactiveChapterId);
             existingInteractiveChapter.setChapterTitle(interactiveChapter.getChapterTitle());
             existingInteractiveChapter.setChapterDescription(interactiveChapter.getChapterDescription());
-            existingInteractiveChapter.setCreationDate(interactiveChapter.getCreationDate());
+//            existingInteractiveChapter.setCreationDate(interactiveChapter.getCreationDate());
             //existingInteractiveChapter.setInteractiveBook(interactiveChapter.getInteractiveBook());
             //existingInteractiveChapter.setInteractivePages(interactiveChapter.getInteractivePages());
 
