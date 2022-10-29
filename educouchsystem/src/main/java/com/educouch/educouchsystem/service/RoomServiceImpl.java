@@ -61,10 +61,16 @@ public class RoomServiceImpl implements RoomService {
         Room room = getRoomByRoomId(roomId);
         try {
             Learner learner = learnerService.findLearnerByUsername(username);
-            room.getParticipants().add(learner);
+            if(!room.getParticipants().contains(learner)) {
+                room.getParticipants().add(learner);
+            }
+
         } catch(UsernameNotFoundException ex) {
             Instructor instructor = educatorService.findInstructorByUsername(username);
-            room.getOrganizers().add(instructor);
+            if(!room.getOrganizers().contains(instructor)) {
+                room.getOrganizers().add(instructor);
+            }
+
         }
         this.saveRoom(room);
     }
