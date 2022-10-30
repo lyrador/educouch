@@ -12,43 +12,43 @@ import java.util.List;
 @Entity
 public class FileSubmission extends Assessment implements Serializable {
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private FileSubmissionEnum fileSubmissionEnum;
+//    @Enumerated(EnumType.STRING)
+//    @NotNull
+//    private FileSubmissionEnum fileSubmissionEnum;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FileSubmissionAttempt> fileSubmissionAttempts;
+//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<FileSubmissionAttempt> fileSubmissionAttempts;
 
     @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<Attachment> attachments;
 
     public FileSubmission() {
         super();
-        this.fileSubmissionAttempts = new ArrayList<>();
+//        this.fileSubmissionAttempts = new ArrayList<>();
         this.attachments = new ArrayList<>();
     }
 
-    public FileSubmission(String title, String description, Double maxScore, Date startDate, Date endDate, FileSubmissionEnum fileSubmissionEnum) {
+    public FileSubmission(String title, String description, Double maxScore, Date startDate, Date endDate) {
         super(title, description, maxScore, startDate, endDate);
-        this.fileSubmissionEnum = fileSubmissionEnum;
-        this.fileSubmissionAttempts = new ArrayList<>();
+//        this.fileSubmissionEnum = fileSubmissionEnum;
+//        this.fileSubmissionAttempts = new ArrayList<>();
     }
 
-    public FileSubmissionEnum getFileSubmissionEnum() {
-        return fileSubmissionEnum;
-    }
+//    public FileSubmissionEnum getFileSubmissionEnum() {
+//        return fileSubmissionEnum;
+//    }
+//
+//    public void setFileSubmissionEnum(FileSubmissionEnum fileSubmissionEnum) {
+//        this.fileSubmissionEnum = fileSubmissionEnum;
+//    }
 
-    public void setFileSubmissionEnum(FileSubmissionEnum fileSubmissionEnum) {
-        this.fileSubmissionEnum = fileSubmissionEnum;
-    }
-
-    public List<FileSubmissionAttempt> getFileSubmissionAttempts() {
-        return fileSubmissionAttempts;
-    }
-
-    public void setFileSubmissionAttempts(List<FileSubmissionAttempt> fileSubmissionAttempts) {
-        this.fileSubmissionAttempts = fileSubmissionAttempts;
-    }
+//    public List<FileSubmissionAttempt> getFileSubmissionAttempts() {
+//        return fileSubmissionAttempts;
+//    }
+//
+//    public void setFileSubmissionAttempts(List<FileSubmissionAttempt> fileSubmissionAttempts) {
+//        this.fileSubmissionAttempts = fileSubmissionAttempts;
+//    }
 
     public List<Attachment> getAttachments() {
         return attachments;

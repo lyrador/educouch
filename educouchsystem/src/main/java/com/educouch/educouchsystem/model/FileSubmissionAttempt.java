@@ -15,23 +15,28 @@ public class FileSubmissionAttempt implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fileSubmissionAttemptId;
 
-    @NotNull
-    private String fileSubmissionAttemptName;
+//    @NotNull
+//    private String fileSubmissionAttemptName;
 
     @NotNull
     private Double obtainedScore = 0.0;
 
-    @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY)
     private List<Attachment> attachments;
+
+    @OneToOne
+    @NotNull
+    @JoinColumn
+    private FileSubmission fileSubmissionAttempted;
 
     public FileSubmissionAttempt() {
         this.attachments = new ArrayList<>();
     }
 
-    public FileSubmissionAttempt(String fileSubmissionAttemptName) {
-        this();
-        this.fileSubmissionAttemptName = fileSubmissionAttemptName;
-    }
+//    public FileSubmissionAttempt(String fileSubmissionAttemptName) {
+//        this();
+//        this.fileSubmissionAttemptName = fileSubmissionAttemptName;
+//    }
 
     public Long getFileSubmissionAttemptId() {
         return fileSubmissionAttemptId;
@@ -54,6 +59,14 @@ public class FileSubmissionAttempt implements Serializable {
 
     public void setAttachments(List<Attachment> attachments) {
         this.attachments = attachments;
+    }
+
+    public FileSubmission getFileSubmissionAttempted() {
+        return fileSubmissionAttempted;
+    }
+
+    public void setFileSubmissionAttempted(FileSubmission fileSubmission) {
+        this.fileSubmissionAttempted = fileSubmission;
     }
 
     @Override

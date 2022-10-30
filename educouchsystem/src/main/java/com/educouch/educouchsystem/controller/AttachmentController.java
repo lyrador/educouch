@@ -114,7 +114,6 @@ public class AttachmentController {
                 FolderNotFoundException | FolderUnableToSaveException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @GetMapping("/renameAttachment")
@@ -180,6 +179,26 @@ public class AttachmentController {
         }
     }
 
+
+    @PostMapping("/uploadAttachmentToFileSubmissionAttempt/{file}")
+    public ResponseData uploadAttachmentToFileSubmissionAttempt(@PathVariable("file") MultipartFile file, @RequestParam("fileSubmissionAttemptId") Long fileSubmissionAttemptId) {
+        Attachment attachment = null;
+        try {
+            attachment = attachmentService.saveAttachment(file);
+            attachmentService.uploadAttachmentToFileSubmissionAttempt(attachment, fileSubmissionAttemptId);
+            return new ResponseData(attachment.getAttachmentId(),
+                    attachment.getFileOriginalName(),
+                    attachment.getFileStorageName(),
+                    attachment.getFileURL(),
+                    file.getContentType(),
+                    file.getSize());
+        } catch (FilenameContainsInvalidPathSequenceException | FileUnableToSaveException |
+                FileSubmissionAttemptNotFoundException | FileNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+
     @DeleteMapping("/deleteFileSubmissionAttachment")
     public void deleteAttachmentFromFileSubmission(@RequestParam Long attachmentId, @RequestParam Long fileSubmissionId) {
         try {
@@ -188,4 +207,5 @@ public class AttachmentController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File cannot be deleted.", ex);
         }
     }
+
 }
