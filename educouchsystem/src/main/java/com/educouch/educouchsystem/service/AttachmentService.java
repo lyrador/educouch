@@ -27,8 +27,8 @@ public interface AttachmentService {
     public void uploadAttachmentToFileSubmissionAttempt(Attachment attachment, Long fileSubmissionAttemptId) throws FileSubmissionAttemptNotFoundException,
             FileNotFoundException;
 
-    public void removeAttachmentFromFileSubmissionAttempt(Long attachmentId, Long fileSubmissionAttemptId) throws FileSubmissionAttemptNotFoundException,
-            FileNotFoundException;
+//    public void removeAttachmentFromFileSubmissionAttempt(Long attachmentId, Long fileSubmissionAttemptId) throws FileSubmissionAttemptNotFoundException,
+//            FileNotFoundException;
 
     public void uploadAttachmentToFileSubmissionAssessment(Attachment attachment, Long fileSubmissionId) throws FileSubmissionNotFoundException,
             FileNotFoundException;
