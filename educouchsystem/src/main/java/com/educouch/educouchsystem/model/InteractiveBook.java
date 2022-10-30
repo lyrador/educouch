@@ -28,6 +28,10 @@ public class InteractiveBook {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<InteractiveChapter> interactiveChapters;
 
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "attachment_id")
+    private Attachment attachment;
+
     public InteractiveBook(String bookTitle, Double bookMaxScore, Double bookActualScore, Date creationDate) {
         this.bookTitle = bookTitle;
         this.bookMaxScore = bookMaxScore;
@@ -93,5 +97,13 @@ public class InteractiveBook {
 
     public void setInteractiveChapters(List<InteractiveChapter> interactiveChapters) {
         this.interactiveChapters = interactiveChapters;
+    }
+
+    public Attachment getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
     }
 }
