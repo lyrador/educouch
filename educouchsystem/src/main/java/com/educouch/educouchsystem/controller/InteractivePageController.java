@@ -7,11 +7,13 @@ import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.service.AttachmentService;
 import com.educouch.educouchsystem.service.InteractiveChapterService;
 import com.educouch.educouchsystem.service.InteractivePageService;
+import com.educouch.educouchsystem.service.QuizService;
 import com.educouch.educouchsystem.util.comparator.ChapterComparator;
 import com.educouch.educouchsystem.util.comparator.PageComparator;
 import com.educouch.educouchsystem.util.exception.InteractiveBookNotFoundException;
 import com.educouch.educouchsystem.util.exception.InteractiveChapterNotFoundException;
 import com.educouch.educouchsystem.util.exception.InteractivePageNotFoundException;
+import com.educouch.educouchsystem.util.exception.QuizNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +38,9 @@ public class InteractivePageController {
 
     @Autowired
     private AttachmentService attachmentService;
+
+    @Autowired
+    private QuizService quizService;
 
     @PostMapping("/{interactiveChapterId}/interactivePages")
     public ResponseEntity<InteractivePage> addInteractivePage(@PathVariable(value="interactiveChapterId") Long interactiveChapterId, @RequestBody InteractivePage interactivePageRequest) {
@@ -168,6 +173,26 @@ public class InteractivePageController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @PutMapping("/{interactivePageId}/removeQuiz")
+    public ResponseEntity<InteractivePage> removeQuiz(@PathVariable(value="interactivePageId") Long interactivePageId) {
+        try {
+            InteractivePage interactivePage = interactivePageService.getInteractivePageById(interactivePageId);
+            if (interactivePage.getPageQuiz() != null) {
+                Long quizIdToDelete = interactivePage.getPageQuiz().getAssessmentId();
+                interactivePage.setPageQuiz(null);
+                try {
+                    quizService.deleteQuiz(quizIdToDelete);
+                } catch (QuizNotFoundException ex) {
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                }
+            }
+            interactivePageService.saveInteractivePage(interactivePage);
+            return new ResponseEntity<>(interactivePage, HttpStatus.OK);
+        } catch (InteractivePageNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
