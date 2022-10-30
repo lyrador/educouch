@@ -66,6 +66,7 @@ public class Attachment {
     }
 
     public void setFileURL(String fileURL) { this.fileURL = fileURL; }
+
     @JsonIgnore
     public InteractivePage getInteractivePage() {
         return interactivePage;
