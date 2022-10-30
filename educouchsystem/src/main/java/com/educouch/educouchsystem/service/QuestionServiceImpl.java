@@ -60,16 +60,16 @@ public class QuestionServiceImpl implements QuestionService {
 //        }
 //    }
 
-    @Override
-    public List<QuestionAttempt> getAllQuestionAttemptsInQuestion(Long questionId) throws QuestionNotFoundException {
-        Question question = questionRepository.findById(questionId).get();
-        if (question != null) {
-            List<QuestionAttempt> questionAttempts = question.getQuestionAttempts();
-            return questionAttempts;
-        } else {
-            throw new QuestionNotFoundException("Question Id " + questionId + " does not exist!");
-        }
-    }
+//    @Override
+//    public List<QuestionAttempt> getAllQuestionAttemptsInQuestion(Long questionId) throws QuestionNotFoundException {
+//        Question question = questionRepository.findById(questionId).get();
+//        if (question != null) {
+//            List<QuestionAttempt> questionAttempts = question.getQuestionAttempts();
+//            return questionAttempts;
+//        } else {
+//            throw new QuestionNotFoundException("Question Id " + questionId + " does not exist!");
+//        }
+//    }
 
     @Override
     public Question retrieveQuestionById(Long questionId) throws QuestionNotFoundException {
@@ -85,6 +85,14 @@ public class QuestionServiceImpl implements QuestionService {
     public void deleteQuestion(Long questionId) throws QuestionNotFoundException {
         Question question = questionRepository.findById(questionId).get();
         if (question != null) {
+            Option correctOption = question.getCorrectOption();
+            List<Option> options = question.getOptions();
+            for(Option o : options) {
+                optionRepository.deleteById(o.getOptionId());
+            }
+            if(correctOption!=null) {
+                optionRepository.deleteById(correctOption.getOptionId());
+            }
             questionRepository.deleteById(questionId);
         } else {
             throw new QuestionNotFoundException("Question Id " + questionId + " does not exist!");

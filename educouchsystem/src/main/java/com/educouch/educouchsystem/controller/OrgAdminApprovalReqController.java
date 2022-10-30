@@ -1,7 +1,11 @@
 package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.model.OrgAdminApprovalReq;
+import com.educouch.educouchsystem.service.EducatorService;
+import com.educouch.educouchsystem.service.LearnerService;
 import com.educouch.educouchsystem.service.OrgAdminApprovalReqService;
+import com.educouch.educouchsystem.service.OrganisationService;
+import com.educouch.educouchsystem.util.exception.UsernameExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +17,11 @@ import java.util.List;
 @RequestMapping("/orgAdminApprovalReq")
 @CrossOrigin
 public class OrgAdminApprovalReqController {
+
+    @Autowired
+    private EducatorService educatorService;
+    @Autowired
+    private LearnerService learnerService;
     private final OrgAdminApprovalReqService orgAdminApprovalReqService;
 
     @Autowired
@@ -22,7 +31,14 @@ public class OrgAdminApprovalReqController {
 
     @PostMapping("/addOrgAdminApprovalReq")
     public ResponseEntity<OrgAdminApprovalReq> createOrgAdminApprovalReqService(@RequestBody OrgAdminApprovalReq orgAdminApprovalReq) {
-        OrgAdminApprovalReq newApproval = orgAdminApprovalReqService.createOrgAdminApprovalReq(orgAdminApprovalReq);
+        OrgAdminApprovalReq newApproval = new OrgAdminApprovalReq();
+        if (educatorService.findInstructorByUsername(orgAdminApprovalReq.getUsername()) != null
+                || educatorService.findOrganisationAdminByUsernameNonException(orgAdminApprovalReq.getUsername()) != null
+                || learnerService.findLearnerByUsernameNonException(orgAdminApprovalReq.getUsername()) != null) {
+            throw new UsernameExistException("Username is taken!");
+        } else {
+            newApproval = orgAdminApprovalReqService.createOrgAdminApprovalReq(orgAdminApprovalReq);
+        }
         return ResponseEntity.status(HttpStatus.OK).body(newApproval);
     }
 

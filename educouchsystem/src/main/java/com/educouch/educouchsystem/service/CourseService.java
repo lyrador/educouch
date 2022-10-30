@@ -2,6 +2,7 @@ package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.model.ClassRun;
 import com.educouch.educouchsystem.model.Course;
+import com.educouch.educouchsystem.model.Learner;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.util.exception.LearnerNotFoundException;
 
@@ -32,5 +33,7 @@ public interface CourseService {
 
     public boolean checkIfStudentIsEnrolledInACourse(Long studentId, Long courseId) throws CourseNotFoundException,
             LearnerNotFoundException;
+
+    public List<Learner> getLearnerByCourse(Long courseId) throws CourseNotFoundException;
 
 }

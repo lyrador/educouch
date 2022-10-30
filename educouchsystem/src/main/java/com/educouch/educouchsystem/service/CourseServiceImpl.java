@@ -12,6 +12,7 @@ import com.educouch.educouchsystem.util.exception.LearnerNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -182,7 +183,21 @@ public class CourseServiceImpl implements CourseService{
             throw new CourseNotFoundException("Course cannot be found.");
         }
     }
-
+    @Override
+    public List<Learner> getLearnerByCourse(Long courseId) throws CourseNotFoundException {
+        Course course = getCourseById(courseId);
+        List<ClassRun> list1 = course.getClassRuns();
+        List<Learner> list2 = new ArrayList<>();
+        for(ClassRun r : list1) {
+            List<Learner> list3 = r.getEnrolledLearners();
+            for(Learner l : list3) {
+                l.setClassRuns(null);
+                l.setEnrolmentStatusTrackers(null);
+            }
+            list2.addAll(list3);
+        }
+        return list2;
+    }
 
 
 }
