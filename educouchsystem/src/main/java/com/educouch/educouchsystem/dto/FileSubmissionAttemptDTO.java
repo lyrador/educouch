@@ -11,6 +11,7 @@ public class FileSubmissionAttemptDTO {
 
     private Long fileSubmissionAttemptId;
     private Double obtainedScore;
+    private Attachment attachment;
     private FileSubmissionDTO fileSubmissionAttemptedDTO;
 
     public Long getFileSubmissionAttemptId() {
@@ -35,5 +36,13 @@ public class FileSubmissionAttemptDTO {
 
     public void setFileSubmissionAttemptedDTO(FileSubmissionDTO fileSubmissionAttemptedDTO) {
         this.fileSubmissionAttemptedDTO = fileSubmissionAttemptedDTO;
+    }
+
+    public Attachment getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
     }
 }
