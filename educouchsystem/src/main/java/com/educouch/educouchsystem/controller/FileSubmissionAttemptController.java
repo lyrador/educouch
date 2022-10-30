@@ -46,7 +46,7 @@ public class FileSubmissionAttemptController {
         try {
             FileSubmission fileSubmission = fileSubmissionService.retrieveFileSubmissionById(assessmentId);
             Learner learner = learnerService.getLearnerById(learnerId);
-            FileSubmissionAttempt fileSubmissionAttempt = initializeFileSubmissionAttempt(fileSubmission);
+            FileSubmissionAttempt fileSubmissionAttempt = initializeFileSubmissionAttempt(fileSubmission, learner);
             //save quizAttempt
             fileSubmissionAttempt = fileSubmissionService.saveFileSubmissionAttempt(fileSubmissionAttempt);
             FileSubmissionAttemptDTO fileSubmissionAttemptDTO = convertFileSubmissionAttemptToFileSubmissionAttemptDTO(fileSubmissionAttempt);
@@ -56,9 +56,10 @@ public class FileSubmissionAttemptController {
         }
     }
 
-    public FileSubmissionAttempt initializeFileSubmissionAttempt(FileSubmission fileSubmission) {
+    public FileSubmissionAttempt initializeFileSubmissionAttempt(FileSubmission fileSubmission, Learner learner) {
         FileSubmissionAttempt fileSubmissionAttempt = new FileSubmissionAttempt();
         fileSubmissionAttempt.setFileSubmissionAttempted(fileSubmission);
+        fileSubmissionAttempt.setLearner(learner);
         fileSubmissionAttempt.setObtainedScore(0.0);
         return fileSubmissionAttempt;
     }

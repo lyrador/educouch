@@ -34,6 +34,10 @@ public class FileSubmissionAttempt implements Serializable {
     @JoinColumn
     private FileSubmission fileSubmissionAttempted;
 
+    @ManyToOne
+    @JoinColumn
+    private Learner learner;
+
     public FileSubmissionAttempt() {
         this.lastAttemptTime = new Date();
 
@@ -82,6 +86,14 @@ public class FileSubmissionAttempt implements Serializable {
 
     public void setFileSubmissionAttempted(FileSubmission fileSubmission) {
         this.fileSubmissionAttempted = fileSubmission;
+    }
+
+    public Learner getLearner() {
+        return learner;
+    }
+
+    public void setLearner(Learner learner) {
+        this.learner = learner;
     }
 
     @Override
