@@ -26,7 +26,7 @@ public class FileSubmissionAttempt implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastAttemptTime;
 
-    @OneToOne(cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    @OneToOne(cascade = {CascadeType.REMOVE})
     private Attachment attachments;
 
     @OneToOne
@@ -34,7 +34,7 @@ public class FileSubmissionAttempt implements Serializable {
     @JoinColumn
     private FileSubmission fileSubmissionAttempted;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Learner learner;
 

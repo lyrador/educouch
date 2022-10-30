@@ -1,15 +1,9 @@
 package com.educouch.educouchsystem.controller;
 import com.educouch.educouchsystem.dto.*;
 import com.educouch.educouchsystem.model.*;
-import com.educouch.educouchsystem.service.FileSubmissionService;
-import com.educouch.educouchsystem.service.LearnerService;
-import com.educouch.educouchsystem.service.QuizAttemptService;
-import com.educouch.educouchsystem.service.QuizService;
+import com.educouch.educouchsystem.service.*;
 import com.educouch.educouchsystem.util.enumeration.AssessmentAttemptStatusEnum;
-import com.educouch.educouchsystem.util.exception.FileSubmissionNotFoundException;
-import com.educouch.educouchsystem.util.exception.NoQuizAttemptsFoundException;
-import com.educouch.educouchsystem.util.exception.QuizAttemptNotFoundException;
-import com.educouch.educouchsystem.util.exception.QuizNotFoundException;
+import com.educouch.educouchsystem.util.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,11 +32,14 @@ public class FileSubmissionAttemptController {
     @Autowired
     private FileSubmissionService fileSubmissionService;
 
+    @Autowired
+    private FileSubmissionAttemptService fileSubmissionAttemptService;
+
 
 
     @PostMapping("/createFileSubmissionAttempt/{assessmentId}/{learnerId}")
     public ResponseEntity<FileSubmissionAttemptDTO> createFileSubmissionAttempt(@PathVariable(value = "assessmentId") Long assessmentId,
-                                                            @PathVariable(value = "learnerId") Long learnerId) {
+                                                                                @PathVariable(value = "learnerId") Long learnerId) {
         try {
             FileSubmission fileSubmission = fileSubmissionService.retrieveFileSubmissionById(assessmentId);
             Learner learner = learnerService.getLearnerById(learnerId);
@@ -52,6 +49,18 @@ public class FileSubmissionAttemptController {
             FileSubmissionAttemptDTO fileSubmissionAttemptDTO = convertFileSubmissionAttemptToFileSubmissionAttemptDTO(fileSubmissionAttempt);
             return new ResponseEntity<FileSubmissionAttemptDTO>(fileSubmissionAttemptDTO, HttpStatus.OK);
         } catch (FileSubmissionNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/getFileSubmissionAttemptByAssessmentId/{assessmentId}/{learnerId}")
+    public ResponseEntity<FileSubmissionAttemptDTO> getFileSubmissionAttempt(@PathVariable(value = "assessmentId") Long assessmentId,
+                                                                          @PathVariable(value = "learnerId") Long learnerId) {
+        try {
+            FileSubmissionAttempt fileSubmissionAttempt = fileSubmissionAttemptService.getMostRecentFileSubmissionAttemptByLearnerId(learnerId, assessmentId);
+            FileSubmissionAttemptDTO f = convertFileSubmissionAttemptToFileSubmissionAttemptDTO(fileSubmissionAttempt);
+            return new ResponseEntity<>(f, HttpStatus.OK);
+        } catch (NoFileSubmissionsFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -67,6 +76,7 @@ public class FileSubmissionAttemptController {
     public FileSubmissionAttemptDTO convertFileSubmissionAttemptToFileSubmissionAttemptDTO(FileSubmissionAttempt fileSubmissionAttempt) {
         FileSubmissionAttemptDTO fileSubmissionAttemptDTO = new FileSubmissionAttemptDTO();
         fileSubmissionAttemptDTO.setObtainedScore(fileSubmissionAttempt.getObtainedScore());
+        fileSubmissionAttemptDTO.setAttachment(fileSubmissionAttempt.getAttachments());
         fileSubmissionAttemptDTO.setFileSubmissionAttemptId(fileSubmissionAttempt.getFileSubmissionAttemptId());
         return fileSubmissionAttemptDTO; //file submission attempted not set
     }
