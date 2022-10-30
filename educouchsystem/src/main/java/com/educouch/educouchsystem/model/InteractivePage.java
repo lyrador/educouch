@@ -26,8 +26,8 @@ public class InteractivePage {
     private InteractiveChapter interactiveChapter;
 
     @OneToOne
-    @JoinColumn(name = "questionId")
-    private Question pageQuestion;
+    @JoinColumn(name = "quizId")
+    private Quiz pageQuiz;
 
     @OneToOne
     @JoinColumn(name = "attachmentId")
@@ -80,12 +80,12 @@ public class InteractivePage {
         this.interactiveChapter = interactiveChapter;
     }
 
-    public Question getPageQuestion() {
-        return pageQuestion;
+    public Quiz getPageQuiz() {
+        return pageQuiz;
     }
 
-    public void setPageQuestion(Question pageQuestion) {
-        this.pageQuestion = pageQuestion;
+    public void setPageQuiz(Quiz pageQuiz) {
+        this.pageQuiz = pageQuiz;
     }
 
     public Attachment getAttachment() {
