@@ -152,14 +152,14 @@ public class AttachmentController {
         }
     }
 
-    @DeleteMapping("/deleteFileSubmissionAttemptAttachment")
-    public void deleteAttachmentFromFileSubmissionAttempt(@RequestParam Long attachmentId, @RequestParam Long fileSubmissionAttemptId) {
-        try {
-            attachmentService.removeAttachmentFromFileSubmissionAttempt(attachmentId, fileSubmissionAttemptId);
-        } catch (FileSubmissionAttemptNotFoundException | FileNotFoundException ex) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File cannot be deleted.", ex);
-        }
-    }
+//    @DeleteMapping("/deleteFileSubmissionAttemptAttachment")
+//    public void deleteAttachmentFromFileSubmissionAttempt(@RequestParam Long attachmentId, @RequestParam Long fileSubmissionAttemptId) {
+//        try {
+//            attachmentService.removeAttachmentFromFileSubmissionAttempt(attachmentId, fileSubmissionAttemptId);
+//        } catch (FileSubmissionAttemptNotFoundException | FileNotFoundException ex) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File cannot be deleted.", ex);
+//        }
+//    }
 
     @PostMapping("/uploadAttachmentToFileSubmission")
     public ResponseData uploadFileSubmissionAttachment(@RequestParam("file") MultipartFile file, @RequestParam Long fileSubmissionId) {
