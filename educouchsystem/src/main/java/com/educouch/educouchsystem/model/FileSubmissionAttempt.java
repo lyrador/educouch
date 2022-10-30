@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -15,22 +16,44 @@ public class FileSubmissionAttempt implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fileSubmissionAttemptId;
 
-    @NotNull
-    private String fileSubmissionAttemptName;
+//    @NotNull
+//    private String fileSubmissionAttemptName;
 
     @NotNull
     private Double obtainedScore = 0.0;
 
-    @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER)
-    private List<Attachment> attachments;
+    @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastAttemptTime;
+
+    @OneToOne(cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    private Attachment attachments;
+
+    @OneToOne
+    @NotNull
+    @JoinColumn
+    private FileSubmission fileSubmissionAttempted;
+
+    @ManyToOne
+    @JoinColumn
+    private Learner learner;
 
     public FileSubmissionAttempt() {
-        this.attachments = new ArrayList<>();
+        this.lastAttemptTime = new Date();
+
     }
 
-    public FileSubmissionAttempt(String fileSubmissionAttemptName) {
-        this();
-        this.fileSubmissionAttemptName = fileSubmissionAttemptName;
+//    public FileSubmissionAttempt(String fileSubmissionAttemptName) {
+//        this();
+//        this.fileSubmissionAttemptName = fileSubmissionAttemptName;
+//    }
+
+    public Date getLastAttemptTime() {
+        return lastAttemptTime;
+    }
+
+    public void setLastAttemptTime(Date lastAttemptTime) {
+        this.lastAttemptTime = lastAttemptTime;
     }
 
     public Long getFileSubmissionAttemptId() {
@@ -48,12 +71,29 @@ public class FileSubmissionAttempt implements Serializable {
     public void setObtainedScore(Double obtainedScore) {
         this.obtainedScore = obtainedScore;
     }
-    public List<Attachment> getAttachments() {
+
+    public Attachment getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(List<Attachment> attachments) {
+    public void setAttachments(Attachment attachments) {
         this.attachments = attachments;
+    }
+
+    public FileSubmission getFileSubmissionAttempted() {
+        return fileSubmissionAttempted;
+    }
+
+    public void setFileSubmissionAttempted(FileSubmission fileSubmission) {
+        this.fileSubmissionAttempted = fileSubmission;
+    }
+
+    public Learner getLearner() {
+        return learner;
+    }
+
+    public void setLearner(Learner learner) {
+        this.learner = learner;
     }
 
     @Override
