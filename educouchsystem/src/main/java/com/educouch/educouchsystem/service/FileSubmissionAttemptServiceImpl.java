@@ -29,7 +29,7 @@ public class FileSubmissionAttemptServiceImpl implements FileSubmissionAttemptSe
     public FileSubmissionAttempt saveFileSubmissionAttempt(Long fileSubmissionId, FileSubmissionAttempt fileSubmissionAttempt) throws FileSubmissionNotFoundException {
         FileSubmission fileSubmission = fileSubmissionService.retrieveFileSubmissionById(fileSubmissionId);
         if (fileSubmission != null) {
-            fileSubmission.getFileSubmissionAttempts().add(fileSubmissionAttempt);
+//            fileSubmission.getFileSubmissionAttempts().add(fileSubmissionAttempt);
             fileSubmissionService.saveFileSubmission(fileSubmission);
             fileSubmissionAttemptRepository.save(fileSubmissionAttempt);
             return fileSubmissionAttempt;
@@ -43,16 +43,16 @@ public class FileSubmissionAttemptServiceImpl implements FileSubmissionAttemptSe
         return fileSubmissionAttemptRepository.findAll();
     }
 
-    @Override
-    public List<FileSubmissionAttempt> getAllFileSubmissionAttemptsByFileSubmissionId(Long fileSubmissionId) throws FileSubmissionNotFoundException {
-        FileSubmission fileSubmission = fileSubmissionService.retrieveFileSubmissionById(fileSubmissionId);
-        if (fileSubmission != null) {
-            List<FileSubmissionAttempt> fileSubmissionAttempts = fileSubmission.getFileSubmissionAttempts();
-            return fileSubmissionAttempts;
-        } else {
-            throw new FileSubmissionNotFoundException("File Submission " + fileSubmissionId + " cannot be found!");
-        }
-    }
+//    @Override
+//    public List<FileSubmissionAttempt> getAllFileSubmissionAttemptsByFileSubmissionId(Long fileSubmissionId) throws FileSubmissionNotFoundException {
+//        FileSubmission fileSubmission = fileSubmissionService.retrieveFileSubmissionById(fileSubmissionId);
+//        if (fileSubmission != null) {
+//            List<FileSubmissionAttempt> fileSubmissionAttempts = fileSubmission.getFileSubmissionAttempts();
+//            return fileSubmissionAttempts;
+//        } else {
+//            throw new FileSubmissionNotFoundException("File Submission " + fileSubmissionId + " cannot be found!");
+//        }
+//    }
 
     @Override
     public FileSubmissionAttempt retrieveFileSubmissionAttemptById(Long fileSubmissionAttemptId) throws FileSubmissionAttemptNotFoundException {
