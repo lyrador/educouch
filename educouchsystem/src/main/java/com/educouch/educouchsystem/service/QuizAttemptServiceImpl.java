@@ -136,7 +136,7 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
     @Override
     public QuizAttempt submitQuizAttempt(QuizAttempt updatedQuizAttempt) throws QuizAttemptNotFoundException {
         QuizAttempt quizAttemptToUpdate = getQuizAttemptById(updatedQuizAttempt.getQuizAttemptId());
-        List<QuestionAttempt> qns = quizAttemptToUpdate.getQuestionAttempts();
+        List<QuestionAttempt> qns = updatedQuizAttempt.getQuestionAttempts();
         for(QuestionAttempt learnerAns : qns) {
             Question question = learnerAns.getQuestionAttempted();
             if(question.getQuestionType().equals(QuestionTypeEnum.OPEN_ENDED)) {
