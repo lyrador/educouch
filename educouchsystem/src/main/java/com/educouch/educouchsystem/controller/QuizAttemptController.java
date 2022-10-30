@@ -102,7 +102,7 @@ public class QuizAttemptController {
             Date updatedAttemptTime = new Date();
             DateFormat formatter = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
             updatedQuizAttemptDTO.setLastAttemptTime(formatter.format(updatedAttemptTime));
-            //not updating status
+            updatedQuizAttemptDTO.setAssessmentAttemptStatusEnum("INCOMPLETE");
             QuizAttempt updatedQuizAttempt = quizAttemptService.updateQuizAttempt(convertQuizAttemptDTOToQuizAttempt(updatedQuizAttemptDTO));
             //update quizAttempt
             return new ResponseEntity<>(updatedQuizAttemptDTO, HttpStatus.OK);
@@ -125,6 +125,7 @@ public class QuizAttemptController {
             Date updatedAttemptTime = new Date();
             DateFormat formatter = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
             updatedQuizAttemptDTO.setLastAttemptTime(formatter.format(updatedAttemptTime));
+            updatedQuizAttemptDTO.setAssessmentAttemptStatusEnum("SUBMITTED");
             QuizAttempt updatedQuizAttempt = quizAttemptService.updateQuizAttempt(convertQuizAttemptDTOToQuizAttempt(updatedQuizAttemptDTO));
             //update state of quizAttempt to be "submitted"
             updatedQuizAttempt = quizAttemptService.submitQuizAttempt(updatedQuizAttempt);
@@ -136,6 +137,17 @@ public class QuizAttemptController {
             return new ResponseEntity<>(HttpStatus.valueOf("Date Parsing failed"));
         } catch (QuizAttemptNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/getNumberQuizAttemptsByLearnerId/{assessmentId}/{learnerId}")
+    public ResponseEntity<Integer> getNumberQuizAttemptsByLearnerId(@PathVariable(value = "assessmentId") Long assessmentId,
+                                                                    @PathVariable(value = "learnerId") Long learnerId) {
+        try {
+            List<QuizAttempt> quizAttempts = quizAttemptService.getParticularQuizAttemptsByLearnerId(learnerId, assessmentId);
+            return new ResponseEntity<>(quizAttempts.size(), HttpStatus.OK);
+        } catch (NoQuizAttemptsFoundException ex) {
+            return new ResponseEntity<>(1,HttpStatus.OK);
         }
     }
 

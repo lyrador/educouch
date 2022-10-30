@@ -64,7 +64,7 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
     @Override
     public List<QuizAttempt> getQuizAttemptsByLearnerId(Long learnerId) throws NoQuizAttemptsFoundException {
         List<QuizAttempt> quizAttempts = quizAttemptRepository.findQuizAttemptsByLearnerId(learnerId);
-        if(quizAttempts.size()!=0) {
+            if(quizAttempts.size()!=0) {
             return quizAttempts;
         } else {
             throw new NoQuizAttemptsFoundException();
@@ -125,8 +125,9 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
             q.setOptionSelected(updatedQuestionAttempts.get(i).getOptionSelected());
             optionRepository.save(updatedQuestionAttempts.get(i).getOptionSelected()); //set new option selected
         }
-        quizAttemptToUpdate.setAttemptCounter(quizAttemptToUpdate.getAttemptCounter()+1);
+        quizAttemptToUpdate.setAttemptCounter(quizAttemptToUpdate.getAttemptCounter());
         quizAttemptToUpdate.setAssessmentAttemptStatusEnum(updatedQuizAttempt.getAssessmentAttemptStatusEnum());
+        quizAttemptToUpdate.setTimeLimitRemaining(updatedQuizAttempt.getTimeLimitRemaining());
         quizAttemptRepository.save(quizAttemptToUpdate);
 
         return quizAttemptToUpdate;
