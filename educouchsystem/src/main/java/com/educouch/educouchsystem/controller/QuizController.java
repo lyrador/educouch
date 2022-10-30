@@ -4,9 +4,11 @@ import com.educouch.educouchsystem.dto.OptionDTO;
 import com.educouch.educouchsystem.dto.QuestionAttemptDTO;
 import com.educouch.educouchsystem.dto.QuestionDTO;
 import com.educouch.educouchsystem.dto.QuizDTO;
+import com.educouch.educouchsystem.model.InteractivePage;
 import com.educouch.educouchsystem.model.Option;
 import com.educouch.educouchsystem.model.Question;
 import com.educouch.educouchsystem.model.Quiz;
+import com.educouch.educouchsystem.service.InteractivePageService;
 import com.educouch.educouchsystem.service.OptionService;
 import com.educouch.educouchsystem.service.QuestionService;
 import com.educouch.educouchsystem.service.QuizService;
@@ -41,6 +43,9 @@ public class QuizController {
     @Autowired
     private OptionService optionService;
 
+    @Autowired
+    private InteractivePageService interactivePageService;
+
     @PostMapping("/createQuiz/{courseId}")
     public ResponseEntity<Quiz> createQuiz(@RequestBody QuizDTO quizDTO, @PathVariable(value="courseId") Long courseId) {
 
@@ -57,6 +62,51 @@ public class QuizController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("/createQuizForInteractivePage/{interactivePageId}")
+    public ResponseEntity<Quiz> createQuizForInteractivePage(@RequestBody QuizDTO quizDTO, @PathVariable(value="interactivePageId") Long interactivePageId) {
+
+        try {
+            //Instantiate quiz
+            Quiz newQuiz = instantiateQuiz(quizDTO, interactivePageId);
+            //Add questions
+            newQuiz = addQuestions(newQuiz, quizDTO.getQuestions());
+            InteractivePage interactivePage = interactivePageService.getInteractivePageById(interactivePageId);
+            newQuiz.setInteractivePage(interactivePage);
+            interactivePage.setPageQuiz(newQuiz);
+            //interactivePageService.saveInteractivePage(interactivePage);
+            quizService.saveQuiz(newQuiz);
+            return new ResponseEntity<>(newQuiz, HttpStatus.OK);
+        } catch (InteractivePageNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (CourseNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (ParseException ex) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+//    @PostMapping("/createQuestion/{interactivePageId}")
+//    public ResponseEntity<Question> createQuestion(@RequestBody Question question, @PathVariable(value="interactivePageId") Long interactivePageId) {
+//        try {
+//            InteractivePage interactivePage = interactivePageService.getInteractivePageById(interactivePageId);
+//            Question newQuestion = new Question();
+//            newQuestion.setQuestionTitle(question.getQuestionTitle());
+//            newQuestion.setQuestionContent(question.getQuestionContent());
+//            newQuestion.setQuestionType(question.getQuestionType());
+//            newQuestion.setQuestionHint(question.getQuestionHint());
+//            newQuestion.setCorrectOption(question.getCorrectOption());
+//            newQuestion.setOptions(question.getOptions());
+//            newQuestion.setQuestionMaxScore(question.getQuestionMaxScore());
+//            interactivePage.setPageQuestion(newQuestion);
+//            newQuestion.setInteractivePage(interactivePage);
+//
+//            Question question1 = questionService.saveQuestion(newQuestion);
+//            return new ResponseEntity<>(question1, HttpStatus.OK);
+//        } catch (InteractivePageNotFoundException ex) {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
     @GetMapping("/getQuizById/{quizId}")
     public ResponseEntity<QuizDTO> getQuizById(@PathVariable(value="quizId") Long quizId) {
