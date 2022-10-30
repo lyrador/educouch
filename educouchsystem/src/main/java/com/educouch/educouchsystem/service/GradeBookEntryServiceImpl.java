@@ -8,10 +8,7 @@ import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.repository.GradeBookEntryRepository;
 import com.educouch.educouchsystem.util.enumeration.AssessmentAttemptStatusEnum;
 import com.educouch.educouchsystem.util.enumeration.QuestionTypeEnum;
-import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
-import com.educouch.educouchsystem.util.exception.GradeBookEntryNotFoundException;
-import com.educouch.educouchsystem.util.exception.NoQuizAttemptsFoundException;
-import com.educouch.educouchsystem.util.exception.QuestionAttemptNotFoundException;
+import com.educouch.educouchsystem.util.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +31,10 @@ public class GradeBookEntryServiceImpl implements GradeBookEntryService {
 
     @Autowired
     private QuestionAttemptService questionAttemptService;
+
+    @Autowired
+    private FileSubmissionAttemptService fileSubmissionAttemptService;
+
     @Override
     public GradeBookEntry createGradeBookEntry(GradeBookEntry gradeBookEntry) {
         return gradeBookEntryRepository.save(gradeBookEntry);
@@ -75,35 +76,56 @@ public class GradeBookEntryServiceImpl implements GradeBookEntryService {
     }
 
     @Override
-    public List<LearnerAttemptDTO> viewLearnerAttemptPage(Long courseId, Long assessmentId) throws CourseNotFoundException {
+    public List<LearnerAttemptDTO> viewLearnerAttemptPage(Long courseId, Long assessmentId,Long identifier) throws CourseNotFoundException {
+        //identifier 1 == quiz, 2 == filesubmission
         List<Learner> learnerInCourse = courseService.getLearnerByCourse(courseId);
         List<LearnerAttemptDTO> finalList = new ArrayList<>();
         for(Learner l : learnerInCourse) {
             LearnerAttemptDTO dto = new LearnerAttemptDTO();
             dto.setLearnerId(l.getLearnerId());
             dto.setLearnerName(l.getName());
-            dto.setQuiz(true);
-            try {
-                QuizAttempt attempt = quizAttemptService.getMostRecentQuizAttemptByLearnerId(l.getLearnerId(), assessmentId);
-                dto.setDidAttempt(true);
-                dto.setQuizMax(attempt.getAttemptedQuiz().getMaxScore());
-                if(attempt.getAssessmentAttemptStatusEnum().equals(AssessmentAttemptStatusEnum.GRADED)) {
-                    dto.setGraded(true);
-                } else {
-                    dto.setGraded(false);
-                }
-                dto.setLearnerMcqScore(attempt.getLearnerMcqScore());
-                dto.setObtainedScore(attempt.getObtainedScore());
-                List<QuestionAttempt> qnAttempt = attempt.getQuestionAttempts();
-                for(QuestionAttempt q : qnAttempt) {
-                    if(q.getQuestionAttempted().getQuestionType().equals(QuestionTypeEnum.OPEN_ENDED)) {
-                        dto.setOpenEnded(true);
-                        break;
+            if(identifier.intValue() == 1) {
+                dto.setQuiz(true);
+                try {
+                    QuizAttempt attempt = quizAttemptService.getMostRecentQuizAttemptByLearnerId(l.getLearnerId(), assessmentId);
+                    dto.setDidAttempt(true);
+                    dto.setQuizMax(attempt.getAttemptedQuiz().getMaxScore());
+                    if (attempt.getAssessmentAttemptStatusEnum().equals(AssessmentAttemptStatusEnum.GRADED)) {
+                        dto.setGraded(true);
+                    } else {
+                        dto.setGraded(false);
                     }
-                }
+                    dto.setLearnerMcqScore(attempt.getLearnerMcqScore());
+                    dto.setObtainedScore(attempt.getObtainedScore());
+                    List<QuestionAttempt> qnAttempt = attempt.getQuestionAttempts();
+                    for (QuestionAttempt q : qnAttempt) {
+                        if (q.getQuestionAttempted().getQuestionType().equals(QuestionTypeEnum.OPEN_ENDED)) {
+                            dto.setOpenEnded(true);
+                            break;
+                        }
+                    }
 
-            } catch (NoQuizAttemptsFoundException e) {
-                dto.setDidAttempt(false);
+                } catch (NoQuizAttemptsFoundException e) {
+                    dto.setDidAttempt(false);
+                }
+            } else {
+                dto.setQuiz(false);
+                try {
+                    FileSubmissionAttempt attempt = fileSubmissionAttemptService.getMostRecentFileSubmissionAttemptByLearnerId(l.getLearnerId(),assessmentId);
+                    dto.setDidAttempt(true);
+                    dto.setQuizMax(attempt.getFileSubmissionAttempted().getMaxScore());
+                    if (attempt.getAssessmentAttemptStatusEnum().equals(AssessmentAttemptStatusEnum.GRADED)) {
+                        dto.setGraded(true);
+                        dto.setObtainedScore(attempt.getObtainedScore());
+
+                    } else {
+                        dto.setGraded(false);
+                    }
+
+
+                } catch (NoFileSubmissionsFoundException e) {
+                    dto.setDidAttempt(false);
+                }
             }
             finalList.add(dto);
         }

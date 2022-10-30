@@ -150,6 +150,7 @@ public class QuizAttemptServiceImpl implements QuizAttemptService {
                 }
             }
         }
+        quizAttemptToUpdate.setObtainedScore(quizAttemptToUpdate.getLearnerMcqScore());
         quizAttemptToUpdate.setAssessmentAttemptStatusEnum(AssessmentAttemptStatusEnum.SUBMITTED);
         quizAttemptRepository.save(quizAttemptToUpdate);
         return quizAttemptToUpdate;
