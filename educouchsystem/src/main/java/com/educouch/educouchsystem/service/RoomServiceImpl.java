@@ -41,7 +41,7 @@ public class RoomServiceImpl implements RoomService {
         Room newRoom = new Room(roomDto.getRoomName(), "");
         Instructor instructor = educatorService.findInstructorByUsername(roomDto.getCreatorUsername());
         // when first start, the room will have no participants
-        newRoom.addOrganizer(instructor);
+//        newRoom.addOrganizer(instructor);
         return roomRepository.save(newRoom);
     }
     @Override
@@ -61,10 +61,16 @@ public class RoomServiceImpl implements RoomService {
         Room room = getRoomByRoomId(roomId);
         try {
             Learner learner = learnerService.findLearnerByUsername(username);
-            room.getParticipants().add(learner);
+            if(!room.getParticipants().contains(learner)) {
+                room.getParticipants().add(learner);
+            }
+
         } catch(UsernameNotFoundException ex) {
             Instructor instructor = educatorService.findInstructorByUsername(username);
-            room.getOrganizers().add(instructor);
+            if(!room.getOrganizers().contains(instructor)) {
+                room.getOrganizers().add(instructor);
+            }
+
         }
         this.saveRoom(room);
     }
