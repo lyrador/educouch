@@ -2,16 +2,21 @@ package com.educouch.educouchsystem.controller;
 
 
 import com.educouch.educouchsystem.dto.RoomDTO;
+import com.educouch.educouchsystem.dto.RoomTransferObject;
 import com.educouch.educouchsystem.dto.SessionInvitationDTO;
 import com.educouch.educouchsystem.model.Drawing;
+import com.educouch.educouchsystem.model.Instructor;
+import com.educouch.educouchsystem.model.Learner;
 import com.educouch.educouchsystem.model.Room;
 import com.educouch.educouchsystem.service.RoomService;
+import com.educouch.educouchsystem.util.exception.RoomNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import lombok.AllArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -43,10 +48,15 @@ public class RoomController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Room> getRoom(@PathVariable String id) {
-        Room room = roomsService.getRoomByRoomId(new Long(id));
-        if (room != null) {
-            return new ResponseEntity<>(room, HttpStatus.OK);
-        } else {
+        try {
+            Room room = roomsService.getRoomByRoomId(new Long(id));
+            if (room != null) {
+                return new ResponseEntity<>(room, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+        } catch(RoomNotFoundException ex) {
+            System.out.println("Room not found.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
@@ -62,8 +72,26 @@ public class RoomController {
     }
 
     @GetMapping("/all")
-    public List<Room> getAllRooms() {
-        return roomsService.getAllRooms();
+    public List<RoomTransferObject> getAllRooms() {
+
+        List<Room> listOfAllRooms =  roomsService.getAllRooms();
+        List<RoomTransferObject> modifiedRooms = new ArrayList<>();
+        for(Room r: listOfAllRooms) {
+            List<String> listOfParticipants = new ArrayList<>();
+            List<String> listOfOrganizers = new ArrayList<>();
+            for(Learner l: r.getParticipants()) {
+                listOfParticipants.add(l.getUsername());
+            }
+            for(Instructor i: r.getOrganizers()) {
+                listOfOrganizers.add(i.getUsername());
+            }
+
+            RoomTransferObject modifiedRoom = new RoomTransferObject(r.getRoomId().toString(), r.getName(), r.getPassword(), listOfOrganizers, listOfParticipants);
+            modifiedRooms.add(modifiedRoom);
+        }
+        return modifiedRooms;
+
+
     }
 
     @GetMapping("/{roomId}/get-learner-not-participants")
