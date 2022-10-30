@@ -19,7 +19,7 @@ public interface FileSubmissionService {
 
     public FileSubmission retrieveFileSubmissionById(Long fileSubmissionId) throws FileSubmissionNotFoundException;
 
-    public void deleteFileSubmission(Long fileSubmissionId) throws FileSubmissionNotFoundException;
+//    public void deleteFileSubmission(Long fileSubmissionId) throws FileSubmissionNotFoundException;
 
     public FileSubmission updateFileSubmission(FileSubmission fileSubmissionToUpdate, FileSubmission fileSubmission) throws FileSubmissionNotFoundException;
 

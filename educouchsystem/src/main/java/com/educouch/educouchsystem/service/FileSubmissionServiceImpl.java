@@ -27,8 +27,7 @@ public class FileSubmissionServiceImpl implements FileSubmissionService {
     @Autowired
     CourseService courseService;
 
-    @Autowired
-    AssessmentService assessmentService;
+
 
     @Override
     public FileSubmission saveFileSubmission(FileSubmission fileSubmission) {
@@ -80,16 +79,16 @@ public class FileSubmissionServiceImpl implements FileSubmissionService {
         }
     }
 
-    @Override
-    public void deleteFileSubmission(Long fileSubmissionId) throws FileSubmissionNotFoundException {
-        try {
-            FileSubmission fileSubmission = fileSubmissionRepository.findById(fileSubmissionId).get();
-            fileSubmissionRepository.deleteById(fileSubmissionId);
-            assessmentService.deleteAssessment(fileSubmissionId);
-        } catch (AssessmentNotFoundException ex) {
-            throw new FileSubmissionNotFoundException("File Submission " + fileSubmissionId + " cannot be found!");
-        }
-    }
+//    @Override
+//    public void deleteFileSubmission(Long fileSubmissionId) throws FileSubmissionNotFoundException {
+//        try {
+//            FileSubmission fileSubmission = fileSubmissionRepository.findById(fileSubmissionId).get();
+//            fileSubmissionRepository.deleteById(fileSubmissionId);
+//            assessmentService.deleteAssessment(fileSubmissionId);
+//        } catch (AssessmentNotFoundException ex) {
+//            throw new FileSubmissionNotFoundException("File Submission " + fileSubmissionId + " cannot be found!");
+//        }
+//    }
 
     @Override
     public FileSubmission updateFileSubmission(FileSubmission fileSubmissionToUpdate, FileSubmission fileSubmission) throws FileSubmissionNotFoundException {
