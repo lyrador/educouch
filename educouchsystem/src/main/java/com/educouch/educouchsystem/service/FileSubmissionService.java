@@ -22,4 +22,6 @@ public interface FileSubmissionService {
     public void deleteFileSubmission(Long fileSubmissionId) throws FileSubmissionNotFoundException;
 
     public FileSubmission updateFileSubmission(FileSubmission fileSubmissionToUpdate, FileSubmission fileSubmission) throws FileSubmissionNotFoundException;
+
+    public FileSubmissionAttempt saveFileSubmissionAttempt(FileSubmissionAttempt fileSubmissionAttempt);
 }

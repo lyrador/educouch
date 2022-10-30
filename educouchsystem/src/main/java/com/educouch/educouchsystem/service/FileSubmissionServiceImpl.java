@@ -3,6 +3,8 @@ package com.educouch.educouchsystem.service;
 import com.educouch.educouchsystem.model.Assessment;
 import com.educouch.educouchsystem.model.Course;
 import com.educouch.educouchsystem.model.FileSubmission;
+import com.educouch.educouchsystem.model.FileSubmissionAttempt;
+import com.educouch.educouchsystem.repository.FileSubmissionAttemptRepository;
 import com.educouch.educouchsystem.repository.FileSubmissionRepository;
 import com.educouch.educouchsystem.util.exception.AssessmentNotFoundException;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
@@ -18,6 +20,9 @@ public class FileSubmissionServiceImpl implements FileSubmissionService {
 
     @Autowired
     FileSubmissionRepository fileSubmissionRepository;
+
+    @Autowired
+    FileSubmissionAttemptRepository fileSubmissionAttemptRepository;
 
     @Autowired
     CourseService courseService;
@@ -96,11 +101,17 @@ public class FileSubmissionServiceImpl implements FileSubmissionService {
             fileSubmissionToUpdate.setEndDate(fileSubmission.getEndDate());
             fileSubmissionToUpdate.setOpen(fileSubmission.getOpen());
             fileSubmissionToUpdate.setAssessmentStatus(fileSubmission.getAssessmentStatus());
-            fileSubmissionToUpdate.setFileSubmissionEnum(fileSubmission.getFileSubmissionEnum());
+//            fileSubmissionToUpdate.setFileSubmissionEnum(fileSubmission.getFileSubmissionEnum());
             fileSubmissionRepository.save(fileSubmissionToUpdate);
             return fileSubmissionToUpdate;
         } else {
             throw new FileSubmissionNotFoundException("File Submission to be updated cannot be found!");
         }
     }
+
+    @Override
+    public FileSubmissionAttempt saveFileSubmissionAttempt(FileSubmissionAttempt fileSubmissionAttempt) {
+        return fileSubmissionAttemptRepository.save(fileSubmissionAttempt);
+    }
+
 }
