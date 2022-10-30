@@ -105,7 +105,7 @@ public class InteractivePageController {
 
             interactiveChapter.getInteractivePages().remove(existingInteractivePage);
             existingInteractivePage.setInteractiveChapter(null);
-            existingInteractivePage.setPageQuestion(null);
+            existingInteractivePage.setPageQuiz(null);
             existingInteractivePage.setAttachment(null);
 
             interactivePageService.deleteInteractivePage(interactivePageId);
