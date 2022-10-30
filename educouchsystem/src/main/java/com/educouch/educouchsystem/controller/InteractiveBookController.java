@@ -1,6 +1,8 @@
 package com.educouch.educouchsystem.controller;
 
+import com.educouch.educouchsystem.dto.InteractiveBookRequestDTO;
 import com.educouch.educouchsystem.model.*;
+import com.educouch.educouchsystem.service.AttachmentService;
 import com.educouch.educouchsystem.service.CourseService;
 import com.educouch.educouchsystem.service.InteractiveBookService;
 import com.educouch.educouchsystem.service.InteractiveChapterService;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,8 +32,11 @@ public class InteractiveBookController {
     @Autowired
     private CourseService courseService;
 
+    @Autowired
+    private AttachmentService attachmentService;
+
     @PostMapping("/{courseId}/interactiveBooks")
-    public ResponseEntity<InteractiveBook> addInteractiveBook(@PathVariable(value="courseId") Long courseId, @RequestBody InteractiveBook interactiveBookRequest) {
+    public ResponseEntity<InteractiveBook> addInteractiveBook(@PathVariable(value="courseId") Long courseId, @RequestBody InteractiveBookRequestDTO interactiveBookRequest) throws FileNotFoundException {
         Course course  = courseService.retrieveCourseById(courseId);
         InteractiveBook newInteractiveBook = new InteractiveBook();
         newInteractiveBook.setCourse(course);
@@ -38,6 +44,9 @@ public class InteractiveBookController {
         newInteractiveBook.setBookMaxScore(interactiveBookRequest.getBookMaxScore());
         newInteractiveBook.setCreationDate(new Date());
         newInteractiveBook.setBookActualScore(0.0);
+
+        newInteractiveBook.setAttachment(attachmentService.getAttachment(interactiveBookRequest.getAttachmentId()));
+
         if (course.getInteractiveBooks() != null) {
             course.getInteractiveBooks().add(newInteractiveBook);
         } else {
@@ -110,7 +119,7 @@ public class InteractiveBookController {
     }
 
     @PutMapping("/interactiveBooks/{interactiveBookId}")
-    public ResponseEntity<InteractiveBook> updateInteractiveBook (@RequestBody InteractiveBook interactiveBook, @PathVariable("interactiveBookId") Long interactiveBookId) {
+    public ResponseEntity<InteractiveBook> updateInteractiveBook (@RequestBody InteractiveBookRequestDTO interactiveBook, @PathVariable("interactiveBookId") Long interactiveBookId) {
         try {
             InteractiveBook existingInteractiveBook = interactiveBookService.getInteractiveBookById(interactiveBookId);
             existingInteractiveBook.setBookTitle(interactiveBook.getBookTitle());
@@ -118,12 +127,21 @@ public class InteractiveBookController {
            // existingInteractiveBook.setBookActualScore(interactiveBook.getBookActualScore());
            // existingInteractiveBook.setCreationDate(interactiveBook.getCreationDate());
 
+            if (interactiveBook.getAttachmentId() != null) {
+                    Long attachmentIdToDelete = existingInteractiveBook.getAttachment().getAttachmentId();
+                    existingInteractiveBook.setAttachment(null);
+                    attachmentService.deleteAttachment(attachmentIdToDelete);
+                    existingInteractiveBook.setAttachment(attachmentService.getAttachment(interactiveBook.getAttachmentId()));
+            }
+
             interactiveBookService.saveInteractiveBook(existingInteractiveBook);
             return new ResponseEntity<>(existingInteractiveBook, HttpStatus.OK);
         } catch (InteractiveBookNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (NoSuchElementException ex) {
             return new ResponseEntity<InteractiveBook>(HttpStatus.NOT_FOUND);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 

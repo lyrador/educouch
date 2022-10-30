@@ -105,18 +105,18 @@ public class AttachmentServiceImpl implements AttachmentService{
     @Override
     public void uploadAttachmentToFileSubmissionAttempt(Attachment attachment, Long fileSubmissionAttemptId) throws FileSubmissionAttemptNotFoundException, FileNotFoundException {
         FileSubmissionAttempt fileSubmissionAttempt = fileSubmissionAttemptService.retrieveFileSubmissionAttemptById(fileSubmissionAttemptId);
-        fileSubmissionAttempt.getAttachments().add(attachment);
+        fileSubmissionAttempt.setAttachments(attachment);
         fileSubmissionAttemptService.saveFileSubmissionAttempt(fileSubmissionAttempt);
     }
 
-    @Override
-    public void removeAttachmentFromFileSubmissionAttempt(Long attachmentId, Long fileSubmissionAttemptId) throws FileSubmissionAttemptNotFoundException, FileNotFoundException {
-        Attachment attachment = getAttachment(attachmentId);
-        FileSubmissionAttempt fileSubmissionAttempt = fileSubmissionAttemptService.retrieveFileSubmissionAttemptById(fileSubmissionAttemptId);
-        fileSubmissionAttempt.getAttachments().remove(attachment);
-        fileSubmissionAttemptService.saveFileSubmissionAttempt(fileSubmissionAttempt);
-        this.deleteAttachment(attachmentId);
-    }
+//    @Override
+//    public void removeAttachmentFromFileSubmissionAttempt(Long attachmentId, Long fileSubmissionAttemptId) throws FileSubmissionAttemptNotFoundException, FileNotFoundException {
+//        Attachment attachment = getAttachment(attachmentId);
+//        FileSubmissionAttempt fileSubmissionAttempt = fileSubmissionAttemptService.retrieveFileSubmissionAttemptById(fileSubmissionAttemptId);
+//        fileSubmissionAttempt.setAttachments(null);
+//        fileSubmissionAttemptService.saveFileSubmissionAttempt(fileSubmissionAttempt);
+//        this.deleteAttachment(attachmentId);
+//    }
 
     @Override
     public void uploadAttachmentToFileSubmissionAssessment(Attachment attachment, Long fileSubmissionId) throws FileSubmissionNotFoundException, FileNotFoundException {
