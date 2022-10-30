@@ -9,6 +9,7 @@ import com.educouch.educouchsystem.model.Instructor;
 import com.educouch.educouchsystem.model.Learner;
 import com.educouch.educouchsystem.model.Room;
 import com.educouch.educouchsystem.service.RoomService;
+import com.educouch.educouchsystem.util.exception.RoomNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,10 +48,15 @@ public class RoomController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Room> getRoom(@PathVariable String id) {
-        Room room = roomsService.getRoomByRoomId(new Long(id));
-        if (room != null) {
-            return new ResponseEntity<>(room, HttpStatus.OK);
-        } else {
+        try {
+            Room room = roomsService.getRoomByRoomId(new Long(id));
+            if (room != null) {
+                return new ResponseEntity<>(room, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+        } catch(RoomNotFoundException ex) {
+            System.out.println("Room not found.");
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
