@@ -18,7 +18,10 @@ public class QuestionAttempt implements Serializable {
 
     @NotNull
     private Double questionAttemptScore;
+
     private String shortAnswerResponse;
+
+    private String feedback;
 
     @ManyToOne(optional = false)
     @JoinColumn(nullable = false)
@@ -40,6 +43,7 @@ public class QuestionAttempt implements Serializable {
     public QuestionAttempt() {
         this.questionAttemptScore = 0.0;
         this.shortAnswerResponse = "";
+        this.feedback = "";
 //        this.optionSelected = new Option("");
     }
 
@@ -47,6 +51,14 @@ public class QuestionAttempt implements Serializable {
         this();
         this.questionAttempted = questionAttempted;
 //        this.quizAttempt = quizAttempt;
+    }
+
+    public String getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
     }
 
     public Long getQuestionAttemptId() {

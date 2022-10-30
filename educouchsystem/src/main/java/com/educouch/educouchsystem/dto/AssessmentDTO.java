@@ -17,12 +17,17 @@ public class AssessmentDTO {
     private String endDate;
     private String isOpen;
     private AssessmentStatusEnum assessmentStatus = AssessmentStatusEnum.PENDING;
+
+    private boolean isPublished;
     private String assessmentType;
+    private String isExpired;
 
     public AssessmentDTO() {
+        isPublished = false;
     }
 
     public AssessmentDTO(Long assessmentId, String title, String description, Double maxScore, String startDate, String endDate, String isOpen, AssessmentStatusEnum assessmentStatus, String assessmentType) {
+        this();
         this.assessmentId = assessmentId;
         this.title = title;
         this.description = description;
@@ -32,6 +37,14 @@ public class AssessmentDTO {
         this.isOpen = isOpen;
         this.assessmentStatus = assessmentStatus;
         this.assessmentType = assessmentType;
+    }
+
+    public boolean isPublished() {
+        return isPublished;
+    }
+
+    public void setPublished(boolean published) {
+        isPublished = published;
     }
 
     public Long getAssessmentId() {
@@ -104,5 +117,21 @@ public class AssessmentDTO {
 
     public void setAssessmentType(String assessmentType) {
         this.assessmentType = assessmentType;
+    }
+
+    public String getIsOpen() {
+        return isOpen;
+    }
+
+    public void setIsOpen(String isOpen) {
+        this.isOpen = isOpen;
+    }
+
+    public String getIsExpired() {
+        return isExpired;
+    }
+
+    public void setIsExpired(String isExpired) {
+        this.isExpired = isExpired;
     }
 }

@@ -1,7 +1,11 @@
 package com.educouch.educouchsystem.service;
 
+import com.educouch.educouchsystem.model.ClassRun;
+import com.educouch.educouchsystem.model.Course;
 import com.educouch.educouchsystem.model.Learner;
+import com.educouch.educouchsystem.repository.CourseRepository;
 import com.educouch.educouchsystem.repository.LearnerRepository;
+import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.util.exception.UsernameNotFoundException;
 import org.apache.catalina.User;
 import com.educouch.educouchsystem.util.exception.InvalidLoginCredentialsException;
@@ -18,6 +22,7 @@ public class LearnerServiceImpl implements LearnerService {
     //this annotation injects the student repo into the service class
     @Autowired
     private LearnerRepository learnerRepository;
+
 
     @Override
     public Learner saveLearner(Learner learner) {
@@ -44,6 +49,12 @@ public class LearnerServiceImpl implements LearnerService {
     }
 
     @Override
+    public Learner findLearnerByUsernameNonException(String username) throws UsernameNotFoundException {
+        Learner learner = learnerRepository.findByUsername(username);
+        return learner;
+    }
+
+    @Override
     public void deleteLearner(Long id) {
         learnerRepository.deleteById(id);
     }
@@ -63,4 +74,6 @@ public class LearnerServiceImpl implements LearnerService {
         throw new InvalidLoginCredentialsException("Could not update as Lms Admin object to update has a different password");
 
     }
+
+
 }

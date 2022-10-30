@@ -4,9 +4,11 @@ import com.educouch.educouchsystem.dto.OptionDTO;
 import com.educouch.educouchsystem.dto.QuestionAttemptDTO;
 import com.educouch.educouchsystem.dto.QuestionDTO;
 import com.educouch.educouchsystem.dto.QuizDTO;
+import com.educouch.educouchsystem.model.InteractivePage;
 import com.educouch.educouchsystem.model.Option;
 import com.educouch.educouchsystem.model.Question;
 import com.educouch.educouchsystem.model.Quiz;
+import com.educouch.educouchsystem.service.InteractivePageService;
 import com.educouch.educouchsystem.service.OptionService;
 import com.educouch.educouchsystem.service.QuestionService;
 import com.educouch.educouchsystem.service.QuizService;
@@ -41,6 +43,9 @@ public class QuizController {
     @Autowired
     private OptionService optionService;
 
+    @Autowired
+    private InteractivePageService interactivePageService;
+
     @PostMapping("/createQuiz/{courseId}")
     public ResponseEntity<Quiz> createQuiz(@RequestBody QuizDTO quizDTO, @PathVariable(value="courseId") Long courseId) {
 
@@ -57,6 +62,51 @@ public class QuizController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("/createQuizForInteractivePage/{interactivePageId}")
+    public ResponseEntity<Quiz> createQuizForInteractivePage(@RequestBody QuizDTO quizDTO, @PathVariable(value="interactivePageId") Long interactivePageId) {
+
+        try {
+            //Instantiate quiz
+            Quiz newQuiz = instantiateQuiz(quizDTO, interactivePageId);
+            //Add questions
+            newQuiz = addQuestions(newQuiz, quizDTO.getQuestions());
+            InteractivePage interactivePage = interactivePageService.getInteractivePageById(interactivePageId);
+            newQuiz.setInteractivePage(interactivePage);
+            interactivePage.setPageQuiz(newQuiz);
+            //interactivePageService.saveInteractivePage(interactivePage);
+            quizService.saveQuiz(newQuiz);
+            return new ResponseEntity<>(newQuiz, HttpStatus.OK);
+        } catch (InteractivePageNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch (CourseNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (ParseException ex) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+//    @PostMapping("/createQuestion/{interactivePageId}")
+//    public ResponseEntity<Question> createQuestion(@RequestBody Question question, @PathVariable(value="interactivePageId") Long interactivePageId) {
+//        try {
+//            InteractivePage interactivePage = interactivePageService.getInteractivePageById(interactivePageId);
+//            Question newQuestion = new Question();
+//            newQuestion.setQuestionTitle(question.getQuestionTitle());
+//            newQuestion.setQuestionContent(question.getQuestionContent());
+//            newQuestion.setQuestionType(question.getQuestionType());
+//            newQuestion.setQuestionHint(question.getQuestionHint());
+//            newQuestion.setCorrectOption(question.getCorrectOption());
+//            newQuestion.setOptions(question.getOptions());
+//            newQuestion.setQuestionMaxScore(question.getQuestionMaxScore());
+//            interactivePage.setPageQuestion(newQuestion);
+//            newQuestion.setInteractivePage(interactivePage);
+//
+//            Question question1 = questionService.saveQuestion(newQuestion);
+//            return new ResponseEntity<>(question1, HttpStatus.OK);
+//        } catch (InteractivePageNotFoundException ex) {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
     @GetMapping("/getQuizById/{quizId}")
     public ResponseEntity<QuizDTO> getQuizById(@PathVariable(value="quizId") Long quizId) {
@@ -135,12 +185,6 @@ public class QuizController {
         List<Question> questions = oldQuiz.getQuizQuestions();
         for (int j=0; j<questions.size(); j++) {
             List<Option> options = questions.get(j).getOptions();
-//            if(options.size()>0) {
-//                for(int i=0; i<options.size(); i++) {
-//                    optionService.deleteOptionById(options.get(i).getOptionId());
-//                    options.remove(options.size()-1);
-//                }
-//            }
             questionService.deleteQuestion(questions.get(j).getQuestionId());
         }
         while(questions.size()>0) {
@@ -150,7 +194,6 @@ public class QuizController {
         Quiz updatedQuiz = addQuestions(oldQuiz, questionDTOs);
         return updatedQuiz;
     }
-
 
     public Quiz instantiateQuiz(QuizDTO quizDTO, Long courseId) throws CourseNotFoundException, ParseException{
 
@@ -198,34 +241,42 @@ public class QuizController {
         List<Question> questions = quiz.getQuizQuestions();
 
         for(QuestionDTO q : questionDTOs) {
-
             //add question to quiz
-            Question question = new Question();
-            question.setLocalid(q.getLocalid());
-            question.setQuestionTitle(q.getQuestionTitle());
-            if(q.getQuestionType().equals("mcq")) {
-                question.setQuestionType(QuestionTypeEnum.MCQ);
-            } else if(q.getQuestionType().equals("shortAnswer")) {
-                question.setQuestionType(QuestionTypeEnum.OPEN_ENDED);
-            } else if(q.getQuestionType().equals("trueFalse")) {
-                question.setQuestionType(QuestionTypeEnum.TRUE_FALSE);
-            }
-            question.setQuestionContent(q.getQuestionContent());
-            question.setQuestionHint(q.getQuestionHint());
-            try {
-                question.setQuestionMaxScore(Double.parseDouble(q.getQuestionMaxPoints()));
-            } catch (Exception e) {
-                question.setQuestionMaxScore(0.0);
-            }
-            //for each question, add options to question
-            question = addOptions(question, q.getOptions());
-            question.setCorrectOption(new Option(q.getCorrectOption()));
+            Question question = convertQuestionDTOToQuestion(q);
             questions.add(question);
+
         }
 
         quiz.setQuizQuestions(questions);
-
         return quiz;
+    }
+
+    public Question convertQuestionDTOToQuestion (QuestionDTO q) {
+        Question question = new Question();
+        question.setLocalid(q.getLocalid());
+        question.setQuestionTitle(q.getQuestionTitle());
+        if(q.getQuestionType().equals("mcq")) {
+            question.setQuestionType(QuestionTypeEnum.MCQ);
+        } else if(q.getQuestionType().equals("shortAnswer")) {
+            question.setQuestionType(QuestionTypeEnum.OPEN_ENDED);
+        } else if(q.getQuestionType().equals("trueFalse")) {
+            question.setQuestionType(QuestionTypeEnum.TRUE_FALSE);
+        }
+        question.setQuestionContent(q.getQuestionContent());
+        question.setQuestionHint(q.getQuestionHint());
+        try {
+            question.setQuestionMaxScore(Double.parseDouble(q.getQuestionMaxPoints()));
+        } catch (Exception e) {
+            question.setQuestionMaxScore(0.0);
+        }
+
+        //for each question, add options to question
+        question = addOptions(question, q.getOptions());
+        if(!q.getCorrectOption().equals("")) {
+            question.setCorrectOption(new Option(q.getCorrectOption()));
+        }
+
+        return question;
 
     }
 
@@ -255,6 +306,12 @@ public class QuizController {
         quizDTO.setAssessmentStartDate(quiz.getStartDate().toString());
         quizDTO.setAssessmentEndDate(quiz.getEndDate().toString());
         quizDTO.setAssessmentIsOpen(quiz.getOpen().toString());
+        Date today = new Date();
+        if(today.after(quiz.getEndDate())) {
+            quizDTO.setIsExpired("true");
+        } else {
+            quizDTO.setIsExpired("false");
+        }
 
         if(quiz.getHasTimeLimit()) {
             quizDTO.setHasTimeLimit("true");
@@ -283,8 +340,6 @@ public class QuizController {
         List<QuestionDTO> questionDTOs = convertQuestionsToQuestionDTOs(quiz.getQuizQuestions());
         quizDTO.setQuestions(questionDTOs);
 
-        //need to set attempts for next SR
-
         return quizDTO;
     }
 
@@ -294,13 +349,16 @@ public class QuizController {
         for(Question q : questions) {
             QuestionDTO questionDTO = convertQuestionToQuestionDTO(q);
             questionDTOs.add(questionDTO);
-            questionDTO.setCorrectOption(q.getCorrectOption().getOptionContent());
+            if(!(q.getCorrectOption()==null)) {
+                questionDTO.setCorrectOption(q.getCorrectOption().getOptionContent());
+            }
         }
         return questionDTOs;
     }
 
     public QuestionDTO convertQuestionToQuestionDTO(Question q) {
         QuestionDTO questionDTO = new QuestionDTO();
+        questionDTO.setQuestionId(q.getQuestionId().toString());
         questionDTO.setLocalid(q.getLocalid());
         questionDTO.setQuestionTitle(q.getQuestionTitle());
         String questionType = q.getQuestionType().toString();

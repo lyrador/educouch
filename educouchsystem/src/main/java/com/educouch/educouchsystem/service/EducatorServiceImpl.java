@@ -1,7 +1,6 @@
 package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.model.*;
-import com.educouch.educouchsystem.repository.EducatorRepository;
 import com.educouch.educouchsystem.repository.InstructorRepository;
 import com.educouch.educouchsystem.repository.OrganisationAdminRepository;
 import com.educouch.educouchsystem.repository.OrganisationRepository;
@@ -23,8 +22,6 @@ import java.util.List;
 public class EducatorServiceImpl implements EducatorService{
 
     @Autowired
-    private EducatorRepository educatorRepository;
-    @Autowired
     private OrganisationRepository organisationRepository;
     @Autowired
     private OrganisationAdminRepository organisationAdminRepository;
@@ -33,7 +30,6 @@ public class EducatorServiceImpl implements EducatorService{
 
 
     public OrganisationAdmin saveOrganisationAdmin(OrganisationAdmin orgAdmin) {
-
         return organisationAdminRepository.save(orgAdmin);
     }
 
@@ -145,6 +141,12 @@ public class EducatorServiceImpl implements EducatorService{
             return organisationAdmin;
         }
         throw new UsernameNotFoundException("Username not found");
+    }
+
+    @Override
+    public OrganisationAdmin findOrganisationAdminByUsernameNonException(String username) {
+        OrganisationAdmin organisationAdmin = organisationAdminRepository.findByUsername(username);
+        return organisationAdmin;
     }
 
     @Override

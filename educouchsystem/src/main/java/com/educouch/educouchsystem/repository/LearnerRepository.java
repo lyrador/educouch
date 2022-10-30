@@ -13,5 +13,6 @@ public interface LearnerRepository extends CrudRepository<Learner, Long> {
 
     public List<Learner> findAll();
     public Learner findByUsername(String username);
+
     
 }
