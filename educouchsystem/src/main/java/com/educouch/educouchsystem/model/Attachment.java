@@ -1,5 +1,7 @@
 package com.educouch.educouchsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
@@ -64,7 +66,7 @@ public class Attachment {
     }
 
     public void setFileURL(String fileURL) { this.fileURL = fileURL; }
-
+    @JsonIgnore
     public InteractivePage getInteractivePage() {
         return interactivePage;
     }
