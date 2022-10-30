@@ -25,7 +25,7 @@ public interface GradeBookEntryService {
 
     public GradeBookEntry findById(Long gradeBookEntryId) throws GradeBookEntryNotFoundException;
 
-    public List<LearnerAttemptDTO> viewLearnerAttemptPage(Long courseId, Long assessmentId) throws CourseNotFoundException;
+    public List<LearnerAttemptDTO> viewLearnerAttemptPage(Long courseId, Long assessmentId, Long identifier) throws CourseNotFoundException;
 
     public List<QuestionAttemptDTO> getOpenEndedQns(Long learnerId, Long assessmentId) throws NoQuizAttemptsFoundException;
 
