@@ -16,7 +16,7 @@ public class Announcement {
     @NotNull
     private String announcementTitle;
 
-    @NotNull
+    @Column(name="announcementBody", nullable = false, length = 15000)
     private String announcementBody;
 
     @NotNull

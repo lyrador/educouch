@@ -54,11 +54,11 @@ public class AssessmentController {
             newFileSubmission.setDescription(fileSubmissionDTO.getAssessmentDescription());
             newFileSubmission.setMaxScore(fileSubmissionDTO.getAssessmentMaxScore());
 
-            if (fileSubmissionDTO.getAssessmentFileSubmissionEnum().equals("INDIVIDUAL")) {
-                newFileSubmission.setFileSubmissionEnum(FileSubmissionEnum.INDIVIDUAL);
-            } else if (fileSubmissionDTO.getAssessmentFileSubmissionEnum().equals("GROUP")) {
-                newFileSubmission.setFileSubmissionEnum(FileSubmissionEnum.GROUP);
-            }
+//            if (fileSubmissionDTO.getAssessmentFileSubmissionEnum().equals("INDIVIDUAL")) {
+//                newFileSubmission.setFileSubmissionEnum(FileSubmissionEnum.INDIVIDUAL);
+//            } else if (fileSubmissionDTO.getAssessmentFileSubmissionEnum().equals("GROUP")) {
+//                newFileSubmission.setFileSubmissionEnum(FileSubmissionEnum.GROUP);
+//            }
 
             if (fileSubmissionDTO.getAssessmentIsOpen().equals("true")) {
                 newFileSubmission.setOpen(Boolean.TRUE);
@@ -104,11 +104,11 @@ public class AssessmentController {
                 fileSubmissionDTO.setAssessmentStartDate(formatter.format(filesubmission.getStartDate()));
                 fileSubmissionDTO.setAssessmentEndDate(formatter.format(filesubmission.getEndDate()));
 
-                if (filesubmission.getFileSubmissionEnum() == FileSubmissionEnum.INDIVIDUAL) {
-                    fileSubmissionDTO.setAssessmentFileSubmissionEnum("INDIVIDUAL");
-                } else if (filesubmission.getFileSubmissionEnum() == FileSubmissionEnum.GROUP) {
-                    fileSubmissionDTO.setAssessmentFileSubmissionEnum("GROUP");
-                }
+//                if (filesubmission.getFileSubmissionEnum() == FileSubmissionEnum.INDIVIDUAL) {
+//                    fileSubmissionDTO.setAssessmentFileSubmissionEnum("INDIVIDUAL");
+//                } else if (filesubmission.getFileSubmissionEnum() == FileSubmissionEnum.GROUP) {
+//                    fileSubmissionDTO.setAssessmentFileSubmissionEnum("GROUP");
+//                }
 
                 if (filesubmission.getOpen()) {
                     fileSubmissionDTO.setAssessmentIsOpen("true");
@@ -279,11 +279,11 @@ public class AssessmentController {
             fileSubmissionToUpdate.setDescription(fileSubmissionDTO.getAssessmentDescription());
             fileSubmissionToUpdate.setMaxScore(fileSubmissionDTO.getAssessmentMaxScore());
 
-            if (fileSubmissionDTO.getAssessmentFileSubmissionEnum().equals("INDIVIDUAL")) {
-                fileSubmissionToUpdate.setFileSubmissionEnum(FileSubmissionEnum.INDIVIDUAL);
-            } else if (fileSubmissionDTO.getAssessmentFileSubmissionEnum().equals("GROUP")) {
-                fileSubmissionToUpdate.setFileSubmissionEnum(FileSubmissionEnum.GROUP);
-            }
+//            if (fileSubmissionDTO.getAssessmentFileSubmissionEnum().equals("INDIVIDUAL")) {
+//                fileSubmissionToUpdate.setFileSubmissionEnum(FileSubmissionEnum.INDIVIDUAL);
+//            } else if (fileSubmissionDTO.getAssessmentFileSubmissionEnum().equals("GROUP")) {
+//                fileSubmissionToUpdate.setFileSubmissionEnum(FileSubmissionEnum.GROUP);
+//            }
 
             if (fileSubmissionDTO.getAssessmentIsOpen().equals("true")) {
                 fileSubmissionToUpdate.setOpen(Boolean.TRUE);
