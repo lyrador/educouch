@@ -1,6 +1,7 @@
 package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.model.Learner;
+import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.util.exception.UsernameNotFoundException;
 import com.educouch.educouchsystem.util.exception.InvalidLoginCredentialsException;
 
@@ -17,4 +18,7 @@ public interface LearnerService {
     public void deleteLearner(Long id);
 
     public Learner updateLearner(Learner learner) throws InvalidLoginCredentialsException;
+
+    public Learner findLearnerByUsernameNonException(String username);
+
 }

@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -43,20 +44,6 @@ public class AssessmentController {
 
     @Autowired
     private QuizService quizService;
-
-//    @Autowired
-//    private QuizService quizService;
-//
-//    @PostMapping("/addNewQuiz/{courseId}")
-//    public ResponseEntity<Quiz> addQuiz(@RequestBody Quiz quiz, @PathVariable(value="courseId") Long courseId) {
-//        try {
-//            Course course = courseService.retrieveCourseById(courseId);
-//            quizService.saveQuiz(courseId, quiz);
-//            return new ResponseEntity<>(quiz, HttpStatus.OK);
-//        } catch (CourseNotFoundException ex) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
 
     @PostMapping("/addNewFileSubmission/{courseId}")
     public ResponseEntity<FileSubmission> addFileSubmission(@RequestBody FileSubmissionDTO fileSubmissionDTO, @PathVariable(value="courseId") Long courseId) {
@@ -327,6 +314,16 @@ public class AssessmentController {
         }
     }
 
+    @PutMapping("/togglePublish")
+    public ResponseEntity<String> togglePublish(@RequestParam Long assessmentId) {
+        try {
+            assessmentService.togglePublish(assessmentId);
+            return ResponseEntity.status(HttpStatus.OK).body("Toggle worked");
+        } catch (AssessmentNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find assessment attempt", e);
+        }
+    }
+
 //    @PutMapping("/updateQuiz/{quizId}")
 //    public ResponseEntity<Quiz> updateQuiz(@RequestBody QuizDTO quizDTO, @PathVariable("quizId") Long quizId) {
 //        try {
@@ -386,19 +383,25 @@ public class AssessmentController {
 
             AssessmentDTO dtoItem = new AssessmentDTO();
             DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
+            Date today = new Date();
             dtoItem.setAssessmentId(a.getAssessmentId());
             dtoItem.setTitle(a.getTitle());
             dtoItem.setDescription(a.getDescription());
             dtoItem.setMaxScore(a.getMaxScore());
             dtoItem.setStartDate(formatter.format(a.getStartDate()));
             dtoItem.setEndDate(formatter.format(a.getEndDate()));
+            dtoItem.setPublished(a.isPublished());
             if(a.getOpen()) {
                 dtoItem.setOpen("true");
             } else {
                 dtoItem.setOpen("false");
             }
             dtoItem.setAssessmentStatus(a.getAssessmentStatus());
+            if(today.after(a.getEndDate())) {
+                dtoItem.setIsExpired("true");
+            } else {
+                dtoItem.setIsExpired("false");
+            }
             String s = a.getClass().getName();
             String[] assessmentTypeArray = s.split("\\.");
 //            System.out.println(assessmentTypeArray[4]);

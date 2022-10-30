@@ -3,16 +3,28 @@ package com.educouch.educouchsystem.dto;
 public class QuestionAttemptDTO {
 
     private Long questionAttemptId;
+    private String questionAttemptedQuestionId;
     private Double questionAttemptScore;
     private String shortAnswerResponse;
     private QuestionDTO questionAttempted;
     private String optionSelected;
 
+    private String feedback;
+
 
     public QuestionAttemptDTO() {
         questionAttemptScore = 0.0;
         shortAnswerResponse = "";
+        feedback = "";
         optionSelected = new String();
+    }
+
+    public String getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
     }
 
     public Long getQuestionAttemptId() {
@@ -54,4 +66,14 @@ public class QuestionAttemptDTO {
     public void setOptionSelected(String optionSelected) {
         this.optionSelected = optionSelected;
     }
+
+    public String getQuestionAttemptedQuestionId() {
+        return questionAttemptedQuestionId;
+    }
+
+    public void setQuestionAttemptedQuestionId(String questionAttemptedQuestionId) {
+        this.questionAttemptedQuestionId = questionAttemptedQuestionId;
+    }
+
+
 }

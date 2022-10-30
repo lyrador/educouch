@@ -401,6 +401,15 @@ public class CourseController {
 
     }
 
+    @GetMapping("/getLearnerByCourse")
+    public ResponseEntity<List<Learner>> getLearnerByCourse(@RequestParam Long courseId) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(courseService.getLearnerByCourse(courseId));
+        } catch (CourseNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find Course", e);
+        }
+    }
+
     private void processEnrolmentStatusTracker(EnrolmentStatusTracker e) {
         e.setClassRun(null);
         e.setLearner(null);
