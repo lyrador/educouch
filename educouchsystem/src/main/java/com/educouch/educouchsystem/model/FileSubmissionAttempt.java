@@ -1,5 +1,7 @@
 package com.educouch.educouchsystem.model;
 
+import com.educouch.educouchsystem.util.enumeration.AssessmentAttemptStatusEnum;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -38,8 +40,13 @@ public class FileSubmissionAttempt implements Serializable {
     @JoinColumn
     private Learner learner;
 
+    @NotNull
+    private AssessmentAttemptStatusEnum assessmentAttemptStatusEnum;
+
     public FileSubmissionAttempt() {
         this.lastAttemptTime = new Date();
+        this.assessmentAttemptStatusEnum = AssessmentAttemptStatusEnum.SUBMITTED;
+
 
     }
 
@@ -47,6 +54,14 @@ public class FileSubmissionAttempt implements Serializable {
 //        this();
 //        this.fileSubmissionAttemptName = fileSubmissionAttemptName;
 //    }
+
+    public AssessmentAttemptStatusEnum getAssessmentAttemptStatusEnum() {
+        return assessmentAttemptStatusEnum;
+    }
+
+    public void setAssessmentAttemptStatusEnum(AssessmentAttemptStatusEnum assessmentAttemptStatusEnum) {
+        this.assessmentAttemptStatusEnum = assessmentAttemptStatusEnum;
+    }
 
     public Date getLastAttemptTime() {
         return lastAttemptTime;
