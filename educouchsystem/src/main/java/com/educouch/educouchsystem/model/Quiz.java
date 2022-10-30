@@ -30,6 +30,10 @@ public class Quiz extends Assessment implements Serializable {
     @JoinColumn(name="quiz_id")
     private List<Question> quizQuestions;
 
+    @OneToOne
+    @JoinColumn
+    private InteractivePage interactivePage;
+
     public Quiz() {
         super();
         this.quizQuestions = new ArrayList<>();
@@ -104,5 +108,13 @@ public class Quiz extends Assessment implements Serializable {
 
     public void setHasMaxAttempts(Boolean hasMaxAttempts) {
         this.hasMaxAttempts = hasMaxAttempts;
+    }
+
+    public InteractivePage getInteractivePage() {
+        return interactivePage;
+    }
+
+    public void setInteractivePage(InteractivePage interactivePage) {
+        this.interactivePage = interactivePage;
     }
 }
