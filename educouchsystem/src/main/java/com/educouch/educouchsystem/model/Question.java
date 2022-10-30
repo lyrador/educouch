@@ -33,7 +33,7 @@ public class Question implements Serializable {
     @JoinColumn(name="question_id")
     private List<Option> options;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn
     private Option correctOption;
 
@@ -41,9 +41,9 @@ public class Question implements Serializable {
 //    @JoinColumn(name="question_id")
 //    private List<QuestionAttempt> questionAttempts;
 
-    @ManyToOne
-    @JoinColumn(name="interactivePage_id")
-    private InteractivePage interactivePage;
+//    @ManyToOne
+//    @JoinColumn(name="interactivePage_id")
+//    private InteractivePage interactivePage;
 
     public Question() {
         this.options = new ArrayList<>();
@@ -148,13 +148,13 @@ public class Question implements Serializable {
         this.questionTitle = questionTitle;
     }
 
-    public InteractivePage getInteractivePage() {
-        return interactivePage;
-    }
-
-    public void setInteractivePage(InteractivePage interactivePage) {
-        this.interactivePage = interactivePage;
-    }
+//    public InteractivePage getInteractivePage() {
+//        return interactivePage;
+//    }
+//
+//    public void setInteractivePage(InteractivePage interactivePage) {
+//        this.interactivePage = interactivePage;
+//    }
 
     @Override
     public int hashCode() {
