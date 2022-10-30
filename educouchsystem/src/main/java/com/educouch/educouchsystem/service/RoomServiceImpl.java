@@ -46,6 +46,7 @@ public class RoomServiceImpl implements RoomService {
     }
     @Override
     public List<Room> getAllRooms() {
+        System.out.println("Called b");
         return roomRepository.findAll();
     }
     @Override
