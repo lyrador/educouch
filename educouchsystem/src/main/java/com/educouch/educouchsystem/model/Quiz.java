@@ -1,5 +1,7 @@
 package com.educouch.educouchsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -30,8 +32,7 @@ public class Quiz extends Assessment implements Serializable {
     @JoinColumn(name="quiz_id")
     private List<Question> quizQuestions;
 
-    @OneToOne
-    @JoinColumn
+    @OneToOne(mappedBy = "pageQuiz")
     private InteractivePage interactivePage;
 
     public Quiz() {
@@ -110,6 +111,7 @@ public class Quiz extends Assessment implements Serializable {
         this.hasMaxAttempts = hasMaxAttempts;
     }
 
+    @JsonIgnore
     public InteractivePage getInteractivePage() {
         return interactivePage;
     }

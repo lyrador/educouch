@@ -18,8 +18,7 @@ public class Attachment {
     @NotBlank(message = "File url is mandatory")
     private String fileURL;
 
-    @ManyToOne
-    @JoinColumn(name="interactivePage_id")
+    @OneToOne(mappedBy = "attachment")
     private InteractivePage interactivePage;
 
     public Attachment() {

@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.CascadeType;
 import javax.websocket.server.PathParam;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -115,6 +116,17 @@ public class QuizController {
             QuizDTO quizDto = convertQuizToDTO(quiz);
             return new ResponseEntity<>(quizDto, HttpStatus.OK);
         } catch (QuizNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/getQuizByInteractivePageId/{interactivePageId}")
+    public ResponseEntity<QuizDTO> getQuizByInteractivePageId(@PathVariable(value="interactivePageId") Long interactivePageId) {
+        try {
+            InteractivePage interactivePage = interactivePageService.getInteractivePageById(interactivePageId);
+            QuizDTO quizDTO = convertQuizToDTO(interactivePage.getPageQuiz());
+            return new ResponseEntity<>(quizDTO, HttpStatus.OK);
+        } catch (InteractivePageNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

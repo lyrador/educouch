@@ -25,12 +25,12 @@ public class InteractivePage {
     @JoinColumn(name="interactiveChapter_id")
     private InteractiveChapter interactiveChapter;
 
-    @OneToOne
-    @JoinColumn(name = "quizId")
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "quiz_id")
     private Quiz pageQuiz;
 
-    @OneToOne
-    @JoinColumn(name = "attachmentId")
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "attachment_id")
     private Attachment attachment;
 
     public InteractivePage(Integer pageNumber, String pageDescription) {
