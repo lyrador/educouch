@@ -114,7 +114,7 @@ public class DataLoader implements CommandLineRunner {
         Learner learner_4 = learnerRepository.save(new Learner("David", "lielieirene@gmail.com", "password",
                 "david",
                 "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1665376079555_png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png",
-                false, "23456"));
+                true, "23456"));
 
         // create organisation and organisation admin
         Organisation org1 = new Organisation("FakeTuition", "issa fake tuition", "23423423234234");
@@ -164,6 +164,7 @@ public class DataLoader implements CommandLineRunner {
 
         cs2102 = courseService.saveCourse(cs2102);
 
+
         // from here can create classruns and enrol learners in the course cs2102 to
         // test functionality
         Integer[] daysOfWeek = new Integer[2];
@@ -172,14 +173,65 @@ public class DataLoader implements CommandLineRunner {
         ClassRun classRunOne = new ClassRun(LocalDate.now().plusDays(7), LocalDate.now().plusDays(90),
                 LocalTime.MIDNIGHT, LocalTime.NOON, 1, 10, daysOfWeek, RecurringEnum.ALTERNATE);
         classRunOne.setInstructor(i2);
+
+        // create another course for kids
+        Course cs2102_kids = new Course();
+        cs2102_kids.setCourseCode("CS2102K");
+        cs2102_kids.setCourseTitle("Database Systems for Kids");
+        cs2102_kids.setCourseDescription("This is a new CS2102 course for kids!");
+        cs2102_kids.setCourseTimeline("TILL END 2022");
+        cs2102_kids.setCourseMaxScore(100.00);
+        cs2102_kids.setAgeGroup(AgeGroupEnum.KIDS);
+        cs2102_kids.setCourseFee(new BigDecimal(5000));
+        cs2102_kids.setStartDate(LocalDate.now().plusDays(7));
+        // set it to live status to test enrollment functionality (in normal situations
+        // classruns should be created first before making the course live)
+        cs2102_kids.setCourseApprovalStatus(CourseApprovalStatusEnum.LIVE);
+
+        if (i1.getCourses() == null) {
+            List<Course> courseList = new ArrayList<>();
+            i2.setCourses(courseList);
+        }
+        i1.getCourses().add(cs2102);
+
+        if (org1.getCourses() == null) {
+            List<Course> courseList = new ArrayList<>();
+            org1.setCourses(courseList);
+        }
+        org1.getCourses().add(cs2102);
+        cs2102.setOrganisation(org1);
+
+        if (cs2102.getInstructors() == null) {
+            List<Instructor> instructorList = new ArrayList<>();
+            cs2102.setInstructors(instructorList);
+        }
+        cs2102.getInstructors().add(i2);
+
+        cs2102 = courseService.saveCourse(cs2102);
+
+
+        // from here can create classruns and enrol learners in the course cs2102 to
+        // test functionality
+        Integer[] daysOfWeekTwo = new Integer[2];
+        daysOfWeek[0] = 1;
+        daysOfWeek[1] = 2;
+        ClassRun classRunTwo = new ClassRun(LocalDate.now().plusDays(7), LocalDate.now().plusDays(90),
+                LocalTime.MIDNIGHT, LocalTime.NOON, 1, 10, daysOfWeek, RecurringEnum.ALTERNATE);
+        classRunTwo.setInstructor(i1);
         try {
             courseService.addClassRunToCourse(cs2102.getCourseId(), classRunOne);
+            courseService.addClassRunToCourse(cs2102_kids.getCourseId(), classRunTwo);
             cs2102 = courseService.getCourseById(cs2102.getCourseId());
+            cs2102_kids = courseService.getCourseById(cs2102_kids.getCourseId());
             int size = cs2102.getClassRuns().size();
+            int size_kids = cs2102_kids.getClassRuns().size();
             List<ClassRun> listOfClassRuns = cs2102.getClassRuns();
+            List<ClassRun> listOfClassRuns_kids = cs2102_kids.getClassRuns();
             classRunOne = listOfClassRuns.get(0);
+            classRunTwo = listOfClassRuns_kids.get(0);
             try {
                 stripeService.payDeposit(classRunOne.getClassRunId(), learner_1.getLearnerId(), new BigDecimal(100));
+                stripeService.payDeposit(classRunTwo.getClassRunId(), learner_4.getLearnerId(), new BigDecimal(50));
                 // stripeService.payCourseFee(classRunOne.getClassRunId(),
                 // learner_1.getLearnerId(), new BigDecimal(900));
             } catch (ClassRunNotFoundException | LearnerNotFoundException ex) {
