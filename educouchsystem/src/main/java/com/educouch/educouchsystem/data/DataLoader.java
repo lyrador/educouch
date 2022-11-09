@@ -1,4 +1,12 @@
 package com.educouch.educouchsystem.data;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 
 import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.repository.*;
@@ -12,13 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
 
 @Component("loader")
 public class DataLoader implements CommandLineRunner {
