@@ -51,13 +51,11 @@ public class Course {
     @Column(name="courseApprovalStatus")
     private CourseApprovalStatusEnum courseApprovalStatus;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name="course_id")
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Forum> forums;
 
     @OneToMany(fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    @JoinColumn(name="course_id")
     private List<ClassRun> classRuns;
 
     @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
