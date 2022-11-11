@@ -3,6 +3,7 @@ package com.educouch.educouchsystem.service;
 import com.educouch.educouchsystem.dto.RoomDTO;
 import com.educouch.educouchsystem.model.Drawing;
 import com.educouch.educouchsystem.model.Room;
+import com.educouch.educouchsystem.util.exception.RoomNotFoundException;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface RoomService {
 
     public List<Room> getAllRooms();
 
-    public Room getRoomByRoomId(Long roomId);
+    public Room getRoomByRoomId(Long roomId) throws RoomNotFoundException;
 
     public void deleteRoom(Long roomId);
 

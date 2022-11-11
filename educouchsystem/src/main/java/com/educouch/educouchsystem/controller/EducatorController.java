@@ -62,6 +62,9 @@ public class EducatorController {
             instr = organisationService.findAllInstructors(organisationId);
             for (Instructor i : instr) {
                 i = deserializeInstructor(i);
+                i.setClassRuns(null);
+                i.setOrganisation(null);
+                i.setCourses(null);
             }
             return new ResponseEntity<>(instr, HttpStatus.OK);
         } else {
