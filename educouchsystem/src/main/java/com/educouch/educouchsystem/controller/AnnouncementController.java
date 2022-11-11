@@ -1,16 +1,12 @@
 package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.dto.AnnouncementDTO;
-import com.educouch.educouchsystem.dto.ForumDTO;
 import com.educouch.educouchsystem.model.Announcement;
-import com.educouch.educouchsystem.model.Assessment;
 import com.educouch.educouchsystem.model.Course;
-import com.educouch.educouchsystem.model.Forum;
 import com.educouch.educouchsystem.service.AnnouncementService;
 import com.educouch.educouchsystem.service.CourseService;
 import com.educouch.educouchsystem.service.EducatorService;
 import com.educouch.educouchsystem.util.exception.AnnouncementNotFoundException;
-import com.educouch.educouchsystem.util.exception.AssessmentNotFoundException;
 import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -98,18 +94,6 @@ public class AnnouncementController {
             }
             return new ResponseEntity<>(announcementDTOs, HttpStatus.OK);
         } catch (NoSuchElementException ex) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/markAnnouncementAsRead/{announcementId}")
-    public ResponseEntity<Announcement> markAnnouncementAsRead(@PathVariable(value="announcementId") Long announcementId) {
-        try {
-            Announcement announcement = announcementService.retrieveAnnouncementById(announcementId);
-            announcement.setIsRead("READ");
-            announcementService.saveAnnouncement(announcement);
-            return new ResponseEntity<>(announcement,HttpStatus.OK);
-        } catch (AnnouncementNotFoundException exception) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

@@ -38,10 +38,10 @@ public class GradeBookEntryController {
     }
 
     @GetMapping("/getLearnerAttemptPage")
-    public ResponseEntity<List<LearnerAttemptDTO>> getLearnerAttemptPage(@RequestParam Long courseId, @RequestParam Long assessmentId) {
+    public ResponseEntity<List<LearnerAttemptDTO>> getLearnerAttemptPage(@RequestParam Long courseId, @RequestParam Long assessmentId, @RequestParam Long identifier) {
         List<LearnerAttemptDTO> learnerAttemptDTOS = null;
         try {
-            learnerAttemptDTOS = gradeBookEntryService.viewLearnerAttemptPage(courseId, assessmentId);
+            learnerAttemptDTOS = gradeBookEntryService.viewLearnerAttemptPage(courseId, assessmentId,identifier);
         } catch (CourseNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find course", e);
         }

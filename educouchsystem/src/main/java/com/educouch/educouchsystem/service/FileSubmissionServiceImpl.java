@@ -3,6 +3,8 @@ package com.educouch.educouchsystem.service;
 import com.educouch.educouchsystem.model.Assessment;
 import com.educouch.educouchsystem.model.Course;
 import com.educouch.educouchsystem.model.FileSubmission;
+import com.educouch.educouchsystem.model.FileSubmissionAttempt;
+import com.educouch.educouchsystem.repository.FileSubmissionAttemptRepository;
 import com.educouch.educouchsystem.repository.FileSubmissionRepository;
 import com.educouch.educouchsystem.util.exception.AssessmentNotFoundException;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
@@ -20,10 +22,12 @@ public class FileSubmissionServiceImpl implements FileSubmissionService {
     FileSubmissionRepository fileSubmissionRepository;
 
     @Autowired
-    CourseService courseService;
+    FileSubmissionAttemptRepository fileSubmissionAttemptRepository;
 
     @Autowired
-    AssessmentService assessmentService;
+    CourseService courseService;
+
+
 
     @Override
     public FileSubmission saveFileSubmission(FileSubmission fileSubmission) {
@@ -75,16 +79,16 @@ public class FileSubmissionServiceImpl implements FileSubmissionService {
         }
     }
 
-    @Override
-    public void deleteFileSubmission(Long fileSubmissionId) throws FileSubmissionNotFoundException {
-        try {
-            FileSubmission fileSubmission = fileSubmissionRepository.findById(fileSubmissionId).get();
-            fileSubmissionRepository.deleteById(fileSubmissionId);
-            assessmentService.deleteAssessment(fileSubmissionId);
-        } catch (AssessmentNotFoundException ex) {
-            throw new FileSubmissionNotFoundException("File Submission " + fileSubmissionId + " cannot be found!");
-        }
-    }
+//    @Override
+//    public void deleteFileSubmission(Long fileSubmissionId) throws FileSubmissionNotFoundException {
+//        try {
+//            FileSubmission fileSubmission = fileSubmissionRepository.findById(fileSubmissionId).get();
+//            fileSubmissionRepository.deleteById(fileSubmissionId);
+//            assessmentService.deleteAssessment(fileSubmissionId);
+//        } catch (AssessmentNotFoundException ex) {
+//            throw new FileSubmissionNotFoundException("File Submission " + fileSubmissionId + " cannot be found!");
+//        }
+//    }
 
     @Override
     public FileSubmission updateFileSubmission(FileSubmission fileSubmissionToUpdate, FileSubmission fileSubmission) throws FileSubmissionNotFoundException {
@@ -96,11 +100,17 @@ public class FileSubmissionServiceImpl implements FileSubmissionService {
             fileSubmissionToUpdate.setEndDate(fileSubmission.getEndDate());
             fileSubmissionToUpdate.setOpen(fileSubmission.getOpen());
             fileSubmissionToUpdate.setAssessmentStatus(fileSubmission.getAssessmentStatus());
-            fileSubmissionToUpdate.setFileSubmissionEnum(fileSubmission.getFileSubmissionEnum());
+//            fileSubmissionToUpdate.setFileSubmissionEnum(fileSubmission.getFileSubmissionEnum());
             fileSubmissionRepository.save(fileSubmissionToUpdate);
             return fileSubmissionToUpdate;
         } else {
             throw new FileSubmissionNotFoundException("File Submission to be updated cannot be found!");
         }
     }
+
+    @Override
+    public FileSubmissionAttempt saveFileSubmissionAttempt(FileSubmissionAttempt fileSubmissionAttempt) {
+        return fileSubmissionAttemptRepository.save(fileSubmissionAttempt);
+    }
+
 }
