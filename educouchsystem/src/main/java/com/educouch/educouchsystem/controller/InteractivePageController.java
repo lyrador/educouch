@@ -127,6 +127,8 @@ public class InteractivePageController {
             existingInteractivePage.setPageDescription(interactivePage.getPageDescription());
             existingInteractivePage.setPageNumber(interactivePage.getPageNumber());
             existingInteractivePage.setPageTitle(interactivePage.getPageTitle());
+            existingInteractivePage.setTextBoxHeight(interactivePage.getTextBoxHeight());
+            existingInteractivePage.setTextBoxWidth(interactivePage.getTextBoxWidth());
            // existingInteractivePage.setPageQuestions(interactivePage.getPageQuestions());    const [newTextItemWords, setNewTextItemWords] = useState("");
            // existingInteractivePage.setAttachments(interactivePage.getAttachments());
 
@@ -148,7 +150,8 @@ public class InteractivePageController {
                 interactivePage.setAttachment(null);
                 attachmentService.deleteAttachment(attachmentIdToDelete);
             }
-            interactivePage.setAttachment(attachmentService.getAttachment(fileItemDTORequest.getAttachmentId()));
+            Attachment attachment = attachmentService.getAttachment(fileItemDTORequest.getAttachmentId());
+            interactivePage.setAttachment(attachment);
             interactivePageService.saveInteractivePage(interactivePage);
             return new ResponseEntity<>(interactivePage, HttpStatus.OK);
         } catch (InteractivePageNotFoundException ex) {

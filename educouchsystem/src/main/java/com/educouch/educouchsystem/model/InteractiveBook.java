@@ -25,7 +25,7 @@ public class InteractiveBook {
     @JoinColumn(name="course_id")
     private Course course;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "interactiveBook", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<InteractiveChapter> interactiveChapters;
 
     @OneToOne(cascade=CascadeType.ALL)
