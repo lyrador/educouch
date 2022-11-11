@@ -129,8 +129,6 @@ public class QuizAttemptController {
             QuizAttempt updatedQuizAttempt = quizAttemptService.updateQuizAttempt(convertQuizAttemptDTOToQuizAttempt(updatedQuizAttemptDTO));
             //update state of quizAttempt to be "submitted"
             updatedQuizAttempt = quizAttemptService.submitQuizAttempt(updatedQuizAttempt);
-
-
             return new ResponseEntity<>(updatedQuizAttemptDTO, HttpStatus.OK);
         }
         catch (ParseException e) {
