@@ -42,6 +42,8 @@ public class Learner {
     @Column(nullable = false)
     private String paymentAcc;
 
+    private Integer treePoints = 0;
+
     @ManyToMany
     @JoinTable(name = "Learner_ClassRun",
     joinColumns = {@JoinColumn(name = "learnerId")},
@@ -57,6 +59,12 @@ public class Learner {
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "learnerId")
     private List<LearnerTransaction> learnerTransactions;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "galleryId")
+    private Gallery gallery;
+
+
 
     public Learner() {
         this.classRuns = new ArrayList<>();
@@ -252,5 +260,21 @@ public class Learner {
 
     public void setLearnerTransactions(List<LearnerTransaction> learnerTransactions) {
         this.learnerTransactions = learnerTransactions;
+    }
+
+    public Integer getTreePoints() {
+        return treePoints;
+    }
+
+    public void setTreePoints(Integer treePoints) {
+        this.treePoints = treePoints;
+    }
+
+    public Gallery getGallery() {
+        return gallery;
+    }
+
+    public void setGallery(Gallery gallery) {
+        this.gallery = gallery;
     }
 }
