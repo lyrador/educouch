@@ -19,6 +19,19 @@ public class Item {
     private String itemName;
     private String itemDescription;
 
+    public Item() {
+    }
+
+    public Item(Integer price, String imageUrl, Boolean smallAvailable, Boolean mediumAvailable, Boolean largeAvailable, String itemName, String itemDescription) {
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.smallAvailable = smallAvailable;
+        this.mediumAvailable = mediumAvailable;
+        this.largeAvailable = largeAvailable;
+        this.itemName = itemName;
+        this.itemDescription = itemDescription;
+    }
+
     public Long getItemId() {
         return itemId;
     }

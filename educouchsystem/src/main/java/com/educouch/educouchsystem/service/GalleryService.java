@@ -2,6 +2,7 @@ package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.model.Item;
 import com.educouch.educouchsystem.model.ItemOwned;
+import com.educouch.educouchsystem.util.exception.InsufficientTreePointBalanceException;
 import com.educouch.educouchsystem.util.exception.ItemNotFoundException;
 import com.educouch.educouchsystem.util.exception.LocationOccupiedException;
 
@@ -17,5 +18,6 @@ public interface GalleryService {
 
     public void deleteItem(Long itemId);
 
-    public ItemOwned purchaseItem(Long galleryId, Long itemId, ItemOwned newItem) throws LocationOccupiedException;
+    public ItemOwned purchaseItem(Long learnerId, Long itemId, ItemOwned newItem) throws
+            LocationOccupiedException, InsufficientTreePointBalanceException;
 }
