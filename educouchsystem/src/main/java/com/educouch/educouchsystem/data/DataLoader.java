@@ -74,6 +74,9 @@ public class DataLoader implements CommandLineRunner {
     private StripeService stripeService;
 
     @Autowired
+    private GalleryService galleryService;
+
+    @Autowired
     private LearnerService learnerService;
 
     @Autowired
@@ -369,6 +372,23 @@ public class DataLoader implements CommandLineRunner {
         } catch (CourseNotFoundException ex) {
             System.out.println("Error in generating class run. ");
         }
+
+        // creating items
+        // public Item(Integer price, String imageUrl, Boolean smallAvailable, Boolean mediumAvailable,
+        // Boolean largeAvailable, String itemName, String itemDescription)
+
+        Item item1 = new Item(30, "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1668456539402_castle.png", true, true, true, "Castle", "Sleeping Beauty Castle is a fairy tale castle at the center of Disneyland and formerly at Hong Kong Disneyland.");
+        Item item2 = new Item(10, "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1668458409292_trees.png", true, true, true, "Pine Tree", "Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book");
+        Item item3 = new Item(10, "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1668458465609_bonsai.png", true, true, true, "Bonsai Tree", "Test");
+        Item item4 = new Item(15, "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1668459046674_bench.png", true, true, true, "Bench", "test");
+        Item item5 = new Item(15, "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1668459006015_table.png", true, true, true, "Table", "test");
+
+
+        galleryService.saveItem(item1);
+        galleryService.saveItem(item2);
+        galleryService.saveItem(item3);
+        galleryService.saveItem(item4);
+        galleryService.saveItem(item5);
 
     }
 }
