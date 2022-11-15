@@ -149,6 +149,20 @@ public class QuizAttemptController {
         }
     }
 
+    @GetMapping("/createQuizPreview/{assessmentId}")
+    public ResponseEntity<QuizAttemptDTO> createQuizPreview(@PathVariable(value = "assessmentId") Long assessmentId) {
+        try {
+            //getQuiz, run through all questions and create quizAttempt with empty questionAttempts
+            Quiz quiz = quizService.retrieveQuizById(assessmentId);
+            QuizAttempt quizAttempt = initializeQuizAttempt(quiz);
+            quizAttempt.setAttemptedQuiz(quiz);
+            QuizAttemptDTO quizAttemptDTO = convertQuizAttemptToQuizAttemptDTO(quizAttempt);
+            return new ResponseEntity<QuizAttemptDTO>(quizAttemptDTO, HttpStatus.OK);
+        } catch (QuizNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     public QuizAttempt initializeQuizAttempt(Quiz quiz) {
 
         List<Question> questions = quiz.getQuizQuestions();
