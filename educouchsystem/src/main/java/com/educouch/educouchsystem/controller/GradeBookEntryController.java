@@ -1,7 +1,10 @@
 package com.educouch.educouchsystem.controller;
 
+import com.educouch.educouchsystem.dto.FileSubmissionAttemptDTO;
+import com.educouch.educouchsystem.dto.FileSubmissionDTO;
 import com.educouch.educouchsystem.dto.LearnerAttemptDTO;
 import com.educouch.educouchsystem.dto.QuestionAttemptDTO;
+import com.educouch.educouchsystem.model.FileSubmissionAttempt;
 import com.educouch.educouchsystem.model.GradeBookEntry;
 import com.educouch.educouchsystem.model.Transaction;
 import com.educouch.educouchsystem.service.GradeBookEntryService;
@@ -70,6 +73,28 @@ public class GradeBookEntryController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find quiz attempt", e);
         } catch (QuestionAttemptNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find question attempt", e);
+
+        }
+    }
+
+    @GetMapping("/getFileSubmissionAttempt")
+    public ResponseEntity<FileSubmissionAttemptDTO> getFileSubmissionAttempt(@RequestParam Long learnerId, @RequestParam Long assessmentId) {
+        try {
+            FileSubmissionAttemptDTO attempt = gradeBookEntryService.getFileSubmission(learnerId,assessmentId);
+            return ResponseEntity.status(HttpStatus.OK).body(attempt);
+
+        } catch (NoFileSubmissionsFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find file submission attempt", e);
+        }
+    }
+
+    @PostMapping("/updateFileSubmission")
+    public ResponseEntity<String> updateFileSubmission(@RequestBody FileSubmissionAttemptDTO attempt) {
+        try {
+            gradeBookEntryService.updateFileSubmissionAttempt(attempt);
+            return ResponseEntity.status(HttpStatus.OK).body("it worked yo");
+        } catch (FileSubmissionAttemptNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find file submission attempt", e);
 
         }
     }
