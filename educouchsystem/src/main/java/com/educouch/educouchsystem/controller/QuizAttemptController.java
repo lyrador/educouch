@@ -270,6 +270,7 @@ public class QuizAttemptController {
         questionAttempt.setShortAnswerResponse(q.getShortAnswerResponse());
         questionAttempt.setQuestionAttempted(quizController.convertQuestionDTOToQuestion(q.getQuestionAttempted()));
         questionAttempt.setOptionSelected(new Option(q.getOptionSelected()));
+        questionAttempt.setFeedback(q.getFeedback());
         return questionAttempt;
     }
 
@@ -282,6 +283,7 @@ public class QuizAttemptController {
         questionAttemptDTO.setQuestionAttempted(quizController.convertQuestionToQuestionDTO(q.getQuestionAttempted()));
         questionAttemptDTO.setQuestionAttemptedQuestionId(q.getQuestionAttempted().getQuestionId().toString());
         questionAttemptDTO.setOptionSelected(q.getOptionSelected().getOptionContent());
+        questionAttemptDTO.setFeedback(q.getFeedback());
         return questionAttemptDTO;
     }
 }

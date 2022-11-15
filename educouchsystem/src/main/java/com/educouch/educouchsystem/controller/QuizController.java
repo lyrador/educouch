@@ -356,6 +356,9 @@ public class QuizController {
         questionDTO.setQuestionContent(q.getQuestionContent());
         questionDTO.setQuestionHint(q.getQuestionHint());
         questionDTO.setQuestionMaxPoints(q.getQuestionMaxScore().toString());
+        if(!questionType.equals("OPEN_ENDED")) {
+            questionDTO.setCorrectOption(q.getCorrectOption().getOptionContent());
+        }
 
         //link options
         questionDTO.setOptions(convertOptionsToOptionDTOs(q.getOptions()));
