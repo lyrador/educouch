@@ -14,6 +14,21 @@ public class FileSubmissionAttemptDTO {
     private Attachment attachment;
     private FileSubmissionDTO fileSubmissionAttemptedDTO;
 
+    private String feedback;
+
+    public FileSubmissionAttemptDTO() {
+        this.feedback = "";
+        this.obtainedScore = 0.0;
+    }
+
+    public String getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
+    }
+
     public Long getFileSubmissionAttemptId() {
         return fileSubmissionAttemptId;
     }
