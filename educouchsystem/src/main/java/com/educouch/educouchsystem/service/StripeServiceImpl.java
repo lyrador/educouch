@@ -45,6 +45,9 @@ public class StripeServiceImpl implements StripeService {
     DepositRefundRequestService depositRefundRequestService;
 
     @Autowired
+    PointsWalletService pointsWalletService;
+
+    @Autowired
     OrgLmsRevenueMapService orgLmsRevenueMapService;
 
     @Autowired
@@ -166,6 +169,9 @@ public class StripeServiceImpl implements StripeService {
                         GradeBookEntry g = new GradeBookEntry(c.getCourse().getCourseId(),learnerId,a.getAssessmentId(),a.getTitle(),a.getMaxScore());
                         gradeBookEntryService.createGradeBookEntry(g);
                     }
+
+                    pointsWalletService.createWallet(learnerId,org.getOrganisationId(), org.getOrganisationName());
+
                 } catch(DuplicateEnrolmentTrackerException ex) {
                     throw new EnrolmentStatusTrackerNotFoundException("Unexpected administration error has occured. Please contact our LMS Admin to sort out your duplicate record. ");
                 } catch (CourseNotFoundException e) {
