@@ -13,13 +13,4 @@ public interface QuestionAttemptService {
 
     public QuestionAttempt getQuestionAttemptById(Long questionAttemptId) throws QuestionAttemptNotFoundException;
 
-//    public List<QuestionAttempt> getAllQuestionAttempts();
-
-//    public List<Option> getSubmittedOptions(Long questionAttemptId) throws QuestionAttemptNotFoundException;
-
-
-//    public void deleteQuestionAttempt(Long questionAttemptId) throws QuestionAttemptNotFoundException;
-
-    /*public void calculateQuestionScore(Long questionAttemptId) throws QuestionAttemptNotFoundException, QuestionNotFoundException;*/
-
 }
