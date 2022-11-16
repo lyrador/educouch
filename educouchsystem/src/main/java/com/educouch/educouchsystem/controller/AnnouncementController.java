@@ -141,6 +141,8 @@ public class AnnouncementController {
         try {
             Announcement a = announcementService.retrieveAnnouncementById(announcementId);
             a.setIsRead("READ");
+            a.setCourse(null);
+            a.getCreatedByInstructor().setClassRuns(new ArrayList<>());
             announcementService.saveAnnouncement(a);
             return new ResponseEntity<>(a,HttpStatus.OK);
         } catch (AnnouncementNotFoundException exception) {
