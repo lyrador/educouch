@@ -141,7 +141,6 @@ public class DataLoader implements CommandLineRunner {
         cs2102.setStartDate(LocalDate.now().plusDays(7));
         // set it to live status to test enrollment functionality (in normal situations
         // classruns should be created first before making the course live)
-        cs2102.setCourseApprovalStatus(CourseApprovalStatusEnum.LIVE);
 
         if (i2.getCourses() == null) {
             List<Course> courseList = new ArrayList<>();
