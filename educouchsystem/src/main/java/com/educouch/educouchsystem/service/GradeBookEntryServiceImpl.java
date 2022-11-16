@@ -1,9 +1,6 @@
 package com.educouch.educouchsystem.service;
 
-import com.educouch.educouchsystem.dto.LearnerAttemptDTO;
-import com.educouch.educouchsystem.dto.QuestionAttemptDTO;
-import com.educouch.educouchsystem.dto.QuestionDTO;
-import com.educouch.educouchsystem.dto.QuizAttemptDTO;
+import com.educouch.educouchsystem.dto.*;
 import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.repository.GradeBookEntryRepository;
 import com.educouch.educouchsystem.util.enumeration.AssessmentAttemptStatusEnum;
@@ -117,7 +114,6 @@ public class GradeBookEntryServiceImpl implements GradeBookEntryService {
                     if (attempt.getAssessmentAttemptStatusEnum().equals(AssessmentAttemptStatusEnum.GRADED)) {
                         dto.setGraded(true);
                         dto.setObtainedScore(attempt.getObtainedScore());
-
                     } else {
                         dto.setGraded(false);
                     }
@@ -131,6 +127,7 @@ public class GradeBookEntryServiceImpl implements GradeBookEntryService {
         }
         return finalList;
     }
+
 
     @Override
     public List<QuestionAttemptDTO> getOpenEndedQns(Long learnerId, Long assessmentId) throws NoQuizAttemptsFoundException {
@@ -172,4 +169,28 @@ public class GradeBookEntryServiceImpl implements GradeBookEntryService {
         quizAttempt.setObtainedScore(quizAttempt.getLearnerMcqScore() + newOpenEndedScore);
         quizAttemptService.saveQuizAttemptEz(quizAttempt);
     }
+
+    @Override
+    public FileSubmissionAttemptDTO getFileSubmission(Long learnerId, Long assessmentId) throws NoFileSubmissionsFoundException {
+        FileSubmissionAttempt fileSubmissionAttempt = fileSubmissionAttemptService.getMostRecentFileSubmissionAttemptByLearnerId(learnerId,assessmentId);
+        FileSubmissionAttemptDTO dto = new FileSubmissionAttemptDTO();
+        dto.setAttachment(fileSubmissionAttempt.getAttachments());
+        dto.setFileSubmissionAttemptId(fileSubmissionAttempt.getFileSubmissionAttemptId());
+        dto.setObtainedScore(fileSubmissionAttempt.getObtainedScore());
+        dto.setFeedback(fileSubmissionAttempt.getFeedback());
+
+        return dto;
+    }
+
+    @Override
+    public void updateFileSubmissionAttempt(FileSubmissionAttemptDTO fileSubmissionAttemptDTO) throws  FileSubmissionAttemptNotFoundException {
+        FileSubmissionAttempt attempt = fileSubmissionAttemptService.retrieveFileSubmissionAttemptById(fileSubmissionAttemptDTO.getFileSubmissionAttemptId());
+        attempt.setAssessmentAttemptStatusEnum(AssessmentAttemptStatusEnum.GRADED);
+        attempt.setObtainedScore(fileSubmissionAttemptDTO.getObtainedScore());
+        System.out.println(fileSubmissionAttemptDTO.getFeedback());
+        attempt.setFeedback(fileSubmissionAttemptDTO.getFeedback());
+        fileSubmissionAttemptService.saveFileSubmissionAttempt(attempt);
+    }
+
+
 }

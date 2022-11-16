@@ -219,6 +219,7 @@ public class EventController {
 
         c.setCalendar(null);
         c.setEvents(null);
+        c.setTriviaQuizzes(null);
 //        Instructor i = c.getInstructor();
 //        if(i != null) {
 //            i.setClassRuns(null);

@@ -60,6 +60,9 @@ public class Learner {
     @JoinColumn(name = "learnerId")
     private List<LearnerTransaction> learnerTransactions;
 
+    @OneToMany(mappedBy = "learner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<TriviaQuestionResponse> triviaQuestionResponses;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "galleryId")
     private Gallery gallery;
@@ -70,6 +73,7 @@ public class Learner {
         this.classRuns = new ArrayList<>();
         this.enrolmentStatusTrackers = new ArrayList<>();
         this.learnerTransactions = new ArrayList<>();
+        this.triviaQuestionResponses = new ArrayList<>();
     }
 
 //    public Learner(String name, String address, String email, String password, String username, String profilePictureURL) {
