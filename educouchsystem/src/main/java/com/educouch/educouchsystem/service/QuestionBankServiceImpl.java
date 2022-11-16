@@ -14,10 +14,11 @@ import com.educouch.educouchsystem.util.exception.QuestionNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class QuestionBankServiceImpl implements QuestionBankService{
+public class QuestionBankServiceImpl implements QuestionBankService {
 
     @Autowired
     public CourseService courseService;
@@ -40,18 +41,28 @@ public class QuestionBankServiceImpl implements QuestionBankService{
     }
 
     public Long deleteQuestionBank(Long questionBankId) throws QuestionBankNotFoundException {
-        return null;
+        QuestionBank questionBankToDelete = questionBankRepository.findById(questionBankId).get();
+        List<Question> questionsCopy = questionBankToDelete.getQuestions();
+        questionsCopy.size();
+        questionBankToDelete.setQuestions(new ArrayList<>());
+        questionBankRepository.save(questionBankToDelete);
+        for (Question q : questionsCopy) {
+            questionRepository.delete(q);
+        }
+        questionBankRepository.delete(questionBankToDelete);
+        return questionBankId;
     }
-    public QuestionBank addQuestionToQuestionBank(Question questionToDuplicate, Long questionBankId) throws QuestionBankNotFoundException{
+
+    public QuestionBank addQuestionToQuestionBank(Question questionToDuplicate, Long questionBankId) throws QuestionBankNotFoundException {
         QuestionBank questionBank = questionBankRepository.findById(questionBankId).get();
         Question q = duplicateQuestion(questionToDuplicate);
         List<Option> options = q.getOptions();
-        if(options.size()>0) {
-            for(Option o : options) {
+        if (options.size() > 0) {
+            for (Option o : options) {
                 optionRepository.save(o);
             }
         }
-        if(!(q.getCorrectOption() == null)) {
+        if (!(q.getCorrectOption() == null)) {
             optionRepository.save(q.getCorrectOption());
         }
         questionRepository.save(q);
@@ -67,24 +78,27 @@ public class QuestionBankServiceImpl implements QuestionBankService{
         for (Question q : questionBank.getQuestions()) {
             if (q.getQuestionId().equals(questionToRemoveId)) {
                 questionBank.getQuestions().remove(q);
+                questionRepository.delete(q);
                 System.out.println("qBankServiceImpl || removeQuestion || removing question: " + questionToRemoveId);
                 break;
             }
         }
         return questionBankRepository.save(questionBank);
     }
-    public List<QuestionBank> getQuestionBanksByCourseId(Long courseId) throws CourseNotFoundException{
-        return null;
+
+    public List<QuestionBank> getQuestionBanksByCourseId(Long courseId) throws QuestionBankNotFoundException {
+        return questionBankRepository.findQuestionBanksByCourseId(courseId);
     }
 
     public Question duplicateQuestion(Question question) {
         question.setQuestionId(null);
-        for(Option o : question.getOptions()) {
+        for (Option o : question.getOptions()) {
             o.setOptionId(null);
         }
-        if(question.getQuestionType()!= QuestionTypeEnum.OPEN_ENDED) {
+        if (question.getQuestionType() != QuestionTypeEnum.OPEN_ENDED) {
             question.getCorrectOption().setOptionId(null);
         }
         return question;
     }
+
 }
