@@ -78,6 +78,7 @@ public class FileSubmissionAttemptController {
         fileSubmissionAttemptDTO.setObtainedScore(fileSubmissionAttempt.getObtainedScore());
         fileSubmissionAttemptDTO.setAttachment(fileSubmissionAttempt.getAttachments());
         fileSubmissionAttemptDTO.setFileSubmissionAttemptId(fileSubmissionAttempt.getFileSubmissionAttemptId());
+        fileSubmissionAttemptDTO.setFeedback(fileSubmissionAttempt.getFeedback());
         return fileSubmissionAttemptDTO; //file submission attempted not set
     }
 

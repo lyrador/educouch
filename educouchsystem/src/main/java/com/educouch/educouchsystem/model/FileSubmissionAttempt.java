@@ -21,6 +21,8 @@ public class FileSubmissionAttempt implements Serializable {
 //    @NotNull
 //    private String fileSubmissionAttemptName;
 
+    private String feedback;
+
     @NotNull
     private Double obtainedScore = 0.0;
 
@@ -46,6 +48,7 @@ public class FileSubmissionAttempt implements Serializable {
     public FileSubmissionAttempt() {
         this.lastAttemptTime = new Date();
         this.assessmentAttemptStatusEnum = AssessmentAttemptStatusEnum.SUBMITTED;
+        this.feedback = "";
 
 
     }
@@ -54,6 +57,14 @@ public class FileSubmissionAttempt implements Serializable {
 //        this();
 //        this.fileSubmissionAttemptName = fileSubmissionAttemptName;
 //    }
+
+    public String getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
+    }
 
     public AssessmentAttemptStatusEnum getAssessmentAttemptStatusEnum() {
         return assessmentAttemptStatusEnum;
