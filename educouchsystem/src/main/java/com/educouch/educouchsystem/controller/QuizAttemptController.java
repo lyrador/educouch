@@ -284,6 +284,7 @@ public class QuizAttemptController {
         questionAttemptDTO.setQuestionAttemptedQuestionId(q.getQuestionAttempted().getQuestionId().toString());
         questionAttemptDTO.setOptionSelected(q.getOptionSelected().getOptionContent());
         questionAttemptDTO.setFeedback(q.getFeedback());
+        questionAttemptDTO.setQuestionAttemptScore(q.getQuestionAttemptScore());
         return questionAttemptDTO;
     }
 }
