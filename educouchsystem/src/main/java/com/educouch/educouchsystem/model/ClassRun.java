@@ -49,13 +49,14 @@ public class ClassRun {
     @JoinColumn(name = "calendar")
     private Calendar calendar;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "classRun", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Event> events;
 
     @ManyToOne
     private Instructor instructor;
 
     @ManyToOne
+    @JoinColumn(name="course_id")
     private Course course;
 
     @ManyToMany(mappedBy = "classRuns")

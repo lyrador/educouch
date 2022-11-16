@@ -27,7 +27,7 @@ public class InteractiveChapter {
     @JoinColumn(name="interactiveBook_id")
     private InteractiveBook interactiveBook;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "interactiveChapter", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<InteractivePage> interactivePages;
 
     public InteractiveChapter(String chapterTitle, String chapterDescription, Date creationDate) {
