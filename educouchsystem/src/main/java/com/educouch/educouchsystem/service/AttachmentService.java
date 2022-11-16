@@ -35,4 +35,9 @@ public interface AttachmentService {
 
     public void removeAttachmentFromFileSubmissionAssessment(Long attachmentId, Long fileSubmissionId) throws FileSubmissionNotFoundException,
             FileNotFoundException;
+
+    public void uploadVideoToReel(Attachment attachment, Long reelId) throws FileSubmissionNotFoundException,
+            ReelNotFoundException;
+
+    public void removeVideoFromReel(Long attachmentId, Long reelId) throws ReelNotFoundException, FileNotFoundException;
 }
