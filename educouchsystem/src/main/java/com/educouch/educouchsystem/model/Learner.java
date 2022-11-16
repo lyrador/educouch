@@ -109,6 +109,20 @@ public class Learner {
 //        createCustomer();
     }
 
+    public Learner(String name, String email, String password, String username, String profilePictureURL, Boolean isKid, String paymentAcc, Integer treePoints) {
+        new Learner();
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.username = username;
+        this.profilePictureURL = profilePictureURL;
+        this.isActive = true;
+        this.isKid = isKid;
+        this.paymentAcc = paymentAcc;
+        this.treePoints = treePoints;
+//        createCustomer();
+    }
+
     public Long getLearnerId() {
         return learnerId;
     }

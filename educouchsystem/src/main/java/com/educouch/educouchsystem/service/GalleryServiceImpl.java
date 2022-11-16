@@ -181,5 +181,11 @@ public class GalleryServiceImpl implements GalleryService {
     }
 
 
+    @Override
+    public Gallery saveGallery(Gallery gallery) {
+        return galleryRepository.save(gallery);
+    }
+
+
 
 }

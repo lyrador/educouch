@@ -12,7 +12,7 @@ public class ItemOwned {
     private Long itemOwnedId;
     private Integer positionX;
     private Integer positionY;
-    private Boolean isHorizontal;
+    private Boolean isHorizontal = false;
     private Boolean isHidden;
     private ItemSizeEnum size;
 
@@ -23,14 +23,19 @@ public class ItemOwned {
     public ItemOwned() {
     }
 
-    public ItemOwned(Long itemOwnedId, Integer positionX, Integer positionY, Boolean isHorizontal, Boolean isHidden, ItemSizeEnum size, Item item) {
-        this.itemOwnedId = itemOwnedId;
+    public ItemOwned(Integer positionX, Integer positionY, Boolean isHorizontal, ItemSizeEnum size, Item item) {
         this.positionX = positionX;
         this.positionY = positionY;
         this.isHorizontal = isHorizontal;
-        this.isHidden = isHidden;
         this.size = size;
         this.item = item;
+    }
+
+    public ItemOwned(Integer positionX, Integer positionY, Boolean isHorizontal, ItemSizeEnum size) {
+        this.positionX = positionX;
+        this.positionY = positionY;
+        this.isHorizontal = isHorizontal;
+        this.size = size;
     }
 
     public Long getItemOwnedId() {
