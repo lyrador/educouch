@@ -101,23 +101,24 @@ public class DataLoader implements CommandLineRunner {
         lmsAdminService.saveLmsAdmin(new LmsAdmin("manager", "manager@gmail.com", "password", "manager"));
 
         // create learners
-        Learner learner_1 = learnerRepository.save(new Learner("Alex", "irenelie@u.nus.edu", "password",
+        Learner learner_1  = learnerService.saveLearner(new Learner("Alex", "irenelie@u.nus.edu", "password",
                 "alex", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", false,
                 "23456"));
 
-        Learner learner_2 = learnerRepository.save(new Learner("Beatrice", "irenelie1412@gmail.com", "password",
+
+        Learner learner_2 = learnerService.saveLearner(new Learner("Beatrice", "irenelie1412@gmail.com", "password",
                 "beatrice", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1665376248092_2938982-middle.png",
                 false, "23456"));
 
-        Learner learner_3 = learnerRepository.save(new Learner("Carol", "irenelie@nushackers.org", "password",
+        Learner learner_3 = learnerService.saveLearner(new Learner("Carol", "irenelie@nushackers.org", "password",
                 "carol",
                 "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1665376289662_imgbin-computer-icons-woman-avatar-avatar-girl-TBWeJMyXNwtNQA661FQ0rZSv2.jpg",
                 false, "23456"));
 
-        Learner learner_4 = learnerRepository.save(new Learner("David", "lielieirene@gmail.com", "password",
+        Learner learner_4 = learnerService.saveLearner(new Learner("David", "lielieirene@gmail.com", "password",
                 "david",
                 "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1665376079555_png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png",
-                true, "23456"));
+                true, "23456", 100));
 
         // create organisation and organisation admin
         Organisation org1 = new Organisation("FakeTuition", "issa fake tuition", "23423423234234");
@@ -384,11 +385,11 @@ public class DataLoader implements CommandLineRunner {
         Item item5 = new Item(15, "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1668459006015_table.png", true, true, true, "Table", "test");
 
 
-        galleryService.saveItem(item1);
-        galleryService.saveItem(item2);
-        galleryService.saveItem(item3);
-        galleryService.saveItem(item4);
-        galleryService.saveItem(item5);
+        item1 = galleryService.saveItem(item1);
+        item2 = galleryService.saveItem(item2);
+        item3 = galleryService.saveItem(item3);
+        item4 = galleryService.saveItem(item4);
+        item5 = galleryService.saveItem(item5);
 
     }
 }

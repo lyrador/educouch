@@ -14,17 +14,19 @@ public class Gallery {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long galleryId;
 
-    @OneToOne(mappedBy = "gallery")
+    @OneToOne(mappedBy = "gallery", fetch = FetchType.EAGER)
     private Learner learner;
 
     @OneToMany(fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
-    private List<ItemOwned> itemsOwned = new ArrayList<>();
+    private List<ItemOwned> itemsOwned;
 
     public Gallery() {
+        this.itemsOwned = new ArrayList<>();
     }
 
     public Gallery(Long galleryId, Learner learner, List<ItemOwned> itemsOwned) {
+        new Gallery();
         this.galleryId = galleryId;
         this.learner = learner;
         this.itemsOwned = itemsOwned;

@@ -1,5 +1,6 @@
 package com.educouch.educouchsystem.service;
 
+import com.educouch.educouchsystem.model.Gallery;
 import com.educouch.educouchsystem.model.Item;
 import com.educouch.educouchsystem.model.ItemOwned;
 import com.educouch.educouchsystem.util.exception.InsufficientTreePointBalanceException;
@@ -20,4 +21,6 @@ public interface GalleryService {
 
     public ItemOwned purchaseItem(Long learnerId, Long itemId, ItemOwned newItem) throws
             LocationOccupiedException, InsufficientTreePointBalanceException;
+
+    public Gallery saveGallery(Gallery gallery);
 }
