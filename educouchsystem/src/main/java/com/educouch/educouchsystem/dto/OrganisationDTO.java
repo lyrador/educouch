@@ -19,10 +19,12 @@ public class OrganisationDTO {
     private Double rewardPointsConversionNumber;
     private Double currencyConversionNumber;
 
+    private Double maxAssignmentPoints;
+
     public OrganisationDTO() {
     }
 
-    public OrganisationDTO(Long organisationId, String organisationName, String orgDescription, String paymentAcc, BigDecimal orgBalance, PaymentStatusEnum paymentStatus, Double rewardPointsConversionNumber, Double currencyConversionNumber) {
+    public OrganisationDTO(Long organisationId, String organisationName, String orgDescription, String paymentAcc, BigDecimal orgBalance, PaymentStatusEnum paymentStatus, Double rewardPointsConversionNumber, Double currencyConversionNumber,Double maxAssignmentPoints) {
         this.organisationId = organisationId;
         this.organisationName = organisationName;
         this.orgDescription = orgDescription;
@@ -31,6 +33,15 @@ public class OrganisationDTO {
         this.paymentStatus = paymentStatus;
         this.rewardPointsConversionNumber = rewardPointsConversionNumber;
         this.currencyConversionNumber = currencyConversionNumber;
+        this.maxAssignmentPoints = maxAssignmentPoints;
+    }
+
+    public Double getMaxAssignmentPoints() {
+        return maxAssignmentPoints;
+    }
+
+    public void setMaxAssignmentPoints(Double maxAssignmentPoints) {
+        this.maxAssignmentPoints = maxAssignmentPoints;
     }
 
     public Long getOrganisationId() {
