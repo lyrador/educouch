@@ -32,6 +32,10 @@ public class Quiz extends Assessment implements Serializable {
     @JoinColumn(name="quiz_id")
     private List<Question> quizQuestions;
 
+    @OneToOne
+    @JoinColumn(name="preview_attempt_id")
+    private QuizAttempt previewAttempt;
+
     @OneToOne(mappedBy = "pageQuiz")
     private InteractivePage interactivePage;
 
@@ -118,5 +122,13 @@ public class Quiz extends Assessment implements Serializable {
 
     public void setInteractivePage(InteractivePage interactivePage) {
         this.interactivePage = interactivePage;
+    }
+
+    public QuizAttempt getPreviewAttempt() {
+        return previewAttempt;
+    }
+
+    public void setPreviewAttempt(QuizAttempt previewAttempt) {
+        this.previewAttempt = previewAttempt;
     }
 }

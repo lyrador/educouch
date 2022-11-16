@@ -21,6 +21,12 @@ public class InteractivePage {
     @Column(name="pageTitle")
     private String pageTitle;
 
+    @Column(name="textBoxHeight")
+    private String textBoxHeight;
+
+    @Column(name="textBoxWidth")
+    private String textBoxWidth;
+
     @ManyToOne
     @JoinColumn(name="interactiveChapter_id")
     private InteractiveChapter interactiveChapter;
@@ -42,6 +48,14 @@ public class InteractivePage {
         this.pageNumber = pageNumber;
         this.pageDescription = pageDescription;
         this.pageTitle = pageTitle;
+    }
+
+    public InteractivePage(Integer pageNumber, String pageDescription, String pageTitle, String textBoxHeight, String textBoxWidth) {
+        this.pageNumber = pageNumber;
+        this.pageDescription = pageDescription;
+        this.pageTitle = pageTitle;
+        this.textBoxHeight = textBoxHeight;
+        this.textBoxWidth = textBoxWidth;
     }
 
     public InteractivePage() {
@@ -102,5 +116,21 @@ public class InteractivePage {
 
     public void setPageTitle(String pageTitle) {
         this.pageTitle = pageTitle;
+    }
+
+    public String getTextBoxHeight() {
+        return textBoxHeight;
+    }
+
+    public void setTextBoxHeight(String textBoxHeight) {
+        this.textBoxHeight = textBoxHeight;
+    }
+
+    public String getTextBoxWidth() {
+        return textBoxWidth;
+    }
+
+    public void setTextBoxWidth(String textBoxWidth) {
+        this.textBoxWidth = textBoxWidth;
     }
 }

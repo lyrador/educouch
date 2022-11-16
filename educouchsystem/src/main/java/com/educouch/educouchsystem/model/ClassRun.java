@@ -49,13 +49,14 @@ public class ClassRun {
     @JoinColumn(name = "calendar")
     private Calendar calendar;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "classRun", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Event> events;
 
     @ManyToOne
     private Instructor instructor;
 
     @ManyToOne
+    @JoinColumn(name="course_id")
     private Course course;
 
     @ManyToMany(mappedBy = "classRuns")
@@ -70,11 +71,15 @@ public class ClassRun {
     @JoinColumn(name = "classRunId")
     private List<LearnerTransaction> learnerTransactions;
 
+    @OneToMany(mappedBy = "classRun", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<TriviaQuiz> triviaQuizzes;
+
     public ClassRun() {
         this.enrolmentStatusTrackers = new ArrayList<>();
         this.enrolledLearners = new ArrayList<>();
         this.learnerTransactions = new ArrayList<>();
         this.events = new ArrayList<>();
+        this.triviaQuizzes = new ArrayList<>();
     }
 
     public ClassRun(LocalDate classRunStart, LocalDate classRunEnd, LocalTime classRunStartTime, LocalTime classRunEndTime, int minClassSize, int maximumCapacity, Integer[] daysOfWeek, RecurringEnum recurringEnum) {
@@ -274,5 +279,13 @@ public class ClassRun {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public List<TriviaQuiz> getTriviaQuizzes() {
+        return triviaQuizzes;
+    }
+
+    public void setTriviaQuizzes(List<TriviaQuiz> triviaQuizzes) {
+        this.triviaQuizzes = triviaQuizzes;
     }
 }
