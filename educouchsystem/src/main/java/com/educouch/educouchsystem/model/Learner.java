@@ -60,12 +60,12 @@ public class Learner {
     @JoinColumn(name = "learnerId")
     private List<LearnerTransaction> learnerTransactions;
 
-    @OneToMany(mappedBy = "learner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<TriviaQuestionResponse> triviaQuestionResponses;
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "galleryId")
     private Gallery gallery;
+
+    @OneToMany(mappedBy = "learner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<TriviaQuestionResponse> triviaQuestionResponses = new ArrayList<>();
 
 
 
@@ -73,7 +73,7 @@ public class Learner {
         this.classRuns = new ArrayList<>();
         this.enrolmentStatusTrackers = new ArrayList<>();
         this.learnerTransactions = new ArrayList<>();
-        this.triviaQuestionResponses = new ArrayList<>();
+//        this.triviaQuestionResponses = new ArrayList<>();
     }
 
 //    public Learner(String name, String address, String email, String password, String username, String profilePictureURL) {
@@ -238,6 +238,13 @@ public class Learner {
         this.stripeCustomerId = stripeCustomerId;
     }
 
+    public List<TriviaQuestionResponse> getTriviaQuestionResponses() {
+        return triviaQuestionResponses;
+    }
+
+    public void setTriviaQuestionResponses(List<TriviaQuestionResponse> triviaQuestionResponses) {
+        this.triviaQuestionResponses = triviaQuestionResponses;
+    }
     //    private String createCustomer() {
 //
 //        Map<String, Object> customerParams = new HashMap<String, Object>();
