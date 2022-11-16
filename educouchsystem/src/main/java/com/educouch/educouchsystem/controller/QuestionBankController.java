@@ -60,6 +60,15 @@ public class QuestionBankController {
             }
     }
 
+    @PostMapping("/deleteQuestionBank/{questionBankId}")
+    public ResponseEntity<Long> deleteQuestionBank(@PathVariable(value="questionBankId") Long questionBankId) {
+        try {
+            Long deletedQuestionBankId = questionBankService.deleteQuestionBank(questionBankId);
+            return new ResponseEntity<Long>(deletedQuestionBankId, HttpStatus.OK);
+        } catch (QuestionBankNotFoundException exception) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
+        }
+    }
 
 }
