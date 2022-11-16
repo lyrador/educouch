@@ -19,22 +19,6 @@ public class QuestionAttemptServiceImpl implements QuestionAttemptService {
         return questionAttemptRepository.save(questionAttempt);
     }
 
-//    @Override
-//    public List<QuestionAttempt> getAllQuestionAttempts() {
-//        return questionAttemptRepository.findAll();
-//    }
-
-//    @Override
-//    public List<Option> getSubmittedOptions(Long questionAttemptId) throws QuestionAttemptNotFoundException{
-//        QuestionAttempt questionAttempt = questionAttemptRepository.findById(questionAttemptId).get();
-//        if (questionAttempt != null) {
-//            List<Option> questionAttemptOption = questionAttempt.getOptions();
-//            return questionAttemptOption;
-//        } else {
-//            throw new QuestionAttemptNotFoundException("QuestionAttempt Id " + questionAttemptId + " does not exist!");
-//        }
-//    }
-
     @Override
     public QuestionAttempt getQuestionAttemptById(Long questionAttemptId) throws QuestionAttemptNotFoundException {
         QuestionAttempt questionAttempt = questionAttemptRepository.findById(questionAttemptId).get();
@@ -44,38 +28,4 @@ public class QuestionAttemptServiceImpl implements QuestionAttemptService {
             throw new QuestionAttemptNotFoundException("QuestionAttempt Id " + questionAttemptId + " does not exist!");
         }
     }
-
-//    @Override
-//    public void deleteQuestionAttempt(Long questionAttemptId) throws QuestionAttemptNotFoundException {
-//        QuestionAttempt questionAttempt = questionAttemptRepository.findById(questionAttemptId).get();
-//        if (questionAttempt != null) {
-//            questionAttemptRepository.deleteById(questionAttemptId);
-//        } else {
-//            throw new QuestionAttemptNotFoundException("QuestionAttempt Id " + questionAttemptId + " does not exist!");
-//        }
-//    }
-
-    /*
-    @Override
-    public void calculateQuestionScore(Long questionAttemptId) throws QuestionAttemptNotFoundException, QuestionNotFoundException {
-        QuestionAttempt questionAttempt = retrieveQuestionAttemptById(questionAttemptId);
-        Question questionAttempted = questionAttempt.getQuestionAttempted();
-        if (questionAttempted != null) {
-            List<Option> learnerOptions = getSubmittedOptions(questionAttemptId);
-            List<Answer> correctAnswers = questionAttempted.getAnswers();
-            Double obtainedScore = 0.0;
-            for (Option option : learnerOptions) {
-                for (Answer ans : correctAnswers) {
-                    if (option.getOptionContent().equals(ans.getAnswerContent())) {
-                        obtainedScore += ans.getMaxScore();
-                    }
-                }
-            }
-            questionAttempt.setQuestionAttemptScore(obtainedScore);
-            questionAttemptRepository.save(questionAttempt);
-        } else {
-            throw new QuestionNotFoundException("Question does not exist for this Question Attempt!");
-        }
-    }
-    */
 }
