@@ -1,17 +1,8 @@
 package com.educouch.educouchsystem.controller;
 
-import com.educouch.educouchsystem.dto.OptionDTO;
-import com.educouch.educouchsystem.dto.QuestionAttemptDTO;
-import com.educouch.educouchsystem.dto.QuestionDTO;
-import com.educouch.educouchsystem.dto.QuizDTO;
-import com.educouch.educouchsystem.model.InteractivePage;
-import com.educouch.educouchsystem.model.Option;
-import com.educouch.educouchsystem.model.Question;
-import com.educouch.educouchsystem.model.Quiz;
-import com.educouch.educouchsystem.service.InteractivePageService;
-import com.educouch.educouchsystem.service.OptionService;
-import com.educouch.educouchsystem.service.QuestionService;
-import com.educouch.educouchsystem.service.QuizService;
+import com.educouch.educouchsystem.dto.*;
+import com.educouch.educouchsystem.model.*;
+import com.educouch.educouchsystem.service.*;
 import com.educouch.educouchsystem.util.enumeration.AssessmentStatusEnum;
 import com.educouch.educouchsystem.util.enumeration.QuestionTypeEnum;
 import com.educouch.educouchsystem.util.exception.*;
@@ -86,28 +77,6 @@ public class QuizController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
-//    @PostMapping("/createQuestion/{interactivePageId}")
-//    public ResponseEntity<Question> createQuestion(@RequestBody Question question, @PathVariable(value="interactivePageId") Long interactivePageId) {
-//        try {
-//            InteractivePage interactivePage = interactivePageService.getInteractivePageById(interactivePageId);
-//            Question newQuestion = new Question();
-//            newQuestion.setQuestionTitle(question.getQuestionTitle());
-//            newQuestion.setQuestionContent(question.getQuestionContent());
-//            newQuestion.setQuestionType(question.getQuestionType());
-//            newQuestion.setQuestionHint(question.getQuestionHint());
-//            newQuestion.setCorrectOption(question.getCorrectOption());
-//            newQuestion.setOptions(question.getOptions());
-//            newQuestion.setQuestionMaxScore(question.getQuestionMaxScore());
-//            interactivePage.setPageQuestion(newQuestion);
-//            newQuestion.setInteractivePage(interactivePage);
-//
-//            Question question1 = questionService.saveQuestion(newQuestion);
-//            return new ResponseEntity<>(question1, HttpStatus.OK);
-//        } catch (InteractivePageNotFoundException ex) {
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//    }
 
     @GetMapping("/getQuizById/{quizId}")
     public ResponseEntity<QuizDTO> getQuizById(@PathVariable(value="quizId") Long quizId) {
@@ -191,6 +160,9 @@ public class QuizController {
 
         }
     }
+
+
+
 
     public Quiz updateQuizQuestions(Quiz oldQuiz, List<QuestionDTO> questionDTOs) throws QuestionNotFoundException, OptionNotFoundException{
 
@@ -384,6 +356,9 @@ public class QuizController {
         questionDTO.setQuestionContent(q.getQuestionContent());
         questionDTO.setQuestionHint(q.getQuestionHint());
         questionDTO.setQuestionMaxPoints(q.getQuestionMaxScore().toString());
+        if(!questionType.equals("OPEN_ENDED")) {
+            questionDTO.setCorrectOption(q.getCorrectOption().getOptionContent());
+        }
 
         //link options
         questionDTO.setOptions(convertOptionsToOptionDTOs(q.getOptions()));
@@ -398,96 +373,5 @@ public class QuizController {
         }
         return optionStrings;
     }
-
-
-//    @PostMapping("/addNewQuestion/{quizId}")
-//    public ResponseEntity<Question> addQuestionToQuiz(@RequestBody QuestionDTO questionDTO, @PathVariable(value="quizId") Long quizId) {
-//        try {
-//            Quiz quiz = quizService.retrieveQuizById(quizId);
-//            Question newQuestion = new Question();
-//
-//            newQuestion.setQuestionContent(questionDTO.getQuestionContent());
-//
-//            if (questionDTO.getQuestionType().equals("TRUE FALSE")) {
-//                newQuestion.setQuestionType(QuestionTypeEnum.TRUE_FALSE);
-//            } else if (questionDTO.getQuestionType().equals("OPEN ENDED")) {
-//                newQuestion.setQuestionType(QuestionTypeEnum.OPEN_ENDED);
-//            } else if (questionDTO.getQuestionType().equals("MCQ")) {
-//                newQuestion.setQuestionType(QuestionTypeEnum.MCQ);
-//            } else if (questionDTO.getQuestionType().equals("MRQ")) {
-//                newQuestion.setQuestionType(QuestionTypeEnum.MRQ);
-//            }
-//
-//            quizService.addQuestionToQuiz(quizId, newQuestion);
-//            return new ResponseEntity<>(newQuestion, HttpStatus.OK);
-//        } catch (QuizNotFoundException | EntityInstanceExistsInCollectionException ex) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
-
-//    @DeleteMapping("/deleteQuestionByIdFromQuizId/{questionId}/{quizId}")
-//    public ResponseEntity<HttpStatus> deleteQuestionByIdFromQuizId(@PathVariable("questionId") Long questionId, @PathVariable("quizId") Long quizId) {
-//        try {
-//            quizService.deleteQuestionFromQuizId(questionId, quizId);
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        } catch (QuizNotFoundException | QuestionNotFoundException ex) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
-
-//    @GetMapping("/getAllQuestionsByQuizId/{quizId}")
-//    public ResponseEntity<List<QuestionDTO>> getAllQuestionsByQuizId(@PathVariable(value="quizId") Long quizId) {
-//        try {
-//            List<Question> questions = quizService.getAllQuestionsInQuiz(quizId);
-//            List<QuestionDTO> questionDTOs = new ArrayList<>();
-//            for (Question question : questions) {
-//                QuestionDTO questionDTO = new QuestionDTO();
-//                questionDTO.setQuestionId(String.valueOf(question.getQuestionId()));
-//                questionDTO.setQuestionContent(question.getQuestionContent());
-//                questionDTO.setQuestionMaxPoints(String.valueOf(question.getQuestionMaxScore()));
-//
-//                if (question.getQuestionType() == QuestionTypeEnum.TRUE_FALSE) {
-//                    questionDTO.setQuestionType("TRUE FALSE");
-//                } else if (question.getQuestionType() == QuestionTypeEnum.OPEN_ENDED) {
-//                    questionDTO.setQuestionType("OPEN ENDED");
-//                } else if (question.getQuestionType() == QuestionTypeEnum.MCQ) {
-//                    questionDTO.setQuestionType("MCQ");
-//                } else if (question.getQuestionType() == QuestionTypeEnum.MRQ) {
-//                    questionDTO.setQuestionType("MRQ");
-//                }
-//
-//                questionDTOs.add(questionDTO);
-//            }
-//            return new ResponseEntity<>(questionDTOs, HttpStatus.OK);
-//
-//        } catch (QuizNotFoundException ex) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//    }
-
-//    @PutMapping("/updateQuestion/{questionId}")
-//    public ResponseEntity<Question> updateQuestion(@RequestBody QuestionDTO questionDTO, @PathVariable("questionId") Long questionId) {
-//        try {
-//            Question questionToUpdate = questionService.retrieveQuestionById(questionId);
-//
-//            questionToUpdate.setQuestionContent(questionDTO.getQuestionContent());
-//            questionToUpdate.setQuestionMaxScore(Double.parseDouble(questionDTO.getQuestionMaxPoints()));
-//
-//            if (questionDTO.getQuestionType().equals("TRUE FALSE")) {
-//                questionToUpdate.setQuestionType(QuestionTypeEnum.TRUE_FALSE);
-//            } else if (questionDTO.getQuestionType().equals("OPEN ENDED")) {
-//                questionToUpdate.setQuestionType(QuestionTypeEnum.OPEN_ENDED);
-//            } else if (questionDTO.getQuestionType().equals("MCQ")) {
-//                questionToUpdate.setQuestionType(QuestionTypeEnum.MCQ);
-//            } else if (questionDTO.getQuestionType().equals("MRQ")) {
-//                questionToUpdate.setQuestionType(QuestionTypeEnum.MRQ);
-//            }
-//
-//            questionService.updateQuestion(questionToUpdate, questionToUpdate);
-//            return new ResponseEntity<Question>(questionService.saveQuestion(questionToUpdate), HttpStatus.OK);
-//        } catch (QuestionNotFoundException ex) {
-//            return new ResponseEntity<Question>(HttpStatus.NOT_FOUND);
-//        }
-//    }
 
 }
