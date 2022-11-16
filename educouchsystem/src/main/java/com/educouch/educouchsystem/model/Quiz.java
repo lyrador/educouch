@@ -75,14 +75,6 @@ public class Quiz extends Assessment implements Serializable {
         this.quizQuestions = quizQuestions;
     }
 
-//    public List<QuizAttempt> getQuizAttempts() {
-//        return quizAttempts;
-//    }
-//
-//    public void setQuizAttempts(List<QuizAttempt> quizAttempts) {
-//        this.quizAttempts = quizAttempts;
-//    }
-
     public Integer getTimeLimit() {
         return timeLimit;
     }
