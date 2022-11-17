@@ -45,6 +45,11 @@ public class LearnerServiceImpl implements LearnerService {
         return learner;
     }
 
+    public Learner saveLearnerWithoutGallery(Learner learner) {
+        learner = learnerRepository.save(learner);
+        return learner;
+    }
+
     @Override
     public List<Learner> getAllLearners() {
         return learnerRepository.findAll();

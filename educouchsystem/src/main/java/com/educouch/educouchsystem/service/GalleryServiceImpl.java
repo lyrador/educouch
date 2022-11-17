@@ -74,18 +74,7 @@ public class GalleryServiceImpl implements GalleryService {
         if(locationIsAvailable) {
             // deduct tree points from the learner
 
-            Integer price = 0;
-            if(newItem.getSize() == ItemSizeEnum.SMALL) {
-                price = item.getPrice();
-            } else if(newItem.getSize() == ItemSizeEnum.MEDIUM) {
-                price = item.getPrice() + 10;
-            } else {
-                price = item.getPrice() + 20;
-            }
-
-            if(learner.getTreePoints() < price) {
-                throw new InsufficientTreePointBalanceException("Insufficient tree points");
-            } else {
+            if(learnerBalanceIsEnough(newItem, item, learner)){
                 // adding reference to the catalogue
                 newItem.setItem(item);
                 newItem = itemOwnedRepository.save(newItem);
@@ -94,16 +83,69 @@ public class GalleryServiceImpl implements GalleryService {
                 gallery.getItemsOwned().add(newItem);
                 galleryRepository.save(gallery);
 
+                // reducing learner points
+                learner.setTreePoints(learner.getTreePoints() - item.getPrice());
+                learnerService.saveLearnerWithoutGallery(learner);
                 return newItem;
+            } else {
+                throw new InsufficientTreePointBalanceException("Insufficient tree points");
             }
 
 
         } else {
-            throw new LocationOccupiedException("Location has been occupied.");
+            List<ItemOwned> itemsOwned = gallery.getItemsOwned();
+            ItemOwned replacedItem = null;
+            for(ItemOwned itemOwned: itemsOwned) {
+                Integer itemOwnedX = itemOwned.getPositionX();
+                Integer itemOwnedY = itemOwned.getPositionY();
+                if(itemOwnedX == newItem.getPositionX() && itemOwnedY == newItem.getPositionY()) {
+                    replacedItem = itemOwned;
+                }
+
+            }
+
+            // proceed to updating the replacedItem with the new item
+
+            replacedItem.setHorizontal(newItem.getHorizontal());
+            replacedItem.setHidden(newItem.getHidden());
+            replacedItem.setSize(newItem.getSize());
+            replacedItem.setItem(newItem.getItem());
+
+            replacedItem = itemOwnedRepository.save(replacedItem);
+
+            learner.setTreePoints(learner.getTreePoints() - item.getPrice());
+            learnerService.saveLearner(learner);
+
+            return replacedItem;
         }
 
 
 
+    }
+
+    private boolean learnerBalanceIsEnough(ItemOwned newItem, Item item, Learner learner) {
+        Integer price = 0;
+        if(newItem.getSize() == ItemSizeEnum.SMALL) {
+            price = item.getPrice();
+        } else if(newItem.getSize() == ItemSizeEnum.MEDIUM) {
+            price = item.getPrice() + 10;
+        } else {
+            price = item.getPrice() + 20;
+        }
+
+        if(learner.getTreePoints() < price) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
+
+    public List<ItemOwned> retrieveItemsByLearnerId(Long learnerId) {
+        Gallery gallery = learnerService.getLearnerById(learnerId).getGallery();
+        List<ItemOwned> listOfItemsOwned = gallery.getItemsOwned();
+        return listOfItemsOwned;
     }
 
     public Boolean checkIfLocationIsAvailable(Long galleryId, ItemOwned newItem) {
@@ -184,6 +226,11 @@ public class GalleryServiceImpl implements GalleryService {
     @Override
     public Gallery saveGallery(Gallery gallery) {
         return galleryRepository.save(gallery);
+    }
+
+    public Integer retrieveTreePointFromUserId(Long learnerId) {
+        Learner learner = learnerService.getLearnerById(learnerId);
+        return learner.getTreePoints();
     }
 
 
