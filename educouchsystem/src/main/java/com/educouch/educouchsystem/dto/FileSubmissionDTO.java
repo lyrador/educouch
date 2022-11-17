@@ -12,7 +12,7 @@ public class FileSubmissionDTO {
 
     private Double assessmentMaxScore;
 
-    private Double discountPointForAssessment;
+    private Long discountPointForAssessment;
 
     private Integer discountPointToTopPercent;
 
@@ -39,7 +39,7 @@ public class FileSubmissionDTO {
     public FileSubmissionDTO() {
     }
 
-    public FileSubmissionDTO(String assessmentTitle, String assessmentDescription, Double assessmentMaxScore, Double assessmentActualScore, String assessmentStartDate, String assessmentEndDate, String assessmentIsOpen, String assessmentStatusEnum, String assessmentFileSubmissionEnum, String createdDateTime, Long createdByUserId, String createdByUserName, String createdByUserType, Double discountPointForAssessment, Integer discountPointToTopPercent) {
+    public FileSubmissionDTO(String assessmentTitle, String assessmentDescription, Double assessmentMaxScore, Double assessmentActualScore, String assessmentStartDate, String assessmentEndDate, String assessmentIsOpen, String assessmentStatusEnum, String assessmentFileSubmissionEnum, String createdDateTime, Long createdByUserId, String createdByUserName, String createdByUserType, Long discountPointForAssessment, Integer discountPointToTopPercent) {
         this.assessmentTitle = assessmentTitle;
         this.assessmentDescription = assessmentDescription;
         this.assessmentMaxScore = assessmentMaxScore;
@@ -57,11 +57,11 @@ public class FileSubmissionDTO {
         this.discountPointToTopPercent = discountPointToTopPercent;
     }
 
-    public Double getDiscountPointForAssessment() {
+    public Long getDiscountPointForAssessment() {
         return discountPointForAssessment;
     }
 
-    public void setDiscountPointForAssessment(Double discountPointForAssessment) {
+    public void setDiscountPointForAssessment(Long discountPointForAssessment) {
         this.discountPointForAssessment = discountPointForAssessment;
     }
 

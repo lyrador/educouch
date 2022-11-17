@@ -62,6 +62,9 @@ public class DataLoader implements CommandLineRunner {
     private OrganisationService organisationService;
 
     @Autowired
+    private PointsWalletService pointsWalletService;
+
+    @Autowired
     private QuizService quizService;
 
     @Autowired
@@ -179,6 +182,7 @@ public class DataLoader implements CommandLineRunner {
             classRunOne = listOfClassRuns.get(0);
             try {
                 stripeService.payDeposit(classRunOne.getClassRunId(), learner_1.getLearnerId(), new BigDecimal(100));
+
                 // stripeService.payCourseFee(classRunOne.getClassRunId(),
                 // learner_1.getLearnerId(), new BigDecimal(900));
             } catch (ClassRunNotFoundException | LearnerNotFoundException ex) {
@@ -187,6 +191,10 @@ public class DataLoader implements CommandLineRunner {
         } catch (CourseNotFoundException ex) {
             System.out.println("Error in generating class run. ");
         }
+
+        PointsWallet points = new PointsWallet(learner_1.getLearnerId(), org1.getOrganisationId(),org1.getOrganisationName());
+        points.setDiscountPoints(50L);
+        pointsWalletService.saveWallet(points);
 
     }
 }

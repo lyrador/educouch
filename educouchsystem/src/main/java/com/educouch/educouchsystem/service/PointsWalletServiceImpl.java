@@ -24,8 +24,21 @@ public class PointsWalletServiceImpl implements PointsWalletService{
     }
 
     @Override
+    public PointsWallet saveWallet(PointsWallet wallet) {
+        return pointsWalletRepository.save(wallet);
+    }
+
+    @Override
     public List<PointsWallet> findAllWalletForLearner(Long learnerId) {
         return pointsWalletRepository.findAllByLearnerId(learnerId);
+    }
+
+    @Override
+    public PointsWallet updatePointsWallet(PointsWallet wallet) throws PointsWalletNotFoundException {
+        PointsWallet walletToUpdate = findParticularWallet(wallet.getLearnerId(),wallet.getOrganisationId());
+        walletToUpdate.setDiscountPoints(wallet.getDiscountPoints());
+        pointsWalletRepository.save(walletToUpdate);
+        return walletToUpdate;
     }
 
     @Override
