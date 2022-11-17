@@ -1,16 +1,17 @@
 package com.educouch.educouchsystem.service;
 
-import com.educouch.educouchsystem.model.Assessment;
-import com.educouch.educouchsystem.model.Course;
-import com.educouch.educouchsystem.model.GradeBookEntry;
-import com.educouch.educouchsystem.model.QuizAttempt;
+import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.repository.AssessmentRepository;
 import com.educouch.educouchsystem.util.exception.AssessmentNotFoundException;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.util.exception.NoQuizAttemptsFoundException;
+import com.educouch.educouchsystem.util.exception.PointsWalletNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +29,9 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Autowired
     private QuizAttemptService quizAttemptService;
+
+    @Autowired
+    private PointsWalletService pointsWalletService;
 
     @Override
     public Assessment saveAssessment (Assessment assessment) {
@@ -80,13 +84,15 @@ public class AssessmentServiceImpl implements AssessmentService {
     public void togglePublish(Long assessmentId) throws AssessmentNotFoundException {
         Assessment a = retrieveAssessmentById(assessmentId);
         a.setPublished(!a.isPublished());
-        saveAssessment(a);
 
         List<GradeBookEntry> list = gradeBookEntryService.findAllGradeBookEntriesByAssessmentId(assessmentId);
+
+        List<Double> listOfScores = new ArrayList<>();
         for(GradeBookEntry g : list) {
             g.setPublished(a.isPublished());
             try {
                 QuizAttempt attempt = quizAttemptService.getMostRecentQuizAttemptByLearnerId(g.getLearnerId(), assessmentId);
+                listOfScores.add(attempt.getObtainedScore());
                 g.setLearnerScore(attempt.getObtainedScore());
                 gradeBookEntryService.createGradeBookEntry(g);
             } catch (NoQuizAttemptsFoundException e) {
@@ -96,6 +102,30 @@ public class AssessmentServiceImpl implements AssessmentService {
 
 
         }
+        if(!a.getPointsAllocation() && a.getDiscountPointForAssessment() > 0L) {
+        Collections.sort(listOfScores);
+        Double scoreToGetDiscount = percentile(listOfScores,a.getDiscountPointToTopPercent());
+        System.out.println("score to get discount: " + scoreToGetDiscount);
+        list = gradeBookEntryService.findAllGradeBookEntriesByAssessmentId(assessmentId);
+        System.out.println("size of gradebook list: " + list.size());
+
+            for(GradeBookEntry gb : list) {
+            if (gb.getLearnerScore() >= scoreToGetDiscount) {
+                try {
+                    System.out.println("learner with ID is getting discount: " + gb.getLearnerId());
+                    Course course = courseService.getCourseById(gb.getCourseId());
+                    PointsWallet wallet = pointsWalletService.findParticularWallet(gb.getLearnerId(), course.getOrganisation().getOrganisationId());
+                    wallet.setDiscountPoints(wallet.getDiscountPoints() + a.getDiscountPointForAssessment());
+                    pointsWalletService.updatePointsWallet(wallet);
+                } catch (CourseNotFoundException | PointsWalletNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+        }
+        a.setPointsAllocation(true);
+        }
+        saveAssessment(a);
     }
 
 
@@ -108,5 +138,12 @@ public class AssessmentServiceImpl implements AssessmentService {
         } else {
             throw new AssessmentNotFoundException("Assessment Id " + assessmentId + " does not exist!");
         }
+    }
+
+
+    public Double percentile(List<Double> latencies, Integer topPercent) {
+        Integer percentile = 100 - topPercent;
+        int index = (int) Math.ceil(percentile / 100.0 * latencies.size());
+        return latencies.get(index-1);
     }
 }

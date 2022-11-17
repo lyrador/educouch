@@ -9,7 +9,7 @@ public class QuizDTO {
     private String assessmentDescription;
     private Double assessmentMaxScore;
 
-    private Double discountPointForAssessment;
+    private Long discountPointForAssessment;
 
     private Integer discountPointToTopPercent;
     private String assessmentStartDate;
@@ -33,11 +33,11 @@ public class QuizDTO {
     public QuizDTO() {
     }
 
-    public Double getDiscountPointForAssessment() {
+    public Long getDiscountPointForAssessment() {
         return discountPointForAssessment;
     }
 
-    public void setDiscountPointForAssessment(Double discountPointForAssessment) {
+    public void setDiscountPointForAssessment(Long discountPointForAssessment) {
         this.discountPointForAssessment = discountPointForAssessment;
     }
 

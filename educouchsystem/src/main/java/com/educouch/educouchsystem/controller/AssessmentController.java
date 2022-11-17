@@ -414,6 +414,7 @@ public class AssessmentController {
             dtoItem.setTitle(a.getTitle());
             dtoItem.setDescription(a.getDescription());
             dtoItem.setMaxScore(a.getMaxScore());
+            dtoItem.setPointsAllocation(a.getPointsAllocation());
             dtoItem.setStartDate(formatter.format(a.getStartDate()));
             dtoItem.setEndDate(formatter.format(a.getEndDate()));
             dtoItem.setPublished(a.isPublished());
