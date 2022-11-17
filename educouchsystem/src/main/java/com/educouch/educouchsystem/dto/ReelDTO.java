@@ -10,37 +10,30 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.Set;
 
 public class ReelDTO {
 
     private Long reelId;
-
     private String reelTitle;
-
     private String reelCaption;
-
     private Integer numLikes;
-
     private ReelApprovalStatusEnum reelApprovalStatusEnum;
-
     private Course courseTag;
-
-    //attribute not in Reel entity
-    private Long courseId;
-
+    private Long courseId;     //attribute not in Reel entity
     private Instructor reelCreator;
-
-    //attribute not in Reel entity
-    private Long instructorId;
-
+    private Long instructorId;     //attribute not in Reel entity
     private Attachment video;
+    private Set<Learner> likers;
+    private Set<Learner> viewers;
+    private boolean isLiked;     //attribute not in Reel entity
 
-    private List<Learner> likers;
+
 
     public ReelDTO() {
     }
 
-    public ReelDTO(Long reelId, String reelTitle, String reelCaption, Integer numLikes, ReelApprovalStatusEnum reelApprovalStatusEnum, Long instructorId, Long courseId) {
+    public ReelDTO(Long reelId, String reelTitle, String reelCaption, Integer numLikes, ReelApprovalStatusEnum reelApprovalStatusEnum, Long instructorId, Long courseId, Attachment attachment) {
         this.reelId = reelId;
         this.reelTitle = reelTitle;
         this.reelCaption = reelCaption;
@@ -48,6 +41,7 @@ public class ReelDTO {
         this.reelApprovalStatusEnum = reelApprovalStatusEnum;
         this.instructorId = instructorId;
         this.courseId = courseId;
+        this.video = attachment;
     }
 
     public Long getReelId() {
@@ -130,11 +124,27 @@ public class ReelDTO {
         this.video = video;
     }
 
-    public List<Learner> getLikers() {
+    public boolean isLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(boolean liked) {
+        isLiked = liked;
+    }
+
+    public Set<Learner> getLikers() {
         return likers;
     }
 
-    public void setLikers(List<Learner> likers) {
+    public void setLikers(Set<Learner> likers) {
         this.likers = likers;
+    }
+
+    public Set<Learner> getViewers() {
+        return viewers;
+    }
+
+    public void setViewers(Set<Learner> viewers) {
+        this.viewers = viewers;
     }
 }
