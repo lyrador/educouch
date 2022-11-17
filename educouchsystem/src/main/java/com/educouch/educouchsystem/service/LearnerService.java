@@ -21,4 +21,6 @@ public interface LearnerService {
 
     public Learner findLearnerByUsernameNonException(String username);
 
+    public Learner saveLearnerWithoutGallery(Learner learner);
+
 }

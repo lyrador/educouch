@@ -23,4 +23,8 @@ public interface GalleryService {
             LocationOccupiedException, InsufficientTreePointBalanceException;
 
     public Gallery saveGallery(Gallery gallery);
+
+    public Integer retrieveTreePointFromUserId(Long learnerId);
+
+    public List<ItemOwned> retrieveItemsByLearnerId(Long learnerId);
 }

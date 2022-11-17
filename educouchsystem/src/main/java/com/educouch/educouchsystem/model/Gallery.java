@@ -14,7 +14,7 @@ public class Gallery {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long galleryId;
 
-    @OneToOne(mappedBy = "gallery", fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "gallery")
     private Learner learner;
 
     @OneToMany(fetch = FetchType.EAGER)
