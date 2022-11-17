@@ -2,10 +2,8 @@ package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.dto.CourseTagDTO;
 import com.educouch.educouchsystem.dto.ReelDTO;
-import com.educouch.educouchsystem.model.Course;
-import com.educouch.educouchsystem.model.Instructor;
-import com.educouch.educouchsystem.model.Learner;
-import com.educouch.educouchsystem.model.Reel;
+import com.educouch.educouchsystem.model.*;
+import com.educouch.educouchsystem.repository.ReelPreferenceProfileRepository;
 import com.educouch.educouchsystem.repository.ReelRepository;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
@@ -22,6 +20,9 @@ public class ReelServiceImpl implements ReelService{
 
     @Autowired
     ReelRepository reelRepository;
+
+    @Autowired
+    ReelPreferenceProfileRepository reelPreferenceProfileRepository;
 
     @Autowired
     LearnerService learnerService;
@@ -57,6 +58,7 @@ public class ReelServiceImpl implements ReelService{
         return reelRepository.findReelsByInstructorId(i.getInstructorId());
     }
 
+    //not done
     @Override
     public Long deleteReelById(Long Id) throws ReelNotFoundException {
         return null;
@@ -69,20 +71,93 @@ public class ReelServiceImpl implements ReelService{
 
     //below are learner interaction related
     @Override
+    public ReelPreferenceProfile createReelPreferenceProfile(Long learnerId) throws LearnerNotFoundException {
+        ReelPreferenceProfile r = new ReelPreferenceProfile();
+        return reelPreferenceProfileRepository.save(r);
+    }
+
+    //finds 10 reels
+    @Override
+    public List<Reel> findReelsForLearner(Long learnerId) {
+
+        List<Reel> reelsToReturn = new ArrayList<>();
+        //check if this learner has a preference, if dont have then create one
+        List<ReelPreferenceProfile> r = reelPreferenceProfileRepository.findReelPreferenceProfileByLearnerId(learnerId);
+        if(r.size() < 1) {
+            ReelPreferenceProfile preferenceProfile = new ReelPreferenceProfile();
+            Learner learner = learnerService.getLearnerById(learnerId);
+            preferenceProfile.setLearner(learner);
+            reelPreferenceProfileRepository.save(preferenceProfile);
+            //fetch random shit
+        } else {
+            //loop through preferences, fetch reels by course tag
+            ReelPreferenceProfile preferenceProfile = r.get(0);
+            List<Course> courseTags = preferenceProfile.getCourseTags();
+            for(Course c : courseTags) {
+                List<Reel> reelsUnderCourseTag = findReelsByCourseTag(c.getCourseId());
+                for(Reel reel : reelsUnderCourseTag) {
+
+                }
+            }
+
+        }
+        return null;
+    }
+
+    @Override
     public List<Reel> findReelsByCourseTag(Long courseId) {
-        return null;
+        return reelRepository.findReelsByCourseTag(courseId);
     }
 
     @Override
-    public Reel likeReel(Long reelId) throws ReelNotFoundException {
-        return null;
+    public Reel likeReel(Long reelId, Long learnerId) throws ReelNotFoundException {
+        //find learner's preference profile and add the course in
+        Reel r = reelRepository.getReferenceById(reelId);
+        Course courseTag = r.getCourseTag();
+        Learner learner = learnerService.getLearnerById(learnerId);
+
+        //update preference
+        List<ReelPreferenceProfile> preferenceProfiles = reelPreferenceProfileRepository.findReelPreferenceProfileByLearnerId(learnerId);
+        ReelPreferenceProfile preferenceProfile = preferenceProfiles.get(0);
+        preferenceProfile.getCourseTags().add(courseTag);
+        reelPreferenceProfileRepository.save(preferenceProfile);
+        return r;
+
     }
 
     @Override
-    public Reel unlikeReel(Long reelId) throws ReelNotFoundException {
-        return null;
+    public Reel unlikeReel(Long reelId, Long learnerId) throws ReelNotFoundException {
+        //find learner's preference profile and remove the course
+        Reel r = reelRepository.getReferenceById(reelId);
+        Course courseTag = r.getCourseTag();
+        Learner learner = learnerService.getLearnerById(learnerId);
+
+        //update preference
+        List<ReelPreferenceProfile> preferenceProfiles = reelPreferenceProfileRepository.findReelPreferenceProfileByLearnerId(learnerId);
+        ReelPreferenceProfile preferenceProfile = preferenceProfiles.get(0);
+        for(Course c : preferenceProfile.getCourseTags()) {
+            if(c.getCourseId().equals(courseTag.getCourseId())) {
+                preferenceProfile.getCourseTags().remove(c);
+                break;
+            }
+        }
+        reelPreferenceProfileRepository.save(preferenceProfile);
+        return r;
     }
 
+    @Override
+    public void addCourseToPreference(Long reelPreferenceProfileId, Long CourseId) throws ReelNotFoundException, CourseNotFoundException {
+    }
 
+    @Override
+    public void removeCourseFromPreferenceLong(Long reelPreferenceProfileId, Long CourseId) throws ReelNotFoundException, CourseNotFoundException {
+    }
 
+    @Override
+    public Reel viewReel(Long reelId, long learnerId) throws ReelNotFoundException {
+        Reel r = reelRepository.getReferenceById(reelId);
+        Learner l = learnerService.getLearnerById(learnerId);
+        r.getViewers().add(l);
+        return reelRepository.save(r);
+    }
 }
