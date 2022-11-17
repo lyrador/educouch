@@ -8,7 +8,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Reel implements Serializable   {
@@ -31,6 +33,12 @@ public class Reel implements Serializable   {
     @NotNull
     private ReelApprovalStatusEnum reelApprovalStatusEnum;
 
+    @OneToMany
+    private Set<Learner> likers;
+
+    @OneToMany
+    private Set<Learner> viewers;
+
     @NotNull
     @OneToOne
     @JoinColumn
@@ -45,11 +53,11 @@ public class Reel implements Serializable   {
     @JoinColumn
     private Attachment video;
 
-    @OneToMany
-    private List<Learner> likers;
+
 
     public Reel() {
-        this.likers = new ArrayList<>();
+        this.likers = new HashSet<>();
+        this.viewers = new HashSet<>();
         this.reelApprovalStatusEnum = ReelApprovalStatusEnum.PENDING;
     }
 
@@ -116,11 +124,11 @@ public class Reel implements Serializable   {
         this.reelCreator = reelCreator;
     }
 
-    public List<Learner> getLikers() {
+    public Set<Learner> getLikers() {
         return likers;
     }
 
-    public void setLikers(List<Learner> likers) {
+    public void setLikers(Set<Learner> likers) {
         this.likers = likers;
     }
 
@@ -130,5 +138,13 @@ public class Reel implements Serializable   {
 
     public void setVideo(Attachment video) {
         this.video = video;
+    }
+
+    public Set<Learner> getViewers() {
+        return viewers;
+    }
+
+    public void setViewers(Set<Learner> viewers) {
+        this.viewers = viewers;
     }
 }
