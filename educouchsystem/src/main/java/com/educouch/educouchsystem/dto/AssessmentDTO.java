@@ -13,6 +13,9 @@ public class AssessmentDTO {
     private String title;
     private String description;
     private Double maxScore;
+
+    private Boolean pointsAllocation;
+
     private String startDate;
     private String endDate;
     private String isOpen;
@@ -24,6 +27,7 @@ public class AssessmentDTO {
 
     public AssessmentDTO() {
         isPublished = false;
+        pointsAllocation = false;
     }
 
     public AssessmentDTO(Long assessmentId, String title, String description, Double maxScore, String startDate, String endDate, String isOpen, AssessmentStatusEnum assessmentStatus, String assessmentType) {
@@ -37,6 +41,14 @@ public class AssessmentDTO {
         this.isOpen = isOpen;
         this.assessmentStatus = assessmentStatus;
         this.assessmentType = assessmentType;
+    }
+
+    public Boolean getPointsAllocation() {
+        return pointsAllocation;
+    }
+
+    public void setPointsAllocation(Boolean pointsAllocation) {
+        this.pointsAllocation = pointsAllocation;
     }
 
     public boolean isPublished() {
