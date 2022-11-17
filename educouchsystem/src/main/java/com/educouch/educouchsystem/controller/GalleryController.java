@@ -1,17 +1,11 @@
 package com.educouch.educouchsystem.controller;
 
-import com.amazonaws.services.ec2.model.Purchase;
 import com.educouch.educouchsystem.dto.PurchaseItemDTO;
 import com.educouch.educouchsystem.model.Item;
 import com.educouch.educouchsystem.model.ItemOwned;
-import com.educouch.educouchsystem.repository.GalleryRepository;
-import com.educouch.educouchsystem.repository.ItemOwnedRepository;
-import com.educouch.educouchsystem.repository.ItemRepository;
 import com.educouch.educouchsystem.service.GalleryService;
 import com.educouch.educouchsystem.util.enumeration.ItemSizeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/treePoints")
 @CrossOrigin
-public class TreePointController {
+public class GalleryController {
 
     @Autowired
     private GalleryService galleryService;
@@ -51,6 +45,16 @@ public class TreePointController {
     public List<Item> getAllItems() {
         List<Item> items = galleryService.getAllItems();
         return items;
+    }
+
+    @GetMapping("/retrieveItemOwnedByLearnerId")
+    public List<ItemOwned> retrieveItemOwnedByLearner(@RequestParam Long learnerId) {
+        return galleryService.retrieveItemsByLearnerId(learnerId);
+    }
+
+    @GetMapping("/retrieveTreePointByLearnerId")
+    public Integer retrieveTreePointByLearner(@RequestParam Long learnerId) {
+        return galleryService.retrieveTreePointFromUserId(learnerId);
     }
 
 
