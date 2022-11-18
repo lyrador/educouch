@@ -1,6 +1,7 @@
 package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.dto.AssessmentDTO;
+import com.educouch.educouchsystem.dto.AssessmentRetrievalDTO;
 import com.educouch.educouchsystem.dto.FileSubmissionDTO;
 import com.educouch.educouchsystem.dto.QuizDTO;
 import com.educouch.educouchsystem.model.*;
@@ -45,6 +46,8 @@ public class AssessmentController {
     @Autowired
     private QuizService quizService;
 
+
+
     @PostMapping("/addNewFileSubmission/{courseId}")
     public ResponseEntity<FileSubmission> addFileSubmission(@RequestBody FileSubmissionDTO fileSubmissionDTO, @PathVariable(value="courseId") Long courseId) {
         try {
@@ -53,6 +56,8 @@ public class AssessmentController {
             newFileSubmission.setTitle(fileSubmissionDTO.getAssessmentTitle());
             newFileSubmission.setDescription(fileSubmissionDTO.getAssessmentDescription());
             newFileSubmission.setMaxScore(fileSubmissionDTO.getAssessmentMaxScore());
+            newFileSubmission.setDiscountPointForAssessment(fileSubmissionDTO.getDiscountPointForAssessment());
+            newFileSubmission.setDiscountPointToTopPercent(fileSubmissionDTO.getDiscountPointToTopPercent());
 
 //            if (fileSubmissionDTO.getAssessmentFileSubmissionEnum().equals("INDIVIDUAL")) {
 //                newFileSubmission.setFileSubmissionEnum(FileSubmissionEnum.INDIVIDUAL);
@@ -142,6 +147,25 @@ public class AssessmentController {
             List<AssessmentDTO> assessmentDTOS = setAssessmentDTOList(assessments);
 
             return new ResponseEntity<List<AssessmentDTO>>(assessmentDTOS, HttpStatus.OK);
+        } catch (CourseNotFoundException exception) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/getAllAssessmentsByCourseIdWithDiscountPoint")
+    public ResponseEntity<AssessmentRetrievalDTO> getAllAssessmentsByCourseIdWithDiscountPoint(@RequestParam String courseId) {
+
+        try {
+            List<Assessment> assessments = new ArrayList<>();
+            assessments = assessmentService.getAllAssessmentsByCourseId(Long.parseLong(courseId));
+            List<AssessmentDTO> assessmentDTOS = setAssessmentDTOList(assessments);
+
+            Course course = courseService.getCourseById(Long.parseLong(courseId));
+
+            AssessmentRetrievalDTO dto = new AssessmentRetrievalDTO(course.getOrganisation().getMaxAssignmentPoints(), assessmentDTOS);
+
+
+            return new ResponseEntity<AssessmentRetrievalDTO>(dto, HttpStatus.OK);
         } catch (CourseNotFoundException exception) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -278,6 +302,8 @@ public class AssessmentController {
             fileSubmissionToUpdate.setTitle(fileSubmissionDTO.getAssessmentTitle());
             fileSubmissionToUpdate.setDescription(fileSubmissionDTO.getAssessmentDescription());
             fileSubmissionToUpdate.setMaxScore(fileSubmissionDTO.getAssessmentMaxScore());
+            fileSubmissionToUpdate.setDiscountPointForAssessment(fileSubmissionDTO.getDiscountPointForAssessment());
+            fileSubmissionToUpdate.setDiscountPointToTopPercent(fileSubmissionDTO.getDiscountPointToTopPercent());
 
 //            if (fileSubmissionDTO.getAssessmentFileSubmissionEnum().equals("INDIVIDUAL")) {
 //                fileSubmissionToUpdate.setFileSubmissionEnum(FileSubmissionEnum.INDIVIDUAL);
@@ -388,6 +414,7 @@ public class AssessmentController {
             dtoItem.setTitle(a.getTitle());
             dtoItem.setDescription(a.getDescription());
             dtoItem.setMaxScore(a.getMaxScore());
+            dtoItem.setPointsAllocation(a.getPointsAllocation());
             dtoItem.setStartDate(formatter.format(a.getStartDate()));
             dtoItem.setEndDate(formatter.format(a.getEndDate()));
             dtoItem.setPublished(a.isPublished());
