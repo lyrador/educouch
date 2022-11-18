@@ -1,10 +1,12 @@
 package com.educouch.educouchsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class ReelPreferenceProfile implements Serializable {
@@ -17,11 +19,12 @@ public class ReelPreferenceProfile implements Serializable {
     @OneToOne
     private Learner learner;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany
-    private List<Course> courseTags;
+    private Set<Course> courseTags;
 
     public ReelPreferenceProfile() {
-        this.courseTags = new ArrayList<>();
+        this.courseTags = new HashSet<>();
     }
 
     public Long getReelPreferenceProfileId() {
@@ -40,11 +43,11 @@ public class ReelPreferenceProfile implements Serializable {
         this.learner = learner;
     }
 
-    public List<Course> getCourseTags() {
+    public Set<Course> getCourseTags() {
         return courseTags;
     }
 
-    public void setCourseTags(List<Course> courseTags) {
+    public void setCourseTags(Set<Course> courseTags) {
         this.courseTags = courseTags;
     }
 }

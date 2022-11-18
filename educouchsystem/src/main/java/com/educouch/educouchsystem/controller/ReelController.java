@@ -32,8 +32,50 @@ public class ReelController {
     @Autowired
     LearnerService learnerService;
 
+    //<<lms admin related>>
+    @GetMapping("/getAllReels")
+    public ResponseEntity<List<Reel>> getAllReels() {
+        List<Reel> reels = reelService.getAllReels();
+        for(Reel r : reels) {
+            r = unmarshallReel(r);
+        }
+        return new ResponseEntity<>(reels, HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllPendingReels")
+    public ResponseEntity<List<Reel>> getAllPendingReels() {
+        List<Reel> reels = reelService.getAllPendingReels();
+        for(Reel r : reels) {
+            r = unmarshallReel(r);
+        }
+        return new ResponseEntity<>(reels, HttpStatus.OK);
+    }
+
+    @PutMapping("/approveReel/{reelId}")
+    public ResponseEntity<Reel> approveReel(@PathVariable(value = "reelId") Long reelId) {
+        try {
+            Reel reel = reelService.approveReel(reelId);
+            reel = unmarshallReel(reel);
+            return new ResponseEntity<>(reel, HttpStatus.OK);
+        } catch (ReelNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/rejectReel/{reelId}")
+    public ResponseEntity<Reel> rejectReel(@PathVariable(value = "reelId") Long reelId, @RequestBody String rejectionReason) {
+        try {
+            Reel reel = reelService.rejectReel(reelId, rejectionReason);
+            reel = unmarshallReel(reel);
+            return new ResponseEntity<>(reel, HttpStatus.OK);
+        } catch (ReelNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    //<<instructor interaction related>>
     @PostMapping("/createReel")
-    public ResponseEntity<Reel> createQuiz(@RequestBody ReelDTO reelDTO) {
+    public ResponseEntity<Reel> createReel(@RequestBody ReelDTO reelDTO) {
         try {
             Reel reel = reelService.createReel(reelDTO);
             reel = unmarshallReel(reel);
@@ -43,6 +85,20 @@ public class ReelController {
         }
     }
 
+
+    @PutMapping("/deleteReel/{reelId}")
+    public ResponseEntity<Reel> deleteReel(@PathVariable(value = "reelId") Long reelId) {
+        try {
+            Reel reel = reelService.deleteReelById(reelId);
+            reel = unmarshallReel(reel);
+            return new ResponseEntity<>(reel, HttpStatus.OK);
+        } catch (ReelNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    //all reels as those without "deleted" enum
     @GetMapping("/getAllReelsByInstructorId/{instructorId}")
     public ResponseEntity<List<Reel>> getAllReelsByInstructorId(@PathVariable(value = "instructorId") Long instructorId) {
         try {
@@ -56,8 +112,7 @@ public class ReelController {
         }
     }
 
-
-    //from here onwards is learner interaction related
+    //<<learner interaction related>>
     @PutMapping("/viewReel/{reelId}/{learnerId}")
     public ResponseEntity<Reel> viewReel(@PathVariable(value = "reelId") Long reelId,
                                          @PathVariable(value = "learnerId") Long learnerId) {
@@ -70,21 +125,59 @@ public class ReelController {
         }
     }
 
-    //might need to unmarshall for learner also
+    //not tested
+    @PutMapping("/likeReel/{reelId}/{learnerId}")
+    public ResponseEntity<Reel> likeReel(@PathVariable(value = "reelId") Long reelId,
+                                         @PathVariable(value = "learnerId") Long learnerId) {
+        try {
+            Reel updatedReel = reelService.likeReel(reelId, learnerId);
+            updatedReel = unmarshallReel(updatedReel);
+            return new ResponseEntity<>(updatedReel, HttpStatus.OK);
+        } catch (ReelNotFoundException | CourseNotFoundException exception) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/findReelsForLearner/{learnerId}")
+    public ResponseEntity<List<Reel>> findReelsForLearner(@PathVariable(value = "learnerId") Long learnerId) {
+        List<Reel> reels = reelService.findReelsForLearner(learnerId);
+        for(Reel r : reels) {
+            r = unmarshallReel(r);
+        }
+//        reels.stream().forEach(reel -> reel=unmarshallReel(reel));
+        return new ResponseEntity<>(reels, HttpStatus.OK);
+    }
+
+    //nextReel api to trigger "viewReel"
     public Reel unmarshallReel(Reel reel) {
         reel.getCourseTag().setClassRuns(new ArrayList<>());
         reel.getCourseTag().setAssessments(new ArrayList<>());
         reel.getCourseTag().setInteractiveBooks(new ArrayList<>());
         reel.getCourseTag().setAssessments(new ArrayList<>());
         reel.getReelCreator().setClassRuns(new ArrayList<>());
-        reel.getViewers().stream().forEach( r -> {
-            r.setClassRuns(new ArrayList<>());
-            r.setEnrolmentStatusTrackers(new ArrayList<>());
-            r.setLearnerTransactions(new ArrayList<>());
+        reel.getViewers().stream().forEach( learner -> {
+            learner.setClassRuns(new ArrayList<>());
+            learner.setEnrolmentStatusTrackers(new ArrayList<>());
+            learner.setLearnerTransactions(new ArrayList<>());
+            learner.setStripeCustomerId(null);
+            learner.setPaymentAcc(null);
         });
-        reel.getLikers().stream().forEach( r -> r.setClassRuns(new ArrayList<>()));
+        reel.getLikers().stream().forEach( learner -> {
+            learner.setClassRuns(new ArrayList<>());
+            learner.setEnrolmentStatusTrackers(new ArrayList<>());
+            learner.setLearnerTransactions(new ArrayList<>());
+            learner.setStripeCustomerId(null);
+            learner.setPaymentAcc(null);
+        });
         return reel;
     }
+
+
+
+
+
+
+
 
     public List<ReelDTO> convertReelsToReelDTOs(List<Reel> reels) {
         List<ReelDTO> reelDTOS = new ArrayList<>();
@@ -95,7 +188,8 @@ public class ReelController {
             ReelDTO reelDTO = new ReelDTO(r.getReelId(),r.getReelTitle(),
                     r.getReelCaption(),r.getNumLikes(),
                     r.getReelApprovalStatusEnum(), r.getReelCreator().getInstructorId(),
-                    r.getCourseTag().getCourseId(), r.getVideo());
+                    r.getCourseTag().getCourseId(), r.getVideo(),
+                    r.getReelTimeStamp());
             reelDTOS.add(reelDTO);
         }
         return reelDTOS;

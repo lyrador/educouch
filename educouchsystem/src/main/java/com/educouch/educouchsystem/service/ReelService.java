@@ -18,18 +18,25 @@ import java.util.List;
 @Service
 public interface ReelService {
 
+    //instructor interactions
     public Reel createReel(ReelDTO reelDTO) throws InstructorNotFoundException, CourseNotFoundException;
     public Reel retrieveReelById(Long reelId) throws ReelNotFoundException;
     public List<Reel> getAllReelsByInstructorId(Long instructorId) throws InstructorNotFoundException;
-    public Long deleteReelById(Long Id) throws ReelNotFoundException;
+    public Reel deleteReelById(Long Id) throws ReelNotFoundException;
     public Reel saveReel(Reel reel);
 
+    //lms admin interactions
+    public Reel approveReel(Long reelId) throws ReelNotFoundException;
+    public Reel rejectReel(Long reelId , String rejectionReason) throws ReelNotFoundException;
+    public List<Reel> getAllReels();
+    public List<Reel> getAllPendingReels();
 
     //learner interactions
     public ReelPreferenceProfile createReelPreferenceProfile(Long learnerId) throws LearnerNotFoundException;
     public List<Reel> findReelsForLearner(Long learnerId);
+    public List<Reel> findRecentReels(Long learnerId);
     public List<Reel> findReelsByCourseTag(Long courseId);
-    public Reel likeReel(Long reelId, Long learnerId) throws ReelNotFoundException;
+    public Reel likeReel(Long reelId, Long learnerId) throws ReelNotFoundException, CourseNotFoundException;
     public Reel unlikeReel(Long reelId, Long learnerId) throws ReelNotFoundException;
     public void addCourseToPreference(Long reelPreferenceProfileId, Long CourseId)throws ReelNotFoundException, CourseNotFoundException;
     public void removeCourseFromPreferenceLong(Long reelPreferenceProfileId, Long CourseId) throws ReelNotFoundException, CourseNotFoundException;
