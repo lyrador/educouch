@@ -8,9 +8,7 @@ import com.educouch.educouchsystem.repository.GalleryRepository;
 import com.educouch.educouchsystem.repository.ItemOwnedRepository;
 import com.educouch.educouchsystem.repository.ItemRepository;
 import com.educouch.educouchsystem.util.enumeration.ItemSizeEnum;
-import com.educouch.educouchsystem.util.exception.InsufficientTreePointBalanceException;
-import com.educouch.educouchsystem.util.exception.ItemNotFoundException;
-import com.educouch.educouchsystem.util.exception.LocationOccupiedException;
+import com.educouch.educouchsystem.util.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -93,30 +91,31 @@ public class GalleryServiceImpl implements GalleryService {
 
 
         } else {
-            List<ItemOwned> itemsOwned = gallery.getItemsOwned();
-            ItemOwned replacedItem = null;
-            for(ItemOwned itemOwned: itemsOwned) {
-                Integer itemOwnedX = itemOwned.getPositionX();
-                Integer itemOwnedY = itemOwned.getPositionY();
-                if(itemOwnedX == newItem.getPositionX() && itemOwnedY == newItem.getPositionY()) {
-                    replacedItem = itemOwned;
-                }
-
-            }
-
-            // proceed to updating the replacedItem with the new item
-
-            replacedItem.setHorizontal(newItem.getHorizontal());
-            replacedItem.setHidden(newItem.getHidden());
-            replacedItem.setSize(newItem.getSize());
-            replacedItem.setItem(newItem.getItem());
-
-            replacedItem = itemOwnedRepository.save(replacedItem);
-
-            learner.setTreePoints(learner.getTreePoints() - item.getPrice());
-            learnerService.saveLearner(learner);
-
-            return replacedItem;
+//            List<ItemOwned> itemsOwned = gallery.getItemsOwned();
+//            ItemOwned replacedItem = null;
+//            for(ItemOwned itemOwned: itemsOwned) {
+//                Integer itemOwnedX = itemOwned.getPositionX();
+//                Integer itemOwnedY = itemOwned.getPositionY();
+//                if(itemOwnedX == newItem.getPositionX() && itemOwnedY == newItem.getPositionY()) {
+//                    replacedItem = itemOwned;
+//                }
+//
+//            }
+//
+//            // proceed to updating the replacedItem with the new item
+//
+//            replacedItem.setHorizontal(newItem.getHorizontal());
+//            replacedItem.setHidden(newItem.getHidden());
+//            replacedItem.setSize(newItem.getSize());
+//            replacedItem.setItem(newItem.getItem());
+//
+//            replacedItem = itemOwnedRepository.save(replacedItem);
+//
+//            learner.setTreePoints(learner.getTreePoints() - item.getPrice());
+//            learnerService.saveLearner(learner);
+//
+//            return replacedItem;
+            throw new LocationOccupiedException("Location has been occupied.");
         }
 
 
@@ -138,6 +137,73 @@ public class GalleryServiceImpl implements GalleryService {
         } else {
             return true;
         }
+    }
+
+    @Override
+    public void hideItemOwned(Long learnerId, Long itemOwnedId) throws UnauthorizedActionException, ItemOwnedNotFoundException {
+
+        ItemOwned itemOwned = itemOwnedRepository.getReferenceById(itemOwnedId);
+
+        if(itemOwned == null) {
+            throw new ItemOwnedNotFoundException("Item cannot be found.");
+        }
+        // check if the learner owned the item
+        Learner learner = learnerService.getLearnerById(learnerId);
+        Gallery gallery = learner.getGallery();
+        if(!gallery.getItemsOwned().contains(itemOwned)) {
+            throw new UnauthorizedActionException("Incorrect login credentials.");
+        }
+
+        itemOwned.setHidden(true);
+        itemOwnedRepository.save(itemOwned);
+    }
+
+    @Override
+    public void unhideItemOwned(Long learnerId, Long itemOwnedId) throws UnauthorizedActionException, ItemOwnedNotFoundException {
+
+        ItemOwned itemOwned = itemOwnedRepository.getReferenceById(itemOwnedId);
+
+        if(itemOwned == null) {
+            throw new ItemOwnedNotFoundException("Item cannot be found.");
+        }
+        // check if the learner owned the item
+        Learner learner = learnerService.getLearnerById(learnerId);
+        Gallery gallery = learner.getGallery();
+        if(!gallery.getItemsOwned().contains(itemOwned)) {
+            throw new UnauthorizedActionException("Incorrect login credentials.");
+        }
+
+        itemOwned.setHidden(false);
+        itemOwnedRepository.save(itemOwned);
+    }
+
+    @Override
+    public void updateLocation(Long learnerId, Long itemOwnedId, Integer x, Integer y) throws UnauthorizedActionException,
+            ItemOwnedNotFoundException, LocationOccupiedException {
+        ItemOwned itemOwned = itemOwnedRepository.getReferenceById(itemOwnedId);
+        itemOwned.setPositionX(x);
+        itemOwned.setPositionY(y);
+
+        if(itemOwned == null) {
+            throw new ItemOwnedNotFoundException("Item cannot be found.");
+        }
+        // check if the learner owned the item
+        Learner learner = learnerService.getLearnerById(learnerId);
+        Gallery gallery = learner.getGallery();
+        if(!gallery.getItemsOwned().contains(itemOwned)) {
+            throw new UnauthorizedActionException("Incorrect login credentials.");
+        }
+
+        Boolean isValid = checkIfLocationIsAvailable(learner.getGallery().getGalleryId(), itemOwned);
+
+        if(isValid) {
+            itemOwnedRepository.save(itemOwned);
+
+        } else {
+            throw new LocationOccupiedException("Location is occupied, or item is not moved at all!");
+        }
+
+
     }
 
 
