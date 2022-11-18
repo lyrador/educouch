@@ -10,4 +10,8 @@ import java.util.List;
 public interface ReelPreferenceProfileRepository extends JpaRepository<ReelPreferenceProfile, Long> {
 
     @Query("SELECT r FROM ReelPreferenceProfile r WHERE r.learner.learnerId=:learnerId")
-    List<ReelPreferenceProfile> findReelPreferenceProfileByLearnerId(Long learnerId);}
+    public ReelPreferenceProfile findReelPreferenceProfileByLearnerId(Long learnerId);
+
+}
+
+

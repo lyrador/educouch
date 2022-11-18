@@ -4,12 +4,13 @@ import com.educouch.educouchsystem.model.Course;
 import com.educouch.educouchsystem.model.Learner;
 
 import java.util.List;
+import java.util.Set;
 
 public class ReelPreferenceProfileDTO {
 
     private Long reelPreferenceProfileId;
     private Learner learner;
-    private List<Course> courseTags;
+    private Set<Course> courseTags;
 
     public ReelPreferenceProfileDTO(Long reelPreferenceProfileId) {
         this.reelPreferenceProfileId = reelPreferenceProfileId;
@@ -31,11 +32,11 @@ public class ReelPreferenceProfileDTO {
         this.learner = learner;
     }
 
-    public List<Course> getCourseTags() {
+    public Set<Course> getCourseTags() {
         return courseTags;
     }
 
-    public void setCourseTags(List<Course> courseTags) {
+    public void setCourseTags(Set<Course> courseTags) {
         this.courseTags = courseTags;
     }
 }

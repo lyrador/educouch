@@ -1,16 +1,15 @@
 package com.educouch.educouchsystem.model;
 
 import com.educouch.educouchsystem.util.enumeration.ReelApprovalStatusEnum;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.Nullable;
-
+import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Reel implements Serializable   {
@@ -18,42 +17,36 @@ public class Reel implements Serializable   {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reelId;
-
     @NotNull
     @Size(min = 1, max = 100)
     private String reelTitle;
-
     @NotNull
     @Size(min = 1, max = 250)
     private String reelCaption;
-
     @NotNull
     private Integer numLikes;
-
     @NotNull
     private ReelApprovalStatusEnum reelApprovalStatusEnum;
+    @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date reelTimeStamp;
+    private String rejectionReason;
 
     @OneToMany
     private Set<Learner> likers;
-
     @OneToMany
     private Set<Learner> viewers;
-
     @NotNull
     @OneToOne
     @JoinColumn
     private Course courseTag;
-
     @NotNull
     @OneToOne
     @JoinColumn
     private Instructor reelCreator;
-
     @OneToOne
     @JoinColumn
     private Attachment video;
-
-
 
     public Reel() {
         this.likers = new HashSet<>();
@@ -66,6 +59,8 @@ public class Reel implements Serializable   {
         this.reelTitle = reelTitle;
         this.reelCaption = reelCaption;
         this.numLikes = 0;
+        this.reelTimeStamp = new Date();
+        this.rejectionReason = "";
     }
 
     public Long getReelId() {
@@ -146,5 +141,21 @@ public class Reel implements Serializable   {
 
     public void setViewers(Set<Learner> viewers) {
         this.viewers = viewers;
+    }
+
+    public Date getReelTimeStamp() {
+        return reelTimeStamp;
+    }
+
+    public void setReelTimeStamp(Date reelTimeStamp) {
+        this.reelTimeStamp = reelTimeStamp;
+    }
+
+    public String getRejectionReason() {
+        return rejectionReason;
+    }
+
+    public void setRejectionReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
     }
 }
