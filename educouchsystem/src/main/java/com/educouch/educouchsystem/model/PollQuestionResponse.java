@@ -1,5 +1,7 @@
 package com.educouch.educouchsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -43,6 +45,7 @@ public class PollQuestionResponse {
         this.responseAnswer = responseAnswer;
     }
 
+    @JsonIgnore
     public PollQuestion getPollQuestion() {
         return pollQuestion;
     }
@@ -51,6 +54,7 @@ public class PollQuestionResponse {
         this.pollQuestion = pollQuestion;
     }
 
+    @JsonIgnore
     public Learner getLearner() {
         return learner;
     }
