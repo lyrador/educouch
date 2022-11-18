@@ -1,5 +1,7 @@
 package com.educouch.educouchsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -82,6 +84,7 @@ public class Poll {
         this.numOfQuestions = numOfQuestions;
     }
 
+    @JsonIgnore
     public ClassRun getClassRun() {
         return classRun;
     }
