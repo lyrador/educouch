@@ -1,5 +1,6 @@
 package com.educouch.educouchsystem.controller;
 
+import com.educouch.educouchsystem.dto.GameDTO;
 import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.service.ClassRunService;
 import com.educouch.educouchsystem.service.TriviaQuizService;
@@ -119,6 +120,17 @@ public class TriviaQuizController {
 //        }
 
         return new ResponseEntity<>(triviaQuizzes, HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllPollsAndTriviaFromClassRun/{classRunId}")
+    public ResponseEntity<List<GameDTO>> getAllPollsAndTriviaFromClassRunId (@PathVariable(value = "classRunId") Long classRunId) {
+        ClassRun classRun = classRunService.retrieveClassRunById(classRunId);
+        List<GameDTO> gameDTOs = new ArrayList<>();
+        for (TriviaQuiz trivia : classRun.getTriviaQuizzes()) {
+            GameDTO gameDTO = new GameDTO(trivia.getTriviaQuizId(), trivia.getTriviaQuizDescription(), trivia.getNumOfQuestions(), "TRIVIA");
+            gameDTOs.add(gameDTO);
+        }
+        return new ResponseEntity<>(gameDTOs, HttpStatus.OK);
     }
 
 //don't really need all this unmarshalling when we use json ignore

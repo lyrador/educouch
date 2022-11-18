@@ -1,9 +1,14 @@
 package com.educouch.educouchsystem.controller;
 
-import com.educouch.educouchsystem.model.TriviaQuestion;
-import com.educouch.educouchsystem.model.TriviaQuiz;
+import com.educouch.educouchsystem.dto.ChapterToReorderDTO;
+import com.educouch.educouchsystem.dto.QuestionToReorderDTO;
+import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.service.TriviaQuestionService;
 import com.educouch.educouchsystem.service.TriviaQuizService;
+import com.educouch.educouchsystem.util.comparator.ChapterComparator;
+import com.educouch.educouchsystem.util.comparator.TriviaQuestionComparator;
+import com.educouch.educouchsystem.util.exception.InteractiveBookNotFoundException;
+import com.educouch.educouchsystem.util.exception.InteractiveChapterNotFoundException;
 import com.educouch.educouchsystem.util.exception.TriviaQuestionNotFoundException;
 import com.educouch.educouchsystem.util.exception.TriviaQuizNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -71,6 +77,19 @@ public class TriviaQuestionController {
     public ResponseEntity<TriviaQuestion> getTriviaQuestionById(@PathVariable("triviaQuestionId") Long triviaQuestionId) {
         try {
             TriviaQuestion triviaQuestion = triviaQuestionService.getTriviaQuestionById(triviaQuestionId);
+            return new ResponseEntity<>(triviaQuestion, HttpStatus.OK);
+        } catch (TriviaQuestionNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("{triviaQuestionId}/triviaQuestionsUnmarshalledQuestionFromOptions")
+    public ResponseEntity<TriviaQuestion> getTriviaQuestionByIdWithUnmarshalledQuestionFromOptions(@PathVariable("triviaQuestionId") Long triviaQuestionId) {
+        try {
+            TriviaQuestion triviaQuestion = triviaQuestionService.getTriviaQuestionById(triviaQuestionId);
+            for (TriviaOption triviaOption : triviaQuestion.getTriviaOptions()) {
+                triviaOption.setTriviaQuestion(null);
+            }
             return new ResponseEntity<>(triviaQuestion, HttpStatus.OK);
         } catch (TriviaQuestionNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -139,11 +158,30 @@ public class TriviaQuestionController {
             TriviaQuiz existingTriviaQuiz = triviaQuizService.getTriviaQuizById(triviaQuizId);
             List<TriviaQuestion> triviaQuestionList = new ArrayList<>();
             triviaQuestionList.addAll(existingTriviaQuiz.getTriviaQuestions());
+            Collections.sort(triviaQuestionList, new TriviaQuestionComparator());
             return new ResponseEntity<>(triviaQuestionList, HttpStatus.OK);
         } catch (TriviaQuizNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
+    @PutMapping("/triviaQuiz/{triviaQuizId}/reorderQuestions")
+    public ResponseEntity<List<TriviaQuestion>> reorderTriviaQuestions(@PathVariable(value="triviaQuizId") Long triviaQuizId, @RequestBody List<QuestionToReorderDTO> questionToReorderDTOList) {
+        try {
+            TriviaQuiz triviaQuiz = triviaQuizService.getTriviaQuizById(triviaQuizId);
+            for (QuestionToReorderDTO questionToReorderDTO : questionToReorderDTOList) {
+                TriviaQuestion triviaQuestion = triviaQuestionService.getTriviaQuestionById(questionToReorderDTO.getTriviaQuestionId());
+                triviaQuestion.setQuestionNumber(Integer.valueOf(questionToReorderDTO.getQuestionNumber()));
+                triviaQuestion = triviaQuestionService.saveTriviaQuestion(triviaQuestion);
+            }
+            List<TriviaQuestion> triviaQuestionList = new ArrayList<>();
+            triviaQuestionList.addAll(triviaQuiz.getTriviaQuestions());
+            return new ResponseEntity<>(triviaQuestionList, HttpStatus.OK);
+        } catch (TriviaQuizNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (TriviaQuestionNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
 }
