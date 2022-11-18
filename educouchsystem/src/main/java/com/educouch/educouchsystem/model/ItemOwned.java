@@ -13,7 +13,7 @@ public class ItemOwned {
     private Integer positionX;
     private Integer positionY;
     private Boolean isHorizontal = false;
-    private Boolean isHidden;
+    private Boolean isHidden = false;
     private ItemSizeEnum size;
 
     @ManyToOne
