@@ -2,13 +2,11 @@ package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.dto.AnnouncementDTO;
 import com.educouch.educouchsystem.model.Announcement;
-import com.educouch.educouchsystem.model.Assessment;
 import com.educouch.educouchsystem.model.Course;
 import com.educouch.educouchsystem.service.AnnouncementService;
 import com.educouch.educouchsystem.service.CourseService;
 import com.educouch.educouchsystem.service.EducatorService;
 import com.educouch.educouchsystem.util.exception.AnnouncementNotFoundException;
-import com.educouch.educouchsystem.util.exception.AssessmentNotFoundException;
 import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -86,6 +84,7 @@ public class AnnouncementController {
                     announcementDTO.setCreatedByUserId(announcement.getCreatedByInstructor().getInstructorId());
                     announcementDTO.setCreatedByUserName(announcement.getCreatedByInstructor().getName());
                     announcementDTO.setCreatedByUserType("INSTRUCTOR");
+                    announcementDTO.setProfilePictureUrl(announcement.getCreatedByInstructor().getProfilePictureURL());
                 }
                 if (announcement.getIsRead().equals("READ")) {
                     announcementDTO.setIsRead("READ");
@@ -120,6 +119,7 @@ public class AnnouncementController {
                     announcementDTO.setCreatedByUserId(announcement.getCreatedByInstructor().getInstructorId());
                     announcementDTO.setCreatedByUserName(announcement.getCreatedByInstructor().getName());
                     announcementDTO.setCreatedByUserType("INSTRUCTOR");
+                    announcementDTO.setProfilePictureUrl(announcement.getCreatedByInstructor().getProfilePictureURL());
                 }
                 if (announcement.getIsRead().equals("READ")) {
                     announcementDTO.setIsRead("READ");
@@ -132,20 +132,6 @@ public class AnnouncementController {
             }
             return new ResponseEntity<>(announcementDTOs, HttpStatus.OK);
         } catch (NoSuchElementException ex) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/readAnnouncement/{announcementId}")
-    public ResponseEntity<Announcement> readAnnouncement(@PathVariable(value="announcementId") Long announcementId) {
-        try {
-            Announcement a = announcementService.retrieveAnnouncementById(announcementId);
-            a.setIsRead("READ");
-            a.setCourse(null);
-            a.getCreatedByInstructor().setClassRuns(new ArrayList<>());
-            announcementService.saveAnnouncement(a);
-            return new ResponseEntity<>(a,HttpStatus.OK);
-        } catch (AnnouncementNotFoundException exception) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -166,6 +152,7 @@ public class AnnouncementController {
             Announcement existingAnnouncement = announcementService.retrieveAnnouncementById(announcementId);
             existingAnnouncement.setAnnouncementTitle(announcementDTO.getAnnouncementTitle());
             existingAnnouncement.setAnnouncementBody(announcementDTO.getAnnouncementBody());
+            existingAnnouncement.setIsRead(announcementDTO.getIsRead());
             existingAnnouncement.setTimestamp(LocalDateTime.now());
             return new ResponseEntity<Announcement>(announcementService.saveAnnouncement(existingAnnouncement), HttpStatus.OK);
         } catch (NoSuchElementException | AnnouncementNotFoundException ex) {
