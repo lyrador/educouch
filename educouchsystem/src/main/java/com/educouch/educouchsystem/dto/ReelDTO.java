@@ -5,10 +5,13 @@ import com.educouch.educouchsystem.model.Course;
 import com.educouch.educouchsystem.model.Instructor;
 import com.educouch.educouchsystem.model.Learner;
 import com.educouch.educouchsystem.util.enumeration.ReelApprovalStatusEnum;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -23,6 +26,7 @@ public class ReelDTO {
     private Long courseId;     //attribute not in Reel entity
     private Instructor reelCreator;
     private Long instructorId;     //attribute not in Reel entity
+    private Date reelTimeStamp;
     private Attachment video;
     private Set<Learner> likers;
     private Set<Learner> viewers;
@@ -33,7 +37,7 @@ public class ReelDTO {
     public ReelDTO() {
     }
 
-    public ReelDTO(Long reelId, String reelTitle, String reelCaption, Integer numLikes, ReelApprovalStatusEnum reelApprovalStatusEnum, Long instructorId, Long courseId, Attachment attachment) {
+    public ReelDTO(Long reelId, String reelTitle, String reelCaption, Integer numLikes, ReelApprovalStatusEnum reelApprovalStatusEnum, Long instructorId, Long courseId, Attachment attachment, Date reelTimeStamp) {
         this.reelId = reelId;
         this.reelTitle = reelTitle;
         this.reelCaption = reelCaption;
@@ -42,6 +46,7 @@ public class ReelDTO {
         this.instructorId = instructorId;
         this.courseId = courseId;
         this.video = attachment;
+        this.reelTimeStamp = reelTimeStamp;
     }
 
     public Long getReelId() {
@@ -146,5 +151,13 @@ public class ReelDTO {
 
     public void setViewers(Set<Learner> viewers) {
         this.viewers = viewers;
+    }
+
+    public Date getReelTimeStamp() {
+        return reelTimeStamp;
+    }
+
+    public void setReelTimeStamp(Date reelTimeStamp) {
+        this.reelTimeStamp = reelTimeStamp;
     }
 }
