@@ -29,6 +29,9 @@ public class Instructor {
 
     @OneToMany(mappedBy="instructor")
     private List<ClassRun> classRuns;
+
+    @OneToMany(mappedBy="createdByInstructor")
+    private List<TechnicalSupportRequest> requests;
     private String profilePictureURL;
 
     @ManyToOne
@@ -42,6 +45,7 @@ public class Instructor {
 
     public Instructor() {
         this.classRuns = new ArrayList<>();
+        this.requests = new ArrayList<>();
     }
 
     public Instructor(@NotBlank(message = "Name is mandatory") String name, String email, String username, String password, InstructorAccessRight instructorAccessRight) {
@@ -133,5 +137,13 @@ public class Instructor {
 
     public void setClassRuns(List<ClassRun> classRuns) {
         this.classRuns = classRuns;
+    }
+
+    public List<TechnicalSupportRequest> getRequests() {
+        return requests;
+    }
+
+    public void setRequests(List<TechnicalSupportRequest> requests) {
+        this.requests = requests;
     }
 }
