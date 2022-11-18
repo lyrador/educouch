@@ -62,6 +62,9 @@ public class DataLoader implements CommandLineRunner {
     private OrganisationService organisationService;
 
     @Autowired
+    private PointsWalletService pointsWalletService;
+
+    @Autowired
     private QuizService quizService;
 
     @Autowired
@@ -145,7 +148,6 @@ public class DataLoader implements CommandLineRunner {
         cs2102.setStartDate(LocalDate.now().plusDays(7));
         // set it to live status to test enrollment functionality (in normal situations
         // classruns should be created first before making the course live)
-        cs2102.setCourseApprovalStatus(CourseApprovalStatusEnum.LIVE);
 
         if (i2.getCourses() == null) {
             List<Course> courseList = new ArrayList<>();
@@ -184,6 +186,7 @@ public class DataLoader implements CommandLineRunner {
             classRunOne = listOfClassRuns.get(0);
             try {
                 stripeService.payDeposit(classRunOne.getClassRunId(), learner_1.getLearnerId(), new BigDecimal(100));
+
                 // stripeService.payCourseFee(classRunOne.getClassRunId(),
                 // learner_1.getLearnerId(), new BigDecimal(900));
             } catch (ClassRunNotFoundException | LearnerNotFoundException ex) {
@@ -390,6 +393,10 @@ public class DataLoader implements CommandLineRunner {
         item3 = galleryService.saveItem(item3);
         item4 = galleryService.saveItem(item4);
         item5 = galleryService.saveItem(item5);
+
+        PointsWallet points = new PointsWallet(learner_1.getLearnerId(), org1.getOrganisationId(),org1.getOrganisationName());
+        points.setDiscountPoints(50L);
+        pointsWalletService.saveWallet(points);
 
     }
 }
