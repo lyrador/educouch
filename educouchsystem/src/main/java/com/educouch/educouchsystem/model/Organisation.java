@@ -41,12 +41,23 @@ public class Organisation {
 
     private Double currencyConversionNumber;
 
+    private Double maxAssignmentPoints;
+
     public Organisation() {
         this.instructors = new ArrayList<>();
         this.orgBalance = new BigDecimal(0);
         this.paymentStatus = PaymentStatusEnum.PAID;
         setRewardPointsConversionNumber(1.00);
         setCurrencyConversionNumber(0.01);
+        this.maxAssignmentPoints = 50.0;
+    }
+
+    public Double getMaxAssignmentPoints() {
+        return maxAssignmentPoints;
+    }
+
+    public void setMaxAssignmentPoints(Double maxAssignmentPoints) {
+        this.maxAssignmentPoints = maxAssignmentPoints;
     }
 
     public Organisation(String organisationName, String orgDescription, String paymentAcc) {

@@ -123,6 +123,8 @@ public class QuizServiceImpl implements QuizService{
             quizToUpdate.setTitle(quiz.getTitle());
             quizToUpdate.setDescription(quiz.getDescription());
             quizToUpdate.setMaxScore(quiz.getMaxScore());
+            quizToUpdate.setDiscountPointToTopPercent(quiz.getDiscountPointToTopPercent());
+            quizToUpdate.setDiscountPointToTopPercent(quiz.getDiscountPointToTopPercent());
             quizToUpdate.setStartDate(quiz.getStartDate());
             quizToUpdate.setEndDate(quiz.getEndDate());
             quizToUpdate.setOpen(quiz.getOpen());

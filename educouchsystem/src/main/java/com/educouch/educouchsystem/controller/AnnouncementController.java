@@ -2,11 +2,13 @@ package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.dto.AnnouncementDTO;
 import com.educouch.educouchsystem.model.Announcement;
+import com.educouch.educouchsystem.model.Assessment;
 import com.educouch.educouchsystem.model.Course;
 import com.educouch.educouchsystem.service.AnnouncementService;
 import com.educouch.educouchsystem.service.CourseService;
 import com.educouch.educouchsystem.service.EducatorService;
 import com.educouch.educouchsystem.util.exception.AnnouncementNotFoundException;
+import com.educouch.educouchsystem.util.exception.AssessmentNotFoundException;
 import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -94,6 +96,54 @@ public class AnnouncementController {
             }
             return new ResponseEntity<>(announcementDTOs, HttpStatus.OK);
         } catch (NoSuchElementException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/getAllUnreadAnnouncementsByCourseId/{courseId}")
+    public ResponseEntity<List<AnnouncementDTO>> getAllUnreadAnnouncementsByCourseId (@PathVariable(value="courseId") Long courseId) {
+        try {
+            Course course = courseService.retrieveCourseById(courseId);
+            List<Announcement> announcements = new ArrayList<Announcement>();
+            announcements.addAll(course.getAnnouncements());
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.MEDIUM);
+
+            List<AnnouncementDTO> announcementDTOs = new ArrayList<>();
+            for (Announcement announcement : announcements) {
+                AnnouncementDTO announcementDTO = new AnnouncementDTO();
+                announcementDTO.setAnnouncementId(announcement.getAnnouncementId());
+                announcementDTO.setAnnouncementTitle(announcement.getAnnouncementTitle());
+                announcementDTO.setAnnouncementBody(announcement.getAnnouncementBody());
+                announcementDTO.setCreatedDateTime(announcement.getTimestamp().format(formatter));
+                if (announcement.getCreatedByInstructor() != null) {
+                    announcementDTO.setCreatedByUserId(announcement.getCreatedByInstructor().getInstructorId());
+                    announcementDTO.setCreatedByUserName(announcement.getCreatedByInstructor().getName());
+                    announcementDTO.setCreatedByUserType("INSTRUCTOR");
+                }
+                if (announcement.getIsRead().equals("READ")) {
+                    announcementDTO.setIsRead("READ");
+                } else if (announcement.getIsRead().equals("UNREAD")) {
+                    announcementDTO.setIsRead("UNREAD");
+                }
+                if (announcementDTO.getIsRead().equals("UNREAD")) {
+                    announcementDTOs.add(announcementDTO);
+                }
+            }
+            return new ResponseEntity<>(announcementDTOs, HttpStatus.OK);
+        } catch (NoSuchElementException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/readAnnouncement/{announcementId}")
+    public ResponseEntity<Announcement> readAnnouncement(@PathVariable(value="announcementId") Long announcementId) {
+        try {
+            Announcement a = announcementService.retrieveAnnouncementById(announcementId);
+            a.setIsRead("READ");
+            announcementService.saveAnnouncement(a);
+            return new ResponseEntity<>(a,HttpStatus.OK);
+        } catch (AnnouncementNotFoundException exception) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
