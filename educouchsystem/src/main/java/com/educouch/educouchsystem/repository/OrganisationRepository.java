@@ -18,8 +18,8 @@ public interface OrganisationRepository extends JpaRepository<Organisation, Inte
     @Query("SELECT o FROM Organisation o WHERE o.organisationName=:organisationName")
     Organisation findOrganisationByOrganisationName(String organisationName);
 
-    @Query("SELECT o FROM Organisation o WHERE o.paymentStatus = 1")
-    List<Organisation> findAllDueOrganisations();
+//    @Query("SELECT o FROM Organisation o WHERE o.paymentStatus = 1")
+//    List<Organisation> findAllDueOrganisations();
 
 }
 
