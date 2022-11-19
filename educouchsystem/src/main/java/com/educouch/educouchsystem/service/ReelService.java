@@ -21,6 +21,7 @@ public interface ReelService {
     //instructor interactions
     public Reel createReel(ReelDTO reelDTO) throws InstructorNotFoundException, CourseNotFoundException;
     public Reel updateReel(Long reelId, ReelDTO incompleteDTO) throws ReelNotFoundException;
+    public Reel submitReel(Long reelId) throws ReelNotFoundException;
     public Reel retrieveReelById(Long reelId) throws ReelNotFoundException;
     public List<Reel> getAllReelsByInstructorId(Long instructorId) throws InstructorNotFoundException;
     public Reel deleteReelById(Long Id) throws ReelNotFoundException;

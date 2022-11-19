@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -121,6 +122,16 @@ public class ReelController {
     public ResponseEntity<Reel> updateReel(@PathVariable("reelId") Long reelId, @RequestBody ReelDTO incompleteDTO) {
         try {
             Reel updatedReel = reelService.updateReel(reelId, incompleteDTO);
+            return new ResponseEntity<>(updatedReel, HttpStatus.OK);
+        }catch ( ReelNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @PutMapping("/submitReel/{reelId}")
+    public ResponseEntity<Reel> submitReel(@PathVariable("reelId") Long reelId) {
+        try {
+            Reel updatedReel = reelService.submitReel(reelId);
             return new ResponseEntity<>(updatedReel, HttpStatus.OK);
         }catch ( ReelNotFoundException ex) {
             throw new RuntimeException(ex);
