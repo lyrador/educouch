@@ -234,7 +234,11 @@ public class ReelServiceImpl implements ReelService{
     public Reel viewReel(Long reelId, long learnerId) throws ReelNotFoundException {
         Reel r = reelRepository.getReferenceById(reelId);
         Learner l = learnerService.getLearnerById(learnerId);
-        r.getViewers().add(l);
+
+        if(!r.getViewers().contains(l)) {
+            r.setNumViews(r.getNumViews() +1);
+            r.getViewers().add(l);
+        }
         return reelRepository.save(r);
     }
 }

@@ -208,23 +208,6 @@ public class AttachmentController {
         }
     }
 
-    @PostMapping("/uploadVideoToReel/{file}")
-    public ResponseData uploadVideoToReel(@PathVariable("file") MultipartFile file, @RequestParam("reelId") Long reelId) {
-        Attachment attachment = null;
-        try {
-            attachment = attachmentService.saveAttachment(file);
-            //need to write new service below
-            attachmentService.uploadAttachmentToFileSubmissionAttempt(attachment, reelId);
-            return new ResponseData(attachment.getAttachmentId(),
-                    attachment.getFileOriginalName(),
-                    attachment.getFileStorageName(),
-                    attachment.getFileURL(),
-                    file.getContentType(),
-                    file.getSize());
-        } catch (FilenameContainsInvalidPathSequenceException | FileUnableToSaveException |
-                FileSubmissionAttemptNotFoundException | FileNotFoundException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
+
 
 }

@@ -26,6 +26,8 @@ public class Reel implements Serializable   {
     @NotNull
     private Integer numLikes;
     @NotNull
+    private Integer numViews;
+    @NotNull
     private ReelApprovalStatusEnum reelApprovalStatusEnum;
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
@@ -59,6 +61,7 @@ public class Reel implements Serializable   {
         this.reelTitle = reelTitle;
         this.reelCaption = reelCaption;
         this.numLikes = 0;
+        this.numViews = 0;
         this.reelTimeStamp = new Date();
         this.rejectionReason = "";
     }
@@ -157,5 +160,13 @@ public class Reel implements Serializable   {
 
     public void setRejectionReason(String rejectionReason) {
         this.rejectionReason = rejectionReason;
+    }
+
+    public Integer getNumViews() {
+        return numViews;
+    }
+
+    public void setNumViews(Integer numViews) {
+        this.numViews = numViews;
     }
 }
