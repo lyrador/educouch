@@ -2,19 +2,18 @@ package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.dto.QuizDTO;
 import com.educouch.educouchsystem.dto.ReelDTO;
-import com.educouch.educouchsystem.model.Learner;
-import com.educouch.educouchsystem.model.Quiz;
-import com.educouch.educouchsystem.model.Reel;
+import com.educouch.educouchsystem.model.*;
+import com.educouch.educouchsystem.service.AttachmentService;
 import com.educouch.educouchsystem.service.LearnerService;
 import com.educouch.educouchsystem.service.ReelService;
-import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
-import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
-import com.educouch.educouchsystem.util.exception.ReelNotFoundException;
+import com.educouch.educouchsystem.util.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +30,9 @@ public class ReelController {
 
     @Autowired
     LearnerService learnerService;
+
+    @Autowired
+    AttachmentService attachmentService;
 
     //<<lms admin related>>
     @GetMapping("/getAllReels")
@@ -73,7 +75,18 @@ public class ReelController {
         }
     }
 
+
     //<<instructor interaction related>>
+    @GetMapping("/getReel/{reelId}")
+    public ResponseEntity<ReelDTO> getReel(@PathVariable(value = "reelId") Long reelId) {
+        try {
+            Reel reel = reelService.retrieveReelById(reelId);
+            ReelDTO reelDTO = convertReelToReelDTO(reel);
+            return new ResponseEntity<ReelDTO>(reelDTO, HttpStatus.OK);
+        } catch (ReelNotFoundException exception) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
     @PostMapping("/createReel")
     public ResponseEntity<Reel> createReel(@RequestBody ReelDTO reelDTO) {
         try {
@@ -82,6 +95,25 @@ public class ReelController {
             return new ResponseEntity<>(reel, HttpStatus.OK);
         } catch (CourseNotFoundException | InstructorNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/uploadVideoToReel/{reelId}/{file}")
+    public ResponseEntity<Reel> uploadVideoToReel(@PathVariable("file") Long file, @PathVariable("reelId") Long reelId) {
+        Attachment attachment = null;
+        try {
+            attachment = attachmentService.getAttachment(file);
+            Reel reel = reelService.retrieveReelById(reelId);
+            if(reel.getVideo()!=null) {
+                Long attachmentIdToDelete = reel.getVideo().getAttachmentId();
+                reel.setVideo(null);
+                attachmentService.deleteAttachment(attachmentIdToDelete);
+            }
+            //need to write new service below
+            attachmentService.uploadVideoToReel(attachment, reelId);
+            return new ResponseEntity<Reel>(reel, HttpStatus.OK);
+        } catch ( FileNotFoundException | ReelNotFoundException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
@@ -183,16 +215,21 @@ public class ReelController {
         List<ReelDTO> reelDTOS = new ArrayList<>();
         for(Reel r : reels) {
             r = unmarshallReel(r);
-            //does not set likers
-            //does not set viewers
-            ReelDTO reelDTO = new ReelDTO(r.getReelId(),r.getReelTitle(),
-                    r.getReelCaption(),r.getNumLikes(),
-                    r.getReelApprovalStatusEnum(), r.getReelCreator().getInstructorId(),
-                    r.getCourseTag().getCourseId(), r.getVideo(),
-                    r.getReelTimeStamp());
+            ReelDTO reelDTO = convertReelToReelDTO(r);
             reelDTOS.add(reelDTO);
         }
         return reelDTOS;
+    }
+
+    public ReelDTO convertReelToReelDTO(Reel r) {
+        //does not set likers
+        //does not set viewers
+        ReelDTO reelDTO = new ReelDTO(r.getReelId(),r.getReelTitle(),
+                r.getReelCaption(),r.getNumLikes(),r.getNumViews(),
+                r.getReelApprovalStatusEnum(), r.getReelCreator().getInstructorId(),
+                r.getCourseTag().getCourseId(), r.getVideo(),
+                r.getReelTimeStamp());
+        return reelDTO;
     }
 
     //only used for learner side

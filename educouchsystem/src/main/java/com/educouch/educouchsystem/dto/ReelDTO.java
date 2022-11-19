@@ -21,6 +21,7 @@ public class ReelDTO {
     private String reelTitle;
     private String reelCaption;
     private Integer numLikes;
+    private Integer numViews;
     private ReelApprovalStatusEnum reelApprovalStatusEnum;
     private Course courseTag;
     private Long courseId;     //attribute not in Reel entity
@@ -37,11 +38,12 @@ public class ReelDTO {
     public ReelDTO() {
     }
 
-    public ReelDTO(Long reelId, String reelTitle, String reelCaption, Integer numLikes, ReelApprovalStatusEnum reelApprovalStatusEnum, Long instructorId, Long courseId, Attachment attachment, Date reelTimeStamp) {
+    public ReelDTO(Long reelId, String reelTitle, String reelCaption, Integer numLikes, Integer numViews, ReelApprovalStatusEnum reelApprovalStatusEnum, Long instructorId, Long courseId, Attachment attachment, Date reelTimeStamp) {
         this.reelId = reelId;
         this.reelTitle = reelTitle;
         this.reelCaption = reelCaption;
         this.numLikes = numLikes;
+        this.numViews = numViews;
         this.reelApprovalStatusEnum = reelApprovalStatusEnum;
         this.instructorId = instructorId;
         this.courseId = courseId;
@@ -159,5 +161,13 @@ public class ReelDTO {
 
     public void setReelTimeStamp(Date reelTimeStamp) {
         this.reelTimeStamp = reelTimeStamp;
+    }
+
+    public Integer getNumViews() {
+        return numViews;
+    }
+
+    public void setNumViews(Integer numViews) {
+        this.numViews = numViews;
     }
 }
