@@ -40,7 +40,7 @@ public class LearnerController {
                 || learnerService.findLearnerByUsernameNonException(learnerDTO.getUsername()) != null) {
             throw new UsernameExistException("Username is taken!");
         } else {
-            learnerService.saveLearner(
+            learnerService.saveLearnerWithoutGallery(
                     new Learner(learnerDTO.getName(), learnerDTO.getEmail(), learnerDTO.getPassword(), learnerDTO.getUsername(), learnerDTO.getProfilePictureURL(), isKid, "123123312")
             );
         }

@@ -60,7 +60,7 @@ public class Learner {
     @JoinColumn(name = "learnerId")
     private List<LearnerTransaction> learnerTransactions;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne
     @JoinColumn(name = "galleryId")
     private Gallery gallery;
 
