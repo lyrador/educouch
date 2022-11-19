@@ -1,5 +1,6 @@
 package com.educouch.educouchsystem.model;
 
+import com.educouch.educouchsystem.util.enumeration.TriviaQuestionTypeEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -25,6 +26,15 @@ public class TriviaQuestion {
     @Column(name="questionTimeLimit")
     private Double questionTimeLimit;
 
+    @Column(name="questionIsValid")
+    private Boolean questionIsValid;
+
+    private TriviaQuestionTypeEnum triviaQuestionType;
+
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "attachment_id")
+    private Attachment attachment;
+
     @ManyToOne
     @JoinColumn(name="triviaQuiz_id")
     private TriviaQuiz triviaQuiz;
@@ -34,6 +44,14 @@ public class TriviaQuestion {
 
     @OneToMany(mappedBy = "triviaQuestion", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<TriviaQuestionResponse> triviaQuestionResponses;
+
+    public TriviaQuestion(String questionTitle, Integer questionNumber, Boolean hasTimeLimit, Double questionTimeLimit, Attachment attachment) {
+        this.questionTitle = questionTitle;
+        this.questionNumber = questionNumber;
+        this.hasTimeLimit = hasTimeLimit;
+        this.questionTimeLimit = questionTimeLimit;
+        this.attachment = attachment;
+    }
 
     public TriviaQuestion(String questionTitle, Boolean hasTimeLimit, Double questionTimeLimit) {
         this.questionTitle = questionTitle;
@@ -109,5 +127,29 @@ public class TriviaQuestion {
 
     public void setTriviaQuestionResponses(List<TriviaQuestionResponse> triviaQuestionResponses) {
         this.triviaQuestionResponses = triviaQuestionResponses;
+    }
+
+    public Attachment getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
+    }
+
+    public Boolean getQuestionIsValid() {
+        return questionIsValid;
+    }
+
+    public void setQuestionIsValid(Boolean questionIsValid) {
+        this.questionIsValid = questionIsValid;
+    }
+
+    public TriviaQuestionTypeEnum getTriviaQuestionType() {
+        return triviaQuestionType;
+    }
+
+    public void setTriviaQuestionType(TriviaQuestionTypeEnum triviaQuestionType) {
+        this.triviaQuestionType = triviaQuestionType;
     }
 }
