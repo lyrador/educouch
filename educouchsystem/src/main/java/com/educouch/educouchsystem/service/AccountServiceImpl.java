@@ -41,7 +41,7 @@ public class AccountServiceImpl implements AccountService {
             retrievedLearner.setProfilePictureURL(editAccountRequestDTO.getProfilePictureURL());
             retrievedLearner.setEmail(editAccountRequestDTO.getEmail());
             retrievedLearner.setPassword(editAccountRequestDTO.getPassword());
-            Learner updatedLearner = learnerService.saveLearner(retrievedLearner);
+            Learner updatedLearner = learnerService.saveLearnerWithoutGallery(retrievedLearner);
             updatedUser = new EditAccountDTO(
                     updatedLearner.getLearnerId(),
                     updatedLearner.getName(),

@@ -97,7 +97,7 @@ public class StripeServiceImpl implements StripeService {
                 l.getLearnerTransactions().add(transaction);
 
                 classRunService.saveClassRun(c);
-                learnerService.saveLearner(l);
+                learnerService.saveLearnerWithoutGallery(l);
 
                 return transaction;
             }else {
@@ -123,7 +123,7 @@ public class StripeServiceImpl implements StripeService {
                 classRunService.saveClassRun(c);
 
                 l.getEnrolmentStatusTrackers().add(e);
-                learnerService.saveLearner(l);
+                learnerService.saveLearnerWithoutGallery(l);
                 createNewLearnerTransaction(c.getClassRunId(), l.getLearnerId(), LearnerPaymentEnum.DEPOSIT, amount);
 
 
@@ -168,7 +168,7 @@ public class StripeServiceImpl implements StripeService {
                     classRunService.saveClassRun(c);
 
                     l.getClassRuns().add(c);
-                    learnerService.saveLearner(l);
+                    learnerService.saveLearnerWithoutGallery(l);
 
                     createNewLearnerTransaction(c.getClassRunId(), l.getLearnerId(), LearnerPaymentEnum.REMAININGCOURSEFEE, amount);
                     BigDecimal revenue = amount.divide(new BigDecimal(18), 2, RoundingMode.CEILING);
@@ -281,7 +281,7 @@ public class StripeServiceImpl implements StripeService {
                     classRunService.saveClassRun(newClassRun);
 
                     learner.getClassRuns().add(newClassRun);
-                    learnerService.saveLearner(learner);
+                    learnerService.saveLearnerWithoutGallery(learner);
 
                     createNewLearnerTransaction(newClassRun.getClassRunId(), learner.getLearnerId(), LearnerPaymentEnum.REMAININGCOURSEFEE, amount);
                 } catch(DuplicateEnrolmentTrackerException ex) {
