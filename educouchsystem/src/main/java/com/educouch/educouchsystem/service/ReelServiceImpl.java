@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -44,6 +45,15 @@ public class ReelServiceImpl implements ReelService{
         reel.setReelCreator(instructor);
         reel.setCourseTag(course);
         return reelRepository.save(reel);
+    }
+
+    @Override
+    public Reel updateReel(Long reelId, ReelDTO incompleteDTO) throws ReelNotFoundException {
+        Reel reelToUpdate = retrieveReelById(reelId);
+        reelToUpdate.setReelTitle(incompleteDTO.getReelTitle());
+        reelToUpdate.setReelCaption(incompleteDTO.getReelCaption());
+        reelToUpdate.setReelTimeStamp(new Date());
+        return reelRepository.save(reelToUpdate);
     }
 
     @Override

@@ -111,8 +111,18 @@ public class ReelController {
             }
             //need to write new service below
             attachmentService.uploadVideoToReel(attachment, reelId);
-            return new ResponseEntity<Reel>(reel, HttpStatus.OK);
+            return new ResponseEntity<>(reel, HttpStatus.OK);
         } catch ( FileNotFoundException | ReelNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @PutMapping("/updateReel/{reelId}")
+    public ResponseEntity<Reel> updateReel(@PathVariable("reelId") Long reelId, @RequestBody ReelDTO incompleteDTO) {
+        try {
+            Reel updatedReel = reelService.updateReel(reelId, incompleteDTO);
+            return new ResponseEntity<>(updatedReel, HttpStatus.OK);
+        }catch ( ReelNotFoundException ex) {
             throw new RuntimeException(ex);
         }
     }
