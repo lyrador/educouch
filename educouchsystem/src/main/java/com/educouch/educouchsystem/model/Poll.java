@@ -33,10 +33,9 @@ public class Poll {
     @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<PollQuestion> pollQuestions;
 
-    public Poll(String pollDescription, String pollTitle, Date creationDate, Integer numOfQuestions) {
+    public Poll(String pollDescription, String pollTitle, Integer numOfQuestions) {
         this.pollDescription = pollDescription;
         this.pollTitle = pollTitle;
-        this.creationDate = creationDate;
         this.numOfQuestions = numOfQuestions;
     }
 
