@@ -27,9 +27,11 @@ public abstract class Assessment implements Serializable {
     @NotNull
     private Double maxScore;
 
-    private Double discountPointForAssessment;
+    private Long discountPointForAssessment;
 
     private Integer discountPointToTopPercent;
+
+    private Boolean pointsAllocation;
 
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull
@@ -59,9 +61,10 @@ public abstract class Assessment implements Serializable {
 
     public Assessment() {
         isPublished=false;
+        pointsAllocation=false;
     }
 
-    public Assessment(String title, String description, Double maxScore, Date startDate, Date endDate, Double discountPointForAssessment, Integer discountPointToTopPercent) {
+    public Assessment(String title, String description, Double maxScore, Date startDate, Date endDate, Long discountPointForAssessment, Integer discountPointToTopPercent) {
         this();
         this.title = title;
         this.description = description;
@@ -72,11 +75,19 @@ public abstract class Assessment implements Serializable {
         this.discountPointToTopPercent = discountPointToTopPercent;
     }
 
-    public Double getDiscountPointForAssessment() {
+    public Boolean getPointsAllocation() {
+        return pointsAllocation;
+    }
+
+    public void setPointsAllocation(Boolean pointsAllocation) {
+        this.pointsAllocation = pointsAllocation;
+    }
+
+    public Long getDiscountPointForAssessment() {
         return discountPointForAssessment;
     }
 
-    public void setDiscountPointForAssessment(Double discountPointForAssessment) {
+    public void setDiscountPointForAssessment(Long discountPointForAssessment) {
         this.discountPointForAssessment = discountPointForAssessment;
     }
 

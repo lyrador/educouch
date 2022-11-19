@@ -28,11 +28,16 @@ public class CourseServiceImpl implements CourseService{
     @Autowired
     private LearnerService learnerService;
 
+    @Autowired
+    private OrganisationService organisationService;
+
     //creating a course
     @Override
     public Course saveCourse(Course course) {
+        Course savedCourse = courseRepository.save(course);
+        organisationService.createCourseStats(course.getOrganisation().getOrganisationId(), savedCourse.getCourseId(),course.getCourseTitle(), course.getCourseFee());
+        return savedCourse;
 
-        return courseRepository.save(course);
     }
 
     //retrieving all courses
