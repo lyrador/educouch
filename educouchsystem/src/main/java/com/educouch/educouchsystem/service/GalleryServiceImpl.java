@@ -180,28 +180,32 @@ public class GalleryServiceImpl implements GalleryService {
     @Override
     public void updateLocation(Long learnerId, Long itemOwnedId, Integer x, Integer y) throws UnauthorizedActionException,
             ItemOwnedNotFoundException, LocationOccupiedException {
+
         ItemOwned itemOwned = itemOwnedRepository.getReferenceById(itemOwnedId);
         itemOwned.setPositionX(x);
         itemOwned.setPositionY(y);
 
+
         if(itemOwned == null) {
+
             throw new ItemOwnedNotFoundException("Item cannot be found.");
         }
+
         // check if the learner owned the item
+
         Learner learner = learnerService.getLearnerById(learnerId);
+
         Gallery gallery = learner.getGallery();
         if(!gallery.getItemsOwned().contains(itemOwned)) {
+
             throw new UnauthorizedActionException("Incorrect login credentials.");
         }
 
         Boolean isValid = checkIfLocationIsAvailable(learner.getGallery().getGalleryId(), itemOwned);
 
-        if(isValid) {
-            itemOwnedRepository.save(itemOwned);
 
-        } else {
-            throw new LocationOccupiedException("Location is occupied, or item is not moved at all!");
-        }
+        itemOwnedRepository.save(itemOwned);
+
 
 
     }
