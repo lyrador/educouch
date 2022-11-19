@@ -171,6 +171,7 @@ public class StripeServiceImpl implements StripeService {
                     }
 
                     pointsWalletService.createWallet(learnerId,org.getOrganisationId(), org.getOrganisationName());
+                    organisationService.addLearner(c.getCourse().getCourseId());
 
                 } catch(DuplicateEnrolmentTrackerException ex) {
                     throw new EnrolmentStatusTrackerNotFoundException("Unexpected administration error has occured. Please contact our LMS Admin to sort out your duplicate record. ");

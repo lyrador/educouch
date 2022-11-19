@@ -28,7 +28,7 @@ public class FileSubmission extends Assessment implements Serializable {
         this.attachments = new ArrayList<>();
     }
 
-    public FileSubmission(String title, String description, Double maxScore, Date startDate, Date endDate, Double discountPointForAssessment, Integer discountPointToTopPercent) {
+    public FileSubmission(String title, String description, Double maxScore, Date startDate, Date endDate, Long discountPointForAssessment, Integer discountPointToTopPercent) {
         super(title, description, maxScore, startDate, endDate,discountPointForAssessment,discountPointToTopPercent);
 //        this.fileSubmissionEnum = fileSubmissionEnum;
 //        this.fileSubmissionAttempts = new ArrayList<>();
