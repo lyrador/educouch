@@ -57,6 +57,14 @@ public class ReelServiceImpl implements ReelService{
     }
 
     @Override
+    public Reel submitReel(Long reelId) throws ReelNotFoundException {
+        Reel reelToUpdate = retrieveReelById(reelId);
+        reelToUpdate.setReelApprovalStatusEnum(ReelApprovalStatusEnum.PENDING);
+        reelToUpdate.setReelTimeStamp(new Date());
+        return reelRepository.save(reelToUpdate);
+    }
+
+    @Override
     public Reel retrieveReelById(Long reelId) throws ReelNotFoundException {
         if(reelRepository.findById(reelId).get().equals(null)) {
             throw new ReelNotFoundException();
