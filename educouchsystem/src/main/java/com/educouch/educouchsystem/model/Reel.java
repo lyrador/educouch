@@ -18,10 +18,12 @@ public class Reel implements Serializable   {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reelId;
     @NotNull
-    @Size(min = 1, max = 100)
+    @Size(min = 1, max = 900)
+    @Column(length = 100)
     private String reelTitle;
     @NotNull
-    @Size(min = 1, max = 250)
+    @Size(min = 1, max = 900)
+    @Column(length = 400)
     private String reelCaption;
     @NotNull
     private Integer numLikes;
@@ -53,7 +55,7 @@ public class Reel implements Serializable   {
     public Reel() {
         this.likers = new HashSet<>();
         this.viewers = new HashSet<>();
-        this.reelApprovalStatusEnum = ReelApprovalStatusEnum.PENDING;
+        this.reelApprovalStatusEnum = ReelApprovalStatusEnum.INCOMPLETE;
     }
 
     public Reel(String reelTitle, String reelCaption) {
