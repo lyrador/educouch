@@ -28,6 +28,8 @@ public class Organisation {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "organisation")
     private List<Course> courses;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<CourseStats> courseStatsList;
     @Column(nullable = false)
     private String orgDescription;
 
@@ -35,7 +37,7 @@ public class Organisation {
     private String paymentAcc;
     private BigDecimal orgBalance;
 
-    private PaymentStatusEnum paymentStatus;
+//    private PaymentStatusEnum paymentStatus;
 
     private Double rewardPointsConversionNumber;
 
@@ -45,8 +47,9 @@ public class Organisation {
 
     public Organisation() {
         this.instructors = new ArrayList<>();
+        this.courseStatsList = new ArrayList<>();
         this.orgBalance = new BigDecimal(0);
-        this.paymentStatus = PaymentStatusEnum.PAID;
+//        this.paymentStatus = PaymentStatusEnum.PAID;
         setRewardPointsConversionNumber(1.00);
         setCurrencyConversionNumber(0.01);
         this.maxAssignmentPoints = 50.0;
@@ -65,6 +68,14 @@ public class Organisation {
         this.orgDescription = orgDescription;
         this.paymentAcc = paymentAcc;
         this.organisationName = organisationName;
+    }
+
+    public List<CourseStats> getCourseStatsList() {
+        return courseStatsList;
+    }
+
+    public void setCourseStatsList(List<CourseStats> courseStatsList) {
+        this.courseStatsList = courseStatsList;
     }
 
     public String getOrgDescription() {
@@ -132,13 +143,13 @@ public class Organisation {
         this.orgBalance = orgBalance;
     }
 
-    public PaymentStatusEnum getPaymentStatus() {
-        return paymentStatus;
-    }
-
-    public void setPaymentStatus(PaymentStatusEnum paymentStatus) {
-        this.paymentStatus = paymentStatus;
-    }
+//    public PaymentStatusEnum getPaymentStatus() {
+//        return paymentStatus;
+//    }
+//
+//    public void setPaymentStatus(PaymentStatusEnum paymentStatus) {
+//        this.paymentStatus = paymentStatus;
+//    }
 
     public Double getRewardPointsConversionNumber() {
         return rewardPointsConversionNumber;
