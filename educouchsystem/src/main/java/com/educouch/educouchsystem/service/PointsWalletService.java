@@ -10,7 +10,11 @@ public interface PointsWalletService {
 
     public PointsWallet createWallet(Long learnerId, Long organisationId, String orgName);
 
+    public PointsWallet saveWallet(PointsWallet wallet);
+
     public List<PointsWallet> findAllWalletForLearner(Long learnerId);
+
+    public PointsWallet updatePointsWallet(PointsWallet wallet)  throws PointsWalletNotFoundException;
 
     public PointsWallet findParticularWallet(Long learnerId, Long organisationId) throws PointsWalletNotFoundException;
 }
