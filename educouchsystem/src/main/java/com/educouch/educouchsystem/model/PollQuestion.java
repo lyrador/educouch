@@ -14,7 +14,7 @@ public class PollQuestion {
     private Long pollQuestionId;
 
     @Column(name="pollQuestionTitle", nullable = false)
-    private Long pollQuestionTitle;
+    private String pollQuestionTitle;
 
     @Column(name="pollQuestionNumber", nullable = false)
     private Integer pollQuestionNumber;
@@ -32,9 +32,8 @@ public class PollQuestion {
     @OneToMany(mappedBy = "pollQuestion", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<PollQuestionResponse> pollQuestionResponses;
 
-    public PollQuestion(Long pollQuestionTitle, Integer pollQuestionNumber, Boolean hasTimeLimit, Double questionTimeLimit) {
+    public PollQuestion(String pollQuestionTitle, Boolean hasTimeLimit, Double questionTimeLimit) {
         this.pollQuestionTitle = pollQuestionTitle;
-        this.pollQuestionNumber = pollQuestionNumber;
         this.hasTimeLimit = hasTimeLimit;
         this.questionTimeLimit = questionTimeLimit;
     }
@@ -51,11 +50,11 @@ public class PollQuestion {
         this.pollQuestionId = pollQuestionId;
     }
 
-    public Long getPollQuestionTitle() {
+    public String getPollQuestionTitle() {
         return pollQuestionTitle;
     }
 
-    public void setPollQuestionTitle(Long pollQuestionTitle) {
+    public void setPollQuestionTitle(String pollQuestionTitle) {
         this.pollQuestionTitle = pollQuestionTitle;
     }
 
@@ -99,4 +98,6 @@ public class PollQuestion {
     public void setPollQuestionResponses(List<PollQuestionResponse> pollQuestionResponses) {
         this.pollQuestionResponses = pollQuestionResponses;
     }
+
+
 }
