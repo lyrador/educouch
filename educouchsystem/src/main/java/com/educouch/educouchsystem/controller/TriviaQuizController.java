@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -37,6 +38,7 @@ public class TriviaQuizController {
             classRun.setTriviaQuizzes(classRunTriviaQuizzes);
         }
 
+        triviaQuizRequest.setCreationDate(new Date());
         TriviaQuiz triviaQuiz = triviaQuizService.saveTriviaQuiz(triviaQuizRequest);
         return new ResponseEntity<>(triviaQuiz, HttpStatus.OK);
     }
@@ -88,6 +90,7 @@ public class TriviaQuizController {
     public ResponseEntity<TriviaQuiz> updateTriviaQuiz(@RequestBody TriviaQuiz triviaQuiz, @PathVariable(value = "triviaQuizId") Long triviaQuizId) {
         try {
             TriviaQuiz existingTriviaQuiz = triviaQuizService.getTriviaQuizById(triviaQuizId);
+            existingTriviaQuiz.setTriviaQuizTitle(triviaQuiz.getTriviaQuizTitle());
             existingTriviaQuiz.setTriviaQuizDescription(triviaQuiz.getTriviaQuizDescription());
             existingTriviaQuiz.setNumOfQuestions(triviaQuiz.getNumOfQuestions());
             //existingTriviaQuiz.setTriviaQuestions(triviaQuiz.getTriviaQuestions());
