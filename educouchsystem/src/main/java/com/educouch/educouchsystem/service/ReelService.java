@@ -32,8 +32,10 @@ public interface ReelService {
     public Reel rejectReel(Long reelId , String rejectionReason) throws ReelNotFoundException;
     public List<Reel> getAllReels();
     public List<Reel> getAllPendingReels();
+    public List<Reel> getAllApprovedReels();
+    public List<Reel> getAllRejectedReels();
 
-    //learner interactions
+        //learner interactions
     public ReelPreferenceProfile createReelPreferenceProfile(Long learnerId) throws LearnerNotFoundException;
     public List<Reel> findReelsForLearner(Long learnerId);
     public List<Reel> findRecentReels(Long learnerId);

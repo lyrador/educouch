@@ -121,6 +121,15 @@ public class ReelServiceImpl implements ReelService{
     public List<Reel> getAllPendingReels() {
         return reelRepository.findAllReelsChronologically(ReelApprovalStatusEnum.PENDING);
     }
+    @Override
+    public List<Reel> getAllApprovedReels() {
+        return reelRepository.findAllReelsChronologically(ReelApprovalStatusEnum.LIVE);
+    }
+
+    @Override
+    public List<Reel> getAllRejectedReels() {
+        return reelRepository.findAllReelsChronologically(ReelApprovalStatusEnum.REJECTED);
+    }
 
 
 
