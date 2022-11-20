@@ -46,12 +46,33 @@ public class ReelController {
     }
 
     @GetMapping("/getAllPendingReels")
-    public ResponseEntity<List<Reel>> getAllPendingReels() {
+    public ResponseEntity<List<ReelDTO>> getAllPendingReels() {
         List<Reel> reels = reelService.getAllPendingReels();
         for(Reel r : reels) {
             r = unmarshallReel(r);
         }
-        return new ResponseEntity<>(reels, HttpStatus.OK);
+        List<ReelDTO> reelDTOS = convertReelsToReelDTOs(reels);
+        return new ResponseEntity<>(reelDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllRejectedReels")
+    public ResponseEntity<List<ReelDTO>> getAllRejectedReels() {
+        List<Reel> reels = reelService.getAllRejectedReels();
+        for(Reel r : reels) {
+            r = unmarshallReel(r);
+        }
+        List<ReelDTO> reelDTOS = convertReelsToReelDTOs(reels);
+        return new ResponseEntity<>(reelDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping("/getAllApprovedReels")
+    public ResponseEntity<List<ReelDTO>> getAllApprovedReels() {
+        List<Reel> reels = reelService.getAllApprovedReels();
+        for(Reel r : reels) {
+            r = unmarshallReel(r);
+        }
+        List<ReelDTO> reelDTOS = convertReelsToReelDTOs(reels);
+        return new ResponseEntity<>(reelDTOS, HttpStatus.OK);
     }
 
     @PutMapping("/approveReel/{reelId}")
@@ -88,6 +109,7 @@ public class ReelController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
     @PostMapping("/createReel")
     public ResponseEntity<Reel> createReel(@RequestBody ReelDTO reelDTO) {
         try {
@@ -248,7 +270,7 @@ public class ReelController {
         ReelDTO reelDTO = new ReelDTO(r.getReelId(),r.getReelTitle(),
                 r.getReelCaption(),r.getNumLikes(),r.getNumViews(),
                 r.getReelApprovalStatusEnum(), r.getReelCreator().getInstructorId(),
-                r.getCourseTag().getCourseId(), r.getVideo(),
+                r.getReelCreator().getName(), r.getCourseTag().getCourseId(), r.getVideo(),
                 r.getReelTimeStamp());
         reelDTO.setReelCreator(r.getReelCreator());
         return reelDTO;
