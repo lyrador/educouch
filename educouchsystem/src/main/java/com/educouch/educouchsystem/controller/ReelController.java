@@ -103,6 +103,7 @@ public class ReelController {
     public ResponseEntity<ReelDTO> getReel(@PathVariable(value = "reelId") Long reelId) {
         try {
             Reel reel = reelService.retrieveReelById(reelId);
+            reel = unmarshallReel(reel);
             ReelDTO reelDTO = convertReelToReelDTO(reel);
             return new ResponseEntity<ReelDTO>(reelDTO, HttpStatus.OK);
         } catch (ReelNotFoundException exception) {
@@ -144,6 +145,7 @@ public class ReelController {
     public ResponseEntity<Reel> updateReel(@PathVariable("reelId") Long reelId, @RequestBody ReelDTO incompleteDTO) {
         try {
             Reel updatedReel = reelService.updateReel(reelId, incompleteDTO);
+            updatedReel = unmarshallReel(updatedReel);
             return new ResponseEntity<>(updatedReel, HttpStatus.OK);
         }catch ( ReelNotFoundException ex) {
             throw new RuntimeException(ex);
@@ -154,6 +156,7 @@ public class ReelController {
     public ResponseEntity<Reel> submitReel(@PathVariable("reelId") Long reelId) {
         try {
             Reel updatedReel = reelService.submitReel(reelId);
+            updatedReel = unmarshallReel(updatedReel);
             return new ResponseEntity<>(updatedReel, HttpStatus.OK);
         }catch ( ReelNotFoundException ex) {
             throw new RuntimeException(ex);
@@ -273,6 +276,7 @@ public class ReelController {
                 r.getReelCreator().getName(), r.getCourseTag().getCourseId(), r.getVideo(),
                 r.getReelTimeStamp());
         reelDTO.setReelCreator(r.getReelCreator());
+        reelDTO.setVideo(r.getVideo());
         return reelDTO;
     }
 
