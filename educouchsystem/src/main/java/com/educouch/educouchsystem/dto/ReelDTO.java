@@ -33,13 +33,19 @@ public class ReelDTO {
     private Set<Learner> likers;
     private Set<Learner> viewers;
     private boolean isLiked;     //attribute not in Reel entity
+    private String rejectionReason;
 
 
 
     public ReelDTO() {
     }
 
-    public ReelDTO(Long reelId, String reelTitle, String reelCaption, Integer numLikes, Integer numViews, ReelApprovalStatusEnum reelApprovalStatusEnum, Long instructorId, String creatorName, Long courseId, Attachment attachment, Date reelTimeStamp) {
+    public ReelDTO(Long reelId, String reelTitle, String reelCaption,
+                   Integer numLikes, Integer numViews,
+                   ReelApprovalStatusEnum reelApprovalStatusEnum,
+                   Long instructorId, String creatorName, Long courseId,
+                   Attachment attachment, Date reelTimeStamp,
+                   String rejectionReason) {
         this.reelId = reelId;
         this.reelTitle = reelTitle;
         this.reelCaption = reelCaption;
@@ -51,6 +57,7 @@ public class ReelDTO {
         this.courseId = courseId;
         this.video = attachment;
         this.reelTimeStamp = reelTimeStamp;
+        this.rejectionReason = rejectionReason;
     }
 
     public Long getReelId() {
@@ -179,5 +186,13 @@ public class ReelDTO {
 
     public void setCreatorName(String creatorName) {
         this.creatorName = creatorName;
+    }
+
+    public String getRejectionReason() {
+        return rejectionReason;
+    }
+
+    public void setRejectionReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
     }
 }
