@@ -2,8 +2,10 @@ package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.model.ClassRun;
 import com.educouch.educouchsystem.model.Course;
+import com.educouch.educouchsystem.model.Gallery;
 import com.educouch.educouchsystem.model.Learner;
 import com.educouch.educouchsystem.repository.CourseRepository;
+import com.educouch.educouchsystem.repository.GalleryRepository;
 import com.educouch.educouchsystem.repository.LearnerRepository;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.util.exception.UsernameNotFoundException;
@@ -23,15 +25,35 @@ public class LearnerServiceImpl implements LearnerService {
     @Autowired
     private LearnerRepository learnerRepository;
 
+    @Autowired
+    private GalleryRepository galleryRepository;
+
 
     @Override
     public Learner saveLearner(Learner learner) {
-        return learnerRepository.save(learner);
+        Gallery gallery = new Gallery();
+        gallery = galleryRepository.save(gallery);
+        learner = learnerRepository.save(learner);
+
+        //connect learner and gallery
+        learner.setGallery(gallery);
+        gallery.setLearner(learner);
+
+        galleryRepository.save(gallery);
+        learner = learnerRepository.save(learner);
+
+        return learner;
+    }
+
+    public Learner saveLearnerWithoutGallery(Learner learner) {
+        learner = learnerRepository.save(learner);
+        return learner;
     }
 
     @Override
     public List<Learner> getAllLearners() {
         return learnerRepository.findAll();
+
     }
 
     @Override

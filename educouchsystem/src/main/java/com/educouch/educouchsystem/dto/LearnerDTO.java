@@ -12,6 +12,8 @@ public class LearnerDTO {
     private String isActive;
     private String isKid;
 
+    private Integer treePoint;
+
     public LearnerDTO() {
     }
 
@@ -24,6 +26,20 @@ public class LearnerDTO {
         this.profilePictureURL = profilePictureURL;
         this.isActive = isActive;
         this.isKid = isKid;
+
+    }
+
+    public LearnerDTO(Long learnerId, String name, String email, String password, String username, String profilePictureURL, String isActive, String isKid, Integer treePoint) {
+        this.learnerId = learnerId;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.username = username;
+        this.profilePictureURL = profilePictureURL;
+        this.isActive = isActive;
+        this.isKid = isKid;
+        this.treePoint = treePoint;
+
     }
 
     public Long getLearnerId() {
@@ -88,5 +104,13 @@ public class LearnerDTO {
 
     public void setIsKid(String isKid) {
         this.isKid = isKid;
+    }
+
+    public Integer getTreePoint() {
+        return treePoint;
+    }
+
+    public void setTreePoint(Integer treePoint) {
+        this.treePoint = treePoint;
     }
 }
