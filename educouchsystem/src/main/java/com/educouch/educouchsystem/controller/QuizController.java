@@ -121,7 +121,8 @@ public class QuizController {
             if(!(updatedQuiz.getEndDate().toString().equals(updatedQuizDTO.getAssessmentEndDate()))) {
                 updatedQuiz.setEndDate((Date) formatter.parse(updatedQuizDTO.getAssessmentEndDate()));
             }
-
+            updatedQuiz.setDiscountPointForAssessment(updatedQuizDTO.getDiscountPointForAssessment());
+            updatedQuiz.setDiscountPointToTopPercent(updatedQuizDTO.getDiscountPointToTopPercent());
             if (updatedQuizDTO.getHasTimeLimit().equals("true")) {
                 updatedQuiz.setHasTimeLimit(Boolean.TRUE);
             } else if (updatedQuizDTO.getHasTimeLimit().equals("false")) {
@@ -161,9 +162,6 @@ public class QuizController {
         }
     }
 
-
-
-
     public Quiz updateQuizQuestions(Quiz oldQuiz, List<QuestionDTO> questionDTOs) throws QuestionNotFoundException, OptionNotFoundException{
 
         List<Question> questions = oldQuiz.getQuizQuestions();
@@ -185,6 +183,8 @@ public class QuizController {
         newQuiz.setTitle(quizDTO.getAssessmentTitle());
         newQuiz.setDescription(quizDTO.getAssessmentDescription());
         newQuiz.setMaxScore(quizDTO.getAssessmentMaxScore());
+        newQuiz.setDiscountPointForAssessment(quizDTO.getDiscountPointForAssessment());
+        newQuiz.setDiscountPointToTopPercent(quizDTO.getDiscountPointToTopPercent());
         newQuiz.setAssessmentStatus(AssessmentStatusEnum.PENDING);
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date startDate = (Date) formatter.parse(quizDTO.getAssessmentStartDate());
@@ -285,6 +285,8 @@ public class QuizController {
         quizDTO.setAssessmentTitle(quiz.getTitle());
         quizDTO.setAssessmentDescription(quiz.getDescription());
         quizDTO.setAssessmentMaxScore(quiz.getMaxScore());
+        quizDTO.setDiscountPointForAssessment(quiz.getDiscountPointForAssessment());
+        quizDTO.setDiscountPointToTopPercent(quiz.getDiscountPointToTopPercent());
         quizDTO.setAssessmentStatusEnum(quiz.getAssessmentStatus().toString());
 
         quizDTO.setAssessmentStartDate(quiz.getStartDate().toString());
