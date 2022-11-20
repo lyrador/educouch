@@ -177,6 +177,8 @@ public class DataLoader implements CommandLineRunner {
         daysOfWeek[1] = 2;
         ClassRun classRunOne = new ClassRun(LocalDate.now().plusDays(7), LocalDate.now().plusDays(90),
                 LocalTime.MIDNIGHT, LocalTime.NOON, 1, 10, daysOfWeek, RecurringEnum.ALTERNATE);
+        classRunOne.setClassRunName("Classrun 1");
+        classRunOne.setClassRunDescription("Classrun 1");
         classRunOne.setInstructor(i2);
         try {
             courseService.addClassRunToCourse(cs2102.getCourseId(), classRunOne);
