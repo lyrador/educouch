@@ -3,6 +3,8 @@ package com.educouch.educouchsystem.dto;
 public class GameDTO {
 
     private Long gameId;
+
+    private String gameTitle;
     private String gameDescription;
     private Integer numOfQuestions;
     private String gameType;
@@ -10,8 +12,9 @@ public class GameDTO {
     public GameDTO() {
     }
 
-    public GameDTO(Long gameId, String gameDescription, Integer numOfQuestions, String gameType) {
+    public GameDTO(Long gameId, String gameTitle, String gameDescription, Integer numOfQuestions, String gameType) {
         this.gameId = gameId;
+        this.gameTitle = gameTitle;
         this.gameDescription = gameDescription;
         this.numOfQuestions = numOfQuestions;
         this.gameType = gameType;
@@ -47,5 +50,13 @@ public class GameDTO {
 
     public void setGameType(String gameType) {
         this.gameType = gameType;
+    }
+
+    public String getGameTitle() {
+        return gameTitle;
+    }
+
+    public void setGameTitle(String gameTitle) {
+        this.gameTitle = gameTitle;
     }
 }

@@ -130,7 +130,7 @@ public class TriviaQuizController {
         ClassRun classRun = classRunService.retrieveClassRunById(classRunId);
         List<GameDTO> gameDTOs = new ArrayList<>();
         for (TriviaQuiz trivia : classRun.getTriviaQuizzes()) {
-            GameDTO gameDTO = new GameDTO(trivia.getTriviaQuizId(), trivia.getTriviaQuizDescription(), trivia.getNumOfQuestions(), "TRIVIA");
+            GameDTO gameDTO = new GameDTO(trivia.getTriviaQuizId(), trivia.getTriviaQuizTitle(), trivia.getTriviaQuizDescription(), trivia.getNumOfQuestions(), "TRIVIA");
             gameDTOs.add(gameDTO);
         }
         return new ResponseEntity<>(gameDTOs, HttpStatus.OK);
