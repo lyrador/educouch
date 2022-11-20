@@ -42,6 +42,8 @@ public class Learner {
     @Column(nullable = false)
     private String paymentAcc;
 
+    private Integer treePoints = 0;
+
     @ManyToMany
     @JoinTable(name = "Learner_ClassRun",
     joinColumns = {@JoinColumn(name = "learnerId")},
@@ -58,14 +60,20 @@ public class Learner {
     @JoinColumn(name = "learnerId")
     private List<LearnerTransaction> learnerTransactions;
 
+    @OneToOne
+    @JoinColumn(name = "galleryId")
+    private Gallery gallery;
+
     @OneToMany(mappedBy = "learner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<TriviaQuestionResponse> triviaQuestionResponses;
+    private List<TriviaQuestionResponse> triviaQuestionResponses = new ArrayList<>();
+
+
 
     public Learner() {
         this.classRuns = new ArrayList<>();
         this.enrolmentStatusTrackers = new ArrayList<>();
         this.learnerTransactions = new ArrayList<>();
-        this.triviaQuestionResponses = new ArrayList<>();
+//        this.triviaQuestionResponses = new ArrayList<>();
     }
 
 //    public Learner(String name, String address, String email, String password, String username, String profilePictureURL) {
@@ -102,6 +110,20 @@ public class Learner {
         this.isActive = true;
         this.isKid = isKid;
         this.paymentAcc = paymentAcc;
+//        createCustomer();
+    }
+
+    public Learner(String name, String email, String password, String username, String profilePictureURL, Boolean isKid, String paymentAcc, Integer treePoints) {
+        new Learner();
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.username = username;
+        this.profilePictureURL = profilePictureURL;
+        this.isActive = true;
+        this.isKid = isKid;
+        this.paymentAcc = paymentAcc;
+        this.treePoints = treePoints;
 //        createCustomer();
     }
 
@@ -200,14 +222,6 @@ public class Learner {
         this.enrolmentStatusTrackers = enrolmentStatusTrackers;
     }
 
-    public List<TriviaQuestionResponse> getTriviaQuestionResponses() {
-        return triviaQuestionResponses;
-    }
-
-    public void setTriviaQuestionResponses(List<TriviaQuestionResponse> triviaQuestionResponses) {
-        this.triviaQuestionResponses = triviaQuestionResponses;
-    }
-
     public String getPaymentAcc() {
         return paymentAcc;
     }
@@ -224,6 +238,13 @@ public class Learner {
         this.stripeCustomerId = stripeCustomerId;
     }
 
+    public List<TriviaQuestionResponse> getTriviaQuestionResponses() {
+        return triviaQuestionResponses;
+    }
+
+    public void setTriviaQuestionResponses(List<TriviaQuestionResponse> triviaQuestionResponses) {
+        this.triviaQuestionResponses = triviaQuestionResponses;
+    }
     //    private String createCustomer() {
 //
 //        Map<String, Object> customerParams = new HashMap<String, Object>();
@@ -264,5 +285,21 @@ public class Learner {
 
     public void setLearnerTransactions(List<LearnerTransaction> learnerTransactions) {
         this.learnerTransactions = learnerTransactions;
+    }
+
+    public Integer getTreePoints() {
+        return treePoints;
+    }
+
+    public void setTreePoints(Integer treePoints) {
+        this.treePoints = treePoints;
+    }
+
+    public Gallery getGallery() {
+        return gallery;
+    }
+
+    public void setGallery(Gallery gallery) {
+        this.gallery = gallery;
     }
 }
