@@ -169,18 +169,18 @@ public class EducatorController {
 
     }
 
-    @GetMapping("/findAllDueOrganisation")
-    public ResponseEntity<List<Organisation>> getAllDueOrganisation() {
-        List<Organisation> listOfOrganizations = organisationService.findAllDue();
-        for(Organisation o: listOfOrganizations) {
-            List<Course> listOfCourses = o.getCourses();
-            for(Course c: listOfCourses) {
-                processCourse(c);
-            }
-        }
-        return new ResponseEntity<List<Organisation>>(listOfOrganizations , HttpStatus.OK);
-
-    }
+//    @GetMapping("/findAllDueOrganisation")
+//    public ResponseEntity<List<Organisation>> getAllDueOrganisation() {
+//        List<Organisation> listOfOrganizations = organisationService.findAllDue();
+//        for(Organisation o: listOfOrganizations) {
+//            List<Course> listOfCourses = o.getCourses();
+//            for(Course c: listOfCourses) {
+//                processCourse(c);
+//            }
+//        }
+//        return new ResponseEntity<List<Organisation>>(listOfOrganizations , HttpStatus.OK);
+//
+//    }
 
     private Course processCourse(Course c) {
         List<Forum> forums = c.getForums();
