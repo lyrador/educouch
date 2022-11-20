@@ -45,6 +45,7 @@ public class TriviaQuestionResponseController {
             Learner learner = learnerService.getLearnerById(learnerId);
             TriviaOption optionChosen = triviaOptionService.getTriviaOptionById(triviaOptionId);
             triviaQuestionResponseRequest.setTriviaQuestion(triviaQuestion);
+
             triviaQuestionResponseRequest.setLearner(learner);
             triviaQuestionResponseRequest.setOptionChosen(optionChosen);
 
@@ -59,9 +60,9 @@ public class TriviaQuestionResponseController {
             if (learner.getTriviaQuestionResponses() != null) {
                 learner.getTriviaQuestionResponses().add(triviaQuestionResponseRequest);
             } else {
-                List<TriviaQuestionResponse> triviaQuestionResponseList = new ArrayList<>();
-                triviaQuestionResponseList.add(triviaQuestionResponseRequest);
-                learner.setTriviaQuestionResponses(triviaQuestionResponseList);
+//                List<TriviaQuestionResponse> triviaQuestionResponseList = new ArrayList<>();
+//                triviaQuestionResponseList.add(triviaQuestionResponseRequest);
+                learner.getTriviaQuestionResponses().add(triviaQuestionResponseRequest);
             }
 
             TriviaQuestionResponse triviaQuestionResponse = triviaQuestionResponseService.saveTriviaQuestionResponse(triviaQuestionResponseRequest);

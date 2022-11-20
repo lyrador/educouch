@@ -32,11 +32,11 @@ public class TransactionController {
         this.depositRefundRequestService = depositRefundRequestService;
     }
 
-    @PostMapping("/createLmsToOrgTransaction")
-    public ResponseEntity<Transaction> learnerToLmsTransaction(@RequestBody Transaction transaction) {
-        Transaction transaction1 = transactionService.createTransaction(transaction);
-        return ResponseEntity.status(HttpStatus.OK).body(transaction1);
-    }
+//    @PostMapping("/createLmsToOrgTransaction")
+//    public ResponseEntity<Transaction> learnerToLmsTransaction(@RequestBody Transaction transaction) {
+//        Transaction transaction1 = transactionService.createTransaction(transaction);
+//        return ResponseEntity.status(HttpStatus.OK).body(transaction1);
+//    }
 
 
     @GetMapping("/getAllLmsToOrgTransaction")

@@ -94,7 +94,7 @@ public class StorageService {
         return fileStorageName + " removed ...";
     }
 
-    private File convertByteArrToFile(byte[] file, String filename) {
+    public File convertByteArrToFile(byte[] file, String filename) {
         File convertedFile = new File(filename);
         try (FileOutputStream fos = new FileOutputStream(convertedFile)) {
             fos.write(file);

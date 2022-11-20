@@ -66,7 +66,6 @@ public class WebSocketTextController {
             return new ActionResponseDTO("Not supported", new ArrayList<String>());
         }
 
-
     }
     @MessageMapping("/send/{roomId}/chat")
     @SendTo("/topic/{roomId}/chat")

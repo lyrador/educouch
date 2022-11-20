@@ -44,8 +44,8 @@ public class Quiz extends Assessment implements Serializable {
         this.quizQuestions = new ArrayList<>();
     }
 
-    public Quiz(String title, String description, Double maxScore, Date startDate, Date endDate, Boolean hasTimeLimit, Integer timeLimit, Boolean isAutoRelease) {
-        super(title, description, maxScore, startDate, endDate);
+    public Quiz(String title, String description, Double maxScore, Long discountPointForAssessment,Integer discountPointToTopPercent, Date startDate, Date endDate, Boolean hasTimeLimit, Integer timeLimit, Boolean isAutoRelease) {
+        super(title, description, maxScore, startDate, endDate,discountPointForAssessment,discountPointToTopPercent);
         this.hasTimeLimit = hasTimeLimit;
         this.isAutoRelease = isAutoRelease;
         this.quizQuestions = new ArrayList<>();
@@ -74,14 +74,6 @@ public class Quiz extends Assessment implements Serializable {
     public void setQuizQuestions(List<Question> quizQuestions) {
         this.quizQuestions = quizQuestions;
     }
-
-//    public List<QuizAttempt> getQuizAttempts() {
-//        return quizAttempts;
-//    }
-//
-//    public void setQuizAttempts(List<QuizAttempt> quizAttempts) {
-//        this.quizAttempts = quizAttempts;
-//    }
 
     public Integer getTimeLimit() {
         return timeLimit;

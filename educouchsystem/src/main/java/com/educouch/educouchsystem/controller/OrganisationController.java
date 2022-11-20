@@ -36,6 +36,7 @@ public class OrganisationController {
             Organisation existingOrganisation = organisationService.findOrganisationById(organisationId);
             existingOrganisation.setRewardPointsConversionNumber(organisationDTORequest.getRewardPointsConversionNumber());
             existingOrganisation.setCurrencyConversionNumber(organisationDTORequest.getCurrencyConversionNumber());
+            existingOrganisation.setMaxAssignmentPoints(organisationDTORequest.getMaxAssignmentPoints());
             organisationService.saveOrganisation(existingOrganisation);
             existingOrganisation.setInstructors(null);
             existingOrganisation.setCourses(null);
