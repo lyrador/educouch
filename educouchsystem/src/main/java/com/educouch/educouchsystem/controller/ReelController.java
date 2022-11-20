@@ -274,7 +274,7 @@ public class ReelController {
                 r.getReelCaption(),r.getNumLikes(),r.getNumViews(),
                 r.getReelApprovalStatusEnum(), r.getReelCreator().getInstructorId(),
                 r.getReelCreator().getName(), r.getCourseTag().getCourseId(), r.getVideo(),
-                r.getReelTimeStamp());
+                r.getReelTimeStamp(), r.getRejectionReason());
         reelDTO.setReelCreator(r.getReelCreator());
         reelDTO.setVideo(r.getVideo());
         return reelDTO;
