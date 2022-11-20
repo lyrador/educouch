@@ -1,9 +1,6 @@
 package com.educouch.educouchsystem.service;
 
-import com.educouch.educouchsystem.model.Attachment;
-import com.educouch.educouchsystem.model.FileSubmission;
-import com.educouch.educouchsystem.model.FileSubmissionAttempt;
-import com.educouch.educouchsystem.model.Folder;
+import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.repository.AttachmentRepository;
 import com.educouch.educouchsystem.s3.service.StorageService;
 import com.educouch.educouchsystem.util.exception.*;
@@ -34,6 +31,9 @@ public class AttachmentServiceImpl implements AttachmentService{
 
     @Autowired
     private FileSubmissionService fileSubmissionService;
+
+    @Autowired
+    private ReelService reelService;
 
     public AttachmentServiceImpl(AttachmentRepository attachmentRepository, StorageService storageService) {
         this.attachmentRepository = attachmentRepository;
@@ -131,6 +131,26 @@ public class AttachmentServiceImpl implements AttachmentService{
         FileSubmission fileSubmission = fileSubmissionService.retrieveFileSubmissionById(fileSubmissionId);
         fileSubmission.getAttachments().remove(attachment);
         fileSubmissionService.saveFileSubmission(fileSubmission);
+        this.deleteAttachment(attachmentId);
+    }
+
+    @Override
+    public void uploadVideoToReel(Attachment attachment, Long reelId) throws ReelNotFoundException {
+        try {
+            Reel reel = reelService.retrieveReelById(reelId);
+            reel.setVideo(attachment);
+            reelService.saveReel(reel);
+        } catch (ReelNotFoundException exception) {
+            throw new ReelNotFoundException();
+        }
+    }
+
+    @Override
+    public void removeVideoFromReel(Long attachmentId, Long reelId) throws ReelNotFoundException, FileNotFoundException {
+        Attachment attachment = getAttachment(attachmentId);
+        Reel reel = reelService.retrieveReelById(reelId);
+        reel.setVideo(null);
+        reelService.saveReel(reel);
         this.deleteAttachment(attachmentId);
     }
 }
