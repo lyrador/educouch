@@ -27,18 +27,52 @@ public class Transaction {
     @Column(nullable = false)
     private LocalDateTime paymentTime;
 
+    @Column(nullable = false)
+    private String reportUrl;
+
+    @Column(nullable = false)
+    private String fileStorageName;
+
+    @Column(nullable = false, unique = true)
+    private String monthYear;
+
     public Transaction() {
         this.paymentTime = LocalDateTime.now();
 
     }
 
-    public Transaction(Long payTo, String orgName, String orgAccNumber, String amountPaid) {
+    public Transaction(Long payTo, String orgName, String orgAccNumber, BigDecimal amountPaid) {
         this.payTo = payTo;
         this.orgName = orgName;
         this.orgAccNumber = orgAccNumber;
-        this.amountPaid = new BigDecimal(amountPaid);
+        this.amountPaid = amountPaid;
         this.paymentTime = LocalDateTime.now();
     }
+
+    public String getReportUrl() {
+        return reportUrl;
+    }
+
+    public void setReportUrl(String reportUrl) {
+        this.reportUrl = reportUrl;
+    }
+
+    public String getFileStorageName() {
+        return fileStorageName;
+    }
+
+    public void setFileStorageName(String fileStorageName) {
+        this.fileStorageName = fileStorageName;
+    }
+
+    public String getMonthYear() {
+        return monthYear;
+    }
+
+    public void setMonthYear(String monthYear) {
+        this.monthYear = monthYear;
+    }
+
     public Long getTransactionId() {
         return transactionId;
     }

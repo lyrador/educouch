@@ -184,6 +184,8 @@ public class StripeServiceImpl implements StripeService {
                         gradeBookEntryService.createGradeBookEntry(g);
                     }
 
+                    pointsWalletService.createWallet(learnerId,org.getOrganisationId(), org.getOrganisationName());
+                    organisationService.addLearner(c.getCourse().getCourseId());
                     // update the discount points here
                     Map<String, Double> conversionRate = pointsWalletService.retrieveCourseConversionRate(c.getCourse().getCourseId());
                     Double nominal = conversionRate.get("currency");
