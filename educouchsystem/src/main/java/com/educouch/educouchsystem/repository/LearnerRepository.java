@@ -1,5 +1,6 @@
 package com.educouch.educouchsystem.repository;
 
+import com.educouch.educouchsystem.model.ItemOwned;
 import com.educouch.educouchsystem.model.Learner;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +14,7 @@ public interface LearnerRepository extends CrudRepository<Learner, Long> {
 
     public List<Learner> findAll();
     public Learner findByUsername(String username);
+
 
     
 }

@@ -3,6 +3,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.repository.LearnerTransactionRepository;
@@ -43,6 +44,9 @@ public class StripeServiceImpl implements StripeService {
 
     @Autowired
     DepositRefundRequestService depositRefundRequestService;
+
+    @Autowired
+    PointsWalletService pointsWalletService;
 
     @Autowired
     OrgLmsRevenueMapService orgLmsRevenueMapService;
@@ -93,7 +97,7 @@ public class StripeServiceImpl implements StripeService {
                 l.getLearnerTransactions().add(transaction);
 
                 classRunService.saveClassRun(c);
-                learnerService.saveLearner(l);
+                learnerService.saveLearnerWithoutGallery(l);
 
                 return transaction;
             }else {
@@ -119,7 +123,7 @@ public class StripeServiceImpl implements StripeService {
                 classRunService.saveClassRun(c);
 
                 l.getEnrolmentStatusTrackers().add(e);
-                learnerService.saveLearner(l);
+                learnerService.saveLearnerWithoutGallery(l);
                 createNewLearnerTransaction(c.getClassRunId(), l.getLearnerId(), LearnerPaymentEnum.DEPOSIT, amount);
 
 
@@ -137,6 +141,19 @@ public class StripeServiceImpl implements StripeService {
             ClassRunNotFoundException, LearnerNotFoundException,
             EnrolmentStatusTrackerNotFoundException {
         ClassRun c = classRunService.retrieveClassRunById(classRunId);
+
+        // retrieve the points wallet
+        Organisation o = c.getCourse().getOrganisation();
+
+        Long currPoints = new Long(0);
+        PointsWallet pw;
+        try {
+            pw = pointsWalletService.findParticularWallet(learnerId, o.getOrganisationId());
+            currPoints = pw.getDiscountPoints();
+        } catch(PointsWalletNotFoundException ex) {
+            pw = pointsWalletService.createWallet(learnerId, o.getOrganisationId(), o.getOrganisationName());
+        }
+
         if (c != null) {
             Learner l = learnerService.getLearnerById(learnerId);
             if(l != null) {
@@ -151,7 +168,7 @@ public class StripeServiceImpl implements StripeService {
                     classRunService.saveClassRun(c);
 
                     l.getClassRuns().add(c);
-                    learnerService.saveLearner(l);
+                    learnerService.saveLearnerWithoutGallery(l);
 
                     createNewLearnerTransaction(c.getClassRunId(), l.getLearnerId(), LearnerPaymentEnum.REMAININGCOURSEFEE, amount);
                     BigDecimal revenue = amount.divide(new BigDecimal(18), 2, RoundingMode.CEILING);
@@ -166,6 +183,24 @@ public class StripeServiceImpl implements StripeService {
                         GradeBookEntry g = new GradeBookEntry(c.getCourse().getCourseId(),learnerId,a.getAssessmentId(),a.getTitle(),a.getMaxScore());
                         gradeBookEntryService.createGradeBookEntry(g);
                     }
+
+                    pointsWalletService.createWallet(learnerId,org.getOrganisationId(), org.getOrganisationName());
+                    organisationService.addLearner(c.getCourse().getCourseId());
+                    // update the discount points here
+                    Map<String, Double> conversionRate = pointsWalletService.retrieveCourseConversionRate(c.getCourse().getCourseId());
+                    Double nominal = conversionRate.get("currency");
+                    Double equivalentPoint = conversionRate.get("points");
+                    Double nominalDiscount = c.getCourse().getCourseFee().doubleValue() * 0.90 - amount.doubleValue();
+                    Double pointsUsed = Math.floor(nominalDiscount / nominal * equivalentPoint);
+
+                    if(currPoints != 0) {
+                        // if points wallet is not newly created
+                        currPoints = currPoints - new Long(pointsUsed.intValue());
+                        pw.setDiscountPoints(currPoints);
+                        pointsWalletService.saveWallet(pw);
+
+                    }
+
                 } catch(DuplicateEnrolmentTrackerException ex) {
                     throw new EnrolmentStatusTrackerNotFoundException("Unexpected administration error has occured. Please contact our LMS Admin to sort out your duplicate record. ");
                 } catch (CourseNotFoundException e) {
@@ -248,7 +283,7 @@ public class StripeServiceImpl implements StripeService {
                     classRunService.saveClassRun(newClassRun);
 
                     learner.getClassRuns().add(newClassRun);
-                    learnerService.saveLearner(learner);
+                    learnerService.saveLearnerWithoutGallery(learner);
 
                     createNewLearnerTransaction(newClassRun.getClassRunId(), learner.getLearnerId(), LearnerPaymentEnum.REMAININGCOURSEFEE, amount);
                 } catch(DuplicateEnrolmentTrackerException ex) {
