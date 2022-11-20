@@ -170,6 +170,24 @@ public class TriviaQuestionController {
         }
     }
 
+    @GetMapping("/triviaQuiz/{triviaQuizId}/validTriviaQuestions")
+    public ResponseEntity<List<TriviaQuestion>> getAllValidTriviaQuestionsByTriviaQuizId(@PathVariable("triviaQuizId") Long triviaQuizId) {
+        try {
+            TriviaQuiz existingTriviaQuiz = triviaQuizService.getTriviaQuizById(triviaQuizId);
+            List<TriviaQuestion> triviaQuestionList = new ArrayList<>();
+            triviaQuestionList.addAll(existingTriviaQuiz.getTriviaQuestions());
+            Collections.sort(triviaQuestionList, new TriviaQuestionComparator());
+            for (TriviaQuestion triviaQuestion : triviaQuestionList) {
+                if (triviaQuestion.getQuestionIsValid() == false) {
+                    triviaQuestionList.remove(triviaQuestion);
+                }
+            }
+            return new ResponseEntity<>(triviaQuestionList, HttpStatus.OK);
+        } catch (TriviaQuizNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PutMapping("/triviaQuiz/{triviaQuizId}/reorderQuestions")
     public ResponseEntity<List<TriviaQuestion>> reorderTriviaQuestions(@PathVariable(value="triviaQuizId") Long triviaQuizId, @RequestBody List<QuestionToReorderDTO> questionToReorderDTOList) {
         try {
