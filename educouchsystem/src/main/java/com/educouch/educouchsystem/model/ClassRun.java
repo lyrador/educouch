@@ -74,12 +74,16 @@ public class ClassRun {
     @OneToMany(mappedBy = "classRun", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<TriviaQuiz> triviaQuizzes;
 
+    @OneToMany(mappedBy = "classRun", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Poll> polls;
+
     public ClassRun() {
         this.enrolmentStatusTrackers = new ArrayList<>();
         this.enrolledLearners = new ArrayList<>();
         this.learnerTransactions = new ArrayList<>();
         this.events = new ArrayList<>();
         this.triviaQuizzes = new ArrayList<>();
+        this.polls = new ArrayList<>();
     }
 
     public ClassRun(LocalDate classRunStart, LocalDate classRunEnd, LocalTime classRunStartTime, LocalTime classRunEndTime, int minClassSize, int maximumCapacity, Integer[] daysOfWeek, RecurringEnum recurringEnum) {
@@ -287,5 +291,13 @@ public class ClassRun {
 
     public void setTriviaQuizzes(List<TriviaQuiz> triviaQuizzes) {
         this.triviaQuizzes = triviaQuizzes;
+    }
+
+    public List<Poll> getPolls() {
+        return polls;
+    }
+
+    public void setPolls(List<Poll> polls) {
+        this.polls = polls;
     }
 }
