@@ -20,7 +20,7 @@ public class ReelPreferenceProfile implements Serializable {
     private Learner learner;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @OneToMany
+    @ManyToMany
     private Set<Course> courseTags;
 
     public ReelPreferenceProfile() {
