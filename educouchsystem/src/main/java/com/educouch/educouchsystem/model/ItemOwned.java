@@ -18,7 +18,7 @@ public class ItemOwned {
 
     private Integer itemPoints = 0;
 
-    private String currImageUrl;
+    private String imageUrl;
 
     @ManyToOne
     @JoinColumn
@@ -104,7 +104,7 @@ public class ItemOwned {
     // set item is only called once!
     public void setItem(Item item) {
         this.item = item;
-        this.currImageUrl = this.item.getImageUrl();
+        this.imageUrl = this.item.getImageUrl();
     }
 
     public Integer getItemPoints() {
@@ -115,11 +115,11 @@ public class ItemOwned {
         this.itemPoints = itemPoints;
     }
 
-    public String getCurrImageUrl() {
-        return currImageUrl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setCurrImageUrl(String currImageUrl) {
-        this.currImageUrl = currImageUrl;
+    public void setImageUrl(String currImageUrl) {
+        this.imageUrl = currImageUrl;
     }
 }
