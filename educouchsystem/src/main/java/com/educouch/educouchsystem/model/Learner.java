@@ -68,7 +68,8 @@ public class Learner {
     @OneToMany(mappedBy = "createdByLearner")
     private List<TechnicalSupportRequest> requests;
 
-    @OneToMany(mappedBy = "learner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+//    @OneToMany(mappedBy = "learner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "learner")
     private List<PollQuestionResponse> pollQuestionResponses;
 
     public Learner() {
