@@ -2,10 +2,7 @@ package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.dto.CourseTagDTO;
 import com.educouch.educouchsystem.dto.ReelDTO;
-import com.educouch.educouchsystem.model.Instructor;
-import com.educouch.educouchsystem.model.Learner;
-import com.educouch.educouchsystem.model.Reel;
-import com.educouch.educouchsystem.model.ReelPreferenceProfile;
+import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.repository.ReelPreferenceProfileRepository;
 import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
@@ -20,10 +17,11 @@ public interface ReelService {
 
     //instructor interactions
     public Reel createReel(ReelDTO reelDTO) throws InstructorNotFoundException, CourseNotFoundException;
-    public Reel updateReel(Long reelId, ReelDTO incompleteDTO) throws ReelNotFoundException;
-    public Reel submitReel(Long reelId) throws ReelNotFoundException;
+    public Reel updateReel(Long reelId, ReelDTO incompleteDTO) throws ReelNotFoundException, CourseNotFoundException;
+    public Reel submitReel(Long reelId,  ReelDTO incompleteDTO) throws ReelNotFoundException;
     public Reel retrieveReelById(Long reelId) throws ReelNotFoundException;
     public List<Reel> getAllReelsByInstructorId(Long instructorId) throws InstructorNotFoundException;
+    public List<Course> findCoursesUnderInstructor(Long instructorId) throws InstructorNotFoundException;
     public Reel deleteReelById(Long Id) throws ReelNotFoundException;
     public Reel saveReel(Reel reel);
 
@@ -35,7 +33,7 @@ public interface ReelService {
     public List<Reel> getAllApprovedReels();
     public List<Reel> getAllRejectedReels();
 
-        //learner interactions
+    //learner interactions
     public ReelPreferenceProfile createReelPreferenceProfile(Long learnerId) throws LearnerNotFoundException;
     public List<Reel> findReelsForLearner(Long learnerId);
     public List<Reel> findRecentReels(Long learnerId);

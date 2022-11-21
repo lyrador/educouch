@@ -147,15 +147,15 @@ public class ReelController {
             Reel updatedReel = reelService.updateReel(reelId, incompleteDTO);
             updatedReel = unmarshallReel(updatedReel);
             return new ResponseEntity<>(updatedReel, HttpStatus.OK);
-        }catch ( ReelNotFoundException ex) {
+        }catch ( ReelNotFoundException | CourseNotFoundException ex) {
             throw new RuntimeException(ex);
         }
     }
 
     @PutMapping("/submitReel/{reelId}")
-    public ResponseEntity<Reel> submitReel(@PathVariable("reelId") Long reelId) {
+    public ResponseEntity<Reel> submitReel(@PathVariable("reelId") Long reelId, @RequestBody ReelDTO incompleteDTO) {
         try {
-            Reel updatedReel = reelService.submitReel(reelId);
+            Reel updatedReel = reelService.submitReel(reelId, incompleteDTO);
             updatedReel = unmarshallReel(updatedReel);
             return new ResponseEntity<>(updatedReel, HttpStatus.OK);
         }catch ( ReelNotFoundException ex) {
@@ -189,6 +189,24 @@ public class ReelController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/getCoursesUnderInstructor/{instructorId}")
+    public ResponseEntity<List<Course>> getCoursesUnderInstructor(@PathVariable(value = "instructorId") Long instructorId) {
+        try {
+            List<Course> courses = reelService.findCoursesUnderInstructor(instructorId);
+            for(Course c : courses) {
+                c.setClassRuns(new ArrayList<>());
+                c.setAssessments(new ArrayList<>());
+                c.setInteractiveBooks(new ArrayList<>());
+                c.setAssessments(new ArrayList<>());
+            }
+            return new ResponseEntity<>(courses, HttpStatus.OK);
+        } catch (InstructorNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
 
     //<<learner interaction related>>
     @PutMapping("/viewReel/{reelId}/{learnerId}")
@@ -249,13 +267,6 @@ public class ReelController {
         });
         return reel;
     }
-
-
-
-
-
-
-
 
     public List<ReelDTO> convertReelsToReelDTOs(List<Reel> reels) {
         List<ReelDTO> reelDTOS = new ArrayList<>();
