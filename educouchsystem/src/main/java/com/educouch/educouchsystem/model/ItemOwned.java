@@ -14,7 +14,11 @@ public class ItemOwned {
     private Integer positionY;
     private Boolean isHorizontal = false;
     private Boolean isHidden = false;
-    private ItemSizeEnum size;
+    private ItemSizeEnum size = ItemSizeEnum.SMALL;
+
+    private Integer itemPoints = 0;
+
+    private String currImageUrl;
 
     @ManyToOne
     @JoinColumn
@@ -36,6 +40,12 @@ public class ItemOwned {
         this.positionY = positionY;
         this.isHorizontal = isHorizontal;
         this.size = size;
+    }
+
+    public ItemOwned(Integer positionX, Integer positionY) {
+        this.positionX = positionX;
+        this.positionY = positionY;
+
     }
 
     public Long getItemOwnedId() {
@@ -90,7 +100,26 @@ public class ItemOwned {
         return item;
     }
 
+
+    // set item is only called once!
     public void setItem(Item item) {
         this.item = item;
+        this.currImageUrl = this.item.getImageUrl();
+    }
+
+    public Integer getItemPoints() {
+        return itemPoints;
+    }
+
+    public void setItemPoints(Integer itemPoints) {
+        this.itemPoints = itemPoints;
+    }
+
+    public String getCurrImageUrl() {
+        return currImageUrl;
+    }
+
+    public void setCurrImageUrl(String currImageUrl) {
+        this.currImageUrl = currImageUrl;
     }
 }

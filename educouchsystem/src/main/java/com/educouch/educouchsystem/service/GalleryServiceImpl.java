@@ -1,15 +1,16 @@
 package com.educouch.educouchsystem.service;
 
-import com.educouch.educouchsystem.model.Gallery;
-import com.educouch.educouchsystem.model.Item;
-import com.educouch.educouchsystem.model.ItemOwned;
-import com.educouch.educouchsystem.model.Learner;
+import com.educouch.educouchsystem.model.*;
+import com.educouch.educouchsystem.repository.EnhancementItemRepository;
 import com.educouch.educouchsystem.repository.GalleryRepository;
 import com.educouch.educouchsystem.repository.ItemOwnedRepository;
 import com.educouch.educouchsystem.repository.ItemRepository;
 import com.educouch.educouchsystem.util.enumeration.ItemSizeEnum;
+import com.educouch.educouchsystem.util.enumeration.ItemType;
 import com.educouch.educouchsystem.util.exception.*;
+import net.bytebuddy.build.ToStringPlugin;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.stereotype.Service;
 
 import javax.xml.stream.Location;
@@ -27,15 +28,57 @@ public class GalleryServiceImpl implements GalleryService {
     private ItemOwnedRepository itemOwnedRepository;
 
     @Autowired
+    private EnhancementItemRepository enhancementItemRepository;
+
+    @Autowired
     private ItemRepository itemRepository;
 
     @Autowired
     private LearnerService learnerService;
 
+
+
+    private final String largeTreeUrl = "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1669057396006_sprout%20%281%29.png";
+    private final String mediumTreeUrl = "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1669057232592_sesame%20%281%29.png";
+    private final String mediumBuildingUrl = "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1669057691507_wood.png";
+    private final String largeBuildingUrl = "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1669057713052_wood%20%281%29.png";
+
     // item first
     @Override
     public Item saveItem(Item item) {
-        return itemRepository.save(item);
+        Item newItem = new Item();
+        // copy the compulsory ones first
+        newItem.setPrice(item.getPrice());
+        newItem.setItemName(item.getItemName());
+        newItem.setItemDescription(item.getItemDescription());
+        newItem.setImageUrl(item.getImageUrl());
+        newItem.setItemTypeEnum(item.getItemTypeEnum());
+        newItem.setLargeAvailable(item.getLargeAvailable());
+        newItem.setMediumAvailable(item.getMediumAvailable());
+
+        if(item.getMediumAvailable()) {
+            if(item.getItemTypeEnum() == ItemType.BUILDING) {
+                newItem.setMediumImageUrl(mediumBuildingUrl);
+            } else {
+                newItem.setMediumImageUrl(mediumTreeUrl);
+            }
+
+            newItem.setMediumPointThreshold(item.getMediumPointThreshold());
+        }
+
+        if(item.getLargeAvailable()) {
+            if(item.getItemTypeEnum() == ItemType.BUILDING) {
+                newItem.setLargeImageUrl(largeBuildingUrl);
+            } else {
+                newItem.setLargeImageUrl(largeTreeUrl);
+            }
+
+            newItem.setLargePointThreshold(item.getLargePointThreshold());
+        }
+
+
+
+        return itemRepository.save(newItem);
     }
 
     @Override
@@ -302,6 +345,19 @@ public class GalleryServiceImpl implements GalleryService {
         Learner learner = learnerService.getLearnerById(learnerId);
         return learner.getTreePoints();
     }
+
+    @Override
+    public EnhancementItem initiateEnhancementItem(EnhancementItem e) {
+        EnhancementItem newEnhancementItem = enhancementItemRepository.save(e);
+        return newEnhancementItem;
+    }
+
+    @Override
+    public List<EnhancementItem> getAllEnhancementItems() {
+        return enhancementItemRepository.findAll();
+    }
+
+
 
 
 
