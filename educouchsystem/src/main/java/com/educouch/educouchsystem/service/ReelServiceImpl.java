@@ -187,9 +187,11 @@ public class ReelServiceImpl implements ReelService{
                 //not enough suggested videos
                 List<Reel> recentReels = findRecentReels(learnerId);
                 for(Reel recentReel : recentReels) {
-                    reelsToReturn.add(recentReel);
-                    if(reelsToReturn.size()>5) {
-                        break;
+                    if(!reelsToReturn.contains(recentReel)) {
+                        reelsToReturn.add(recentReel);
+                        if (reelsToReturn.size() > 4) {
+                            break;
+                        }
                     }
                 }
             }

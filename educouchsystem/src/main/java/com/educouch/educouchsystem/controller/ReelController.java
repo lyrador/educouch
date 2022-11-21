@@ -240,7 +240,6 @@ public class ReelController {
         for(Reel r : reels) {
             r = unmarshallReel(r);
         }
-//        reels.stream().forEach(reel -> reel=unmarshallReel(reel));
         return new ResponseEntity<>(reels, HttpStatus.OK);
     }
 
