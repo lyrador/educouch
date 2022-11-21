@@ -1,15 +1,11 @@
 package com.educouch.educouchsystem.controller;
 
-
-import com.educouch.educouchsystem.dto.AnnouncementDTO;
-import com.educouch.educouchsystem.dto.ForumDTO;
 import com.educouch.educouchsystem.dto.TechnicalSupportRequestDTO;
 import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.service.EducatorService;
 import com.educouch.educouchsystem.service.LearnerService;
 import com.educouch.educouchsystem.service.TechnicalSupportRequestService;
 import com.educouch.educouchsystem.util.enumeration.TechnicalSupportRequestStatusEnum;
-import com.educouch.educouchsystem.util.exception.AnnouncementNotFoundException;
 import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
 import com.educouch.educouchsystem.util.exception.TechnicalSupportRequestNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +41,7 @@ public class TechnicalSupportRequestController {
             newRequest.setTitle(requestDTO.getRequestTitle());
             newRequest.setDescription(requestDTO.getRequestDescription());
             newRequest.setTimestamp(LocalDateTime.now());
+            newRequest.setImageUrl(requestDTO.getImageUrl());
 
             if (requestDTO.getRequestStatus().equals("PENDING")) {
                 newRequest.setTechnicalSupportRequestStatus(TechnicalSupportRequestStatusEnum.PENDING);
@@ -85,6 +82,7 @@ public class TechnicalSupportRequestController {
                 requestDTO.setRequestId(request.getTechnicalSupportRequestId());
                 requestDTO.setRequestTitle(request.getTitle());
                 requestDTO.setRequestDescription(request.getDescription());
+                requestDTO.setImageUrl(request.getImageUrl());
                 requestDTO.setCreatedDateTime(request.getTimestamp().format(formatter));
                 if (request.getTechnicalSupportRequestStatus() == TechnicalSupportRequestStatusEnum.PENDING) {
                     requestDTO.setRequestStatus("PENDING");
@@ -119,6 +117,7 @@ public class TechnicalSupportRequestController {
                 requestDTO.setRequestId(request.getTechnicalSupportRequestId());
                 requestDTO.setRequestTitle(request.getTitle());
                 requestDTO.setRequestDescription(request.getDescription());
+                requestDTO.setImageUrl(request.getImageUrl());
                 requestDTO.setCreatedDateTime(request.getTimestamp().format(formatter));
                 if (request.getTechnicalSupportRequestStatus() == TechnicalSupportRequestStatusEnum.PENDING) {
                     requestDTO.setRequestStatus("PENDING");
@@ -156,6 +155,7 @@ public class TechnicalSupportRequestController {
                 requestDTO.setRequestId(request.getTechnicalSupportRequestId());
                 requestDTO.setRequestTitle(request.getTitle());
                 requestDTO.setRequestDescription(request.getDescription());
+                requestDTO.setImageUrl(request.getImageUrl());
                 requestDTO.setCreatedDateTime(request.getTimestamp().format(formatter));
                 if (request.getTechnicalSupportRequestStatus() == TechnicalSupportRequestStatusEnum.PENDING) {
                     requestDTO.setRequestStatus("PENDING");
@@ -190,6 +190,7 @@ public class TechnicalSupportRequestController {
                 requestDTO.setRequestId(request.getTechnicalSupportRequestId());
                 requestDTO.setRequestTitle(request.getTitle());
                 requestDTO.setRequestDescription(request.getDescription());
+                requestDTO.setImageUrl(request.getImageUrl());
                 requestDTO.setCreatedDateTime(request.getTimestamp().format(formatter));
                 if (request.getTechnicalSupportRequestStatus() == TechnicalSupportRequestStatusEnum.PENDING) {
                     requestDTO.setRequestStatus("PENDING");
@@ -237,6 +238,7 @@ public class TechnicalSupportRequestController {
                 requestDTO.setRequestId(request.getTechnicalSupportRequestId());
                 requestDTO.setRequestTitle(request.getTitle());
                 requestDTO.setRequestDescription(request.getDescription());
+                requestDTO.setImageUrl(request.getImageUrl());
                 requestDTO.setCreatedDateTime(request.getTimestamp().format(formatter));
                 if (request.getTechnicalSupportRequestStatus() == TechnicalSupportRequestStatusEnum.PENDING) {
                     requestDTO.setRequestStatus("PENDING");
