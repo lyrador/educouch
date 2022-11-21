@@ -57,6 +57,23 @@ public class Item {
         this.itemTypeEnum = itemTypeEnum;
     }
 
+    public Item(Integer price, String imageUrl, String mediumImageUrl, String largeImageUrl, Boolean smallAvailable,
+                Boolean mediumAvailable, Boolean largeAvailable, String itemName, String itemDescription,
+                Integer mediumPointThreshold, Integer largePointThreshold, ItemType itemTypeEnum) {
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.mediumImageUrl = mediumImageUrl;
+        this.largeImageUrl = largeImageUrl;
+        this.smallAvailable = smallAvailable;
+        this.mediumAvailable = mediumAvailable;
+        this.largeAvailable = largeAvailable;
+        this.itemName = itemName;
+        this.itemDescription = itemDescription;
+        this.mediumPointThreshold = mediumPointThreshold;
+        this.largePointThreshold = largePointThreshold;
+        this.itemTypeEnum = itemTypeEnum;
+    }
+
     public Long getItemId() {
         return itemId;
     }

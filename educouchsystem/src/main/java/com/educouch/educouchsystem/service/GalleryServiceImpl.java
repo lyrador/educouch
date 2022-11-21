@@ -64,6 +64,8 @@ public class GalleryServiceImpl implements GalleryService {
             }
 
             newItem.setMediumPointThreshold(item.getMediumPointThreshold());
+        } else {
+            newItem.setMediumAvailable(false);
         }
 
         if(item.getLargeAvailable()) {
@@ -74,6 +76,8 @@ public class GalleryServiceImpl implements GalleryService {
             }
 
             newItem.setLargePointThreshold(item.getLargePointThreshold());
+        } else {
+            newItem.setLargeAvailable(false);
         }
 
 
@@ -118,6 +122,15 @@ public class GalleryServiceImpl implements GalleryService {
             if(learnerBalanceIsEnough(newItem, item, learner)){
                 // adding reference to the catalogue
                 newItem.setItem(item);
+
+                // set the curr image url
+                // rule -> if 'others' -> the default imageUrl.
+                // rule -> if medium is available -> currImageUrl = medium
+                if(item.getMediumAvailable()) {
+                    newItem.setImageUrl(item.getMediumImageUrl());
+                } else {
+                    newItem.setImageUrl(item.getImageUrl());
+                }
                 newItem = itemOwnedRepository.save(newItem);
 
                 // add the new item to the gallery
