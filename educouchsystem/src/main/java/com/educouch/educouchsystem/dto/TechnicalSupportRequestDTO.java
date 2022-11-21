@@ -7,6 +7,8 @@ public class TechnicalSupportRequestDTO {
 
     private String requestDescription;
 
+    private String imageUrl;
+
     private String requestStatus;
 
     private String createdDateTime;
@@ -20,10 +22,11 @@ public class TechnicalSupportRequestDTO {
     public TechnicalSupportRequestDTO() {
     }
 
-    public TechnicalSupportRequestDTO(Long requestId, String requestTitle, String requestDescription, String requestStatus, String createdDateTime, Long createdByUserId, String createdByUserName, String createdByUserType) {
+    public TechnicalSupportRequestDTO(Long requestId, String requestTitle, String requestDescription, String imageUrl, String requestStatus, String createdDateTime, Long createdByUserId, String createdByUserName, String createdByUserType) {
         this.requestId = requestId;
         this.requestTitle = requestTitle;
         this.requestDescription = requestDescription;
+        this.imageUrl = imageUrl;
         this.requestStatus = requestStatus;
         this.createdDateTime = createdDateTime;
         this.createdByUserId = createdByUserId;
@@ -53,6 +56,14 @@ public class TechnicalSupportRequestDTO {
 
     public void setRequestDescription(String requestDescription) {
         this.requestDescription = requestDescription;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getRequestStatus() {

@@ -20,6 +20,8 @@ public class TechnicalSupportRequest {
 
     private LocalDateTime timestamp;
 
+    private String imageUrl;
+
     @Enumerated
     @Column(name="technicalSupportRequestStatus")
     private TechnicalSupportRequestStatusEnum technicalSupportRequestStatus;
@@ -37,10 +39,11 @@ public class TechnicalSupportRequest {
         this.technicalSupportRequestStatus = TechnicalSupportRequestStatusEnum.PENDING;
     }
 
-    public TechnicalSupportRequest(String title, String description, LocalDateTime timestamp) {
+    public TechnicalSupportRequest(String title, String description, LocalDateTime timestamp, String imageUrl) {
         this.title = title;
         this.description = description;
         this.timestamp = timestamp;
+        this.imageUrl = imageUrl;
     }
 
     public Long getTechnicalSupportRequestId() {
@@ -73,6 +76,14 @@ public class TechnicalSupportRequest {
 
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public TechnicalSupportRequestStatusEnum getTechnicalSupportRequestStatus() {
