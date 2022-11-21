@@ -69,7 +69,7 @@ public class Learner {
     private List<TechnicalSupportRequest> requests;
 
     @OneToMany(mappedBy = "learner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<PollQuestionResponse> pollQuestionResponses;
+    private List<PollQuestionResponse> pollQuestionResponses = new ArrayList<>();
 
     public Learner() {
         this.classRuns = new ArrayList<>();
@@ -77,7 +77,7 @@ public class Learner {
         this.learnerTransactions = new ArrayList<>();
         this.requests = new ArrayList<>();
         // this.triviaQuestionResponses = new ArrayList<>();
-        this.pollQuestionResponses = new ArrayList<>();
+//        this.pollQuestionResponses = new ArrayList<>();
     }
 
     // public Learner(String name, String address, String email, String password,
