@@ -3,6 +3,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class OrganisationAdmin {
@@ -25,7 +27,11 @@ public class OrganisationAdmin {
     @OneToOne(mappedBy = "organisationAdmin")
     private Organisation organisation;
 
+    @OneToMany(mappedBy="createdByOrganisationAdmin")
+    private List<TechnicalSupportRequest> requests;
+
     public OrganisationAdmin() {
+        this.requests = new ArrayList<>();
     }
 
     public OrganisationAdmin(@NotBlank(message = "Name is mandatory") String name, String email, String password, String username) {
@@ -98,5 +104,13 @@ public class OrganisationAdmin {
 
     public void setActive(Boolean active) {
         isActive = active;
+    }
+
+    public List<TechnicalSupportRequest> getRequests() {
+        return requests;
+    }
+
+    public void setRequests(List<TechnicalSupportRequest> requests) {
+        this.requests = requests;
     }
 }

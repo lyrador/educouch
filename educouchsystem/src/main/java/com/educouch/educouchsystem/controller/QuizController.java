@@ -162,9 +162,6 @@ public class QuizController {
         }
     }
 
-
-
-
     public Quiz updateQuizQuestions(Quiz oldQuiz, List<QuestionDTO> questionDTOs) throws QuestionNotFoundException, OptionNotFoundException{
 
         List<Question> questions = oldQuiz.getQuizQuestions();

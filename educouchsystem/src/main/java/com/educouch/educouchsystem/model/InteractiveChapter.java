@@ -12,7 +12,7 @@ public class InteractiveChapter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long interactiveChapterId;
+    private Long interactiveChapterId;
     @Column(name="chapterTitle", nullable = false)
     private String chapterTitle;
 
