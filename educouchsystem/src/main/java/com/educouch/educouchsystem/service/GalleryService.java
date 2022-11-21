@@ -1,5 +1,6 @@
 package com.educouch.educouchsystem.service;
 
+import com.educouch.educouchsystem.model.EnhancementItem;
 import com.educouch.educouchsystem.model.Gallery;
 import com.educouch.educouchsystem.model.Item;
 import com.educouch.educouchsystem.model.ItemOwned;
@@ -32,4 +33,8 @@ public interface GalleryService {
             ItemOwnedNotFoundException, LocationOccupiedException;
 
     public void unhideItemOwned(Long learnerId, Long itemOwnedId) throws UnauthorizedActionException, ItemOwnedNotFoundException;
+
+    public EnhancementItem initiateEnhancementItem(EnhancementItem e);
+
+    public List<EnhancementItem> getAllEnhancementItems();
 }
