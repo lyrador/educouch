@@ -80,15 +80,41 @@ public class AttachmentServiceImpl implements AttachmentService{
     public void uploadFileToFolder(Attachment attachment, Long folderId) throws FolderNotFoundException,
             FolderUnableToSaveException {
         Folder f = folderService.getFolder(folderId);
-        f.getAttachments().add(attachment);
-        folderService.saveFolder(f);
+        Boolean isValid = isValid(folderId, attachment.getFileOriginalName());
+
+        if(isValid) {
+            f.getAttachments().add(attachment);
+            folderService.saveFolder(f);
+        } else {
+            throw new FolderUnableToSaveException("Duplicate attachment name detected.");
+        }
+
     }
 
     @Override
     public void rename(Long attachmentId, String fileName) throws FileNotFoundException {
         Attachment attachment = getAttachment(attachmentId);
-        attachment.setFileOriginalName(fileName);
-        attachmentRepository.save(attachment);
+        List<Folder> listOfFolders = folderService.getAllFolders();
+        Folder parentFolder = new Folder();
+        for(Folder f: listOfFolders) {
+            if(f.getAttachments().contains(attachment)) {
+                parentFolder = f;
+                break;
+            }
+        }
+
+        if(parentFolder.getFolderId() != null) {
+            Boolean isValid = isValid(parentFolder.getFolderId(), fileName);
+            if(isValid) {
+                attachment.setFileOriginalName(fileName);
+                attachmentRepository.save(attachment);
+            } else {
+                throw new FileNotFoundException("Duplicate attachment name detected.");
+            }
+        } else {
+            throw new FileNotFoundException("Unable to find the parent folder of the file.");
+        }
+
     }
 
     @Override
@@ -99,6 +125,24 @@ public class AttachmentServiceImpl implements AttachmentService{
         f.getAttachments().remove(attachment);
         folderService.saveFolder(f);
         this.deleteAttachment(attachmentId);
+
+    }
+
+    private Boolean isValid(Long folderId, String attachmentTitle) {
+        try {
+            Folder folder = folderService.getFolder(folderId);
+            List<Attachment> listOfAttachments = folder.getAttachments();
+            for(Attachment a: listOfAttachments) {
+                if(a.getFileOriginalName().equals(attachmentTitle)) {
+                    System.out.println("Is invalid.");
+                    return false;
+                }
+            }
+
+            return true;
+        } catch(FolderNotFoundException ex) {
+            return false;
+        }
 
     }
 
