@@ -1,6 +1,6 @@
 package com.educouch.educouchsystem.model;
 
-import com.educouch.educouchsystem.util.enumeration.TechnicalSupportRequestStatus;
+import com.educouch.educouchsystem.util.enumeration.TechnicalSupportRequestStatusEnum;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -22,22 +22,19 @@ public class TechnicalSupportRequest {
 
     @Enumerated
     @Column(name="technicalSupportRequestStatus")
-    private TechnicalSupportRequestStatus technicalSupportRequestStatus;
+    private TechnicalSupportRequestStatusEnum technicalSupportRequestStatus;
 
-    @OneToOne
-    @JoinColumn(name="learner_id")
+    @ManyToOne
     private Learner createdByLearner;
 
-    @OneToOne
-    @JoinColumn(name="instructor_id")
+    @ManyToOne
     private Instructor createdByInstructor;
 
-    @OneToOne
-    @JoinColumn(name="organisationAdmin_id")
+    @ManyToOne
     private OrganisationAdmin createdByOrganisationAdmin;
 
     public TechnicalSupportRequest() {
-        this.technicalSupportRequestStatus = TechnicalSupportRequestStatus.PENDING;
+        this.technicalSupportRequestStatus = TechnicalSupportRequestStatusEnum.PENDING;
     }
 
     public TechnicalSupportRequest(String title, String description, LocalDateTime timestamp) {
@@ -78,11 +75,11 @@ public class TechnicalSupportRequest {
         this.timestamp = timestamp;
     }
 
-    public TechnicalSupportRequestStatus getTechnicalSupportRequestStatus() {
+    public TechnicalSupportRequestStatusEnum getTechnicalSupportRequestStatus() {
         return technicalSupportRequestStatus;
     }
 
-    public void setTechnicalSupportRequestStatus(TechnicalSupportRequestStatus technicalSupportRequestStatus) {
+    public void setTechnicalSupportRequestStatus(TechnicalSupportRequestStatusEnum technicalSupportRequestStatus) {
         this.technicalSupportRequestStatus = technicalSupportRequestStatus;
     }
 

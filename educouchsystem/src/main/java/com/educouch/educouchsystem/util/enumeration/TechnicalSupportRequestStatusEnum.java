@@ -1,6 +1,6 @@
 package com.educouch.educouchsystem.util.enumeration;
 
-public enum TechnicalSupportRequestStatus {
+public enum TechnicalSupportRequestStatusEnum {
     PENDING,
 
     RESOLVED

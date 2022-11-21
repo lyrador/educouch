@@ -1,6 +1,5 @@
 package com.educouch.educouchsystem.model;
 
-
 import com.stripe.exception.*;
 import com.stripe.model.Customer;
 
@@ -16,13 +15,13 @@ import java.util.Map;
 @Entity
 public class Learner {
 
-    //@id makes this a primary key, GenerationType.IDENTITY lets PK auto-increment
+    // @id makes this a primary key, GenerationType.IDENTITY lets PK auto-increment
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long learnerId;
     @Column(nullable = false)
     private String name;
-//    private String address;
+    // private String address;
     @Column(nullable = false, unique = true)
     private String email;
     @Column(nullable = false)
@@ -45,9 +44,8 @@ public class Learner {
     private Integer treePoints = 0;
 
     @ManyToMany
-    @JoinTable(name = "Learner_ClassRun",
-    joinColumns = {@JoinColumn(name = "learnerId")},
-    inverseJoinColumns = {@JoinColumn(name = "classRunId")})
+    @JoinTable(name = "Learner_ClassRun", joinColumns = { @JoinColumn(name = "learnerId") }, inverseJoinColumns = {
+            @JoinColumn(name = "classRunId") })
     private List<ClassRun> classRuns;
 
     @OneToMany(fetch = FetchType.EAGER)
@@ -67,40 +65,46 @@ public class Learner {
     @OneToMany(mappedBy = "learner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<TriviaQuestionResponse> triviaQuestionResponses = new ArrayList<>();
 
+    @OneToMany(mappedBy = "createdByLearner")
+    private List<TechnicalSupportRequest> requests;
 
+    @OneToMany(mappedBy = "learner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<PollQuestionResponse> pollQuestionResponses;
 
     public Learner() {
         this.classRuns = new ArrayList<>();
         this.enrolmentStatusTrackers = new ArrayList<>();
         this.learnerTransactions = new ArrayList<>();
-//        this.triviaQuestionResponses = new ArrayList<>();
+        this.requests = new ArrayList<>();
+        // this.triviaQuestionResponses = new ArrayList<>();
+        this.pollQuestionResponses = new ArrayList<>();
     }
 
-//    public Learner(String name, String address, String email, String password, String username, String profilePictureURL) {
-//        this.name = name;
-//        this.address = address;
-//        this.email = email;
-//        this.password = password;
-//        this.username = username;
-//        this.profilePictureURL = profilePictureURL;
-//        isActive = true;
-//    }
+    // public Learner(String name, String address, String email, String password,
+    // String username, String profilePictureURL) {
+    // this.name = name;
+    // this.address = address;
+    // this.email = email;
+    // this.password = password;
+    // this.username = username;
+    // this.profilePictureURL = profilePictureURL;
+    // isActive = true;
+    // }
 
-//    public Learner(String name, String address, String email, String password, String username, String profilePictureURL, Boolean isKid) {
-//        this.name = name;
-//        this.address = address;
-//        this.email = email;
-//        this.password = password;
-//        this.username = username;
-//        this.profilePictureURL = profilePictureURL;
-//        this.isActive = true;
-//        this.isKid = isKid;
-//    }
+    // public Learner(String name, String address, String email, String password,
+    // String username, String profilePictureURL, Boolean isKid) {
+    // this.name = name;
+    // this.address = address;
+    // this.email = email;
+    // this.password = password;
+    // this.username = username;
+    // this.profilePictureURL = profilePictureURL;
+    // this.isActive = true;
+    // this.isKid = isKid;
+    // }
 
-
-
-
-    public Learner(String name, String email, String password, String username, String profilePictureURL, Boolean isKid, String paymentAcc) {
+    public Learner(String name, String email, String password, String username, String profilePictureURL, Boolean isKid,
+            String paymentAcc) {
         new Learner();
         this.name = name;
         this.email = email;
@@ -110,10 +114,11 @@ public class Learner {
         this.isActive = true;
         this.isKid = isKid;
         this.paymentAcc = paymentAcc;
-//        createCustomer();
+        // createCustomer();
     }
 
-    public Learner(String name, String email, String password, String username, String profilePictureURL, Boolean isKid, String paymentAcc, Integer treePoints) {
+    public Learner(String name, String email, String password, String username, String profilePictureURL, Boolean isKid,
+            String paymentAcc, Integer treePoints) {
         new Learner();
         this.name = name;
         this.email = email;
@@ -124,12 +129,13 @@ public class Learner {
         this.isKid = isKid;
         this.paymentAcc = paymentAcc;
         this.treePoints = treePoints;
-//        createCustomer();
+        // createCustomer();
     }
 
     public Long getLearnerId() {
         return learnerId;
     }
+
     public void setLearnerId(Long learnerId) {
         this.learnerId = learnerId;
     }
@@ -142,13 +148,13 @@ public class Learner {
         this.name = name;
     }
 
-//    public String getAddress() {
-//        return address;
-//    }
-//
-//    public void setAddress(String address) {
-//        this.address = address;
-//    }
+    // public String getAddress() {
+    // return address;
+    // }
+    //
+    // public void setAddress(String address) {
+    // this.address = address;
+    // }
 
     public String getEmail() {
         return email;
@@ -245,39 +251,38 @@ public class Learner {
     public void setTriviaQuestionResponses(List<TriviaQuestionResponse> triviaQuestionResponses) {
         this.triviaQuestionResponses = triviaQuestionResponses;
     }
-    //    private String createCustomer() {
-//
-//        Map<String, Object> customerParams = new HashMap<String, Object>();
-//        customerParams.put("description",
-//                this.getName());
-//        customerParams.put("email", this.getEmail());
-//
-//        String id = null;
-//
-//        try {
-//            // Create customer
-//            Customer stripeCustomer = Customer.create(customerParams);
-//            id = stripeCustomer.getId();
-//            System.out.println(stripeCustomer);
-//        } catch (CardException e) {
-//            // Transaction failure
-//        } catch (RateLimitException e) {
-//            // Too many requests made to the API too quickly
-//        } catch (InvalidRequestException e) {
-//            // Invalid parameters were supplied to Stripe's API
-//        } catch (AuthenticationException e) {
-//            // Authentication with Stripe's API failed (wrong API key?)
-//        } catch (APIConnectionException e) {
-//            // Network communication with Stripe failed
-//        } catch (StripeException e) {
-//            // Generic error
-//        } catch (Exception e) {
-//            // Something else happened unrelated to Stripe
-//        }
-//
-//        return id;
-//    }
-
+    // private String createCustomer() {
+    //
+    // Map<String, Object> customerParams = new HashMap<String, Object>();
+    // customerParams.put("description",
+    // this.getName());
+    // customerParams.put("email", this.getEmail());
+    //
+    // String id = null;
+    //
+    // try {
+    // // Create customer
+    // Customer stripeCustomer = Customer.create(customerParams);
+    // id = stripeCustomer.getId();
+    // System.out.println(stripeCustomer);
+    // } catch (CardException e) {
+    // // Transaction failure
+    // } catch (RateLimitException e) {
+    // // Too many requests made to the API too quickly
+    // } catch (InvalidRequestException e) {
+    // // Invalid parameters were supplied to Stripe's API
+    // } catch (AuthenticationException e) {
+    // // Authentication with Stripe's API failed (wrong API key?)
+    // } catch (APIConnectionException e) {
+    // // Network communication with Stripe failed
+    // } catch (StripeException e) {
+    // // Generic error
+    // } catch (Exception e) {
+    // // Something else happened unrelated to Stripe
+    // }
+    //
+    // return id;
+    // }
 
     public List<LearnerTransaction> getLearnerTransactions() {
         return learnerTransactions;
@@ -285,6 +290,14 @@ public class Learner {
 
     public void setLearnerTransactions(List<LearnerTransaction> learnerTransactions) {
         this.learnerTransactions = learnerTransactions;
+    }
+
+    public List<TechnicalSupportRequest> getRequests() {
+        return requests;
+    }
+
+    public void setRequests(List<TechnicalSupportRequest> requests) {
+        this.requests = requests;
     }
 
     public Integer getTreePoints() {
@@ -301,5 +314,13 @@ public class Learner {
 
     public void setGallery(Gallery gallery) {
         this.gallery = gallery;
+    }
+
+    public List<PollQuestionResponse> getPollQuestionResponses() {
+        return pollQuestionResponses;
+    }
+
+    public void setPollQuestionResponses(List<PollQuestionResponse> pollQuestionResponses) {
+        this.pollQuestionResponses = pollQuestionResponses;
     }
 }

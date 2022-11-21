@@ -18,10 +18,12 @@ public class AnnouncementDTO {
 
     private String createdByUserType;
 
+    private String profilePictureUrl;
+
     public AnnouncementDTO() {
     }
 
-    public AnnouncementDTO(Long announcementId, String announcementTitle, String announcementBody, String isRead, String createdDateTime, Long createdByUserId, String createdByUserName, String createdByUserType) {
+    public AnnouncementDTO(Long announcementId, String announcementTitle, String announcementBody, String isRead, String createdDateTime, Long createdByUserId, String createdByUserName, String createdByUserType, String profilePictureUrl) {
         this.announcementId = announcementId;
         this.announcementTitle = announcementTitle;
         this.announcementBody = announcementBody;
@@ -30,6 +32,7 @@ public class AnnouncementDTO {
         this.createdByUserId = createdByUserId;
         this.createdByUserName = createdByUserName;
         this.createdByUserType = createdByUserType;
+        this.profilePictureUrl = profilePictureUrl;
     }
 
     public Long getAnnouncementId() {
@@ -94,5 +97,13 @@ public class AnnouncementDTO {
 
     public void setCreatedByUserType(String createdByUserType) {
         this.createdByUserType = createdByUserType;
+    }
+
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public void setProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl;
     }
 }
