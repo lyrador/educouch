@@ -274,6 +274,11 @@ public class TechnicalSupportRequestController {
     public ResponseEntity<TechnicalSupportRequest> updateRequestStatusById(@PathVariable("requestId") Long requestId, @RequestBody TechnicalSupportRequestDTO requestDTO) {
         try {
             TechnicalSupportRequest existingRequest = technicalSupportRequestService.retrieveTechnicalSupportRequestById(requestId);
+            if (requestDTO.getCreatedByUserType() == "LEARNER") {
+                existingRequest.getCreatedByLearner().setClassRuns(new ArrayList<>());
+            } else if (requestDTO.getCreatedByUserType() == "INSTRUCTOR") {
+                existingRequest.getCreatedByLearner().setClassRuns(new ArrayList<>());
+            }
             if (requestDTO.getRequestStatus().equals("RESOLVED")) {
                 existingRequest.setTechnicalSupportRequestStatus(TechnicalSupportRequestStatusEnum.RESOLVED);
             }
