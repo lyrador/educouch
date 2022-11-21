@@ -1,5 +1,7 @@
 package com.educouch.educouchsystem.service;
 
+import com.educouch.educouchsystem.dto.FolderData;
+import com.educouch.educouchsystem.dto.ParentFolder;
 import com.educouch.educouchsystem.model.Attachment;
 import com.educouch.educouchsystem.model.Course;
 import com.educouch.educouchsystem.model.Folder;
@@ -17,9 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class FolderServiceImpl implements FolderService{
@@ -177,23 +177,43 @@ public class FolderServiceImpl implements FolderService{
 
     public void renameFolderByFolderId(String folderName, Long folderId) throws FolderNotFoundException,FolderUnableToSaveException {
         Folder f = folderRepository.getReferenceById(folderId);
-        Folder parentFolder = folderRepository.getReferenceById(f.getParentFolder().getFolderId());
-        List<Folder> listOfChildFolders = parentFolder.getChildFolders();
-        for(Folder childFolder: listOfChildFolders) {
-            if(childFolder.getFolderId().equals(folderName)) {
-                throw new FolderUnableToSaveException("Duplicate name detected. ");
-            }
-        }
         if(f != null) {
-            f.setFolderName(folderName);
-            folderRepository.save(f);
+            if(f.getParentFolder() != null) {
+                // is child folder
+                Folder parentFolder = folderRepository.getReferenceById(f.getParentFolder().getFolderId());
+                List<Folder> listOfChildFolders = parentFolder.getChildFolders();
+                for(Folder childFolder: listOfChildFolders) {
+                    if(childFolder.getFolderName().equals(folderName)) {
+                        throw new FolderUnableToSaveException("Duplicate name detected. ");
+                    }
+                }
+
+                f.setFolderName(folderName);
+                folderRepository.save(f);
+            } else {
+                // is parent folder
+                try {
+                    Course c = courseService.getCourseById(f.getCourse().getCourseId());
+                    List<Folder> listOfChildFolders = c.getFolders();
+                    for(Folder childFolder: listOfChildFolders) {
+                        if(childFolder.getFolderName().equals(folderName)) {
+                            throw new FolderUnableToSaveException("Duplicate name detected. ");
+                        }
+                    }
+                    f.setFolderName(folderName);
+                    folderRepository.save(f);
+                } catch(CourseNotFoundException ex) {
+                    throw new FolderNotFoundException("Unable to find folder within the course.");
+                }
+            }
         } else {
             throw new FolderNotFoundException("Folder cannot be found. ");
         }
 
 
-    }
 
+
+    }
     private List<Folder> retrieveParentFolders(Course c) {
 
         List<Folder> folders = c.getFolders();
@@ -205,6 +225,29 @@ public class FolderServiceImpl implements FolderService{
         }
 
         return parentFolders;
+    }
+
+    @Override
+    public List<FolderData> retrieveParentFolders(Long folderId) {
+        List<FolderData> listOfFolderData = new ArrayList<>();
+        Folder folder = folderRepository.getReferenceById(folderId);
+        listOfFolderData.add(new FolderData(folder.getFolderId().toString(), folder.getFolderName()));
+        if(folder != null) {
+            Folder parentFolder = folder.getParentFolder();
+            while(parentFolder != null) {
+                listOfFolderData.add(new FolderData(parentFolder.getFolderId().toString(), parentFolder.getFolderName()));
+                parentFolder = parentFolder.getParentFolder();
+            }
+            List<FolderData> swapped = new ArrayList<>();
+            for(int i = listOfFolderData.size() - 1; i >= 0; i--) {
+                swapped.add(listOfFolderData.get(i));
+            }
+            return swapped;
+        } else {
+            return listOfFolderData;
+        }
+
+
     }
 
 
