@@ -30,8 +30,8 @@ public class ReelDTO {
     private String creatorName;    //attribute not in Reel entity
     private Date reelTimeStamp;
     private Attachment video;
-    private Set<Learner> likers;
-    private Set<Learner> viewers;
+    private List<Learner> likers;
+    private List<Learner> viewers;
     private boolean isLiked;     //attribute not in Reel entity
     private String rejectionReason;
 
@@ -148,19 +148,19 @@ public class ReelDTO {
         isLiked = liked;
     }
 
-    public Set<Learner> getLikers() {
+    public List<Learner> getLikers() {
         return likers;
     }
 
-    public void setLikers(Set<Learner> likers) {
+    public void setLikers(List<Learner> likers) {
         this.likers = likers;
     }
 
-    public Set<Learner> getViewers() {
+    public List<Learner> getViewers() {
         return viewers;
     }
 
-    public void setViewers(Set<Learner> viewers) {
+    public void setViewers(List<Learner> viewers) {
         this.viewers = viewers;
     }
 

@@ -184,10 +184,13 @@ public class ReelServiceImpl implements ReelService{
                 break;
             }
             if(reelsToReturn.size()<5) {
-                //not enough videos
+                //not enough suggested videos
                 List<Reel> recentReels = findRecentReels(learnerId);
                 for(Reel recentReel : recentReels) {
                     reelsToReturn.add(recentReel);
+                    if(reelsToReturn.size()>5) {
+                        break;
+                    }
                 }
             }
         }
@@ -274,8 +277,10 @@ public class ReelServiceImpl implements ReelService{
         Reel r = reelRepository.getReferenceById(reelId);
         Learner l = learnerService.getLearnerById(learnerId);
 
+        //allow learner to view video multiple times
+        r.setNumViews(r.getNumViews() +1);
+
         if(!r.getViewers().contains(l)) {
-            r.setNumViews(r.getNumViews() +1);
             r.getViewers().add(l);
         }
         return reelRepository.save(r);
