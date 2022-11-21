@@ -104,21 +104,21 @@ public class DataLoader implements CommandLineRunner {
         lmsAdminService.saveLmsAdmin(new LmsAdmin("manager", "manager@gmail.com", "password", "manager"));
 
         // create learners
-        Learner learner_1  = learnerService.saveLearnerWithoutGallery(new Learner("Alex", "irenelie@u.nus.edu", "password",
+        Learner learner_1  = learnerService.saveLearner(new Learner("Alex", "irenelie@u.nus.edu", "password",
                 "alex", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1662869709706_alex.png", false,
                 "23456"));
 
 
-        Learner learner_2 = learnerService.saveLearnerWithoutGallery(new Learner("Beatrice", "irenelie1412@gmail.com", "password",
+        Learner learner_2 = learnerService.saveLearner(new Learner("Beatrice", "irenelie1412@gmail.com", "password",
                 "beatrice", "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1665376248092_2938982-middle.png",
                 false, "23456"));
 
-        Learner learner_3 = learnerService.saveLearnerWithoutGallery(new Learner("Carol", "irenelie@nushackers.org", "password",
+        Learner learner_3 = learnerService.saveLearner(new Learner("Carol", "irenelie@nushackers.org", "password",
                 "carol",
                 "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1665376289662_imgbin-computer-icons-woman-avatar-avatar-girl-TBWeJMyXNwtNQA661FQ0rZSv2.jpg",
                 false, "23456"));
 
-        Learner learner_4 = learnerService.saveLearnerWithoutGallery(new Learner("David", "lielieirene@gmail.com", "password",
+        Learner learner_4 = learnerService.saveLearner(new Learner("David", "lielieirene@gmail.com", "password",
                 "david",
                 "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1665376079555_png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png",
                 true, "23456", 100));
