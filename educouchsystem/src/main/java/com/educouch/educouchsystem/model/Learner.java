@@ -294,6 +294,7 @@ public class Learner {
 
     public void setRequests(List<TechnicalSupportRequest> requests) {
         this.requests = requests;
+    }
 
     public Integer getTreePoints() {
         return treePoints;
