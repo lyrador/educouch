@@ -133,6 +133,12 @@ public class TriviaQuizController {
             GameDTO gameDTO = new GameDTO(trivia.getTriviaQuizId(), trivia.getTriviaQuizTitle(), trivia.getTriviaQuizDescription(), trivia.getNumOfQuestions(), "TRIVIA");
             gameDTOs.add(gameDTO);
         }
+
+        for (Poll poll : classRun.getPolls()) {
+            GameDTO gameDTO1 = new GameDTO(poll.getPollId(), poll.getPollTitle(), poll.getPollDescription(), poll.getNumOfQuestions(), "POLL");
+            gameDTOs.add(gameDTO1);
+        }
+
         return new ResponseEntity<>(gameDTOs, HttpStatus.OK);
     }
 

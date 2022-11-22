@@ -15,5 +15,9 @@ public interface QuestionBankService {
     public Long deleteQuestionBank(Long questionBankId) throws QuestionBankNotFoundException;
     public QuestionBank addQuestionToQuestionBank(Question questionToDuplicate, Long questionBankId) throws QuestionBankNotFoundException;
     public QuestionBank removeQuestionFromQuestionBank(Long questionToRemoveId, Long questionBankId) throws QuestionNotFoundException, QuestionBankNotFoundException;
-    public List<QuestionBank> getQuestionBanksByCourseId(Long courseId) throws QuestionBankNotFoundException;
+    public List<QuestionBank> getQuestionBanksByCourseId(Long courseId);
+
+    public List<QuestionBank> findAllQuestionBanks();
+
+    public QuestionBank findQuestionBankById(Long questionBankId) throws QuestionBankNotFoundException;
 }
