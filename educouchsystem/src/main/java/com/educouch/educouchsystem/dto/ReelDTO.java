@@ -30,6 +30,7 @@ public class ReelDTO {
     private String creatorName;    //attribute not in Reel entity
     private Date reelTimeStamp;
     private Attachment video;
+    private Attachment thumbnail;
     private List<Learner> likers;
     private List<Learner> viewers;
     private boolean isLiked;     //attribute not in Reel entity
@@ -194,5 +195,13 @@ public class ReelDTO {
 
     public void setRejectionReason(String rejectionReason) {
         this.rejectionReason = rejectionReason;
+    }
+
+    public Attachment getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(Attachment thumbnail) {
+        this.thumbnail = thumbnail;
     }
 }
