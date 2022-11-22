@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -13,8 +14,14 @@ public class TriviaQuiz {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long triviaQuizId;
 
+    @Column(name="triviaQuizTitle", nullable = false)
+    private String triviaQuizTitle;
+
     @Column(name="triviaQuizDescription", nullable = false)
     private String triviaQuizDescription;
+
+    @Column(name = "creationDate", nullable = false)
+    private Date creationDate;
 
     @Column(name="numOfQuestions")
     private Integer numOfQuestions;
@@ -26,7 +33,8 @@ public class TriviaQuiz {
     @JoinColumn(name="classRun_id")
     private ClassRun classRun;
 
-    public TriviaQuiz(String triviaQuizDescription, Integer numOfQuestions) {
+    public TriviaQuiz(String triviaQuizTitle, String triviaQuizDescription, Integer numOfQuestions) {
+        this.triviaQuizTitle = triviaQuizTitle;
         this.triviaQuizDescription = triviaQuizDescription;
         this.numOfQuestions = numOfQuestions;
     }
@@ -37,6 +45,14 @@ public class TriviaQuiz {
 
     public Long getTriviaQuizId() {
         return triviaQuizId;
+    }
+
+    public String getTriviaQuizTitle() {
+        return triviaQuizTitle;
+    }
+
+    public void setTriviaQuizTitle(String triviaQuizTitle) {
+        this.triviaQuizTitle = triviaQuizTitle;
     }
 
     public void setTriviaQuizId(Long triviaQuizId) {
@@ -74,5 +90,13 @@ public class TriviaQuiz {
 
     public void setClassRun(ClassRun classRun) {
         this.classRun = classRun;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 }

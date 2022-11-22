@@ -68,12 +68,16 @@ public class Learner {
     @OneToMany(mappedBy = "createdByLearner")
     private List<TechnicalSupportRequest> requests;
 
+    @OneToMany(mappedBy = "learner", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<PollQuestionResponse> pollQuestionResponses = new ArrayList<>();
+
     public Learner() {
         this.classRuns = new ArrayList<>();
         this.enrolmentStatusTrackers = new ArrayList<>();
         this.learnerTransactions = new ArrayList<>();
         this.requests = new ArrayList<>();
         // this.triviaQuestionResponses = new ArrayList<>();
+//        this.pollQuestionResponses = new ArrayList<>();
     }
 
     // public Learner(String name, String address, String email, String password,
@@ -310,5 +314,13 @@ public class Learner {
 
     public void setGallery(Gallery gallery) {
         this.gallery = gallery;
+    }
+
+    public List<PollQuestionResponse> getPollQuestionResponses() {
+        return pollQuestionResponses;
+    }
+
+    public void setPollQuestionResponses(List<PollQuestionResponse> pollQuestionResponses) {
+        this.pollQuestionResponses = pollQuestionResponses;
     }
 }
