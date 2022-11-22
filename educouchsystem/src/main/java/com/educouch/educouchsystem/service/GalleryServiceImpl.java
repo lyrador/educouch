@@ -1,15 +1,16 @@
 package com.educouch.educouchsystem.service;
 
-import com.educouch.educouchsystem.model.Gallery;
-import com.educouch.educouchsystem.model.Item;
-import com.educouch.educouchsystem.model.ItemOwned;
-import com.educouch.educouchsystem.model.Learner;
+import com.educouch.educouchsystem.model.*;
+import com.educouch.educouchsystem.repository.EnhancementItemRepository;
 import com.educouch.educouchsystem.repository.GalleryRepository;
 import com.educouch.educouchsystem.repository.ItemOwnedRepository;
 import com.educouch.educouchsystem.repository.ItemRepository;
 import com.educouch.educouchsystem.util.enumeration.ItemSizeEnum;
+import com.educouch.educouchsystem.util.enumeration.ItemType;
 import com.educouch.educouchsystem.util.exception.*;
+import net.bytebuddy.build.ToStringPlugin;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.stereotype.Service;
 
 import javax.xml.stream.Location;
@@ -27,15 +28,61 @@ public class GalleryServiceImpl implements GalleryService {
     private ItemOwnedRepository itemOwnedRepository;
 
     @Autowired
+    private EnhancementItemRepository enhancementItemRepository;
+
+    @Autowired
     private ItemRepository itemRepository;
 
     @Autowired
     private LearnerService learnerService;
 
+
+
+    private final String largeTreeUrl = "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1669057396006_sprout%20%281%29.png";
+    private final String mediumTreeUrl = "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1669057232592_sesame%20%281%29.png";
+    private final String mediumBuildingUrl = "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1669057691507_wood.png";
+    private final String largeBuildingUrl = "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1669057713052_wood%20%281%29.png";
+
     // item first
     @Override
     public Item saveItem(Item item) {
-        return itemRepository.save(item);
+        Item newItem = new Item();
+        // copy the compulsory ones first
+        newItem.setPrice(item.getPrice());
+        newItem.setItemName(item.getItemName());
+        newItem.setItemDescription(item.getItemDescription());
+        newItem.setImageUrl(item.getImageUrl());
+        newItem.setItemTypeEnum(item.getItemTypeEnum());
+        newItem.setLargeAvailable(item.getLargeAvailable());
+        newItem.setMediumAvailable(item.getMediumAvailable());
+
+        if(item.getMediumAvailable()) {
+            if(item.getItemTypeEnum() == ItemType.BUILDING) {
+                newItem.setMediumImageUrl(mediumBuildingUrl);
+            } else {
+                newItem.setMediumImageUrl(mediumTreeUrl);
+            }
+
+            newItem.setMediumPointThreshold(item.getMediumPointThreshold());
+        } else {
+            newItem.setMediumAvailable(false);
+        }
+
+        if(item.getLargeAvailable()) {
+            if(item.getItemTypeEnum() == ItemType.BUILDING) {
+                newItem.setLargeImageUrl(largeBuildingUrl);
+            } else {
+                newItem.setLargeImageUrl(largeTreeUrl);
+            }
+
+            newItem.setLargePointThreshold(item.getLargePointThreshold());
+        } else {
+            newItem.setLargeAvailable(false);
+        }
+
+
+
+        return itemRepository.save(newItem);
     }
 
     @Override
@@ -75,6 +122,15 @@ public class GalleryServiceImpl implements GalleryService {
             if(learnerBalanceIsEnough(newItem, item, learner)){
                 // adding reference to the catalogue
                 newItem.setItem(item);
+
+                // set the curr image url
+                // rule -> if 'others' -> the default imageUrl.
+                // rule -> if medium is available -> currImageUrl = medium
+                if(item.getMediumAvailable()) {
+                    newItem.setImageUrl(item.getMediumImageUrl());
+                } else {
+                    newItem.setImageUrl(item.getImageUrl());
+                }
                 newItem = itemOwnedRepository.save(newItem);
 
                 // add the new item to the gallery
@@ -301,6 +357,88 @@ public class GalleryServiceImpl implements GalleryService {
     public Integer retrieveTreePointFromUserId(Long learnerId) {
         Learner learner = learnerService.getLearnerById(learnerId);
         return learner.getTreePoints();
+    }
+
+    @Override
+    public EnhancementItem initiateEnhancementItem(EnhancementItem e) {
+        EnhancementItem newEnhancementItem = enhancementItemRepository.save(e);
+        return newEnhancementItem;
+    }
+
+    @Override
+    public List<EnhancementItem> getAllEnhancementItems() {
+        return enhancementItemRepository.findAll();
+    }
+
+    @Override
+    public ItemOwned enhanceItem(Long enhancementItemId, Long itemOwnedId, Long learnerId) throws UnauthorizedActionException,
+            InsufficientTreePointBalanceException {
+        ItemOwned itemOwned = itemOwnedRepository.getReferenceById(itemOwnedId);
+        Learner learner = learnerService.getLearnerById(learnerId);
+        EnhancementItem enhancementItem = enhancementItemRepository.getReferenceById(enhancementItemId);
+
+        if(itemOwned != null && learner != null && enhancementItem != null) {
+            // effect -> decrease tree points, increase item points, change the imageUrl in itemOwned if needed
+            // what need to be checked: tree points, compatibility
+            if(learner.getTreePoints() >= enhancementItem.getPricePerUse()) {
+                // check whether learner has enough balance
+                if(itemOwned.getItem().getItemTypeEnum() == enhancementItem.getItemType()) {
+                    // check whether the item is compatible with each other
+                    Integer newPoints = learner.getTreePoints() - enhancementItem.getPricePerUse();
+                    learner.setTreePoints(newPoints);
+                    learnerService.saveLearnerWithoutGallery(learner);
+
+                    // increase item points
+                    Integer currPoints = itemOwned.getItemPoints();
+                    Integer newItemPoints = currPoints + enhancementItem.getItemPointIncrement();
+
+                    if(itemOwned.getItem().getMediumAvailable()) {
+                        Item item = itemOwned.getItem();
+                        // update hte imageurl here
+
+                        if(item.getLargeAvailable()) {
+                            if(currPoints < item.getMediumPointThreshold() && newItemPoints >= item.getMediumPointThreshold()) {
+                                // check if it needs to be changed to the medium threshold
+                                itemOwned.setImageUrl(item.getLargeImageUrl());
+                            } else if(newItemPoints > item.getMediumPointThreshold() && currPoints < item.getLargePointThreshold()
+                                    && newItemPoints >= item.getLargePointThreshold()) {
+                                itemOwned.setImageUrl(item.getImageUrl());
+                            }
+
+                        } else {
+                            if(currPoints < item.getMediumPointThreshold() && newItemPoints >= item.getMediumPointThreshold()) {
+                                // check if it needs to be changed to the medium threshold
+                                itemOwned.setImageUrl(item.getImageUrl());
+                            }
+                        }
+
+
+                    }
+                    itemOwned.setItemPoints(newItemPoints);
+                    ItemOwned io = itemOwnedRepository.save(itemOwned);
+                    return io;
+
+                } else {
+                    throw new UnauthorizedActionException("Items are incompatible with each other.");
+                }
+            } else {
+                throw new InsufficientTreePointBalanceException("Insufficient balance.");
+            }
+        } else {
+            throw new UnauthorizedActionException("Unable to find the correct data.");
+        }
+    }
+
+    public Integer incrementTreePoints(Long learnerId, Integer increaseTreePoints) throws LearnerNotFoundException{
+        Learner learner = learnerService.getLearnerById(learnerId);
+        if(learner != null) {
+            Integer newPoint = learner.getTreePoints() + increaseTreePoints;
+            learner.setTreePoints(newPoint);
+            learnerService.saveLearnerWithoutGallery(learner);
+            return newPoint;
+        } else {
+            throw new LearnerNotFoundException("Learner cannot be found.");
+        }
     }
 
 

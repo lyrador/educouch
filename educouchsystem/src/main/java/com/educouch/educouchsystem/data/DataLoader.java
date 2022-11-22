@@ -381,23 +381,48 @@ public class DataLoader implements CommandLineRunner {
         } catch (CourseNotFoundException ex) {
             System.out.println("Error in generating class run. ");
         }
+//
+//         creating items
 
-        // creating items
-        // public Item(Integer price, String imageUrl, Boolean smallAvailable, Boolean mediumAvailable,
-        // Boolean largeAvailable, String itemName, String itemDescription)
+        Item item1 = new Item(10, "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1669058807202_apple-tree.png",
+                true, true, true, "Apple Tree", "Apple tree is a fairy tale castle at the center of Disneyland and formerly at Hong Kong Disneyland.");
+//        item1.setMediumImageUrl("https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1669059723754_park.png");
+        item1.setMediumPointThreshold(10);
+//        item1.setLargeImageUrl("https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1669057396006_sprout%20%281%29.png");
+        item1.setLargePointThreshold(20);
+        item1.setItemTypeEnum(ItemType.PLANT);
 
-        Item item1 = new Item(30, "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1668456539402_castle.png", true, true, true, "Castle", "Sleeping Beauty Castle is a fairy tale castle at the center of Disneyland and formerly at Hong Kong Disneyland.");
-        Item item2 = new Item(10, "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1668458409292_trees.png", true, true, true, "Pine Tree", "Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book");
-        Item item3 = new Item(10, "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1668458465609_bonsai.png", true, true, true, "Bonsai Tree", "Test");
-        Item item4 = new Item(15, "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1668459046674_bench.png", true, true, true, "Bench", "test");
-        Item item5 = new Item(15, "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1668459006015_table.png", true, true, true, "Table", "test");
+        Item item2 = new Item(10, "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1669059686752_wooden-house.png", true, true, false, "Cottage", "Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book");
+//        item2.setMediumImageUrl("https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1669057691507_wood.png");
+        item2.setMediumPointThreshold(30);
+        item2.setItemTypeEnum(ItemType.BUILDING);
+
+        Item item3 = new Item(20, "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1669059723754_park.png", true, false, false, "Bench", "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book");
+        item3.setItemTypeEnum(ItemType.MISC);
 
 
         item1 = galleryService.saveItem(item1);
         item2 = galleryService.saveItem(item2);
         item3 = galleryService.saveItem(item3);
-        item4 = galleryService.saveItem(item4);
-        item5 = galleryService.saveItem(item5);
+
+        EnhancementItem et1 = new EnhancementItem();
+        et1.setEnhancementItemDescription("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.");
+        et1.setEnhancementItemName("Watering can");
+        et1.setImageUrl("https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1669062774157_watering-can.png");
+        et1.setItemPointIncrement(5);
+        et1.setItemType(ItemType.PLANT);
+        et1.setPricePerUse(5);
+
+        EnhancementItem et2 = new EnhancementItem();
+        et2.setEnhancementItemDescription("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.");
+        et2.setEnhancementItemName("Construction");
+        et2.setImageUrl("https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1669063761455_construction.png");
+        et2.setItemPointIncrement(10);
+        et2.setItemType(ItemType.BUILDING);
+        et2.setPricePerUse(10);
+
+        galleryService.initiateEnhancementItem(et1);
+        galleryService.initiateEnhancementItem(et2);
 
         PointsWallet points = new PointsWallet(learner_1.getLearnerId(), org1.getOrganisationId(),org1.getOrganisationName());
         points.setDiscountPoints(50L);
