@@ -122,6 +122,14 @@ public class GalleryController {
         }
     }
 
+    @GetMapping("/incrementTreePoints")
+    public Integer incrementTreePoints(@RequestParam Long learnerId, @RequestParam Integer increment) {
+        try {
+            return galleryService.incrementTreePoints(learnerId, increment);
+        } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+        }
+    }
 
 
 }
