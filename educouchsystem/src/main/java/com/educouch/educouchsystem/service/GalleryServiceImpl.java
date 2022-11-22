@@ -370,7 +370,64 @@ public class GalleryServiceImpl implements GalleryService {
         return enhancementItemRepository.findAll();
     }
 
+    @Override
+    public ItemOwned enhanceItem(Long enhancementItemId, Long itemOwnedId, Long learnerId) throws UnauthorizedActionException,
+            InsufficientTreePointBalanceException {
+        ItemOwned itemOwned = itemOwnedRepository.getReferenceById(itemOwnedId);
+        Learner learner = learnerService.getLearnerById(learnerId);
+        EnhancementItem enhancementItem = enhancementItemRepository.getReferenceById(enhancementItemId);
 
+        if(itemOwned != null && learner != null && enhancementItem != null) {
+            // effect -> decrease tree points, increase item points, change the imageUrl in itemOwned if needed
+            // what need to be checked: tree points, compatibility
+            if(learner.getTreePoints() >= enhancementItem.getPricePerUse()) {
+                // check whether learner has enough balance
+                if(itemOwned.getItem().getItemTypeEnum() == enhancementItem.getItemType()) {
+                    // check whether the item is compatible with each other
+                    Integer newPoints = learner.getTreePoints() - enhancementItem.getPricePerUse();
+                    learner.setTreePoints(newPoints);
+                    learnerService.saveLearnerWithoutGallery(learner);
+
+                    // increase item points
+                    Integer currPoints = itemOwned.getItemPoints();
+                    Integer newItemPoints = currPoints + enhancementItem.getItemPointIncrement();
+
+                    if(itemOwned.getItem().getMediumAvailable()) {
+                        Item item = itemOwned.getItem();
+                        // update hte imageurl here
+
+                        if(item.getLargeAvailable()) {
+                            if(currPoints < item.getMediumPointThreshold() && newItemPoints >= item.getMediumPointThreshold()) {
+                                // check if it needs to be changed to the medium threshold
+                                itemOwned.setImageUrl(item.getLargeImageUrl());
+                            } else if(newItemPoints > item.getMediumPointThreshold() && currPoints < item.getLargePointThreshold()
+                                    && newItemPoints >= item.getLargePointThreshold()) {
+                                itemOwned.setImageUrl(item.getImageUrl());
+                            }
+
+                        } else {
+                            if(currPoints < item.getMediumPointThreshold() && newItemPoints >= item.getMediumPointThreshold()) {
+                                // check if it needs to be changed to the medium threshold
+                                itemOwned.setImageUrl(item.getImageUrl());
+                            }
+                        }
+
+
+                    }
+                    itemOwned.setItemPoints(newItemPoints);
+                    ItemOwned io = itemOwnedRepository.save(itemOwned);
+                    return io;
+
+                } else {
+                    throw new UnauthorizedActionException("Items are incompatible with each other.");
+                }
+            } else {
+                throw new InsufficientTreePointBalanceException("Insufficient balance.");
+            }
+        } else {
+            throw new UnauthorizedActionException("Unable to find the correct data.");
+        }
+    }
 
 
 

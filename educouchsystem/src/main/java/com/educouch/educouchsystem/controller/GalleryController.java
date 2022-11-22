@@ -110,6 +110,18 @@ public class GalleryController {
         return galleryService.retrieveTreePointFromUserId(learnerId);
     }
 
+    @GetMapping("/enhanceItem")
+    @ResponseBody
+    public ItemOwned enhanceItem(@RequestParam Long learnerId, @RequestParam Long itemOwnedId,
+                                 @RequestParam Long enhancementId) {
+        try{
+            ItemOwned io = galleryService.enhanceItem(enhancementId, itemOwnedId, learnerId);
+            return io;
+        } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+        }
+    }
+
 
 
 }
