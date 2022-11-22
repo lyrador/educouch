@@ -40,4 +40,6 @@ public interface GalleryService {
 
     public ItemOwned enhanceItem(Long enhancementItemId, Long itemOwnedId, Long learnerId) throws UnauthorizedActionException,
             InsufficientTreePointBalanceException;
+
+    public Integer incrementTreePoints(Long learnerId, Integer increaseTreePoints) throws LearnerNotFoundException;
 }

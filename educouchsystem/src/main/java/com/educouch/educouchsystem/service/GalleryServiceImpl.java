@@ -429,6 +429,18 @@ public class GalleryServiceImpl implements GalleryService {
         }
     }
 
+    public Integer incrementTreePoints(Long learnerId, Integer increaseTreePoints) throws LearnerNotFoundException{
+        Learner learner = learnerService.getLearnerById(learnerId);
+        if(learner != null) {
+            Integer newPoint = learner.getTreePoints() + increaseTreePoints;
+            learner.setTreePoints(newPoint);
+            learnerService.saveLearnerWithoutGallery(learner);
+            return newPoint;
+        } else {
+            throw new LearnerNotFoundException("Learner cannot be found.");
+        }
+    }
+
 
 
 }
