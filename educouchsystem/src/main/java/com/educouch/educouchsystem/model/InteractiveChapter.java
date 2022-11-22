@@ -39,11 +39,11 @@ public class InteractiveChapter {
     public InteractiveChapter() {
     }
 
-    public long getInteractiveChapterId() {
+    public Long getInteractiveChapterId() {
         return interactiveChapterId;
     }
 
-    public void setInteractiveChapterId(long interactiveChapterId) {
+    public void setInteractiveChapterId(Long interactiveChapterId) {
         this.interactiveChapterId = interactiveChapterId;
     }
 
