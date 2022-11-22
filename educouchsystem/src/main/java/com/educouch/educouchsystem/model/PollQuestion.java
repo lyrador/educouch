@@ -25,6 +25,13 @@ public class PollQuestion {
     @Column(name="questionTimeLimit", nullable = false)
     private Double questionTimeLimit;
 
+    @Column(name="questionIsValid")
+    private Boolean questionIsValid;
+
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "attachment_id")
+    private Attachment attachment;
+
     @ManyToOne
     @JoinColumn(name="poll_id")
     private Poll poll;
@@ -97,6 +104,22 @@ public class PollQuestion {
 
     public void setPollQuestionResponses(List<PollQuestionResponse> pollQuestionResponses) {
         this.pollQuestionResponses = pollQuestionResponses;
+    }
+
+    public Boolean getQuestionIsValid() {
+        return questionIsValid;
+    }
+
+    public void setQuestionIsValid(Boolean questionIsValid) {
+        this.questionIsValid = questionIsValid;
+    }
+
+    public Attachment getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
     }
 
 
