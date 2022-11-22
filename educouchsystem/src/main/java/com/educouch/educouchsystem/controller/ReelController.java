@@ -141,21 +141,39 @@ public class ReelController {
         }
     }
 
+        @PostMapping("/uploadThumbnailToReel/{reelId}/{file}")
+    public ResponseEntity<Reel> uploadThumbnailToReel(@PathVariable("file") Long file, @PathVariable("reelId") Long reelId) {
+        Attachment attachment = null;
+        try {
+            attachment = attachmentService.getAttachment(file);
+            Reel reel = reelService.retrieveReelById(reelId);
+            if(reel.getThumbnail()!=null) {
+                Long attachmentIdToDelete = reel.getThumbnail().getAttachmentId();
+                reel.setThumbnail(null);
+                attachmentService.deleteAttachment(attachmentIdToDelete);
+            }
+            attachmentService.uploadThumbnailToReel(attachment, reelId);
+            return new ResponseEntity<>(reel, HttpStatus.OK);
+        } catch ( FileNotFoundException | ReelNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     @PutMapping("/updateReel/{reelId}")
     public ResponseEntity<Reel> updateReel(@PathVariable("reelId") Long reelId, @RequestBody ReelDTO incompleteDTO) {
         try {
             Reel updatedReel = reelService.updateReel(reelId, incompleteDTO);
             updatedReel = unmarshallReel(updatedReel);
             return new ResponseEntity<>(updatedReel, HttpStatus.OK);
-        }catch ( ReelNotFoundException ex) {
+        }catch ( ReelNotFoundException | CourseNotFoundException ex) {
             throw new RuntimeException(ex);
         }
     }
 
     @PutMapping("/submitReel/{reelId}")
-    public ResponseEntity<Reel> submitReel(@PathVariable("reelId") Long reelId) {
+    public ResponseEntity<Reel> submitReel(@PathVariable("reelId") Long reelId, @RequestBody ReelDTO incompleteDTO) {
         try {
-            Reel updatedReel = reelService.submitReel(reelId);
+            Reel updatedReel = reelService.submitReel(reelId, incompleteDTO);
             updatedReel = unmarshallReel(updatedReel);
             return new ResponseEntity<>(updatedReel, HttpStatus.OK);
         }catch ( ReelNotFoundException ex) {
@@ -190,6 +208,24 @@ public class ReelController {
         }
     }
 
+    @GetMapping("/getCoursesUnderInstructor/{instructorId}")
+    public ResponseEntity<List<Course>> getCoursesUnderInstructor(@PathVariable(value = "instructorId") Long instructorId) {
+        try {
+            List<Course> courses = reelService.findCoursesUnderInstructor(instructorId);
+            for(Course c : courses) {
+                c.setClassRuns(new ArrayList<>());
+                c.setAssessments(new ArrayList<>());
+                c.setInteractiveBooks(new ArrayList<>());
+                c.setAssessments(new ArrayList<>());
+            }
+            return new ResponseEntity<>(courses, HttpStatus.OK);
+        } catch (InstructorNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+
     //<<learner interaction related>>
     @PutMapping("/viewReel/{reelId}/{learnerId}")
     public ResponseEntity<Reel> viewReel(@PathVariable(value = "reelId") Long reelId,
@@ -203,7 +239,6 @@ public class ReelController {
         }
     }
 
-    //not tested
     @PutMapping("/likeReel/{reelId}/{learnerId}")
     public ResponseEntity<Reel> likeReel(@PathVariable(value = "reelId") Long reelId,
                                          @PathVariable(value = "learnerId") Long learnerId) {
@@ -222,9 +257,19 @@ public class ReelController {
         for(Reel r : reels) {
             r = unmarshallReel(r);
         }
-//        reels.stream().forEach(reel -> reel=unmarshallReel(reel));
         return new ResponseEntity<>(reels, HttpStatus.OK);
     }
+
+    @GetMapping("/findLearnerLikedReels/{learnerId}")
+    public ResponseEntity<List<Reel>> findLearnerLikedReels(@PathVariable(value = "learnerId") Long learnerId) {
+        try {
+            List<Reel> reels = reelService.findLearnerLikedReels(learnerId);
+            return new ResponseEntity<>(reels, HttpStatus.OK);
+        } catch (LearnerNotFoundException exception) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     //nextReel api to trigger "viewReel"
     public Reel unmarshallReel(Reel reel) {
@@ -250,13 +295,6 @@ public class ReelController {
         return reel;
     }
 
-
-
-
-
-
-
-
     public List<ReelDTO> convertReelsToReelDTOs(List<Reel> reels) {
         List<ReelDTO> reelDTOS = new ArrayList<>();
         for(Reel r : reels) {
@@ -277,6 +315,7 @@ public class ReelController {
                 r.getReelTimeStamp(), r.getRejectionReason());
         reelDTO.setReelCreator(r.getReelCreator());
         reelDTO.setVideo(r.getVideo());
+        reelDTO.setThumbnail(r.getThumbnail());
         return reelDTO;
     }
 
