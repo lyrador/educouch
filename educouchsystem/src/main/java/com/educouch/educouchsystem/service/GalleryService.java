@@ -37,4 +37,7 @@ public interface GalleryService {
     public EnhancementItem initiateEnhancementItem(EnhancementItem e);
 
     public List<EnhancementItem> getAllEnhancementItems();
+
+    public ItemOwned enhanceItem(Long enhancementItemId, Long itemOwnedId, Long learnerId) throws UnauthorizedActionException,
+            InsufficientTreePointBalanceException;
 }
