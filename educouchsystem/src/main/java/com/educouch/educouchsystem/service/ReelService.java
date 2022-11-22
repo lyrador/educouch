@@ -43,4 +43,5 @@ public interface ReelService {
     public void addCourseToPreference(Long reelPreferenceProfileId, Long CourseId)throws ReelNotFoundException, CourseNotFoundException;
     public void removeCourseFromPreferenceLong(Long reelPreferenceProfileId, Long CourseId) throws ReelNotFoundException, CourseNotFoundException;
     public Reel viewReel(Long reelId, long LearnerId)throws ReelNotFoundException;
+    public List<Reel> findLearnerLikedReels(Long learnerId) throws LearnerNotFoundException;
 }

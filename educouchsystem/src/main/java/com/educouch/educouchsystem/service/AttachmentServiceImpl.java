@@ -153,4 +153,15 @@ public class AttachmentServiceImpl implements AttachmentService{
         reelService.saveReel(reel);
         this.deleteAttachment(attachmentId);
     }
+
+    @Override
+    public void uploadThumbnailToReel(Attachment attachment, Long reelId) throws ReelNotFoundException {
+        try {
+            Reel reel = reelService.retrieveReelById(reelId);
+            reel.setThumbnail(attachment);
+            reelService.saveReel(reel);
+        } catch (ReelNotFoundException exception) {
+            throw new ReelNotFoundException();
+        }
+    }
 }

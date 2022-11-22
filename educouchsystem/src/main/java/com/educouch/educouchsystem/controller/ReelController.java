@@ -46,13 +46,13 @@ public class ReelController {
     }
 
     @GetMapping("/getAllPendingReels")
-    public ResponseEntity<List<ReelDTO>> getAllPendingReels() {
+    public ResponseEntity<List<Reel>> getAllPendingReels() {
         List<Reel> reels = reelService.getAllPendingReels();
         for(Reel r : reels) {
             r = unmarshallReel(r);
         }
         List<ReelDTO> reelDTOS = convertReelsToReelDTOs(reels);
-        return new ResponseEntity<>(reelDTOS, HttpStatus.OK);
+        return new ResponseEntity<>(reels, HttpStatus.OK);
     }
 
     @GetMapping("/getAllRejectedReels")
@@ -141,6 +141,24 @@ public class ReelController {
         }
     }
 
+        @PostMapping("/uploadThumbnailToReel/{reelId}/{file}")
+    public ResponseEntity<Reel> uploadThumbnailToReel(@PathVariable("file") Long file, @PathVariable("reelId") Long reelId) {
+        Attachment attachment = null;
+        try {
+            attachment = attachmentService.getAttachment(file);
+            Reel reel = reelService.retrieveReelById(reelId);
+            if(reel.getThumbnail()!=null) {
+                Long attachmentIdToDelete = reel.getThumbnail().getAttachmentId();
+                reel.setThumbnail(null);
+                attachmentService.deleteAttachment(attachmentIdToDelete);
+            }
+            attachmentService.uploadThumbnailToReel(attachment, reelId);
+            return new ResponseEntity<>(reel, HttpStatus.OK);
+        } catch ( FileNotFoundException | ReelNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     @PutMapping("/updateReel/{reelId}")
     public ResponseEntity<Reel> updateReel(@PathVariable("reelId") Long reelId, @RequestBody ReelDTO incompleteDTO) {
         try {
@@ -221,7 +239,6 @@ public class ReelController {
         }
     }
 
-    //not tested
     @PutMapping("/likeReel/{reelId}/{learnerId}")
     public ResponseEntity<Reel> likeReel(@PathVariable(value = "reelId") Long reelId,
                                          @PathVariable(value = "learnerId") Long learnerId) {
@@ -242,6 +259,18 @@ public class ReelController {
         }
         return new ResponseEntity<>(reels, HttpStatus.OK);
     }
+
+    @GetMapping("/findLearnerLikedReels/{learnerId}")
+    public ResponseEntity<List<Reel>> findLearnerLikedReels(@PathVariable(value = "learnerId") Long learnerId) {
+        try {
+            List<Reel> reels = reelService.findLearnerLikedReels(learnerId);
+            return new ResponseEntity<>(reels, HttpStatus.OK);
+        } catch (LearnerNotFoundException exception) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        }
+    }
+
 
     //nextReel api to trigger "viewReel"
     public Reel unmarshallReel(Reel reel) {
@@ -287,6 +316,7 @@ public class ReelController {
                 r.getReelTimeStamp(), r.getRejectionReason());
         reelDTO.setReelCreator(r.getReelCreator());
         reelDTO.setVideo(r.getVideo());
+        reelDTO.setThumbnail(r.getThumbnail());
         return reelDTO;
     }
 
