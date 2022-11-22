@@ -2,6 +2,7 @@ package com.educouch.educouchsystem.controller;
 
 import com.educouch.educouchsystem.dto.PurchaseItemDTO;
 import com.educouch.educouchsystem.dto.UpdateLocationDTO;
+import com.educouch.educouchsystem.model.EnhancementItem;
 import com.educouch.educouchsystem.model.Item;
 import com.educouch.educouchsystem.model.ItemOwned;
 import com.educouch.educouchsystem.service.GalleryService;
@@ -32,6 +33,13 @@ public class GalleryController {
         return "Item has successfully been added.";
     }
 
+    @PostMapping("/createNewEnhancementItem")
+    public String addNewEnhancementItem(@RequestBody EnhancementItem et) {
+        galleryService.initiateEnhancementItem(et);
+        return "Enhancement item has successfully been added.";
+    }
+
+
     @PostMapping("/purchaseItem")
     @ResponseBody
     public ResponseEntity<String> purchaseItem(@RequestBody PurchaseItemDTO p){
@@ -41,7 +49,7 @@ public class GalleryController {
             System.out.println(p.learnerId.toString());
             System.out.println(p.itemId.toString());
             // later change this to make it more than small
-            ItemOwned newItem = new ItemOwned(p.positionX, p.positionY, true, ItemSizeEnum.SMALL);
+            ItemOwned newItem = new ItemOwned(p.positionX, p.positionY);
             ItemOwned item = galleryService.purchaseItem(new Long(p.learnerId), new Long(p.itemId), newItem);
             return new ResponseEntity<>("Successfully purchased the item", HttpStatus.OK);
         } catch(Exception ex1) {
@@ -53,6 +61,12 @@ public class GalleryController {
     public List<Item> getAllItems() {
         List<Item> items = galleryService.getAllItems();
         return items;
+    }
+
+    @GetMapping("/getAllEnhancementItems")
+    public List<EnhancementItem> getAllEnhancementItems() {
+        List<EnhancementItem> listOfItems = galleryService.getAllEnhancementItems();
+        return listOfItems;
     }
 
     @GetMapping("/retrieveItemOwnedByLearnerId")
@@ -96,6 +110,26 @@ public class GalleryController {
         return galleryService.retrieveTreePointFromUserId(learnerId);
     }
 
+    @GetMapping("/enhanceItem")
+    @ResponseBody
+    public ItemOwned enhanceItem(@RequestParam Long learnerId, @RequestParam Long itemOwnedId,
+                                 @RequestParam Long enhancementId) {
+        try{
+            ItemOwned io = galleryService.enhanceItem(enhancementId, itemOwnedId, learnerId);
+            return io;
+        } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+        }
+    }
+
+    @GetMapping("/incrementTreePoints")
+    public Integer incrementTreePoints(@RequestParam Long learnerId, @RequestParam Integer increment) {
+        try {
+            return galleryService.incrementTreePoints(learnerId, increment);
+        } catch(Exception ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+        }
+    }
 
 
 }
