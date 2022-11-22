@@ -74,6 +74,14 @@ public class LearnerController {
         return listOfKidsLearners;
     }
 
+    @GetMapping("/retrieveById")
+    public LearnerDTO getAllKidsLearners(@RequestParam Long learnerId){
+        Learner l = learnerService.getLearnerById(learnerId);
+        LearnerDTO dto = new LearnerDTO(l.getLearnerId(), l.getName(), l.getEmail(),
+                l.getUsername(), l.getProfilePictureURL());
+        return dto;
+    }
+
     @PostMapping("/update")
     public ResponseEntity<Learner> updateLearner(@RequestBody Learner learner) {
         Learner updatedLearner = learnerService.updateLearner(learner);
@@ -94,10 +102,11 @@ public class LearnerController {
         for(ClassRun cr: listOfClassRuns) {
             processClassRun(cr);
         }
-        List<EnrolmentStatusTracker> enrolmentStatusTrackers = l.getEnrolmentStatusTrackers();
-        for(EnrolmentStatusTracker est: enrolmentStatusTrackers) {
-            processEnrolmentStatusTracker(est);
-        }
+        l.setEnrolmentStatusTrackers(null);
+//        List<EnrolmentStatusTracker> enrolmentStatusTrackers = l.getEnrolmentStatusTrackers();
+//        for(EnrolmentStatusTracker est: enrolmentStatusTrackers) {
+//            processEnrolmentStatusTracker(est);
+//        }
 
         return ResponseEntity.status(HttpStatus.OK).body(l);
 
@@ -147,6 +156,7 @@ public class LearnerController {
             i.setClassRuns(null);
             i.setOrganisation(null);
             i.setCourses(null);
+            i.setRequests(null);
         }
 
 
