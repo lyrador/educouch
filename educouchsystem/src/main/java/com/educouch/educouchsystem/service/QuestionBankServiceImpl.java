@@ -86,8 +86,23 @@ public class QuestionBankServiceImpl implements QuestionBankService {
         return questionBankRepository.save(questionBank);
     }
 
-    public List<QuestionBank> getQuestionBanksByCourseId(Long courseId) throws QuestionBankNotFoundException {
+    public List<QuestionBank> getQuestionBanksByCourseId(Long courseId)  {
         return questionBankRepository.findQuestionBanksByCourseId(courseId);
+    }
+
+    @Override
+    public List<QuestionBank> findAllQuestionBanks() {
+        return questionBankRepository.findAll();
+    }
+
+    @Override
+    public QuestionBank findQuestionBankById(Long questionBankId) throws QuestionBankNotFoundException{
+        if(questionBankRepository.findById(questionBankId).isPresent()) {
+            return questionBankRepository.findById(questionBankId).get();
+
+        }
+        throw new QuestionBankNotFoundException();
+
     }
 
     public Question duplicateQuestion(Question question) {
