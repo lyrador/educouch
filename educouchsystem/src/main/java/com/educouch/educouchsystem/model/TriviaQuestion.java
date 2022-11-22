@@ -152,4 +152,6 @@ public class TriviaQuestion {
     public void setTriviaQuestionType(TriviaQuestionTypeEnum triviaQuestionType) {
         this.triviaQuestionType = triviaQuestionType;
     }
+
+
 }
