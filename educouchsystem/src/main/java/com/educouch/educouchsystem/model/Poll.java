@@ -23,12 +23,14 @@ public class Poll {
     @Column(name="creationDate", nullable = false)
     private Date creationDate;
 
-    @Column(name="numOfQuestions", nullable = false)
+    @Column(name="numOfQuestions")
     private Integer numOfQuestions;
+
 
     @ManyToOne
     @JoinColumn(name="classRun_id")
     private ClassRun classRun;
+
 
     @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<PollQuestion> pollQuestions;
@@ -99,4 +101,6 @@ public class Poll {
     public void setPollQuestions(List<PollQuestion> pollQuestions) {
         this.pollQuestions = pollQuestions;
     }
+
+
 }
