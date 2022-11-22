@@ -85,6 +85,9 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     private ClassRunService classRunService;
 
+    @Autowired
+    private QuestionBankService questionBankService;
+
     public DataLoader(LmsAdminService lmsAdminService) {
         this.lmsAdminService = lmsAdminService;
     }
@@ -399,6 +402,8 @@ public class DataLoader implements CommandLineRunner {
         PointsWallet points = new PointsWallet(learner_1.getLearnerId(), org1.getOrganisationId(),org1.getOrganisationName());
         points.setDiscountPoints(50L);
         pointsWalletService.saveWallet(points);
+
+
 
     }
 }
