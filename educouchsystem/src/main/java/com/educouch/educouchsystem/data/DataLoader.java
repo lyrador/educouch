@@ -235,6 +235,7 @@ public class DataLoader implements CommandLineRunner {
         }
         cs2102k.getInstructors().add(i2);
 
+
         cs2102k = courseService.saveCourse(cs2102k);
 
         // from here can create classruns and enrol learners in the course cs2102 to
