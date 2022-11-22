@@ -15,4 +15,6 @@ public interface QuestionBankRepository  extends JpaRepository<QuestionBank, Lon
 
     @Query("SELECT q FROM QuestionBank q WHERE q.courseId=:courseId")
     List<QuestionBank> findQuestionBanksByCourseId(Long courseId);
+
+    List<QuestionBank> findAll();
 }
