@@ -92,7 +92,7 @@ public class TriviaQuizController {
             TriviaQuiz existingTriviaQuiz = triviaQuizService.getTriviaQuizById(triviaQuizId);
             existingTriviaQuiz.setTriviaQuizTitle(triviaQuiz.getTriviaQuizTitle());
             existingTriviaQuiz.setTriviaQuizDescription(triviaQuiz.getTriviaQuizDescription());
-            existingTriviaQuiz.setNumOfQuestions(triviaQuiz.getNumOfQuestions());
+//            existingTriviaQuiz.setNumOfQuestions(triviaQuiz.getNumOfQuestions());
             //existingTriviaQuiz.setTriviaQuestions(triviaQuiz.getTriviaQuestions());
             triviaQuizService.saveTriviaQuiz(existingTriviaQuiz);
 
