@@ -23,4 +23,6 @@ public interface LearnerService {
 
     public Learner saveLearnerWithoutGallery(Learner learner);
 
+    public List<Learner> getAllKidsLearner();
+
 }
