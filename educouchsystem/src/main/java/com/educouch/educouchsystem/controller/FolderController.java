@@ -1,5 +1,6 @@
 package com.educouch.educouchsystem.controller;
 
+import com.educouch.educouchsystem.dto.FolderData;
 import com.educouch.educouchsystem.model.Course;
 import com.educouch.educouchsystem.model.Folder;
 import com.educouch.educouchsystem.model.Forum;
@@ -15,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -90,9 +92,7 @@ public class FolderController {
     }
 
     private Folder processFolder(Folder folder) {
-        System.out.println("When folder is folder " + folder.getFolderId());
         List<Folder> subFolders = folder.getChildFolders();
-        System.out.println("SubFolders is " + subFolders.toString());
         for(Folder cf: subFolders) {
             cf.setParentFolder(null);
             cf.setAttachments(null);
@@ -154,5 +154,11 @@ public class FolderController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
         }
 
+    }
+
+    @GetMapping("/getParentFolders")
+    @ResponseBody
+    public List<FolderData> retrieveParentFolders(@RequestParam String folderId) {
+        return folderService.retrieveParentFolders(new Long(folderId));
     }
 }
