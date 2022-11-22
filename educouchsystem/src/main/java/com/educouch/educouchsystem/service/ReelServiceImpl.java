@@ -9,6 +9,8 @@ import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
 import com.educouch.educouchsystem.util.exception.InstructorNotFoundException;
 import com.educouch.educouchsystem.util.exception.LearnerNotFoundException;
 import com.educouch.educouchsystem.util.exception.ReelNotFoundException;
+import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
+import org.aspectj.apache.bcel.generic.InstructionTargeter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,17 +50,21 @@ public class ReelServiceImpl implements ReelService{
     }
 
     @Override
-    public Reel updateReel(Long reelId, ReelDTO incompleteDTO) throws ReelNotFoundException {
+    public Reel updateReel(Long reelId, ReelDTO incompleteDTO) throws ReelNotFoundException, CourseNotFoundException {
         Reel reelToUpdate = retrieveReelById(reelId);
         reelToUpdate.setReelTitle(incompleteDTO.getReelTitle());
         reelToUpdate.setReelCaption(incompleteDTO.getReelCaption());
+        Course courseTag = courseService.getCourseById(incompleteDTO.getCourseId());
+        reelToUpdate.setCourseTag(courseTag);
         reelToUpdate.setReelTimeStamp(new Date());
         return reelRepository.save(reelToUpdate);
     }
 
     @Override
-    public Reel submitReel(Long reelId) throws ReelNotFoundException {
+    public Reel submitReel(Long reelId, ReelDTO incompleteDTO) throws ReelNotFoundException {
         Reel reelToUpdate = retrieveReelById(reelId);
+        reelToUpdate.setReelTitle(incompleteDTO.getReelTitle());
+        reelToUpdate.setReelCaption(incompleteDTO.getReelCaption());
         reelToUpdate.setReelApprovalStatusEnum(ReelApprovalStatusEnum.PENDING);
         reelToUpdate.setReelTimeStamp(new Date());
         return reelRepository.save(reelToUpdate);
@@ -78,6 +84,12 @@ public class ReelServiceImpl implements ReelService{
         Instructor i = educatorService.findInstructorById(instructorId);
         List<Reel>  reels = reelRepository.findReelsByInstructorId(i.getInstructorId());
         return reels.stream().filter(reel -> (!reel.getReelApprovalStatusEnum().equals(ReelApprovalStatusEnum.DELETED))).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Course> findCoursesUnderInstructor(Long instructorId) throws InstructorNotFoundException {
+        Instructor instructor = educatorService.findInstructorById(instructorId);
+        return instructor.getOrganisation().getCourses();
     }
 
     //does not actually delete, only sets enum as deleted
@@ -172,10 +184,15 @@ public class ReelServiceImpl implements ReelService{
                 break;
             }
             if(reelsToReturn.size()<5) {
-                //not enough videos
+                //not enough suggested videos
                 List<Reel> recentReels = findRecentReels(learnerId);
                 for(Reel recentReel : recentReels) {
-                    reelsToReturn.add(recentReel);
+                    if(!reelsToReturn.contains(recentReel)) {
+                        reelsToReturn.add(recentReel);
+                        if (reelsToReturn.size() > 4) {
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -262,10 +279,25 @@ public class ReelServiceImpl implements ReelService{
         Reel r = reelRepository.getReferenceById(reelId);
         Learner l = learnerService.getLearnerById(learnerId);
 
+        //allow learner to view video multiple times
+        r.setNumViews(r.getNumViews() +1);
+
         if(!r.getViewers().contains(l)) {
-            r.setNumViews(r.getNumViews() +1);
             r.getViewers().add(l);
         }
         return reelRepository.save(r);
+    }
+
+    @Override
+    public List<Reel> findLearnerLikedReels(Long learnerId) throws LearnerNotFoundException {
+        List<Reel> allReels = getAllReels();
+        List<Reel> reels = new ArrayList<>();
+        Learner l = learnerService.getLearnerById(learnerId);
+        for(Reel r : allReels) {
+            if(r.getLikers().contains(l)) {
+                reels.add(r);
+            }
+        }
+        return reels;
     }
 }

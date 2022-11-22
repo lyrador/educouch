@@ -36,10 +36,10 @@ public class Reel implements Serializable   {
     private Date reelTimeStamp;
     private String rejectionReason;
 
-    @OneToMany
-    private Set<Learner> likers;
-    @OneToMany
-    private Set<Learner> viewers;
+    @ManyToMany
+    private List<Learner> likers;
+    @ManyToMany
+    private List<Learner> viewers;
     @NotNull
     @OneToOne
     @JoinColumn
@@ -51,10 +51,13 @@ public class Reel implements Serializable   {
     @OneToOne
     @JoinColumn
     private Attachment video;
+    @OneToOne
+    @JoinColumn
+    private Attachment thumbnail;
 
     public Reel() {
-        this.likers = new HashSet<>();
-        this.viewers = new HashSet<>();
+        this.likers = new ArrayList<>();
+        this.viewers = new ArrayList<>();
         this.reelApprovalStatusEnum = ReelApprovalStatusEnum.INCOMPLETE;
     }
 
@@ -124,11 +127,11 @@ public class Reel implements Serializable   {
         this.reelCreator = reelCreator;
     }
 
-    public Set<Learner> getLikers() {
+    public List<Learner> getLikers() {
         return likers;
     }
 
-    public void setLikers(Set<Learner> likers) {
+    public void setLikers(List<Learner> likers) {
         this.likers = likers;
     }
 
@@ -140,11 +143,11 @@ public class Reel implements Serializable   {
         this.video = video;
     }
 
-    public Set<Learner> getViewers() {
+    public List<Learner> getViewers() {
         return viewers;
     }
 
-    public void setViewers(Set<Learner> viewers) {
+    public void setViewers(List<Learner> viewers) {
         this.viewers = viewers;
     }
 
@@ -170,5 +173,13 @@ public class Reel implements Serializable   {
 
     public void setNumViews(Integer numViews) {
         this.numViews = numViews;
+    }
+
+    public Attachment getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(Attachment thumbnail) {
+        this.thumbnail = thumbnail;
     }
 }
