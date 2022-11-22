@@ -1,17 +1,21 @@
 package com.educouch.educouchsystem.controller;
 
-import com.educouch.educouchsystem.model.Poll;
-import com.educouch.educouchsystem.model.PollQuestion;
+import com.educouch.educouchsystem.dto.FileItemDTO;
+import com.educouch.educouchsystem.dto.QuestionToReorderDTO;
+import com.educouch.educouchsystem.model.*;
+import com.educouch.educouchsystem.service.AttachmentService;
 import com.educouch.educouchsystem.service.PollQuestionService;
 import com.educouch.educouchsystem.service.PollService;
 import com.educouch.educouchsystem.util.exception.PollNotFoundException;
 import com.educouch.educouchsystem.util.exception.PollQuestionNotFoundException;
+import com.educouch.educouchsystem.util.exception.TriviaQuestionNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.xml.ws.Response;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +29,9 @@ public class PollQuestionController {
 
     @Autowired
     private PollService pollService;
+
+    @Autowired
+    private AttachmentService attachmentService;
 
     @PostMapping("/{pollId}/pollQuestions")
     public ResponseEntity<PollQuestion> addPollQuestion(@PathVariable(value="pollId") Long pollId, @RequestBody PollQuestion pollQuestionRequest) {
@@ -48,6 +55,7 @@ public class PollQuestionController {
                 }
             }
 
+            pollQuestionRequest.setQuestionIsValid(checkAndApplyQuestionIsValid(pollQuestionRequest));
             PollQuestion pollQuestion = pollQuestionService.savePollQuestion(pollQuestionRequest);
             pollService.savePoll(poll);
 
@@ -73,6 +81,26 @@ public class PollQuestionController {
         try {
             PollQuestion pollQuestion = pollQuestionService.getPollQuestionById(pollQuestionId);
             return new ResponseEntity<>(pollQuestion, HttpStatus.OK);
+        } catch (PollQuestionNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/poll/{pollId}/reorderQuestions")
+    public ResponseEntity<List<PollQuestion>> reorderPollQuestions(@PathVariable(value="pollId") Long pollId, @RequestBody List<QuestionToReorderDTO> questionToReorderDTOList) {
+        try {
+            Poll poll = pollService.getPollById(pollId);
+            for (QuestionToReorderDTO questionToReorderDTO : questionToReorderDTOList) {
+                PollQuestion pollQuestion = pollQuestionService.getPollQuestionById(questionToReorderDTO.getTriviaQuestionId());
+                pollQuestion.setPollQuestionNumber(Integer.valueOf(questionToReorderDTO.getQuestionNumber()));
+            }
+
+            List<PollQuestion> pollQuestionList = new ArrayList<>();
+            pollQuestionList.addAll(poll.getPollQuestions());
+            return new ResponseEntity<>(pollQuestionList, HttpStatus.OK);
+
+        } catch (PollNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (PollQuestionNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -126,6 +154,7 @@ public class PollQuestionController {
             existingPollQuestion.setPollQuestionTitle(pollQuestion.getPollQuestionTitle());
             existingPollQuestion.setHasTimeLimit(pollQuestion.getHasTimeLimit());
             existingPollQuestion.setQuestionTimeLimit(pollQuestion.getQuestionTimeLimit());
+            existingPollQuestion.setQuestionIsValid(checkAndApplyQuestionIsValid(pollQuestion));
 
             pollQuestionService.savePollQuestion(existingPollQuestion);
             return new ResponseEntity<>(existingPollQuestion,HttpStatus.OK);
@@ -144,6 +173,52 @@ public class PollQuestionController {
         } catch (PollNotFoundException ex) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping("/{pollQuestionId}/addFileItem")
+    public ResponseEntity<PollQuestion> addFileItem(@PathVariable(value="pollQuestionId") Long pollQuestionId, @RequestBody FileItemDTO fileItemDTORequest) {
+        try {
+            PollQuestion existingPollQuestion = pollQuestionService.getPollQuestionById(pollQuestionId);
+            if (existingPollQuestion.getAttachment() != null) {
+                Long attachmentIdToDelete = existingPollQuestion.getAttachment().getAttachmentId();
+                existingPollQuestion.setAttachment(null);
+                attachmentService.deleteAttachment(attachmentIdToDelete);
+            }
+            Attachment attachment = attachmentService.getAttachment(fileItemDTORequest.getAttachmentId());
+            existingPollQuestion.setAttachment(attachment);
+            pollQuestionService.savePollQuestion(existingPollQuestion);
+            return new ResponseEntity<>(existingPollQuestion, HttpStatus.OK);
+        } catch (FileNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (PollQuestionNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/{pollQuestionId}/removeFileItem")
+    public ResponseEntity<PollQuestion> removeFileItem(@PathVariable(value="pollQuestionId") Long pollQuestionId) {
+        try {
+            PollQuestion existingPollQuestion = pollQuestionService.getPollQuestionById(pollQuestionId);
+            if (existingPollQuestion.getAttachment() != null) {
+                Long attachmentIdToDelete = existingPollQuestion.getAttachment().getAttachmentId();
+                existingPollQuestion.setAttachment(null);
+                attachmentService.deleteAttachment(attachmentIdToDelete);
+            }
+            pollQuestionService.savePollQuestion(existingPollQuestion);
+            return new ResponseEntity<>(existingPollQuestion, HttpStatus.OK);
+        } catch (FileNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (PollQuestionNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    public Boolean checkAndApplyQuestionIsValid(PollQuestion pollQuestion) {
+        //check for questionTitle
+        if (pollQuestion.getPollQuestionTitle().length() > 0) {
+            return true;
+        }
+        return false;
     }
 
 
