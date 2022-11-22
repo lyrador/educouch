@@ -18,6 +18,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -75,7 +76,8 @@ public class TransactionServiceImpl implements TransactionService{
         transaction.setMonthYear(fileName);
         transaction.setReportUrl(strArr[1]);
         transaction.setFileStorageName(strArr[0]);
-
+        org.setOrgBalance(new BigDecimal(0));
+        organisationService.saveOrganisation(org);
 
         return transactionRepository.save(transaction);
     }
