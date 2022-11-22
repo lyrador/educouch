@@ -46,13 +46,13 @@ public class ReelController {
     }
 
     @GetMapping("/getAllPendingReels")
-    public ResponseEntity<List<Reel>> getAllPendingReels() {
+    public ResponseEntity<List<ReelDTO>> getAllPendingReels() {
         List<Reel> reels = reelService.getAllPendingReels();
         for(Reel r : reels) {
             r = unmarshallReel(r);
         }
         List<ReelDTO> reelDTOS = convertReelsToReelDTOs(reels);
-        return new ResponseEntity<>(reels, HttpStatus.OK);
+        return new ResponseEntity<>(reelDTOS, HttpStatus.OK);
     }
 
     @GetMapping("/getAllRejectedReels")
@@ -267,7 +267,6 @@ public class ReelController {
             return new ResponseEntity<>(reels, HttpStatus.OK);
         } catch (LearnerNotFoundException exception) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
         }
     }
 
