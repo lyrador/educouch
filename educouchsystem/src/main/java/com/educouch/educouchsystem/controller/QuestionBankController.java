@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/questionBank")
@@ -33,6 +34,26 @@ public class QuestionBankController {
             QuestionBank questionBank = questionBankService.createQuestionBank(questionBankName, courseId);
             return new ResponseEntity<QuestionBank>(questionBank, HttpStatus.OK);
         } catch (CourseNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/getQuestionBankNameList/{courseId}")
+    public ResponseEntity<List<QuestionBank>> getQuestionBankNameList(@PathVariable(value="courseId") Long courseId) {
+        List<QuestionBank> questionBanks = questionBankService.getQuestionBanksByCourseId(courseId);
+        for(QuestionBank qb : questionBanks) {
+            qb.setQuestions(null);
+        }
+        return new ResponseEntity<List<QuestionBank>>(questionBanks, HttpStatus.OK);
+    }
+
+    @GetMapping("/getQuestionBankByQuestionBankId/{questionBankId}")
+    public ResponseEntity<QuestionBank> getQuestionByQuestionBankId(@PathVariable(value="questionBankId") Long questionBankId) {
+        try {
+            QuestionBank questionBank = questionBankService.findQuestionBankById(questionBankId);
+            return new ResponseEntity<QuestionBank>(questionBank, HttpStatus.OK);
+
+        } catch (QuestionBankNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
