@@ -99,8 +99,6 @@ public class CourseController {
             f.setCreatedByOrganisationAdmin(null);
             f.setForumDiscussions(null);
             f.setCourse(null);
-//            f.setLearners(null);
-//            f.setEducators(null);
         }
 
         List<Folder> childFolders = c.getFolders();
@@ -201,17 +199,25 @@ public class CourseController {
     }
 
     @GetMapping("/organisation/{organisationId}/courses")
-    public ResponseEntity<List<Course>> getAllCoursesByOrganisationId (@PathVariable(value="organisationId") Long organisationId) {
+    public ResponseEntity<List<CourseDTO>> getAllCoursesByOrganisationId (@PathVariable(value="organisationId") Long organisationId) {
         try {
             Organisation organisation = organisationService.findOrganisationById(organisationId);
-            List<Course> courses = new ArrayList<>();
-            courses.addAll(organisation.getCourses());
+            List<Course> courses = organisation.getCourses();
 
-            for(Course c: courses) {
-                processCourse(c);
+            List<CourseDTO> listOfCourseDTOs = new ArrayList<>();
+            for(Course course: courses) {
+                CourseDTO newCourseDTO = new CourseDTO();
+                newCourseDTO.setCourseId(course.getCourseId());
+                newCourseDTO.setCourseCode(course.getCourseCode());
+                newCourseDTO.setCourseTitle(course.getCourseTitle());
+                newCourseDTO.setCourseDescription(course.getCourseDescription());
+                newCourseDTO.setCourseTimeline(course.getCourseTimeline());
+                newCourseDTO.setCourseMaxScore(course.getCourseMaxScore());
+                newCourseDTO.setRejectionReason(course.getRejectionReason());
+
+                listOfCourseDTOs.add(newCourseDTO);
             }
-
-            return new ResponseEntity<>(courses, HttpStatus.OK);
+            return new ResponseEntity<>(listOfCourseDTOs, HttpStatus.OK);
         } catch (NoSuchElementException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

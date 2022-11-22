@@ -39,4 +39,6 @@ public interface AttachmentService {
     public void uploadVideoToReel(Attachment attachment, Long reelId) throws ReelNotFoundException;
 
     public void removeVideoFromReel(Long attachmentId, Long reelId) throws ReelNotFoundException, FileNotFoundException;
+
+    public void uploadThumbnailToReel(Attachment attachment, Long reelId) throws ReelNotFoundException;
 }
