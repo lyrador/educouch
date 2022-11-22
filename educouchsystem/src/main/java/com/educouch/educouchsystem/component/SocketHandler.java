@@ -23,6 +23,7 @@ public class SocketHandler extends TextWebSocketHandler {
                 webSocketSession.sendMessage(message);
             }
         }
+        System.out.println("Message received is : " + message.getPayload());
     }
 
     @Override
