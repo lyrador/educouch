@@ -119,7 +119,7 @@ public class DataLoader implements CommandLineRunner {
         Learner learner_3 = learnerService.saveLearner(new Learner("Carol", "irenelie@nushackers.org", "password",
                 "carol",
                 "https://educouchbucket.s3.ap-southeast-1.amazonaws.com/1665376289662_imgbin-computer-icons-woman-avatar-avatar-girl-TBWeJMyXNwtNQA661FQ0rZSv2.jpg",
-                false, "23456"));
+                true, "23456"));
 
         Learner learner_4 = learnerService.saveLearner(new Learner("David", "lielieirene@gmail.com", "password",
                 "david",
