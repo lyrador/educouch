@@ -51,6 +51,9 @@ public class Reel implements Serializable   {
     @OneToOne
     @JoinColumn
     private Attachment video;
+    @OneToOne
+    @JoinColumn
+    private Attachment thumbnail;
 
     public Reel() {
         this.likers = new ArrayList<>();
@@ -170,5 +173,13 @@ public class Reel implements Serializable   {
 
     public void setNumViews(Integer numViews) {
         this.numViews = numViews;
+    }
+
+    public Attachment getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(Attachment thumbnail) {
+        this.thumbnail = thumbnail;
     }
 }

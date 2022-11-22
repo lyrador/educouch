@@ -287,4 +287,17 @@ public class ReelServiceImpl implements ReelService{
         }
         return reelRepository.save(r);
     }
+
+    @Override
+    public List<Reel> findLearnerLikedReels(Long learnerId) throws LearnerNotFoundException {
+        List<Reel> allReels = getAllReels();
+        List<Reel> reels = new ArrayList<>();
+        Learner l = learnerService.getLearnerById(learnerId);
+        for(Reel r : allReels) {
+            if(r.getLikers().contains(l)) {
+                reels.add(r);
+            }
+        }
+        return reels;
+    }
 }
