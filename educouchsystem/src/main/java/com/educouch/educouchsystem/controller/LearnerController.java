@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 //so it will get response body and controller at the same time
@@ -61,6 +62,16 @@ public class LearnerController {
             }
         }
         return learnerService.getAllLearners();
+    }
+    @GetMapping("/getAllKidsLearner")
+    public List<LearnerDTO> getAllKidsLearners(){
+        List<Learner> learners = learnerService.getAllKidsLearner();
+        List<LearnerDTO> listOfKidsLearners = new ArrayList<>();
+        for(Learner l: learners) {
+            listOfKidsLearners.add(new LearnerDTO(l.getLearnerId(), l.getName(), l.getEmail(), l.getUsername(), l.getProfilePictureURL()));
+
+        }
+        return listOfKidsLearners;
     }
 
     @PostMapping("/update")
