@@ -282,15 +282,21 @@ public class ReelController {
             learner.setClassRuns(new ArrayList<>());
             learner.setEnrolmentStatusTrackers(new ArrayList<>());
             learner.setLearnerTransactions(new ArrayList<>());
+            learner.setPollQuestionResponses(new ArrayList<>());
+            learner.setRequests(new ArrayList<>());
             learner.setStripeCustomerId(null);
             learner.setPaymentAcc(null);
+            learner.setGallery(null);
         });
         reel.getLikers().stream().forEach( learner -> {
             learner.setClassRuns(new ArrayList<>());
             learner.setEnrolmentStatusTrackers(new ArrayList<>());
             learner.setLearnerTransactions(new ArrayList<>());
+            learner.setPollQuestionResponses(new ArrayList<>());
+            learner.setRequests(new ArrayList<>());
             learner.setStripeCustomerId(null);
             learner.setPaymentAcc(null);
+            learner.setGallery(null);
         });
         return reel;
     }
