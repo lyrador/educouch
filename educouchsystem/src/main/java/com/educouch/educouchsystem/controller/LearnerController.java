@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 //so it will get response body and controller at the same time
@@ -62,6 +63,24 @@ public class LearnerController {
         }
         return learnerService.getAllLearners();
     }
+    @GetMapping("/getAllKidsLearner")
+    public List<LearnerDTO> getAllKidsLearners(){
+        List<Learner> learners = learnerService.getAllKidsLearner();
+        List<LearnerDTO> listOfKidsLearners = new ArrayList<>();
+        for(Learner l: learners) {
+            listOfKidsLearners.add(new LearnerDTO(l.getLearnerId(), l.getName(), l.getEmail(), l.getUsername(), l.getProfilePictureURL()));
+
+        }
+        return listOfKidsLearners;
+    }
+
+    @GetMapping("/retrieveById")
+    public LearnerDTO getAllKidsLearners(@RequestParam Long learnerId){
+        Learner l = learnerService.getLearnerById(learnerId);
+        LearnerDTO dto = new LearnerDTO(l.getLearnerId(), l.getName(), l.getEmail(),
+                l.getUsername(), l.getProfilePictureURL());
+        return dto;
+    }
 
     @PostMapping("/update")
     public ResponseEntity<Learner> updateLearner(@RequestBody Learner learner) {
@@ -83,10 +102,11 @@ public class LearnerController {
         for(ClassRun cr: listOfClassRuns) {
             processClassRun(cr);
         }
-        List<EnrolmentStatusTracker> enrolmentStatusTrackers = l.getEnrolmentStatusTrackers();
-        for(EnrolmentStatusTracker est: enrolmentStatusTrackers) {
-            processEnrolmentStatusTracker(est);
-        }
+        l.setEnrolmentStatusTrackers(null);
+//        List<EnrolmentStatusTracker> enrolmentStatusTrackers = l.getEnrolmentStatusTrackers();
+//        for(EnrolmentStatusTracker est: enrolmentStatusTrackers) {
+//            processEnrolmentStatusTracker(est);
+//        }
 
         return ResponseEntity.status(HttpStatus.OK).body(l);
 
@@ -136,6 +156,7 @@ public class LearnerController {
             i.setClassRuns(null);
             i.setOrganisation(null);
             i.setCourses(null);
+            i.setRequests(null);
         }
 
 

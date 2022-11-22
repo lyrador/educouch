@@ -42,6 +42,14 @@ public class LearnerDTO {
 
     }
 
+    public LearnerDTO(Long learnerId, String name, String email, String username, String profilePictureURL) {
+        this.learnerId = learnerId;
+        this.name = name;
+        this.email = email;
+        this.username = username;
+        this.profilePictureURL = profilePictureURL;
+    }
+
     public Long getLearnerId() {
         return learnerId;
     }
