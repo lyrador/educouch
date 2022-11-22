@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -43,10 +44,8 @@ public class GalleryController {
             ItemOwned newItem = new ItemOwned(p.positionX, p.positionY, true, ItemSizeEnum.SMALL);
             ItemOwned item = galleryService.purchaseItem(new Long(p.learnerId), new Long(p.itemId), newItem);
             return new ResponseEntity<>("Successfully purchased the item", HttpStatus.OK);
-        } catch(LocationOccupiedException ex1) {
-            return new ResponseEntity<>(ex1.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch(InsufficientTreePointBalanceException ex2) {
-            return new ResponseEntity<>(ex2.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch(Exception ex1) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex1.getMessage(), ex1);
         }
     }
 
@@ -67,7 +66,7 @@ public class GalleryController {
             galleryService.hideItemOwned(learnerId, itemOwnedId);
             return new ResponseEntity<>("Successful action.", HttpStatus.OK);
         } catch(Exception ex) {
-            return new ResponseEntity<>("Unauthorized action or item does not exist.", HttpStatus.CONFLICT);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
         }
     }
 
@@ -77,7 +76,7 @@ public class GalleryController {
             galleryService.unhideItemOwned(learnerId, itemOwnedId);
             return new ResponseEntity<>("Successful action.", HttpStatus.OK);
         } catch(Exception ex) {
-            return new ResponseEntity<>("Unauthorized action or item does not exist.", HttpStatus.CONFLICT);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
         }
     }
 
@@ -88,7 +87,7 @@ public class GalleryController {
             galleryService.updateLocation(newItem.getLearnerId(), newItem.getItemOwnedId(), newItem.getX(), newItem.getY());
             return new ResponseEntity<>("Successfully relocated the item.", HttpStatus.OK);
         } catch(Exception ex) {
-            return new ResponseEntity<>("Location is occupied, or the item is not moved at all.", HttpStatus.CONFLICT);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
         }
     }
 
