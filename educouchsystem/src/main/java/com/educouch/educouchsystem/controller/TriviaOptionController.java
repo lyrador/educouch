@@ -30,7 +30,7 @@ public class TriviaOptionController {
         try {
             TriviaQuestion triviaQuestion = triviaQuestionService.getTriviaQuestionById(triviaQuestionId);
             triviaOptionRequest.setTriviaQuestion(triviaQuestion);
-            triviaOptionRequest.setOptionNumber(1);
+//            triviaOptionRequest.setOptionNumber(1);
             System.out.println(triviaOptionRequest.getOptionContent());
 
             if(triviaQuestion.getTriviaOptions() != null) {
@@ -41,11 +41,11 @@ public class TriviaOptionController {
                 triviaQuestion.setTriviaOptions(triviaOptionList);
             }
 
-            if (triviaOptionRequest.getTriviaQuestion() != null) {
-                if (triviaOptionRequest.getTriviaQuestion().getTriviaOptions() != null) {
-                    triviaOptionRequest.setOptionNumber(triviaOptionRequest.getTriviaQuestion().getTriviaOptions().size());
-                }
-            }
+//            if (triviaOptionRequest.getTriviaQuestion() != null) {
+//                if (triviaOptionRequest.getTriviaQuestion().getTriviaOptions() != null) {
+//                    triviaOptionRequest.setOptionNumber(triviaOptionRequest.getTriviaQuestion().getTriviaOptions().size());
+//                }
+//            }
 
             TriviaOption triviaOption = triviaOptionService.saveTriviaOption(triviaOptionRequest);
             return new ResponseEntity<>(triviaOption, HttpStatus.OK);
@@ -83,14 +83,14 @@ public class TriviaOptionController {
             TriviaQuestion triviaQuestion = existingTriviaOption.getTriviaQuestion();
 
             List<TriviaOption> triviaOptionList = triviaQuestion.getTriviaOptions();
-            if (triviaOptionList.size() != existingTriviaOption.getOptionNumber()) {
-                for (int i = existingTriviaOption.getOptionNumber(); i < triviaOptionList.size(); i++) {
-                    TriviaOption triviaOptionToUpdate = triviaOptionList.get(i);
-                    Integer updatedOptionNumber = triviaOptionToUpdate.getOptionNumber() - 1;
-                    triviaOptionToUpdate.setOptionNumber(updatedOptionNumber);
-                    triviaOptionService.saveTriviaOption(triviaOptionToUpdate);
-                }
-            }
+//            if (triviaOptionList.size() != existingTriviaOption.getOptionNumber()) {
+//                for (int i = existingTriviaOption.getOptionNumber(); i < triviaOptionList.size(); i++) {
+//                    TriviaOption triviaOptionToUpdate = triviaOptionList.get(i);
+//                    Integer updatedOptionNumber = triviaOptionToUpdate.getOptionNumber() - 1;
+//                    triviaOptionToUpdate.setOptionNumber(updatedOptionNumber);
+//                    triviaOptionService.saveTriviaOption(triviaOptionToUpdate);
+//                }
+//            }
 
             triviaQuestion.getTriviaOptions().remove(existingTriviaOption);
             existingTriviaOption.setTriviaQuestion(null);

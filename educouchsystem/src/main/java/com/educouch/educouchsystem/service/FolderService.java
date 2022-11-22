@@ -1,10 +1,12 @@
 package com.educouch.educouchsystem.service;
 
+import com.educouch.educouchsystem.dto.FolderData;
 import com.educouch.educouchsystem.model.Folder;
 import com.educouch.educouchsystem.util.exception.FolderNotFoundException;
 import com.educouch.educouchsystem.util.exception.FolderUnableToSaveException;
 
 import java.util.List;
+import java.util.Map;
 
 public interface FolderService {
 
@@ -26,4 +28,5 @@ public interface FolderService {
 
     public void renameFolderByFolderId(String folderName, Long folderId) throws FolderNotFoundException,FolderUnableToSaveException;
 
+    public List<FolderData> retrieveParentFolders(Long folderId);
 }
