@@ -57,6 +57,18 @@ public class LearnerServiceImpl implements LearnerService {
     }
 
     @Override
+    public List<Learner> getAllKidsLearner() {
+        List<Learner> listOfAllLearners = getAllLearners();
+        List<Learner> kidsLearner = new ArrayList<>();
+        for(Learner l: listOfAllLearners) {
+            if(l.getKid()) {
+                kidsLearner.add(l);
+            }
+        }
+        return kidsLearner;
+    }
+
+    @Override
     public Learner getLearnerById(Long learnerId) {
         return learnerRepository.findById(learnerId).get();
     }

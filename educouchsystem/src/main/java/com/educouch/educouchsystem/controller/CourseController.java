@@ -358,6 +358,7 @@ public class CourseController {
             i.setClassRuns(null);
             i.setOrganisation(null);
             i.setCourses(null);
+            i.setRequests(null);
         }
 
 
