@@ -112,16 +112,17 @@ public class AttachmentController {
                     file.getSize());
         } catch (FilenameContainsInvalidPathSequenceException | FileUnableToSaveException |
                 FolderNotFoundException | FolderUnableToSaveException e) {
-            throw new RuntimeException(e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
 
     @GetMapping("/renameAttachment")
-    public void renameAttachment(@RequestParam Long attachmentId, @RequestParam String fileName) {
+    public String renameAttachment(@RequestParam Long attachmentId, @RequestParam String fileName) {
         try {
             attachmentService.rename(attachmentId, fileName);
+            return "Successfully renamed the attachment.";
         } catch (FileNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File cannot be found.", e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
         }
     }
 

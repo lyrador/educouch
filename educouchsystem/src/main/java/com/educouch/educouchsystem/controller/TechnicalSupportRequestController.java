@@ -1,7 +1,5 @@
 package com.educouch.educouchsystem.controller;
 
-
-import com.educouch.educouchsystem.dto.ForumDTO;
 import com.educouch.educouchsystem.dto.TechnicalSupportRequestDTO;
 import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.service.EducatorService;
@@ -43,6 +41,7 @@ public class TechnicalSupportRequestController {
             newRequest.setTitle(requestDTO.getRequestTitle());
             newRequest.setDescription(requestDTO.getRequestDescription());
             newRequest.setTimestamp(LocalDateTime.now());
+            newRequest.setImageUrl(requestDTO.getImageUrl());
 
             if (requestDTO.getRequestStatus().equals("PENDING")) {
                 newRequest.setTechnicalSupportRequestStatus(TechnicalSupportRequestStatusEnum.PENDING);
@@ -83,6 +82,7 @@ public class TechnicalSupportRequestController {
                 requestDTO.setRequestId(request.getTechnicalSupportRequestId());
                 requestDTO.setRequestTitle(request.getTitle());
                 requestDTO.setRequestDescription(request.getDescription());
+                requestDTO.setImageUrl(request.getImageUrl());
                 requestDTO.setCreatedDateTime(request.getTimestamp().format(formatter));
                 if (request.getTechnicalSupportRequestStatus() == TechnicalSupportRequestStatusEnum.PENDING) {
                     requestDTO.setRequestStatus("PENDING");
@@ -107,7 +107,7 @@ public class TechnicalSupportRequestController {
     public ResponseEntity<List<TechnicalSupportRequestDTO>> getAllTechnicalSupportRequestsByInstructorUserId (@PathVariable(value="userId") Long userId) {
         try {
             List<TechnicalSupportRequest> requests = new ArrayList<TechnicalSupportRequest>();
-            requests.addAll(educatorService.findOrganisationAdminById(userId).getRequests());
+            requests.addAll(educatorService.findInstructorById(userId).getRequests());
 
             DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.MEDIUM);
 
@@ -117,6 +117,7 @@ public class TechnicalSupportRequestController {
                 requestDTO.setRequestId(request.getTechnicalSupportRequestId());
                 requestDTO.setRequestTitle(request.getTitle());
                 requestDTO.setRequestDescription(request.getDescription());
+                requestDTO.setImageUrl(request.getImageUrl());
                 requestDTO.setCreatedDateTime(request.getTimestamp().format(formatter));
                 if (request.getTechnicalSupportRequestStatus() == TechnicalSupportRequestStatusEnum.PENDING) {
                     requestDTO.setRequestStatus("PENDING");
@@ -124,7 +125,7 @@ public class TechnicalSupportRequestController {
                     requestDTO.setRequestStatus("RESOLVED");
                 }
 
-                if (request.getCreatedByOrganisationAdmin() != null) {
+                if (request.getCreatedByInstructor() != null) {
                     requestDTO.setCreatedByUserId(request.getCreatedByInstructor().getInstructorId());
                     requestDTO.setCreatedByUserName(request.getCreatedByInstructor().getName());
                     requestDTO.setCreatedByUserType("INSTRUCTOR");
@@ -135,8 +136,10 @@ public class TechnicalSupportRequestController {
 
         } catch (NoSuchElementException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        } catch (InstructorNotFoundException ex) {
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+}
 
     @GetMapping("/getAllTechnicalSupportRequestsByOrgAdmin/{userId}")
     public ResponseEntity<List<TechnicalSupportRequestDTO>> getAllTechnicalSupportRequestsByOrgAdminUserId (@PathVariable(value="userId") Long userId) {
@@ -152,6 +155,7 @@ public class TechnicalSupportRequestController {
                 requestDTO.setRequestId(request.getTechnicalSupportRequestId());
                 requestDTO.setRequestTitle(request.getTitle());
                 requestDTO.setRequestDescription(request.getDescription());
+                requestDTO.setImageUrl(request.getImageUrl());
                 requestDTO.setCreatedDateTime(request.getTimestamp().format(formatter));
                 if (request.getTechnicalSupportRequestStatus() == TechnicalSupportRequestStatusEnum.PENDING) {
                     requestDTO.setRequestStatus("PENDING");
@@ -172,20 +176,117 @@ public class TechnicalSupportRequestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-    @GetMapping("/getTechnicalSupportRequestById/{technicalSupportRequestId}")
-    public ResponseEntity<TechnicalSupportRequest> getTechnicalSupportRequestById(@PathVariable(value = "technicalSupportRequestId") Long technicalSupportRequestId) {
+    @GetMapping("/getAllPendingTechnicalSupportRequests")
+    public ResponseEntity<List<TechnicalSupportRequestDTO>> getAllPendingTechnicalSupportRequests () {
         try {
-            TechnicalSupportRequest existingRequest = technicalSupportRequestService.retrieveTechnicalSupportRequestById(technicalSupportRequestId);
-            return new ResponseEntity<TechnicalSupportRequest>(existingRequest, HttpStatus.OK);
+            List<TechnicalSupportRequest> requests = new ArrayList<TechnicalSupportRequest>();
+            requests.addAll(technicalSupportRequestService.getAllTechnicalSupportRequests());
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.MEDIUM);
+
+            List<TechnicalSupportRequestDTO> requestDTOs = new ArrayList<>();
+            for (TechnicalSupportRequest request : requests) {
+                TechnicalSupportRequestDTO requestDTO = new TechnicalSupportRequestDTO();
+                requestDTO.setRequestId(request.getTechnicalSupportRequestId());
+                requestDTO.setRequestTitle(request.getTitle());
+                requestDTO.setRequestDescription(request.getDescription());
+                requestDTO.setImageUrl(request.getImageUrl());
+                requestDTO.setCreatedDateTime(request.getTimestamp().format(formatter));
+                if (request.getTechnicalSupportRequestStatus() == TechnicalSupportRequestStatusEnum.PENDING) {
+                    requestDTO.setRequestStatus("PENDING");
+                } else if (request.getTechnicalSupportRequestStatus() == TechnicalSupportRequestStatusEnum.RESOLVED) {
+                    requestDTO.setRequestStatus("RESOLVED");
+                }
+                if (request.getCreatedByLearner() != null) {
+                    requestDTO.setCreatedByUserId(request.getCreatedByLearner().getLearnerId());
+                    requestDTO.setCreatedByUserName(request.getCreatedByLearner().getName());
+                    requestDTO.setCreatedByUserType("LEARNER");
+                }
+                if (request.getCreatedByInstructor() != null) {
+                    requestDTO.setCreatedByUserId(request.getCreatedByInstructor().getInstructorId());
+                    requestDTO.setCreatedByUserName(request.getCreatedByInstructor().getName());
+                    requestDTO.setCreatedByUserType("INSTRUCTOR");
+                }
+                if (request.getCreatedByOrganisationAdmin() != null) {
+                    requestDTO.setCreatedByUserId(request.getCreatedByOrganisationAdmin().getOrganisationAdminId());
+                    requestDTO.setCreatedByUserName(request.getCreatedByOrganisationAdmin().getName());
+                    requestDTO.setCreatedByUserType("ORG_ADMIN");
+                }
+
+                if (requestDTO.getRequestStatus().equals("PENDING")) {
+                    requestDTOs.add(requestDTO);
+                }
+            }
+            return new ResponseEntity<>(requestDTOs, HttpStatus.OK);
+
         } catch (NoSuchElementException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @DeleteMapping("/deleteTechnicalSupportRequestById/{technicalSupportRequestId}")
-    public ResponseEntity<HttpStatus> deleteTechnicalSupportRequestById(@PathVariable("technicalSupportRequestId") Long technicalSupportRequestId) {
-        technicalSupportRequestService.deleteTechnicalSupportRequest(technicalSupportRequestId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @GetMapping("/getAllResolvedTechnicalSupportRequests")
+    public ResponseEntity<List<TechnicalSupportRequestDTO>> getAllResolvedTechnicalSupportRequests () {
+        try {
+            List<TechnicalSupportRequest> requests = new ArrayList<TechnicalSupportRequest>();
+            requests.addAll(technicalSupportRequestService.getAllTechnicalSupportRequests());
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.MEDIUM);
+
+            List<TechnicalSupportRequestDTO> requestDTOs = new ArrayList<>();
+            for (TechnicalSupportRequest request : requests) {
+                TechnicalSupportRequestDTO requestDTO = new TechnicalSupportRequestDTO();
+                requestDTO.setRequestId(request.getTechnicalSupportRequestId());
+                requestDTO.setRequestTitle(request.getTitle());
+                requestDTO.setRequestDescription(request.getDescription());
+                requestDTO.setImageUrl(request.getImageUrl());
+                requestDTO.setCreatedDateTime(request.getTimestamp().format(formatter));
+                if (request.getTechnicalSupportRequestStatus() == TechnicalSupportRequestStatusEnum.PENDING) {
+                    requestDTO.setRequestStatus("PENDING");
+                } else if (request.getTechnicalSupportRequestStatus() == TechnicalSupportRequestStatusEnum.RESOLVED) {
+                    requestDTO.setRequestStatus("RESOLVED");
+                }
+                if (request.getCreatedByLearner() != null) {
+                    requestDTO.setCreatedByUserId(request.getCreatedByLearner().getLearnerId());
+                    requestDTO.setCreatedByUserName(request.getCreatedByLearner().getName());
+                    requestDTO.setCreatedByUserType("LEARNER");
+                }
+                if (request.getCreatedByInstructor() != null) {
+                    requestDTO.setCreatedByUserId(request.getCreatedByInstructor().getInstructorId());
+                    requestDTO.setCreatedByUserName(request.getCreatedByInstructor().getName());
+                    requestDTO.setCreatedByUserType("INSTRUCTOR");
+                }
+                if (request.getCreatedByOrganisationAdmin() != null) {
+                    requestDTO.setCreatedByUserId(request.getCreatedByOrganisationAdmin().getOrganisationAdminId());
+                    requestDTO.setCreatedByUserName(request.getCreatedByOrganisationAdmin().getName());
+                    requestDTO.setCreatedByUserType("ORG_ADMIN");
+                }
+
+                if (requestDTO.getRequestStatus().equals("RESOLVED")) {
+                    requestDTOs.add(requestDTO);
+                }
+            }
+            return new ResponseEntity<>(requestDTOs, HttpStatus.OK);
+
+        } catch (NoSuchElementException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/updateRequestStatus/{requestId}")
+    public ResponseEntity<TechnicalSupportRequest> updateRequestStatusById(@PathVariable("requestId") Long requestId, @RequestBody TechnicalSupportRequestDTO requestDTO) {
+        try {
+            TechnicalSupportRequest existingRequest = technicalSupportRequestService.retrieveTechnicalSupportRequestById(requestId);
+            if (requestDTO.getCreatedByUserType() == "LEARNER") {
+                existingRequest.getCreatedByLearner().setClassRuns(new ArrayList<>());
+            } else if (requestDTO.getCreatedByUserType() == "INSTRUCTOR") {
+                existingRequest.getCreatedByLearner().setClassRuns(new ArrayList<>());
+            }
+            if (requestDTO.getRequestStatus().equals("RESOLVED")) {
+                existingRequest.setTechnicalSupportRequestStatus(TechnicalSupportRequestStatusEnum.RESOLVED);
+            }
+            return new ResponseEntity<TechnicalSupportRequest>(technicalSupportRequestService.saveTechnicalSupportRequest(existingRequest), HttpStatus.OK);
+        } catch (NoSuchElementException | TechnicalSupportRequestNotFoundException ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }
