@@ -2,10 +2,7 @@ package com.educouch.educouchsystem.service;
 
 import com.educouch.educouchsystem.model.*;
 import com.educouch.educouchsystem.repository.AssessmentRepository;
-import com.educouch.educouchsystem.util.exception.AssessmentNotFoundException;
-import com.educouch.educouchsystem.util.exception.CourseNotFoundException;
-import com.educouch.educouchsystem.util.exception.NoQuizAttemptsFoundException;
-import com.educouch.educouchsystem.util.exception.PointsWalletNotFoundException;
+import com.educouch.educouchsystem.util.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +26,10 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Autowired
     private QuizAttemptService quizAttemptService;
+
+    @Autowired
+    private FileSubmissionAttemptService fileSubmissionAttemptService;
+
 
     @Autowired
     private PointsWalletService pointsWalletService;
@@ -96,8 +97,16 @@ public class AssessmentServiceImpl implements AssessmentService {
                 g.setLearnerScore(attempt.getObtainedScore());
                 gradeBookEntryService.createGradeBookEntry(g);
             } catch (NoQuizAttemptsFoundException e) {
-                g.setLearnerScore(0.0);
-                gradeBookEntryService.createGradeBookEntry(g);
+                try {
+                    FileSubmissionAttempt attempt = fileSubmissionAttemptService.getMostRecentFileSubmissionAttemptByLearnerId(g.getLearnerId(), assessmentId);
+                    listOfScores.add(attempt.getObtainedScore());
+                    g.setLearnerScore(attempt.getObtainedScore());
+                    gradeBookEntryService.createGradeBookEntry(g);
+                } catch (NoFileSubmissionsFoundException ex) {
+
+                    g.setLearnerScore(0.0);
+                    gradeBookEntryService.createGradeBookEntry(g);
+                }
             }
 
 
