@@ -425,9 +425,9 @@ public class DataLoader implements CommandLineRunner {
         galleryService.initiateEnhancementItem(et1);
         galleryService.initiateEnhancementItem(et2);
 
-        PointsWallet points = new PointsWallet(learner_1.getLearnerId(), org1.getOrganisationId(),org1.getOrganisationName());
-        points.setDiscountPoints(50L);
-        pointsWalletService.saveWallet(points);
+//        PointsWallet points = new PointsWallet(learner_1.getLearnerId(), org1.getOrganisationId(),org1.getOrganisationName());
+//        points.setDiscountPoints(50L);
+//        pointsWalletService.saveWallet(points);
 
 
 
