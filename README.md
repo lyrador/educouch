@@ -1,5 +1,6 @@
 # educouch
 ![neweducouchlogo](https://user-images.githubusercontent.com/65401176/207504168-97263c09-ae9d-49c1-bf70-b43ee6596edb.png)
+
 EduCouch is an all-in-one integrated collaborative EdTech platform for Educators and Learners across all age groups. It provides a one stop platform for Educators to host their learning courses from the first step (signing up and creating courses), all the way to the very end (receiving payment, offering certificates, etc). EduCouch also enables Learners to sign up for all types of courses available, offering unique features such as social media reels for them to view the Educator’s organisation's publicity content in an innovative manner. Learners will also be engaged constantly, with interactive learning embedded into the courses and the opportunity to convert points earned from assessments to discounted registration for other courses.
 
 Key features include:
