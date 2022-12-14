@@ -16,7 +16,7 @@ Key features include:
 
 Usage Instructions:
 1. Create an AWS S3 bucket account
-2. Replace the variables in the application.yml and application.properties files with your bucket credentials
+2. Replace the variables in the application.yml and application.properties files with your bucket credentials and your email sender credentials
 
 Technologies:
 1. PostgreSQL/ MySQL
