@@ -20,8 +20,8 @@ Usage Instructions:
 
 Technologies:
 1. PostgreSQL/ MySQL
-2. Java
-3. JavaScript/ React
+2. Java - Spring
+3. JavaScript - React
 4. React Native
 5. Socket.io
 
